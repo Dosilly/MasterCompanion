@@ -26,7 +26,8 @@ const DetailsContent = Node.create({
   parseHTML: () => [{ tag: 'details > div' }], renderHTML: () => ['div', { 'data-details-content': '' }, 0],
 });
 export function documentExtensions() {
-  return [StarterKit.configure({ link: { openOnClick: false, autolink: false, linkOnPaste: false } }),
+  // TrailingNode appends a paragraph even on reader selection/focus transactions.
+  return [StarterKit.configure({ trailingNode: false, link: { openOnClick: false, autolink: false, linkOnPaste: false } }),
     TableKit.configure({ table: { resizable: false } }), Image.configure({ allowBase64: false }),
     SourceAnchors, Details, DetailsSummary, DetailsContent];
 }

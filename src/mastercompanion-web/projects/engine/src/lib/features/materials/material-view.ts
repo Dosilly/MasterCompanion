@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, input, output, viewChild } from '@angular/core';
 import { Editor } from '@tiptap/core';
-import { documentExtensions } from '../../editor-schema.mjs';
+import { createMaterialEditor } from './material-editor';
 import { MaterialSession } from './material-session';
 import { uiMessages } from '../../i18n/messages';
 
@@ -48,12 +48,7 @@ export class MaterialView implements AfterViewInit, OnDestroy {
   editor?: Editor;
 
   ngAfterViewInit() {
-    this.editor = new Editor({
-      element: this.editorElement().nativeElement,
-      extensions: documentExtensions(), content: this.session().document, editable: false,
-      editorProps: { attributes: { 'aria-label': this.ui.material.contentLabel } },
-      onUpdate: ({ editor }) => this.session().change(editor.getJSON()),
-    });
+    this.editor = createMaterialEditor(this.editorElement().nativeElement, this.session(), this.ui.material.contentLabel);
   }
   async toggleEdit() {
     if (this.session().editing()) {
