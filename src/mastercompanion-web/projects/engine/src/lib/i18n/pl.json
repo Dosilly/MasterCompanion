@@ -1,0 +1,58 @@
+{
+  "workspace": {
+    "map": "Mapa",
+    "darkMode": "Tryb ciemny",
+    "lightMode": "Tryb jasny",
+    "retry": "Ponów",
+    "navigationLabel": "Materiały kampanii",
+    "materials": "Materiały",
+    "searchPlaceholder": "Szukaj po nazwie…",
+    "noSearchResults": "Brak materiałów pasujących do wyszukiwania.",
+    "unfiledMaterials": "Pozostałe materiały",
+    "tabsLabel": "Otwarte materiały",
+    "closeTab": "Zamknij kartę",
+    "closeTabHint": "Zamknij kartę (także środkowym przyciskiem myszy)",
+    "loadingMaterial": "Wczytywanie materiału…",
+    "loadingCampaign": "Wczytywanie kampanii…",
+    "emptyWithMap": "Wybierz materiał ze spisu lub otwórz mapę.",
+    "emptyMaterials": "Wybierz materiał ze spisu.",
+    "errors": {
+      "campaignLoadFailed": "Nie udało się wczytać kampanii. Sprawdź, czy backend i baza działają.",
+      "materialNotFound": "Ten materiał nie jest dostępny w kampanii.",
+      "materialLoadFailed": "Nie udało się otworzyć materiału. Spróbuj ponownie."
+    }
+  },
+  "material": {
+    "edit": "Edytuj notatkę",
+    "finishEditing": "Zakończ edycję",
+    "copyDraft": "Skopiuj tekst zmian",
+    "retrySave": "Ponów zapis",
+    "formattingLabel": "Formatowanie tekstu",
+    "bold": "Pogrubienie",
+    "italic": "Kursywa",
+    "heading": "Nagłówek",
+    "list": "Lista",
+    "quote": "Cytat",
+    "undo": "Cofnij",
+    "redo": "Ponów",
+    "contentLabel": "Treść notatki",
+    "status": {
+      "saved": "Zapisano",
+      "waiting": "Niezapisane zmiany",
+      "saving": "Zapisywanie…",
+      "error": "Błąd zapisu",
+      "conflict": "Konflikt zapisu"
+    },
+    "errors": {
+      "saveConflict": "Materiał zmieniono w innym oknie. Skopiuj swoje zmiany i odśwież stronę, aby wczytać aktualną wersję.",
+      "saveFailed": "Nie udało się zapisać. Zmiany pozostają w tej karcie; ponów zapis po przywróceniu połączenia.",
+      "clipboardUnavailable": "Przeglądarka nie pozwoliła skopiować tekstu. Zaznacz treść i skopiuj ją ręcznie."
+    }
+  },
+  "map": {
+    "zoomOut": "Oddal mapę",
+    "zoomIn": "Przybliż mapę",
+    "fit": "Dopasuj",
+    "hint": "Wybierz znacznik, aby otworzyć opis. Przeciągnij mapę, aby ją przesunąć."
+  }
+}

@@ -1,0 +1,1 @@
+{ "extends": "../../tsconfig.json", "compilerOptions": { "outDir": "../../out-tsc/engine", "declaration": true, "types": [] }, "angularCompilerOptions": { "compilationMode": "partial" }, "include": ["src/**/*.ts", "src/**/*.mjs", "src/**/*.json"] }

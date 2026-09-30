@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "strict": true, "skipLibCheck": true, "experimentalDecorators": true,
+    "module": "preserve", "moduleResolution": "bundler", "target": "ES2022",
+    "lib": ["ES2022", "DOM"], "allowJs": true, "declaration": true, "resolveJsonModule": true,
+    "paths": {
+      "@mastercompanion/contracts": ["./dist/contracts"],
+      "@mastercompanion/engine": ["./dist/engine"],
+      "@mastercompanion/ythryn": ["./dist/ythryn"]
+    }
+  },
+  "angularCompilerOptions": { "strictTemplates": true, "strictInjectionParameters": true }
+}

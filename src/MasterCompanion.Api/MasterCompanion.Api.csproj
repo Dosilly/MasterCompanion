@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.12">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <ProjectReference Include="../MasterCompanion.Engine/MasterCompanion.Engine.csproj" />
+    <ProjectReference Include="../MasterCompanion.Modules.Ythryn/MasterCompanion.Modules.Ythryn.csproj" />
+    <ProjectReference Include="../MasterCompanion.ServiceDefaults/MasterCompanion.ServiceDefaults.csproj" />
+  </ItemGroup>
+</Project>
