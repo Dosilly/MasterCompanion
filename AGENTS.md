@@ -21,7 +21,7 @@ These instructions apply to all implementation work in this repository. Read the
 - Never add module-specific identifiers, branch conditions, or game rules to the engine. Extend the explicit contract when cross-boundary behavior is needed.
 - Organize backend use cases as vertical slices, with endpoint, input/output, validation, and persistence together. Shared code must have a demonstrated purpose. Do not add generic repositories, mediator frameworks, microservices, or Module Federation just to match a pattern.
 - Cross-module operations must use explicit contracts and preserve ownership. Before implementing game operations, define atomic changes of engine time, module state, revision, and undo history.
-- Document meaningful changes to contracts and ownership in `06-Architektura-modulow.md`. Keep current implementation status in `README.md`; preserve historical workshop decisions as history.
+- Document meaningful changes to contracts and ownership in `docs/planning/06-Architektura-modulow.md`. Keep plans and implementation status in `docs/planning/`; keep `README.md` in English with stable project information and no current implementation status. Preserve historical workshop decisions as history.
 
 ## Production-ready implementation standard
 
@@ -94,7 +94,7 @@ pnpm --dir src/mastercompanion-web test:autosave
 - Run `test:api` against a running AppHost when persistence/API behavior changes. This probe changes one material temporarily; prefer an isolated database and respect its revision-protected restore. For changes limited to rejected requests or error diagnostics, `test:api-errors` checks ProblemDetails and confirms no persisted document or revision changes. Folder backfill verification is a separate, explicit before/after probe in `tools/verify-folders.mjs`.
 - Add meaningful regression tests for changed rules, data integrity, concurrency, security, or failure behavior. Avoid tests that merely mirror markup or implementation details. Use real PostgreSQL for database-specific behavior when applicable.
 - For visible UI changes, inspect the running app in the browser, exercise the affected interactions, and check relevant console errors. A successful build is not browser verification.
-- Review the final diff for unrelated changes, source-language violations, missing localization keys, accidental secrets, broken ownership, and destructive migrations. Preserve the original POC as reference data.
+- Review the final diff for unrelated changes, source-language violations, missing localization keys, accidental secrets, broken ownership, and destructive migrations. Preserve module content and user data.
 - Builds of Angular libraries happen before the host starts. Rebuild/restart the frontend as needed; do not validate stale library output. Do not interrupt pending user saves during a restart.
 
 ## Definition of done

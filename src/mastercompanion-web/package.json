@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node tools/start.mjs",
     "build": "node tools/build.mjs",
-    "prepare:ythryn": "node tools/prepare-ythryn.mjs",
     "check:boundaries": "node tools/check-boundaries.mjs",
     "check:code": "node tools/check-code-policy.mjs",
     "test:content": "node --test tools/content.test.mjs",
