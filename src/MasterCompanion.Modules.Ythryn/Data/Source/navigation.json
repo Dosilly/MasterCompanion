@@ -13,27 +13,9 @@
   },
   {
     "id": "sf96c6e0d06eb",
-    "title": "Lokacje Y1–Y9",
+    "title": "Lokacje",
     "parentId": null,
     "sortOrder": 2
-  },
-  {
-    "id": "s51a1e58a9d82",
-    "title": "Lokacje Y10–Y18",
-    "parentId": null,
-    "sortOrder": 3
-  },
-  {
-    "id": "s80aeaed4c2f6",
-    "title": "Iglica Iriolarthasa — Y19a–Y19q",
-    "parentId": null,
-    "sortOrder": 4
-  },
-  {
-    "id": "sd76bc8c36176",
-    "title": "Lokacje Y20–Y29",
-    "parentId": null,
-    "sortOrder": 5
   },
   {
     "id": "s67555e0ee374",
@@ -72,39 +54,9 @@
     "sortOrder": 10
   },
   {
-    "id": "s7fe42d45a1c9",
-    "title": "Fenes — droga przez wir — dla MG",
-    "parentId": "directory:f16120e95f05fc4d",
-    "sortOrder": 11
-  },
-  {
     "id": "directory:f16120e95f05fc4d",
     "title": "Fenes",
     "parentId": "s978ab6dea828",
     "sortOrder": 11
-  },
-  {
-    "id": "se2dd95232813",
-    "title": "O odzyskiwaniu drogi po rozdzieleniu podróżnych",
-    "parentId": "directory:f16120e95f05fc4d",
-    "sortOrder": 12
-  },
-  {
-    "id": "s262b3a9f491c",
-    "title": "Pracownia przejść — korespondencja obserwatorium",
-    "parentId": "directory:f16120e95f05fc4d",
-    "sortOrder": 13
-  },
-  {
-    "id": "sb68cccad8d50",
-    "title": "Przyrząd Dwóch Brzegów",
-    "parentId": "directory:f16120e95f05fc4d",
-    "sortOrder": 14
-  },
-  {
-    "id": "s691e9446ee5a",
-    "title": "Dwa Brzegi — karta wspólnych pomiarów",
-    "parentId": "directory:f16120e95f05fc4d",
-    "sortOrder": 15
   }
 ]

@@ -31,6 +31,12 @@ Write **formatted content**, lists, quotes, and tables here.
 
 Keep existing material IDs and section IDs unchanged: map markers, links, and campaign copies depend on them. Renaming a file does not change its ID. Use YAML quoting when a title contains characters such as `: ` or `#`.
 
+Locations Y1–Y29, including Y19 and its rooms, belong directly to the single `Lokacje` folder in adventure order. The Y19 document contains the spire overview and shared features. Navigation-only index pages are omitted; references point to substantive materials.
+
+Fenes has five complete documents directly inside the character folder: the GM guide, recovery report, observatory correspondence, device instructions, and measurement sheet. Their sections remain in the same Markdown file as the document. Former section material IDs are retained as heading anchors. When combining materials, update incoming links to `#material/document-id/section-id` and preserve existing tables, details, and section order. The [content reference fixture](../../../mastercompanion-web/tools/fixtures/ythryn-source.json) records section hashes from before consolidation; later intentional content changes must update the affected reference evidence.
+
+Folder IDs can contain colons. Source export encodes these IDs in portable directory names prefixed with `folder-`; material filenames also encode their IDs. YAML retains the original identifiers. Authored directories can use another portable name because their names do not determine navigation.
+
 The compiler supports standard Markdown, pipe tables, and heading IDs written as `{#id}`. Rich structures that Markdown cannot represent exactly remain HTML blocks, particularly `<details>` and some tables. Text inside a raw HTML block uses HTML formatting; Markdown inside it is not interpreted. Do not replace these blocks with plain text if their formatting or anchors matter. The compiler rejects unsupported tags, event handlers, unsafe styles, external links, and remote images. Images, when used, reference registered assets as `/api/assets/asset-id`.
 
 ## Building and validation

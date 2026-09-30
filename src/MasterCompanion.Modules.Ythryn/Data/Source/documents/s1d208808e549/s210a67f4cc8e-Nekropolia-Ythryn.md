@@ -33,6 +33,6 @@ Najważniejsi mieszkańcy i strażnicy Ythryn:
 
 #### Spotkania losowe {#sf55e27a35569}
 
-[Osobna notatka](#material/s1e3ee963d887) zawiera częstotliwość sprawdzania, tabelę k100, zastępstwa po przybyciu Avarice i Auril oraz krótkie scenki dla wszystkich zagrożeń.
+[Osobna notatka](#material/sc5b87ae42023) zawiera częstotliwość sprawdzania, tabelę k100, zastępstwa po przybyciu Avarice i Auril oraz krótkie scenki dla wszystkich zagrożeń.
 
 * * *

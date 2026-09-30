@@ -6,10 +6,7 @@
   "deviceTitle": "Przyrząd Dwóch Brzegów",
   "unicodeText": "ąęść",
   "materialFolders": {
-    "sd892956766e6": "sd892956766e6",
     "s208590bc944a": "sd892956766e6",
-    "sb4bb4577af31": "sd892956766e6",
-    "s7264214a61b0": "sd892956766e6",
     "s072e06cef3fe": "sd892956766e6",
     "sc53ffefdf8b4": "sd892956766e6",
     "se3d4b0a102ea": "sd892956766e6",
@@ -21,7 +18,6 @@
     "see1129fbc486": "s1d208808e549",
     "s93a89601edb7": "s1d208808e549",
     "s64d24eb7f020": "s1d208808e549",
-    "sf96c6e0d06eb": "sf96c6e0d06eb",
     "scf9d511aa9f0": "sf96c6e0d06eb",
     "sb6a35696a974": "sf96c6e0d06eb",
     "s70e4a7a6c48e": "sf96c6e0d06eb",
@@ -31,47 +27,43 @@
     "s9a1b9a25ece8": "sf96c6e0d06eb",
     "sdcecae373670": "sf96c6e0d06eb",
     "s3078db7e1d5d": "sf96c6e0d06eb",
-    "s51a1e58a9d82": "s51a1e58a9d82",
-    "sb6ed67a318a5": "s51a1e58a9d82",
-    "s4f4aee7460ca": "s51a1e58a9d82",
-    "s87ddc0d4a17a": "s51a1e58a9d82",
-    "scc80fd2c66b0": "s51a1e58a9d82",
-    "sce80b88d6dee": "s51a1e58a9d82",
-    "se3443d8c7509": "s51a1e58a9d82",
-    "sf3c0c2d8a9ef": "s51a1e58a9d82",
-    "se486e74730b2": "s51a1e58a9d82",
-    "s78abfc471677": "s51a1e58a9d82",
-    "s80aeaed4c2f6": "s80aeaed4c2f6",
-    "sebb9e80ab5fa": "s80aeaed4c2f6",
-    "s96c18f457ab3": "s80aeaed4c2f6",
-    "se5871db3e2b4": "s80aeaed4c2f6",
-    "sc5f3bb91592f": "s80aeaed4c2f6",
-    "s9d8cada47c6c": "s80aeaed4c2f6",
-    "sb679f6b03252": "s80aeaed4c2f6",
-    "sf00d04ac81e9": "s80aeaed4c2f6",
-    "s3bc19eca0369": "s80aeaed4c2f6",
-    "s1b2fee08d088": "s80aeaed4c2f6",
-    "sbd1fd40218bf": "s80aeaed4c2f6",
-    "se128f46ed203": "s80aeaed4c2f6",
-    "s2ff3e58a0c2c": "s80aeaed4c2f6",
-    "se5146ff594e7": "s80aeaed4c2f6",
-    "s1ba999fe1353": "s80aeaed4c2f6",
-    "s2a14a09b4e54": "s80aeaed4c2f6",
-    "s70265faf9694": "s80aeaed4c2f6",
-    "s5c4c63558d3f": "s80aeaed4c2f6",
-    "sc6bc2554afca": "s80aeaed4c2f6",
-    "sd76bc8c36176": "sd76bc8c36176",
-    "se9ecf2a6cb4d": "sd76bc8c36176",
-    "sf33860c9be4f": "sd76bc8c36176",
-    "sb360b5880eb3": "sd76bc8c36176",
-    "sb8c5052b6ab6": "sd76bc8c36176",
-    "s2c656465077b": "sd76bc8c36176",
-    "scd8597de4fbf": "sd76bc8c36176",
-    "s318c29bcc186": "sd76bc8c36176",
-    "s7abafe286739": "sd76bc8c36176",
-    "s165b0c05fce3": "sd76bc8c36176",
-    "sb5aa2efd2a50": "sd76bc8c36176",
-    "s67555e0ee374": "s67555e0ee374",
+    "sb6ed67a318a5": "sf96c6e0d06eb",
+    "s4f4aee7460ca": "sf96c6e0d06eb",
+    "s87ddc0d4a17a": "sf96c6e0d06eb",
+    "scc80fd2c66b0": "sf96c6e0d06eb",
+    "sce80b88d6dee": "sf96c6e0d06eb",
+    "se3443d8c7509": "sf96c6e0d06eb",
+    "sf3c0c2d8a9ef": "sf96c6e0d06eb",
+    "se486e74730b2": "sf96c6e0d06eb",
+    "s78abfc471677": "sf96c6e0d06eb",
+    "s80aeaed4c2f6": "sf96c6e0d06eb",
+    "s96c18f457ab3": "sf96c6e0d06eb",
+    "se5871db3e2b4": "sf96c6e0d06eb",
+    "sc5f3bb91592f": "sf96c6e0d06eb",
+    "s9d8cada47c6c": "sf96c6e0d06eb",
+    "sb679f6b03252": "sf96c6e0d06eb",
+    "sf00d04ac81e9": "sf96c6e0d06eb",
+    "s3bc19eca0369": "sf96c6e0d06eb",
+    "s1b2fee08d088": "sf96c6e0d06eb",
+    "sbd1fd40218bf": "sf96c6e0d06eb",
+    "se128f46ed203": "sf96c6e0d06eb",
+    "s2ff3e58a0c2c": "sf96c6e0d06eb",
+    "se5146ff594e7": "sf96c6e0d06eb",
+    "s1ba999fe1353": "sf96c6e0d06eb",
+    "s2a14a09b4e54": "sf96c6e0d06eb",
+    "s70265faf9694": "sf96c6e0d06eb",
+    "s5c4c63558d3f": "sf96c6e0d06eb",
+    "sc6bc2554afca": "sf96c6e0d06eb",
+    "se9ecf2a6cb4d": "sf96c6e0d06eb",
+    "sf33860c9be4f": "sf96c6e0d06eb",
+    "sb360b5880eb3": "sf96c6e0d06eb",
+    "sb8c5052b6ab6": "sf96c6e0d06eb",
+    "s2c656465077b": "sf96c6e0d06eb",
+    "scd8597de4fbf": "sf96c6e0d06eb",
+    "s318c29bcc186": "sf96c6e0d06eb",
+    "s7abafe286739": "sf96c6e0d06eb",
+    "s165b0c05fce3": "sf96c6e0d06eb",
+    "sb5aa2efd2a50": "sf96c6e0d06eb",
     "s48a5bf192725": "s67555e0ee374",
     "s3c8d64e2e21c": "s67555e0ee374",
     "s92f134b8ba75": "s67555e0ee374",
@@ -80,7 +72,6 @@
     "sa52fdee297f3": "s67555e0ee374",
     "s732a6735d3e4": "s67555e0ee374",
     "sf550a8c35d18": "s67555e0ee374",
-    "s1e3ee963d887": "s1e3ee963d887",
     "sb02bd36e8ce2": "s1e3ee963d887",
     "sc5b87ae42023": "s1e3ee963d887",
     "s20cf855d7418": "s1e3ee963d887",
@@ -114,39 +105,191 @@
     "sdb34e56c0775": "s70cb5f3070b8",
     "sab4ee5f08748": "s70cb5f3070b8",
     "s0a34af6e950d": "s70cb5f3070b8",
-    "s978ab6dea828": "s978ab6dea828",
     "s1fedd0cc4184": "s978ab6dea828",
     "sac101d3faaa5": "s978ab6dea828",
-    "s7fe42d45a1c9": "s7fe42d45a1c9",
-    "s5bc9715700e1": "s7fe42d45a1c9",
-    "sb3e18b49de4c": "s7fe42d45a1c9",
-    "s66cd2ffc733b": "s7fe42d45a1c9",
-    "s75fd49ad96d2": "s7fe42d45a1c9",
-    "s9d65f827d9a1": "s7fe42d45a1c9",
-    "s9a7d5a3cc066": "s7fe42d45a1c9",
-    "se9f2f7f52172": "s7fe42d45a1c9",
-    "sb75abd79082b": "s7fe42d45a1c9",
-    "se2dd95232813": "se2dd95232813",
-    "s516b22b17c1d": "se2dd95232813",
-    "se246b9afddae": "se2dd95232813",
-    "s2f89540e8e91": "se2dd95232813",
-    "sdbaf9a451c71": "se2dd95232813",
-    "s877ad6c0961a": "se2dd95232813",
-    "s262b3a9f491c": "s262b3a9f491c",
-    "sfb828630cc98": "s262b3a9f491c",
-    "sd9d36239f51e": "s262b3a9f491c",
-    "s9d9ce687b59a": "s262b3a9f491c",
-    "s484c8a989123": "s262b3a9f491c",
-    "sb68cccad8d50": "sb68cccad8d50",
-    "se1e11a56e86f": "sb68cccad8d50",
-    "s6ea30af0964f": "sb68cccad8d50",
-    "s476946bb3359": "sb68cccad8d50",
-    "s5eb4bb2ebbe0": "sb68cccad8d50",
-    "s5efe09b28ee1": "sb68cccad8d50",
-    "s86aeb1edbba9": "sb68cccad8d50",
-    "s691e9446ee5a": "s691e9446ee5a",
-    "s2d5227425829": "s691e9446ee5a",
-    "scf351bd874cc": "s691e9446ee5a",
-    "s734b28f2d702": "s691e9446ee5a"
-  }
+    "s7fe42d45a1c9": "directory:f16120e95f05fc4d",
+    "se2dd95232813": "directory:f16120e95f05fc4d",
+    "s262b3a9f491c": "directory:f16120e95f05fc4d",
+    "sb68cccad8d50": "directory:f16120e95f05fc4d",
+    "s691e9446ee5a": "directory:f16120e95f05fc4d"
+  },
+  "locationTitle": "Lokacje",
+  "removedNavigationIds": [
+    "sd892956766e6",
+    "sb4bb4577af31",
+    "sf96c6e0d06eb",
+    "s51a1e58a9d82",
+    "sd76bc8c36176",
+    "s67555e0ee374",
+    "s1e3ee963d887",
+    "s978ab6dea828",
+    "s7264214a61b0"
+  ],
+  "consolidatedDocuments": [
+    {
+      "id": "s7fe42d45a1c9",
+      "sections": [
+        {
+          "id": "s5bc9715700e1",
+          "title": "Ustalenia i granice dodatku",
+          "sha256": "f7bdeb9c63b6f8f5fb170d5fc1f5b60e5c87f04e58dd2849db5dd7b966905aa0"
+        },
+        {
+          "id": "sb3e18b49de4c",
+          "title": "Materiały i kolejność odkryć",
+          "sha256": "854a15241e483cc1ee2a5545eb5c2578f6e5c4e536f2a82e80ce7ed0b10f3bd4"
+        },
+        {
+          "id": "s66cd2ffc733b",
+          "title": "Działanie śladu wiru — przy stole",
+          "sha256": "64e505186f1a20258f5e19346f71ec22b942168a3ca1f5dd7f45d0e1c4237898"
+        },
+        {
+          "id": "s75fd49ad96d2",
+          "title": "Odbiornik w Y15 — przy stole",
+          "sha256": "51a2f4c81a6f3e81c5a380aff57b7deac50648ee9d166886daf817755fc1642f"
+        },
+        {
+          "id": "s9d65f827d9a1",
+          "title": "Przyrząd Dwóch Brzegów — przy stole",
+          "sha256": "10acf47e8231d34ebd1af96a94dc752959bc9e5b599655cde891ef8f09f7317e"
+        },
+        {
+          "id": "s9a7d5a3cc066",
+          "title": "Wspólne poszukiwanie drogi — przy stole",
+          "sha256": "174c4ac784c56ac169311b70ada6f7f4eb02772753ecc00fa589c25a4ab44864"
+        },
+        {
+          "id": "se9f2f7f52172",
+          "title": "Iriolarthas i zdobycie nagrody",
+          "sha256": "968b50cb5d23dbcd51b7463ce4b33eb63de93a4ef044ac10589e78c3f7608a04"
+        },
+        {
+          "id": "sb75abd79082b",
+          "title": "Kontekst — dla MG",
+          "sha256": "22c4a0c416c83c2c26e4d555da9f08d40a9645e69132554468a005d792a82f81"
+        }
+      ]
+    },
+    {
+      "id": "se2dd95232813",
+      "sections": [
+        {
+          "id": "s516b22b17c1d",
+          "title": "Zeznania ocalałych",
+          "sha256": "f9fa1aa563220b94d760623dfdee779f954090ec8fea3aaa9990ec0c4f89cd9f"
+        },
+        {
+          "id": "se246b9afddae",
+          "title": "Co udało się ustalić",
+          "sha256": "8184a6cc629c2c2e2edea973dcd98ebb4ddb91b88b133ea6f78edca36737efa7"
+        },
+        {
+          "id": "s2f89540e8e91",
+          "title": "Próba powrotu",
+          "sha256": "5d469cd7e9f049d98221aa507327281507135be3b693027270974ee98fda61ea"
+        },
+        {
+          "id": "sdbaf9a451c71",
+          "title": "Zalecenia dla kolejnych poszukiwań",
+          "sha256": "070e427c261ca94aefa664c8e708c00e154e7e0f2a8c35d1069233c3c6c03347"
+        },
+        {
+          "id": "s877ad6c0961a",
+          "title": "Złożenie dokumentacji i przyrządów",
+          "sha256": "7b9344307b3765b62e28443b5e567c155b0c93f479853c693335584d051ea972"
+        }
+      ]
+    },
+    {
+      "id": "s262b3a9f491c",
+      "sections": [
+        {
+          "id": "sfb828630cc98",
+          "title": "Do Orrena, obserwatorium",
+          "sha256": "196d77ec7bc4b9abf12dadbe6e7b0500bffee887fa8e49804f18d41838d802d2"
+        },
+        {
+          "id": "sd9d36239f51e",
+          "title": "Wyciąg z protokołu dziewiątej próby",
+          "sha256": "ac91e282fd8df0b7342cd6396b4773cb79c9a281213d5d6359723448fb1773ad"
+        },
+        {
+          "id": "s9d9ce687b59a",
+          "title": "Instrukcja starszego odbiornika",
+          "sha256": "d8f0614f2b129e2bbdb4cd2ece7d9607b0a9f3e23b8a2f93a3e439d7680bc9ac"
+        },
+        {
+          "id": "s484c8a989123",
+          "title": "W sprawie pomiarów drogi",
+          "sha256": "da8cf49062a5aac64c11d4f1666341f577b2d2942bf9a30cfdbf926669cedb79"
+        }
+      ]
+    },
+    {
+      "id": "sb68cccad8d50",
+      "sections": [
+        {
+          "id": "se1e11a56e86f",
+          "title": "Zawartość skrzynki",
+          "sha256": "4d5800078c4544575fe05033ffb7c37049be1ac72b53b133213ffe30ddbc66dc"
+        },
+        {
+          "id": "s6ea30af0964f",
+          "title": "Przygotowanie",
+          "sha256": "03fcd3788b3f03019dcd3f9aab19b9175d8b4421f321556bde10819226a2cbaa"
+        },
+        {
+          "id": "s476946bb3359",
+          "title": "Rozmowa",
+          "sha256": "f02ab7ad782543cd4b3adbca7950730c0cac87fbf6e2c76bc5eb61c8e3b5b99d"
+        },
+        {
+          "id": "s5eb4bb2ebbe0",
+          "title": "Wspólne punkty",
+          "sha256": "41be9d48e5ad584ee4f130802b71b2b9762b6d0eaa6366251e4eba329288b482"
+        },
+        {
+          "id": "s5efe09b28ee1",
+          "title": "Gdy odczyty się zgadzają",
+          "sha256": "6e8710e252e102d7bd9184bf95b351f0cb882ce4bc33198e6c1d34164d72e5cb"
+        },
+        {
+          "id": "s86aeb1edbba9",
+          "title": "Uwagi o czasie i przechowywaniu",
+          "sha256": "b1b5e9636be6ceac303b8f9126d67d8664bda355771a37723e308dce232ac798"
+        }
+      ]
+    },
+    {
+      "id": "s691e9446ee5a",
+      "sections": [
+        {
+          "id": "s2d5227425829",
+          "title": "Zeznania podróżnych",
+          "sha256": "1eedfe8b50bae644201517e9821456d99835f4f37ced6340724fac71fe7d11c5"
+        },
+        {
+          "id": "scf351bd874cc",
+          "title": "Punkty i odczyty",
+          "sha256": "e2c439e3c7c7fbd345e557f96f38e514c57948cd9564ce6da4d56ffcd8a1b955"
+        },
+        {
+          "id": "s734b28f2d702",
+          "title": "Czynności uzgodnione przed zamknięciem połączenia",
+          "sha256": "1a9558ff0550a2e5e13c8dcb577ae588acc2c606640696ab420f26628be92d5c"
+        }
+      ]
+    },
+    {
+      "id": "s80aeaed4c2f6",
+      "sections": [
+        {
+          "id": "sebb9e80ab5fa",
+          "title": "Cechy wspólne iglicy",
+          "sha256": "9f6f10301e9c58e96eeb586121bb41afe5f45a00aff954f4eac7c736f21e1e99"
+        }
+      ]
+    }
+  ]
 }
