@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MasterCompanion.Api/MasterCompanion.Api.csproj" />
+    <Project Path="src/MasterCompanion.AppHost/MasterCompanion.AppHost.csproj" />
+    <Project Path="src/MasterCompanion.Contracts/MasterCompanion.Contracts.csproj" />
+    <Project Path="src/MasterCompanion.Engine/MasterCompanion.Engine.csproj" />
+    <Project Path="src/MasterCompanion.Modules.Ythryn/MasterCompanion.Modules.Ythryn.csproj" />
+    <Project Path="src/MasterCompanion.ServiceDefaults/MasterCompanion.ServiceDefaults.csproj" />
+  </Folder>
+</Solution>

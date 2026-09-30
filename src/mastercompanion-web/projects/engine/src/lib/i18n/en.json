@@ -1,0 +1,58 @@
+{
+  "workspace": {
+    "map": "Map",
+    "darkMode": "Dark mode",
+    "lightMode": "Light mode",
+    "retry": "Retry",
+    "navigationLabel": "Campaign materials",
+    "materials": "Materials",
+    "searchPlaceholder": "Search by name…",
+    "noSearchResults": "No materials match the search.",
+    "unfiledMaterials": "Unfiled materials",
+    "tabsLabel": "Open materials",
+    "closeTab": "Close tab",
+    "closeTabHint": "Close tab (also with the middle mouse button)",
+    "loadingMaterial": "Loading material…",
+    "loadingCampaign": "Loading campaign…",
+    "emptyWithMap": "Select a material from the navigation or open the map.",
+    "emptyMaterials": "Select a material from the navigation.",
+    "errors": {
+      "campaignLoadFailed": "Could not load the campaign. Check that the backend and database are running.",
+      "materialNotFound": "This material is not available in the campaign.",
+      "materialLoadFailed": "Could not open the material. Please try again."
+    }
+  },
+  "material": {
+    "edit": "Edit note",
+    "finishEditing": "Finish editing",
+    "copyDraft": "Copy draft text",
+    "retrySave": "Retry save",
+    "formattingLabel": "Text formatting",
+    "bold": "Bold",
+    "italic": "Italic",
+    "heading": "Heading",
+    "list": "List",
+    "quote": "Quote",
+    "undo": "Undo",
+    "redo": "Redo",
+    "contentLabel": "Note content",
+    "status": {
+      "saved": "Saved",
+      "waiting": "Unsaved changes",
+      "saving": "Saving…",
+      "error": "Save failed",
+      "conflict": "Save conflict"
+    },
+    "errors": {
+      "saveConflict": "The material was changed in another window. Copy your draft and refresh the page to load the current version.",
+      "saveFailed": "Could not save. Your changes remain in this tab; retry after the connection is restored.",
+      "clipboardUnavailable": "The browser could not copy the text. Select the content and copy it manually."
+    }
+  },
+  "map": {
+    "zoomOut": "Zoom out",
+    "zoomIn": "Zoom in",
+    "fit": "Fit",
+    "hint": "Select a marker to open its description. Drag the map to move it."
+  }
+}
