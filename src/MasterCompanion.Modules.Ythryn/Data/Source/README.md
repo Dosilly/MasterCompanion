@@ -45,7 +45,7 @@ dotnet build MasterCompanion.slnx --no-restore
 
 The .NET module build automatically compiles these sources into `Data/Generated/pilot.json` and embeds the package. Generated files are ignored by Git. Compilation validates metadata, duplicate IDs, folder cycles, material/section links, asset paths, and map markers. Invalid input fails the build and preserves the previous generated package. Node must be on PATH; a custom executable can be supplied with `-p:NodeExecutable=<absolute-path>`.
 
-Import regression tests prove that importing the original POC produces the same rich documents, navigation, and map. They validate the importer independently of current authored sources. Other content tests check the maintained module's links, navigation, and schema round trips; editing document text does not require changing the historical POC.
+Regression tests compile the maintained Markdown sources, export their rich documents to a new source directory, and recompile them to verify exact preservation of documents, navigation, and map. A separate fixture tests importing an explicitly supplied external POC file. Other content tests check the maintained module's links, navigation, and schema round trips. Tests do not require the removed legacy directory.
 
 ## Campaign content and future authoring
 
@@ -55,10 +55,10 @@ A future visual module editor will edit individual Markdown sources and metadata
 
 ## Re-importing the reference
 
-The original POC remains historical reference data. Normal builds do not read it. If comparison or a fresh import is needed, use a new staging directory:
+The legacy POC directory was removed from this repository. Normal builds and tests use the maintained Markdown sources. If a fresh import of an external copy is needed, supply its absolute HTML path and a new staging directory:
 
 ```powershell
-pnpm --dir src/mastercompanion-web import:ythryn-poc .local/poc-reimport
+pnpm --dir src/mastercompanion-web import:ythryn-poc "C:/path/to/reference.html" .local/poc-reimport
 ```
 
 The import refuses an existing destination. Review and merge staged changes explicitly; never import directly over edited sources.

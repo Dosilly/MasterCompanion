@@ -8,16 +8,43 @@ import { markdownToDocument, readMaterialSource, writeMaterialSource } from './m
 import { convertYthrynReference } from './ythryn-reference.mjs';
 import { writeModuleSources } from './write-module-sources.mjs';
 
-test('POC import preserves all rich documents, hierarchy, and map in Markdown sources', context => {
+test('Markdown source export preserves all rich documents, hierarchy, and map', context => {
   mkdirSync('.local/tests', { recursive: true });
   const root = mkdtempSync(resolve('.local/tests/reference-'));
   context.after(() => rmSync(root, { recursive: true, force: true }));
-  const { seed, image } = convertYthrynReference();
+  const source = resolve('../MasterCompanion.Modules.Ythryn/Data/Source');
+  const seed = compileModule(source);
+  const image = readFileSync(join(source, 'assets/ythryn-map.webp'));
   const destination = join(root, 'imported');
   writeModuleSources(destination, seed, { id: 'ythryn', name: 'Ythryn', version: '0.1.0', contentSchemaVersion: 1, startMaterialId: 's210a67f4cc8e' }, image);
   const compiled = compileModule(destination);
   const reference = JSON.parse(JSON.stringify(seed));
   assert.deepEqual(compiled, reference);
+  assert.deepEqual(readFileSync(join(destination, 'assets/ythryn-map.webp')), image);
+});
+
+test('POC import uses an explicit external HTML file without a repository legacy directory', context => {
+  mkdirSync('.local/tests', { recursive: true });
+  const root = mkdtempSync(resolve('.local/tests/poc-'));
+  context.after(() => rmSync(root, { recursive: true, force: true }));
+  const config = JSON.parse(readFileSync(new URL('./fixtures/ythryn-import.json', import.meta.url), 'utf8'));
+  const input = join(root, 'reference.html');
+  const image = Buffer.from('fixture image');
+  const data = {
+    docs: [{ id: 'chapter', title: 'Chapter', chapter: 7, path: `${config.rootDirectory}/01.md`, name: '01.md' }],
+    pages: [{ id: 'intro', title: 'Arrival', chapter: 7, doc: 'chapter', html: '<h3 id="arrival">Arrival</h3><p><a href="#intro~arrival">Open section</a></p>' }],
+    maps: { 7: { title: 'Map', width: 100, height: 100, image: `data:image/webp;base64,${image.toString('base64')}`,
+      points: [{ code: 'A', title: 'Arrival', page: 'intro', x: 50, y: 50 }] } },
+  };
+  writeFileSync(input, `const DATA = ${JSON.stringify(data)};`);
+  assert.throws(() => convertYthrynReference(), /external POC HTML path/);
+  const converted = convertYthrynReference(input);
+  assert.equal(converted.seed.materials.length, 1);
+  assert.equal(converted.seed.materials[0].document.content[1].content[0].marks[0].attrs.href, '#material/intro/arrival');
+  const destination = join(root, 'imported');
+  writeModuleSources(destination, converted.seed,
+    { id: 'ythryn', name: 'Ythryn', version: '0.1.0', contentSchemaVersion: 1, startMaterialId: 'intro' }, converted.image);
+  assert.deepEqual(compileModule(destination), JSON.parse(JSON.stringify(converted.seed)));
   assert.deepEqual(readFileSync(join(destination, 'assets/ythryn-map.webp')), image);
 });
 

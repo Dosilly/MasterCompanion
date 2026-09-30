@@ -57,11 +57,10 @@ test('Internal links reach an existing material and preserve their section ancho
   }
 });
 
-test('Source document assignments and nested player folders survive conversion and navigation', () => {
-  const source = readFileSync(resolve('../..', sourceFixture.sourceFile), 'utf8');
-  const data = JSON.parse(source.match(/const DATA\s*=\s*(\{[^\r\n]+\});?/)[1]);
-  for (const page of data.pages.filter(page => Number(page.chapter) === 7))
-    assert.equal(seed.materials.find(material => material.id === page.id).folderId, page.doc, page.title);
+test('Module document assignments and nested player folders match the reference fixture', () => {
+  assert.equal(seed.materials.length, Object.keys(sourceFixture.materialFolders).length);
+  for (const [materialId, folderId] of Object.entries(sourceFixture.materialFolders))
+    assert.equal(seed.materials.find(material => material.id === materialId)?.folderId, folderId, materialId);
   const tree = buildNavigation(seed.folders, seed.materials, '', messages.workspace.unfiledMaterials);
   const players = tree.find(folder => folder.title === sourceFixture.playerTitle);
   assert.ok(players);

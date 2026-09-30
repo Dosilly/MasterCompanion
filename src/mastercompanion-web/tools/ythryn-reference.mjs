@@ -1,16 +1,17 @@
 import { readFileSync } from 'node:fs';
-import { resolve, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 import { createHash } from 'node:crypto';
 import { Window } from 'happy-dom';
 import { generateJSON, generateHTML } from '@tiptap/html';
 import { documentExtensions } from '../projects/engine/src/lib/editor-schema.mjs';
 
-export function convertYthrynReference() {
-  const root = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
-  const sourceFixture = JSON.parse(readFileSync(new URL('./fixtures/ythryn-source.json', import.meta.url), 'utf8'));
-  const source = readFileSync(resolve(root, sourceFixture.sourceFile), 'utf8');
-  const data = JSON.parse(source.match(/const DATA\s*=\s*(\{[^\r\n]+\});?/)[1]);
+export function convertYthrynReference(sourceFile) {
+  if (typeof sourceFile !== 'string' || !sourceFile) throw new Error('An external POC HTML path is required.');
+  const sourceFixture = JSON.parse(readFileSync(new URL('./fixtures/ythryn-import.json', import.meta.url), 'utf8'));
+  const source = readFileSync(resolve(sourceFile), 'utf8');
+  const match = source.match(/const DATA\s*=\s*(\{[^\r\n]+\});?/);
+  if (!match) throw new Error('POC HTML does not contain a supported DATA payload.');
+  const data = JSON.parse(match[1]);
   const pages = data.pages.filter(page => Number(page.chapter) === 7);
   const groups = data.docs.filter(doc => Number(doc.chapter) === 7);
   // Directory hierarchy belongs to this module's source conversion, never to the engine.

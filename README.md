@@ -1,20 +1,18 @@
 # MasterCompanion
 
-Lokalna aplikacja MG w przeglądarce. Angular 22, .NET 10, PostgreSQL 18 i .NET Aspire. Pierwszy moduł: całe Ythryn z dostarczonego POC.
+MasterCompanion is a campaign workspace for tabletop role-playing game masters. It brings adventure materials, personal notes, and maps together in a browser-based application backed by a local database.
 
-## Bieżący stan
+## Architecture
 
-Rozpoczęto implementację fundamentu. Działają nawigacja po 142 materiałach z 16 dokumentów źródłowych, karty, czytnik, wizualna edycja istniejących opisów, autosave w PostgreSQL oraz mapa z 29 znacznikami. Edycja wymaga kliknięcia „Edytuj notatkę”. Mapa zajmuje główny obszar na żądanie. Oryginalny POC jest zachowany.
+The application separates a reusable campaign engine from adventure modules. The engine owns navigation, editing, persistence, and map rendering. Modules supply campaign content, assets, and adventure-specific rules through shared contracts.
 
-Spis zachowuje zagnieżdżenie folderów źródła, w tym wątki graczy i folder Fenes. Aktywacja karty rozwija jej ścieżkę, ustawia focus i przewija spis do wyraźnie zaznaczonego materiału. Karty zamykamy przyciskiem × albo środkowym przyciskiem myszy, po dopilnowaniu zapisu. Nagłówek pozwala przełączać jasny/ciemny motyw; wybór jest pamiętany w przeglądarce.
+The stack combines Angular, ASP.NET Core, PostgreSQL, and .NET Aspire. Aspire coordinates the local database, API, and frontend.
 
-**To jeszcze nie jest pełne MVP.** Pozostają zegar, konfiguracja drużyny, wspólny odpoczynek, Arcane Blight i cofanie operacji gry. Do uzupełnienia są też wstawianie Markdown, menu linków do materiałów i pełny odbiór pracy bez internetu. Po konflikcie zapisu tekst pozostaje w karcie; obecna obsługa pozwala go skopiować przed odświeżeniem.
+## Local development
 
-## Uruchomienie na Windows
+Install the .NET SDK specified in [global.json](global.json), Node.js compatible with the frontend dependencies, the pnpm version specified in [package.json](src/mastercompanion-web/package.json), and Docker with Linux container support.
 
-Wymagane: SDK .NET 10.0.303 lub nowsza poprawka w tej samej gałęzi, Node 24.19+, pnpm 11.19 i uruchomiony Docker Desktop z kontenerami Linux. Pierwsze przygotowanie wymaga internetu do pobrania paczek i obrazu PostgreSQL.
-
-W PowerShell, z katalogu repozytorium:
+Run these commands from the repository root:
 
 ```powershell
 pnpm --dir src/mastercompanion-web install --frozen-lockfile
@@ -23,59 +21,36 @@ dotnet build MasterCompanion.slnx --no-restore
 dotnet run --project src/MasterCompanion.AppHost --no-build
 ```
 
-Otwórz [http://localhost:4200](http://localhost:4200). Aspire uruchamia bazę, API i frontend. Dashboard jest pod adresem wypisanym przez AppHost; token dashboardu dotyczy narzędzia deweloperskiego, aplikacja nie ma logowania. Zatrzymanie procesu przez Ctrl+C zatrzymuje środowisko, zachowując wolumen bazy.
+Open [http://localhost:4200](http://localhost:4200). The AppHost prints the Aspire dashboard address. Stop the environment with Ctrl+C.
 
-Po pierwszej instalacji frontend startuje z `pnpm install --offline --frozen-lockfile`; paczki i obraz kontenera muszą już być dostępne lokalnie. Nie używamy CDN, zewnętrznych fontów ani chmury. Pełnego odbioru przy odłączonym internecie jeszcze nie wykonano.
+Initial setup requires internet access to download dependencies and the database image. Aspire uses the local package cache for subsequent frontend starts. PostgreSQL stores campaign data in the persistent Docker volume `mastercompanion-postgres`; retain this volume to preserve your notes.
 
-Zmiana biblioteki Angulara wymaga ponownego uruchomienia frontendu, ponieważ biblioteki są kompilowane przed `ng serve`. W samym hoście działa odświeżanie deweloperskie.
+## Repository layout
 
-## Dane i moduły
+- `src/MasterCompanion.Contracts` — shared backend module contracts.
+- `src/MasterCompanion.Engine` — campaign behavior and persistence.
+- `src/MasterCompanion.Modules.*` — adventure modules and their content.
+- `src/MasterCompanion.Api` — HTTP endpoints and module composition.
+- `src/MasterCompanion.AppHost` and `src/MasterCompanion.ServiceDefaults` — local orchestration and service configuration.
+- `src/mastercompanion-web` — Angular host, libraries, and frontend tooling.
+- [docs/planning](docs/planning) — product specifications, plans, and architecture decisions.
 
-PostgreSQL przechowuje dane w trwałym wolumenie Docker `mastercompanion-postgres`. Nie usuwaj tego wolumenu, jeśli chcesz zachować własne zmiany. Materiały modułu są kopiowane do kampanii tylko przy pierwszym przygotowaniu bazy; ponowny start nie nadpisuje edycji. API wykonuje migracje EF Core przed uruchomieniem.
+## Module content
 
-Silnik obsługuje ogólny kontrakt modułu. Moduł dostarcza foldery, materiały, mapy, zasoby i własne mechaniki; kampania jest jego instancją z własnymi zmianami. Ythryn jest pierwszą konkretną implementacją. Silnik, kontrakty i implementacje modułów to osobne projekty .NET oraz osobno kompilowane biblioteki Angulara. Host składa te elementy. Granice opisuje [architektura modułów](06-Architektura-modulow.md). Endpointy są organizowane jako vertical slices; reguły przygody rozwijamy w jej module.
+Module defaults are maintained as individual Markdown documents with YAML metadata, alongside a small manifest, folder hierarchy, map definitions, and local assets. The module build validates these sources and compiles an embedded distribution package; generated JSON is not checked into Git. Frontend dependencies and Node.js must be available before building the .NET module.
 
-Przy przejściu z pierwszej wersji płaskiego spisu migracja dodaje foldery, a inicjalizacja jednorazowo uzupełnia ich hierarchię i przypisania materiałów. Nie zmienia treści notatek ani ich rewizji. Edycja organizacji folderów i ogólny mechanizm aktualizacji paczek modułów pozostają przyszłym zakresem.
-
-Źródłem utrzymywanej treści modułu są teraz osobne pliki Markdown z metadanymi YAML w `src/MasterCompanion.Modules.Ythryn/Data/Source/documents`. Manifest, hierarchia folderów, mapa i zasoby mają osobne pliki. Markdown zachowuje kotwice sekcji; zwijane bloki i tabele, których nie da się przenieść bezstratnie, pozostają fragmentami HTML. [Instrukcja utrzymywania modułu](src/MasterCompanion.Modules.Ythryn/Data/Source/README.md) opisuje format i walidację.
-
-Duży JSON jest wyłącznie generowaną paczką w `Data/Generated`, pomijaną przez Git. Kompilacja projektu .NET automatycznie buduje go z Markdown; Node i zainstalowane zależności frontendu są wymagane również podczas tego kroku. Paczkę można przygotować osobno:
+For the first module, see the [content authoring instructions](src/MasterCompanion.Modules.Ythryn/Data/Source/README.md). To prepare its package separately:
 
 ```powershell
 pnpm --dir src/mastercompanion-web prepare:ythryn
 ```
 
-Normalne budowanie nie czyta oryginalnego HTML. POC w `Inspiracja - obecna aplikacja` pozostaje referencją, a ponowny import jest możliwy tylko do nowego katalogu roboczego przez `import:ythryn-poc`. Nie nadpisuje źródeł Markdown. Edycja w aplikacji nadal dotyczy kopii kampanii w bazie, a przebudowa modułu nie aktualizuje istniejących notatek użytkownika. Wizualny edytor źródeł modułu i rozbudowa obecnego edytora są zapisane jako przyszły zakres.
+Application edits belong to the campaign copy in PostgreSQL. Rebuilding module defaults does not overwrite campaign notes. The removed legacy POC is not required for normal builds or tests; the optional reference importer accepts an external HTML file explicitly.
 
-[Raport konwersji](ythryn-conversion-report.json) zawiera brakujące odwołania do materiałów poza POC i bibliografię. Ich widoczny tekst został zachowany, a nieaktywne odnośniki nie wysyłają poza aplikację. Nie dopisano brakujących plików źródłowych ani nowych zasad.
+## Contributing
 
-## Weryfikacja
+Follow the engineering and verification guidelines in [AGENTS.md](AGENTS.md). Keep general campaign behavior in the engine and adventure-specific behavior in modules. Update planning documents when scope or architecture changes.
 
-Repository engineering requirements are in [AGENTS.md](AGENTS.md). They define English source and diagnostics, module ownership, data safety, failure handling, security boundaries, accessibility, and the required evidence before a change is considered complete.
+## License
 
-UI copy is stored in typed English/Polish catalogs under `projects/engine/src/lib/i18n`. The current UI uses the Polish catalog. Technical exceptions and API ProblemDetails are English; UI recovery messages map error codes to localized resources. Source-specific Polish samples belong to fixtures or module content.
-
-`check:code` checks source files for Polish characters and checks catalog keys/placeholders for consistency. It runs before frontend builds and startup, alongside the boundary check. It supports review rather than proving all ASCII text is English or all production requirements have been satisfied.
-
-```powershell
-dotnet build MasterCompanion.slnx
-pnpm --dir src/mastercompanion-web build
-pnpm --dir src/mastercompanion-web check:boundaries
-pnpm --dir src/mastercompanion-web check:code
-pnpm --dir src/mastercompanion-web test:content
-pnpm --dir src/mastercompanion-web test:autosave
-# With a running AppHost: this probe appends temporary text and restores the original content.
-pnpm --dir src/mastercompanion-web test:api
-# Checks English error diagnostics without changing a persisted document or revision.
-pnpm --dir src/mastercompanion-web test:api-errors
-```
-
-Sprawdzono kompilację wszystkich projektów, konwersję i ponowne wczytanie całej treści, granice zależności, kolejność autosave, zachowanie przy błędzie i konflikcie oraz odczyt/zapis przez API na rzeczywistym PostgreSQL. Test w przeglądarce Full HD objął Y4, tabele, zwijany blok, polskie znaki, jawny tryb edycji, mapę, znaczniki i zachowanie powiększenia. Próbny zapis przetrwał kontrolowany restart Aspire, po czym dopisek testowy usunięto.
-
-Po poprawkach czytnika przechodzi 10 testów treści, hierarchii i autosave. Sprawdzają też oczekiwanie na zapis przy zamykaniu oraz odmowę zamknięcia po błędzie lub konflikcie. Migracja na działającej bazie dodała 18 folderów i przypisania wszystkich 142 materiałów; porównanie skrótów dokumentów i rewizji przed i po potwierdziło brak zmian w notatkach. Próby w przeglądarce Full HD potwierdziły ×, środkowy przycisk, zamknięcie ostatniej karty, ponowne otwarcie mapy z zachowanym powiększeniem, focus i centrowanie aktywnego materiału, rozwijanie ścieżki Fenes, odsłanianie materiału ukrytego przez filtr oraz pamiętanie obu motywów po odświeżeniu. Nie zaobserwowano błędów konsoli ani poziomego przepełnienia widoku.
-
-Po przeniesieniu źródeł do Markdown zestaw `test:content` obejmuje 12 testów, w tym bezstratny import całego POC, odnośniki i hierarchię, walidację metadanych i HTML, odmowę nadpisania źródeł oraz zachowanie ostatniej paczki po błędzie budowania. Jednorazowe porównanie paczki po migracji potwierdziło dokładnie te same 142 dokumenty, foldery i mapę oraz identyczne bajty obrazu. Rozwiązanie .NET skompilowano również bez istniejącego wygenerowanego JSON-a, a izolowana próba wczytała osadzony manifest, treść i zasób mapy. Kompilacja .NET używała osobnego katalogu wyjściowego ze względu na pliki zablokowane przez działające API; nie restartowano aplikacji ani nie zmieniano danych kampanii. Kompilacja frontendu i kontrole jakości przeszły.
-
-W logach Aspire 13.6 na tym Windows zaobserwowano powtarzający się komunikat DCP o subskrypcji powiadomień przez lokalny socket. Nie zablokował startu zasobów ani powyższych prób; wymaga osobnej diagnostyki, jeśli wpłynie na dashboard lub pracę środowiska.
-
-Zakres całego pierwszego tygodnia opisują [plan minimum](04-Plan-minimum-tydzien.md) i [plan wykonawczy](05-Plan-wykonawczy-MVP.md).
+Licensed under the [Apache License 2.0](LICENSE).
