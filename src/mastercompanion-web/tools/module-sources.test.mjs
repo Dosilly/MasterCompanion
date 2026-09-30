@@ -117,6 +117,21 @@ test('Source paths cannot escape their module and imports cannot overwrite edite
   assert.throws(() => writeModuleSources(root, {}, {}, Buffer.alloc(0)), /will not be overwritten/);
 });
 
+test('Source export uses portable paths without changing colon-containing contract IDs', context => {
+  const { root, manifest, material } = fixture(context);
+  writeFileSync(join(root, 'documents/intro.md'), material('Text'));
+  const seed = compileModule(root);
+  seed.folders[0].id = 'directory:character';
+  seed.materials[0].folderId = 'directory:character';
+  seed.materials[0].id = 'document:report';
+  seed.maps[0].assetId = 'ythryn-map-image';
+  seed.maps[0].markers[0].materialId = 'document:report';
+  const destination = join(root, 'exported');
+  writeModuleSources(destination, seed, { ...manifest, startMaterialId: 'document:report' }, Buffer.from('fixture'));
+  assert.deepEqual(compileModule(destination), seed);
+  assert.ok(readFileSync(join(destination, 'documents/folder-directory%3Acharacter/document%3Areport-Introduction.md')));
+});
+
 test('Building is deterministic and a rejected source leaves the last valid package intact', context => {
   const { root, json, map } = fixture(context);
   const output = join(root, 'package.json');

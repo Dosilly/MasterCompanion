@@ -5,7 +5,7 @@ folderId: s1d208808e549
 sortOrder: 14
 ---
 
-Materiały do przygotowania: **Iriolarthas — demilich**, **Upadek Ythryn** oraz [Bractwo Tajemnic i gniew Auril](#material/s67555e0ee374). Zasady czasu i dostęp do lokacji są zebrane w [indeksie](#material/sd892956766e6).
+Materiały do przygotowania: **Iriolarthas — demilich**, **Upadek Ythryn** oraz [Rozprawa z Bractwem Tajemnic](#material/s48a5bf192725) i [Gniew Auril](#material/s3c8d64e2e21c). Zasady czasu są zebrane w notatce [Pod ręką podczas sesji](#material/s072e06cef3fe).
 
 ### Rozwój postaci {#se92f0ae73447}
 

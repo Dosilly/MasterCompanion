@@ -58,10 +58,11 @@ export function writeModuleSources(destination, seed, manifest, image) {
   json('maps/ythryn.json', seed.maps[0]);
   writeFileSync(resolve(root, 'assets/ythryn-map.webp'), image);
   for (const { material, body } of documents) {
-    const directory = resolve(root, 'documents', material.folderId);
+    // Contract IDs can contain colons, which Windows filenames cannot contain.
+    const directory = resolve(root, 'documents', `folder-${encodeURIComponent(material.folderId)}`);
     mkdirSync(directory, { recursive: true });
     const slug = material.title.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 72);
-    writeFileSync(resolve(directory, `${material.id}-${slug || 'material'}.md`), writeMaterialSource({
+    writeFileSync(resolve(directory, `${encodeURIComponent(material.id)}-${slug || 'material'}.md`), writeMaterialSource({
       id: material.id, title: material.title, folderId: material.folderId, sortOrder: material.sortOrder,
     }, body));
   }
