@@ -11,7 +11,7 @@
     "check:boundaries": "node tools/check-boundaries.mjs",
     "check:code": "node tools/check-code-policy.mjs",
     "test:content": "node --test tools/content.test.mjs tools/module-sources.test.mjs",
-    "test:autosave": "node --test tools/autosave.test.mjs",
+    "test:autosave": "node --test tools/autosave.test.mjs tools/material-editor.test.mjs",
     "test:api": "node tools/verify-api.mjs",
     "test:api-errors": "node tools/verify-api.mjs --errors-only"
   },
