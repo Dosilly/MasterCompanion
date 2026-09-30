@@ -1,6 +1,8 @@
 import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import assert from 'node:assert/strict';
+import { resolve } from 'node:path';
+import { compileModule } from './module-sources.mjs';
 
 const baseUrl = process.env.API_BASE_URL ?? 'http://localhost:5142';
 const baselinePath = '.local/materials-before-folders.json';
@@ -23,7 +25,7 @@ if (process.argv.includes('--capture')) {
   console.log(`Captured document hashes and revisions for ${materials.length} materials.`);
 } else {
   assert.deepEqual(fingerprints, JSON.parse(readFileSync(baselinePath, 'utf8')), 'Folder upgrade must preserve every document and revision.');
-  const seed = JSON.parse(readFileSync('../MasterCompanion.Modules.Ythryn/Data/pilot.json', 'utf8'));
+  const seed = compileModule(resolve('../MasterCompanion.Modules.Ythryn/Data/Source'));
   const byId = (left, right) => left.id.localeCompare(right.id);
   assert.deepEqual([...workspace.folders].sort(byId), seed.folders.map(({ sortOrder, ...folder }) => folder).sort(byId));
   for (const material of materials) assert.equal(material.folderId, seed.materials.find(item => item.id === material.id).folderId);

@@ -37,11 +37,15 @@ Silnik obsługuje ogólny kontrakt modułu. Moduł dostarcza foldery, materiały
 
 Przy przejściu z pierwszej wersji płaskiego spisu migracja dodaje foldery, a inicjalizacja jednorazowo uzupełnia ich hierarchię i przypisania materiałów. Nie zmienia treści notatek ani ich rewizji. Edycja organizacji folderów i ogólny mechanizm aktualizacji paczek modułów pozostają przyszłym zakresem.
 
-Zasoby wejściowe są w `Inspiracja - obecna aplikacja`. Wygenerowana paczka i mapa należą do `MasterCompanion.Modules.Ythryn/Data`. Konwersję odtwarza:
+Źródłem utrzymywanej treści modułu są teraz osobne pliki Markdown z metadanymi YAML w `src/MasterCompanion.Modules.Ythryn/Data/Source/documents`. Manifest, hierarchia folderów, mapa i zasoby mają osobne pliki. Markdown zachowuje kotwice sekcji; zwijane bloki i tabele, których nie da się przenieść bezstratnie, pozostają fragmentami HTML. [Instrukcja utrzymywania modułu](src/MasterCompanion.Modules.Ythryn/Data/Source/README.md) opisuje format i walidację.
+
+Duży JSON jest wyłącznie generowaną paczką w `Data/Generated`, pomijaną przez Git. Kompilacja projektu .NET automatycznie buduje go z Markdown; Node i zainstalowane zależności frontendu są wymagane również podczas tego kroku. Paczkę można przygotować osobno:
 
 ```powershell
 pnpm --dir src/mastercompanion-web prepare:ythryn
 ```
+
+Normalne budowanie nie czyta oryginalnego HTML. POC w `Inspiracja - obecna aplikacja` pozostaje referencją, a ponowny import jest możliwy tylko do nowego katalogu roboczego przez `import:ythryn-poc`. Nie nadpisuje źródeł Markdown. Edycja w aplikacji nadal dotyczy kopii kampanii w bazie, a przebudowa modułu nie aktualizuje istniejących notatek użytkownika. Wizualny edytor źródeł modułu i rozbudowa obecnego edytora są zapisane jako przyszły zakres.
 
 [Raport konwersji](ythryn-conversion-report.json) zawiera brakujące odwołania do materiałów poza POC i bibliografię. Ich widoczny tekst został zachowany, a nieaktywne odnośniki nie wysyłają poza aplikację. Nie dopisano brakujących plików źródłowych ani nowych zasad.
 
@@ -69,6 +73,8 @@ pnpm --dir src/mastercompanion-web test:api-errors
 Sprawdzono kompilację wszystkich projektów, konwersję i ponowne wczytanie całej treści, granice zależności, kolejność autosave, zachowanie przy błędzie i konflikcie oraz odczyt/zapis przez API na rzeczywistym PostgreSQL. Test w przeglądarce Full HD objął Y4, tabele, zwijany blok, polskie znaki, jawny tryb edycji, mapę, znaczniki i zachowanie powiększenia. Próbny zapis przetrwał kontrolowany restart Aspire, po czym dopisek testowy usunięto.
 
 Po poprawkach czytnika przechodzi 10 testów treści, hierarchii i autosave. Sprawdzają też oczekiwanie na zapis przy zamykaniu oraz odmowę zamknięcia po błędzie lub konflikcie. Migracja na działającej bazie dodała 18 folderów i przypisania wszystkich 142 materiałów; porównanie skrótów dokumentów i rewizji przed i po potwierdziło brak zmian w notatkach. Próby w przeglądarce Full HD potwierdziły ×, środkowy przycisk, zamknięcie ostatniej karty, ponowne otwarcie mapy z zachowanym powiększeniem, focus i centrowanie aktywnego materiału, rozwijanie ścieżki Fenes, odsłanianie materiału ukrytego przez filtr oraz pamiętanie obu motywów po odświeżeniu. Nie zaobserwowano błędów konsoli ani poziomego przepełnienia widoku.
+
+Po przeniesieniu źródeł do Markdown zestaw `test:content` obejmuje 12 testów, w tym bezstratny import całego POC, odnośniki i hierarchię, walidację metadanych i HTML, odmowę nadpisania źródeł oraz zachowanie ostatniej paczki po błędzie budowania. Jednorazowe porównanie paczki po migracji potwierdziło dokładnie te same 142 dokumenty, foldery i mapę oraz identyczne bajty obrazu. Rozwiązanie .NET skompilowano również bez istniejącego wygenerowanego JSON-a, a izolowana próba wczytała osadzony manifest, treść i zasób mapy. Kompilacja .NET używała osobnego katalogu wyjściowego ze względu na pliki zablokowane przez działające API; nie restartowano aplikacji ani nie zmieniano danych kampanii. Kompilacja frontendu i kontrole jakości przeszły.
 
 W logach Aspire 13.6 na tym Windows zaobserwowano powtarzający się komunikat DCP o subskrypcji powiadomień przez lokalny socket. Nie zablokował startu zasobów ani powyższych prób; wymaga osobnej diagnostyki, jeśli wpłynie na dashboard lub pracę środowiska.
 

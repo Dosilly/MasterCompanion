@@ -40,6 +40,7 @@ Production-ready is an evidence-based acceptance standard for the changed behavi
 ## Persistence, concurrency, and data safety
 
 - User content is authoritative after campaign initialization. Never overwrite edited materials with module defaults on startup, rebuild, conversion, or upgrade.
+- Maintain module defaults as individual Markdown sources with metadata and separate navigation/maps/assets. Generated distribution JSON is a build artifact, not an editable source. Reference import must refuse existing destinations; do not regenerate over authored files. Preserve stable IDs and rich HTML structures that Markdown cannot represent losslessly. Module authoring is distinct from editing a campaign copy.
 - Use stable IDs for materials, folders, map links, and assets. Do not make relationships depend on display names. Validate hierarchy cycles and references.
 - Keep material saves independent from game operations and undo. Closing a tab or finishing editing must wait for confirmed persistence; failures and revision conflicts keep the draft recoverable.
 - Preserve optimistic concurrency. Never resolve a conflict by silently overwriting a newer revision. Serialize dependent saves and advance revisions only after confirmation.

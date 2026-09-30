@@ -65,3 +65,6 @@ dist/
 *.user
 .idea/
 .codex/
+
+# Module distribution packages are compiled from Markdown sources.
+/src/MasterCompanion.Modules.Ythryn/Data/Generated/

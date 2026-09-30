@@ -6,8 +6,9 @@ import { pathToFileURL } from 'node:url';
 import ts from 'typescript';
 import { generateHTML, generateJSON } from '@tiptap/html';
 import { documentExtensions } from '../projects/engine/src/lib/editor-schema.mjs';
+import { compileModule } from './module-sources.mjs';
 
-const seed = JSON.parse(readFileSync('../MasterCompanion.Modules.Ythryn/Data/pilot.json', 'utf8'));
+const seed = compileModule(resolve('../MasterCompanion.Modules.Ythryn/Data/Source'));
 const sourceFixture = JSON.parse(readFileSync(new URL('./fixtures/ythryn-source.json', import.meta.url), 'utf8'));
 const messages = JSON.parse(readFileSync('projects/engine/src/lib/i18n/en.json', 'utf8'));
 const extensions = documentExtensions();

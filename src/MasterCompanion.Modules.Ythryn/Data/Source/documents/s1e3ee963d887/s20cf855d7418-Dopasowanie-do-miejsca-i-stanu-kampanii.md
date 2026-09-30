@@ -1,0 +1,18 @@
+---
+id: s20cf855d7418
+title: Dopasowanie do miejsca i stanu kampanii
+folderId: s1e3ee963d887
+sortOrder: 77
+---
+
+-   **Miejsce:** każdy wstęp zaczyna się od dźwięku, ruchu lub zachowania istot. Nie wymaga ulicy, konkretnego budynku, pogody ani kierunku marszu. Scenka działa także podczas postoju.
+
+-   **Dostęp:** przeciwnicy zbliżają się najbliższą dostępną drogą. W małym pomieszczeniu duże istoty pozostają na zewnątrz lub przy wejściu; ich odgłosy zapowiadają spotkanie. Zamknięte drzwi, pole siłowe i ukrycie drużyny zachowują znaczenie. Odizolowana przestrzeń może pozwolić przeczekać zagrożenie.
+
+-   **Widoczność:** zdania o wyglądzie dotyczą chwili, gdy istotę można zobaczyć. Przy braku widoczności pozostaje dźwięk lub inny dostępny bodziec; opis nie daje widzenia przez przeszkody.
+
+-   **Reakcja:** wstęp pokazuje zamiar, a nie rozstrzygnięty atak. Chwyt, splunięcie, promień czy przymus następują dopiero zgodnie ze statystykami i inicjatywą.
+
+-   **Straty:** zniszczony Iriolarthas nie pojawia się ponownie. Zasoby Avarice i Auril maleją zgodnie z [przebiegiem ich działań](#material/s67555e0ee374). **Propozycja MG:** wynik wskazujący definitywnie usunięte zagrożenie oznacza brak spotkania; niedobór sług zmniejsza liczebność grupy.
+
+-   **Dodatkowe patrole:** sprawdzenie **20% przy nowym budynku** dla Avarice oraz osobny pościg Auril nadal podlegają rozdziałowi 06. Można użyć poniższych wstępów także dla tych grup, zachowując ich własny skład. Ten sam rozpoznany patrol nie staje się drugą grupą tylko przez kolejne sprawdzenie.
