@@ -1,0 +1,172 @@
+{
+  "groups": 16,
+  "materials": 142,
+  "markers": 29,
+  "unresolvedLinks": [
+    {
+      "materialId": "s6a0f0a33f372",
+      "title": "Materiały redakcyjne",
+      "label": "CH7 Ythryn ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=CH7%20Ythryn"
+    },
+    {
+      "materialId": "s6a0f0a33f372",
+      "title": "Materiały redakcyjne",
+      "label": "pełniejszy plik podręcznika ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Icewind%20Dale_%20Rime%20of%20the%20Frostmaiden%23Epilogue"
+    },
+    {
+      "materialId": "s210a67f4cc8e",
+      "title": "Nekropolia Ythryn",
+      "label": "Loross: the Netherese Tongue ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Icewind%20Dale_%20Rime%20of%20the%20Frostmaiden%23Loross%3A%20the%20Netherese%20Tongue"
+    },
+    {
+      "materialId": "s48a5bf192725",
+      "title": "Rozprawa z Bractwem Tajemnic",
+      "label": "Czaro-Mariusz ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Postacie%2FMarius%20Gustavson%20(%E2%80%9ECzaro-Mariusz%E2%80%9D)"
+    },
+    {
+      "materialId": "s48a5bf192725",
+      "title": "Rozprawa z Bractwem Tajemnic",
+      "label": "Hugo ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Postacie%2FHugo%20-%20Historia"
+    },
+    {
+      "materialId": "s48a5bf192725",
+      "title": "Rozprawa z Bractwem Tajemnic",
+      "label": "Czaromariusz - Wskrzeszenie ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Akt%204%2FCzaromariusz%20-%20Wskrzeszenie"
+    },
+    {
+      "materialId": "s48a5bf192725",
+      "title": "Rozprawa z Bractwem Tajemnic",
+      "label": "pościgu w akcie 6",
+      "target": "#sfdf3b36baddf"
+    },
+    {
+      "materialId": "s48a5bf192725",
+      "title": "Rozprawa z Bractwem Tajemnic",
+      "label": "akcie 5 ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Akt%205%2FW%C4%85tki%20graczy%2FBryn%20Shander%20%E2%80%94%20rz%C4%85dy%20Naertha%23Avarice%20%E2%80%94%20informacje%20dla%20MG"
+    },
+    {
+      "materialId": "s48a5bf192725",
+      "title": "Rozprawa z Bractwem Tajemnic",
+      "label": "harmonogramu pościgu",
+      "target": "#sfdf3b36baddf~s1cae8e923829"
+    },
+    {
+      "materialId": "sa2326918bfb2",
+      "title": "Jakie sekrety pozostały",
+      "label": "kroniki ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Kronika%20Kampanii"
+    },
+    {
+      "materialId": "sa52fdee297f3",
+      "title": "Nadchodzi lato",
+      "label": "Bryn Shander — rządy Naertha ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Akt%205%2FW%C4%85tki%20graczy%2FBryn%20Shander%20%E2%80%94%20rz%C4%85dy%20Naertha"
+    },
+    {
+      "materialId": "sa52fdee297f3",
+      "title": "Nadchodzi lato",
+      "label": "rozegranej scenie ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Kronika%20Kampanii%23Uk%C5%82ad%20Tilla%20z%20Naerthem"
+    },
+    {
+      "materialId": "s761cae1e8003",
+      "title": "Kontrola zgodności i uwagi do źródła",
+      "label": "załączony rozdział 7 ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=CH7%20Ythryn"
+    },
+    {
+      "materialId": "s761cae1e8003",
+      "title": "Kontrola zgodności i uwagi do źródła",
+      "label": "pełniejszego pliku podręcznika ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Icewind%20Dale_%20Rime%20of%20the%20Frostmaiden%23Epilogue"
+    },
+    {
+      "materialId": "s761cae1e8003",
+      "title": "Kontrola zgodności i uwagi do źródła",
+      "label": "kronikę ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Kronika%20Kampanii"
+    },
+    {
+      "materialId": "s2ea9dde1a3db",
+      "title": "Otwarcie gabinetu Y19m i Y19o",
+      "label": "Y19m, Wizards' Chairs ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Icewind%20Dale_%20Rime%20of%20the%20Frostmaiden%23Y19m.%20Chamber%20of%20the%20Ebon%20Star"
+    },
+    {
+      "materialId": "s2ea9dde1a3db",
+      "title": "Otwarcie gabinetu Y19m i Y19o",
+      "label": "Y19o, zapis w księdze ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Icewind%20Dale_%20Rime%20of%20the%20Frostmaiden%23Y19o.%20Library"
+    },
+    {
+      "materialId": "seddcf2ee5ea5",
+      "title": "Pole siłowe wokół iglicy",
+      "label": "Ogólny opis rytuału ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Icewind%20Dale_%20Rime%20of%20the%20Frostmaiden%23Rite%20of%20the%20Arcane%20Octad"
+    },
+    {
+      "materialId": "seddcf2ee5ea5",
+      "title": "Pole siłowe wokół iglicy",
+      "label": "Y23 ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Icewind%20Dale_%20Rime%20of%20the%20Frostmaiden%23Y23.%20Ythryn%20Mythallar"
+    },
+    {
+      "materialId": "se7dfbaa7136f",
+      "title": "Wymiary stadionu Y3",
+      "label": "Opis do odczytania w Y3 ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Icewind%20Dale_%20Rime%20of%20the%20Frostmaiden%23Y3.%20Chain%20Lightning%20Stadium"
+    },
+    {
+      "materialId": "s0a08e570cd8d",
+      "title": "Niedopowiedzenia zasad Pioruna Łańcuchowego",
+      "label": "ramce z zasadami gry ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Icewind%20Dale_%20Rime%20of%20the%20Frostmaiden%23Chain%20Lightning"
+    },
+    {
+      "materialId": "s1aa357b3b635",
+      "title": "Nazwa grupy w epilogu",
+      "label": "epilogu ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Icewind%20Dale_%20Rime%20of%20the%20Frostmaiden%23Year%20of%20Chilled%20Marrow"
+    },
+    {
+      "materialId": "s5bc9715700e1",
+      "title": "Ustalenia i granice dodatku",
+      "label": "Fenes ↗",
+      "target": "obsidian://open?vault=Icewind%20dale&file=Postacie%2FFenes%20Nesar"
+    }
+  ],
+  "externalReferences": [
+    {
+      "materialId": "s615b3d87a8ef",
+      "title": "Y4. Wieża Odpychania",
+      "label": "Symbol — SRD 5.1, s. 184–185",
+      "target": "https://media.wizards.com/2016/downloads/DND/SRD-OGL_V5.1.pdf#page=184"
+    },
+    {
+      "materialId": "se5146ff594e7",
+      "title": "Y19l. Komnata prób",
+      "label": "Flesh to Stone — SRD 5.1, s. 145–146",
+      "target": "https://media.wizards.com/2016/downloads/DND/SRD-OGL_V5.1.pdf#page=145"
+    },
+    {
+      "materialId": "sb360b5880eb3",
+      "title": "Y22. Wieża Iluzji",
+      "label": "Phantasmal Killer — SRD 5.1, s. 167",
+      "target": "https://media.wizards.com/2016/downloads/DND/SRD-OGL_V5.1.pdf#page=167"
+    },
+    {
+      "materialId": "s761cae1e8003",
+      "title": "Kontrola zgodności i uwagi do źródła",
+      "label": "oficjalnym SRD 5.1",
+      "target": "https://media.wizards.com/2016/downloads/DND/SRD-OGL_V5.1.pdf"
+    }
+  ],
+  "textMismatches": []
+}

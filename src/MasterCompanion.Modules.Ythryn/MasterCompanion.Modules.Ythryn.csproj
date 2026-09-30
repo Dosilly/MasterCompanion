@@ -1,10 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <NodeExecutable Condition="'$(NodeExecutable)' == ''">node</NodeExecutable>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../MasterCompanion.Contracts/MasterCompanion.Contracts.csproj" />
-    <EmbeddedResource Include="Data/pilot.json" />
-    <EmbeddedResource Include="Data/ythryn-map.webp" />
+    <EmbeddedResource Include="Data/Generated/pilot.json" LogicalName="MasterCompanion.Modules.Ythryn.Data.pilot.json" />
+    <EmbeddedResource Include="Data/Source/module.json" LogicalName="MasterCompanion.Modules.Ythryn.Data.module.json" />
+    <EmbeddedResource Include="Data/Source/assets/**/*" LogicalName="ModuleAssets/%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
+  <Target Name="PrepareModuleContent" BeforeTargets="PrepareForBuild">
+    <Exec WorkingDirectory="$(MSBuildProjectDirectory)/../mastercompanion-web"
+          Command="&quot;$(NodeExecutable)&quot; tools/prepare-module.mjs &quot;$(MSBuildProjectDirectory)/Data/Source&quot; &quot;$(MSBuildProjectDirectory)/Data/Generated/pilot.json&quot;" />
+  </Target>
 </Project>

@@ -1,8 +1,8 @@
 # Plan wykonawczy MVP — MasterCompanion
 
-Wersja robocza 0.3 · 30 września 2026
+Wersja robocza 0.4 · 30 września 2026
 
-**Zakres:** pełne Ythryn z POC, mapa, czytelne materiały, edycja istniejących opisów, autosave, czas, Arcane Blight, wspólny odpoczynek i cofanie ostatnich operacji. Edycja i Arcane Blight są obowiązkowe w pierwszym tygodniu. Budżet: około 21 godzin pracy użytkownika z agentem. Implementacja fundamentu została rozpoczęta; bieżący stan i weryfikację opisuje [migawka stanu implementacji](07-Stan-implementacji.md). Mocna granica silnika i modułów jest nowym wymaganiem użytkownika i została uwzględniona w [architekturze](06-Architektura-modulow.md).
+**Zakres:** pełne Ythryn z POC, mapa, czytelne materiały, edycja istniejących opisów, autosave, czas, Arcane Blight, wspólny odpoczynek i cofanie ostatnich operacji. Edycja i Arcane Blight są obowiązkowe w pierwszym tygodniu. Budżet: około 21 godzin pracy użytkownika z agentem. Implementacja fundamentu została rozpoczęta; bieżący stan i weryfikację opisuje [implementation status](07-Stan-implementacji.md). Mocna granica silnika i modułów jest nowym wymaganiem użytkownika i została uwzględniona w [architekturze](06-Architektura-modulow.md).
 
 [Plan minimum](04-Plan-minimum-tydzien.md) rozdziela funkcje pierwszej wersji od backlogu. [Warsztat](03-Plan-implementacji.md) zachowuje uzgodnienia i ich kontekst. Poniższe wybory szczegółów technicznych są rekomendacjami autora planu w ramach przyjętego stosu; nie przedstawiamy ich jako osobnych odpowiedzi użytkownika.
 
@@ -52,7 +52,8 @@ src/
       ythryn/
     src/main.ts                     # składanie bibliotek i DI
     tools/
-      prepare-ythryn.mjs
+      prepare-module.mjs
+      import-ythryn-poc.mjs
       check-boundaries.mjs
       content.test.mjs
       autosave.test.mjs
@@ -128,3 +129,20 @@ Po dniu 1 aktualizujemy estymację na podstawie próby. Gdy wystąpi opóźnieni
 - Widok: rzeczywista mapa, długie opisy, tabela i bloki w edytorze, zachowanie miejsca czytania, błąd autosave i praca offline. Weryfikujemy rzeczywiste zachowanie; nie tworzymy zestawu testów powielających strukturę komponentów.
 
 Pierwsze MVP nie obejmuje nowych osobnych notatek, konfiguratora folderów, edytora map, kolejnych trackerów, historii zapisanych wersji treści, eksportu/importu, kont ani AWS. Te elementy zachowujemy w backlogu, a termin pierwszego tygodnia odnosimy do funkcji opisanych powyżej.
+
+## 7. Źródła modułu i przyszły edytor
+
+Uzgodnienie z 30 września: źródła dokumentów utrzymujemy w Markdown, a lepszy edytor pozostaje przyszłym zadaniem. Każdy materiał ma osobny plik z metadanymi YAML i stabilnymi identyfikatorami. Manifest, nawigacja, mapa i zasoby są rozdzielone. Kompilacja tworzy paczkę JSON wymaganą przez bieżący kontrakt modułu; wynik nie jest źródłem ręcznej edycji ani plikiem wersjonowanym w Git. Oryginalny POC pozostaje referencją, a jego importer nie nadpisuje istniejących źródeł. Test migracji porównuje wszystkie dokumenty, foldery i mapę z referencją.
+
+Edytor kampanii nadal zapisuje dokumenty Tiptap w bazie. Zmiana Markdown lub przebudowa modułu nie nadpisuje jego kopii w istniejącej kampanii. Pełne aktualizacje treści modułu wymagają osobnej polityki wersji i rozstrzygania zmian użytkownika.
+
+Po MVP planujemy:
+
+- Wizualny edytor źródeł modułu: edycja pojedynczego materiału, podgląd zgodny z czytnikiem, zapis Markdown oraz metadanych, bez pracy na zbiorczym JSON-ie.
+- Lepszą obsługę tabel, zwijanych bloków, kotwic, obrazów oraz wybierania odnośników do materiałów. Obecne elementy HTML i identyfikatory muszą przetrwać zapis bez strat; nie zakładamy automatycznie bezstratnej konwersji dowolnego HTML do czystego Markdown.
+- Wyraźne rozróżnienie edycji źródła modułu i własnej kopii kampanii, z ochroną przed przypadkowym nadpisaniem.
+- Walidację i podgląd paczki przed wydaniem oraz osobne, świadome zastosowanie nowej wersji do kampanii z ochroną jej zmian.
+
+Odbiór przyszłego edytora: otwarcie, zmiana i ponowne zapisanie reprezentatywnych materiałów zachowują treść, strukturę, kotwice i cele mapy; błędy nie usuwają lokalnych zmian. Ten etap nie jest częścią obecnego minimum i nie zastępuje obowiązkowego Arcane Blight.
+
+Po uporządkowaniu repozytorium POC jest źródłem historycznym, nie zależnością bieżącego projektu. Budowanie i testy korzystają z utrzymywanych plików Markdown oraz danych odniesienia przypisań materiałów. Opcjonalny importer wymaga jawnie wskazanej zewnętrznej kopii HTML i nowego katalogu wynikowego. Nie odtwarzamy usuniętego katalogu referencji. Dokumentacja i bieżący stan pozostają w `docs/planning`, a README zawiera trwałe informacje o projekcie w języku angielskim.

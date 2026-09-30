@@ -1,0 +1,212 @@
+{
+  "id": "ythryn-map",
+  "title": "Nekropolia Ythryn",
+  "assetId": "ythryn-map-image",
+  "width": 2012,
+  "height": 1248,
+  "markers": [
+    {
+      "code": "Y1",
+      "x": 26.093439363817094,
+      "y": 70.59294871794873,
+      "materialId": "scf9d511aa9f0",
+      "title": "Y1. Lodowa grobla"
+    },
+    {
+      "code": "Y2",
+      "x": 31.262425447316105,
+      "y": 73.87820512820514,
+      "materialId": "sb6a35696a974",
+      "title": "Y2. Iglice czarodziejów"
+    },
+    {
+      "code": "Y3",
+      "x": 41.15308151093439,
+      "y": 70.4326923076923,
+      "materialId": "s70e4a7a6c48e",
+      "title": "Y3. Stadion Pioruna Łańcuchowego"
+    },
+    {
+      "code": "Y4",
+      "x": 44.433399602385684,
+      "y": 60.89743589743589,
+      "materialId": "s615b3d87a8ef",
+      "title": "Y4. Wieża Odpychania"
+    },
+    {
+      "code": "Y5",
+      "x": 27.733598409542743,
+      "y": 50,
+      "materialId": "s1f1e318d4a31",
+      "title": "Y5. Więzienie"
+    },
+    {
+      "code": "Y6",
+      "x": 32.90258449304175,
+      "y": 49.27884615384615,
+      "materialId": "s7e5602d33d61",
+      "title": "Y6. Wejście do iglicy"
+    },
+    {
+      "code": "Y7",
+      "x": 38.916500994035786,
+      "y": 43.75,
+      "materialId": "s9a1b9a25ece8",
+      "title": "Y7. Wieża Przywoływania"
+    },
+    {
+      "code": "Y8",
+      "x": 43.19085487077535,
+      "y": 44.631410256410255,
+      "materialId": "sdcecae373670",
+      "title": "Y8. Dom Wiedzy Tajemnej"
+    },
+    {
+      "code": "Y9",
+      "x": 31.461232604373755,
+      "y": 38.46153846153847,
+      "materialId": "s3078db7e1d5d",
+      "title": "Y9. Biblioteka"
+    },
+    {
+      "code": "Y10",
+      "x": 21.669980119284293,
+      "y": 37.980769230769226,
+      "materialId": "sb6ed67a318a5",
+      "title": "Y10. Arboretum"
+    },
+    {
+      "code": "Y11",
+      "x": 23.26043737574553,
+      "y": 26.041666666666668,
+      "materialId": "s4f4aee7460ca",
+      "title": "Y11. Wieża Wieszczenia"
+    },
+    {
+      "code": "Y12",
+      "x": 26.938369781312126,
+      "y": 24.599358974358974,
+      "materialId": "s87ddc0d4a17a",
+      "title": "Y12. Źródło Odpowiedzi"
+    },
+    {
+      "code": "Y13",
+      "x": 32.90258449304175,
+      "y": 19.871794871794872,
+      "materialId": "scc80fd2c66b0",
+      "title": "Y13. Bazar Osobliwości"
+    },
+    {
+      "code": "Y14",
+      "x": 42.89264413518887,
+      "y": 29.647435897435898,
+      "materialId": "sce80b88d6dee",
+      "title": "Y14. Sala Jedwabiu"
+    },
+    {
+      "code": "Y15",
+      "x": 39.51292246520875,
+      "y": 13.782051282051283,
+      "materialId": "se3443d8c7509",
+      "title": "Y15. Obserwatorium"
+    },
+    {
+      "code": "Y16",
+      "x": 41.50099403578529,
+      "y": 16.666666666666664,
+      "materialId": "sf3c0c2d8a9ef",
+      "title": "Y16. Menażeria"
+    },
+    {
+      "code": "Y17",
+      "x": 46.17296222664016,
+      "y": 23.557692307692307,
+      "materialId": "se486e74730b2",
+      "title": "Y17. Teatr"
+    },
+    {
+      "code": "Y18",
+      "x": 45.52683896620278,
+      "y": 34.455128205128204,
+      "materialId": "s78abfc471677",
+      "title": "Y18. Wieża Nekromancji"
+    },
+    {
+      "code": "Y19",
+      "x": 54.4234592445328,
+      "y": 26.923076923076923,
+      "materialId": "s80aeaed4c2f6",
+      "title": "Iglica Iriolarthasa — Y19a–Y19q"
+    },
+    {
+      "code": "Y20",
+      "x": 64.46322067594433,
+      "y": 37.09935897435898,
+      "materialId": "se9ecf2a6cb4d",
+      "title": "Y20. Wieża Wywoływania"
+    },
+    {
+      "code": "Y21",
+      "x": 68.04174950298211,
+      "y": 32.131410256410255,
+      "materialId": "sf33860c9be4f",
+      "title": "Y21. Obelisk"
+    },
+    {
+      "code": "Y22",
+      "x": 68.53876739562624,
+      "y": 51.36217948717948,
+      "materialId": "sb360b5880eb3",
+      "title": "Y22. Wieża Iluzji"
+    },
+    {
+      "code": "Y23",
+      "x": 55.367793240556665,
+      "y": 54.567307692307686,
+      "materialId": "sb8c5052b6ab6",
+      "title": "Y23. Mythallar Ythryn"
+    },
+    {
+      "code": "Y24",
+      "x": 84.89065606361828,
+      "y": 56.41025641025641,
+      "materialId": "s2c656465077b",
+      "title": "Y24. Wieża Uroków"
+    },
+    {
+      "code": "Y25",
+      "x": 69.28429423459245,
+      "y": 61.77884615384615,
+      "materialId": "scd8597de4fbf",
+      "title": "Y25. Sala Nieważkich Cudów"
+    },
+    {
+      "code": "Y26",
+      "x": 61.92842942345924,
+      "y": 58.01282051282052,
+      "materialId": "s318c29bcc186",
+      "title": "Y26. Wieża Przemian"
+    },
+    {
+      "code": "Y27",
+      "x": 61.7296222664016,
+      "y": 71.7948717948718,
+      "materialId": "s7abafe286739",
+      "title": "Y27. Sala muzyczna"
+    },
+    {
+      "code": "Y28",
+      "x": 53.62823061630218,
+      "y": 67.3076923076923,
+      "materialId": "s165b0c05fce3",
+      "title": "Y28. Iglica Portu Powietrznego"
+    },
+    {
+      "code": "Y29",
+      "x": 55.21868787276342,
+      "y": 59.375,
+      "materialId": "sb5aa2efd2a50",
+      "title": "Y29. Muzeum"
+    }
+  ]
+}

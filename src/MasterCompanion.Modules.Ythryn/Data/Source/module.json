@@ -1,0 +1,20 @@
+{
+  "sourceSchemaVersion": 1,
+  "id": "ythryn",
+  "name": "Ythryn",
+  "version": "0.1.0",
+  "contentSchemaVersion": 1,
+  "startMaterialId": "s210a67f4cc8e",
+  "navigation": "navigation.json",
+  "documents": "documents",
+  "maps": [
+    "maps/ythryn.json"
+  ],
+  "assets": [
+    {
+      "id": "ythryn-map-image",
+      "file": "assets/ythryn-map.webp",
+      "contentType": "image/webp"
+    }
+  ]
+}

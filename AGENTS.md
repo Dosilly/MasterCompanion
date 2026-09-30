@@ -1,6 +1,6 @@
 # Repository engineering rules
 
-These instructions apply to all implementation work in this repository. Read the relevant source, specifications, and existing behavior before editing. Direct user instructions take precedence. Keep changes focused on the requested outcome and complete the applicable checks before reporting completion.
+These instructions apply to all implementation work in this repository. Read the relevant source, specifications, and existing behavior before editing. Direct user instructions take precedence. Keep changes focused on the requested outcome and verify the affected behavior before reporting completion. Verification is scoped to the change, not a requirement to run every check.
 
 ## Language and localization
 
@@ -40,6 +40,7 @@ Production-ready is an evidence-based acceptance standard for the changed behavi
 ## Persistence, concurrency, and data safety
 
 - User content is authoritative after campaign initialization. Never overwrite edited materials with module defaults on startup, rebuild, conversion, or upgrade.
+- Maintain module defaults as individual Markdown sources with metadata and separate navigation/maps/assets. Generated distribution JSON is a build artifact, not an editable source. Reference import must refuse existing destinations; do not regenerate over authored files. Preserve stable IDs and rich HTML structures that Markdown cannot represent losslessly. Module authoring is distinct from editing a campaign copy.
 - Use stable IDs for materials, folders, map links, and assets. Do not make relationships depend on display names. Validate hierarchy cycles and references.
 - Keep material saves independent from game operations and undo. Closing a tab or finishing editing must wait for confirmed persistence; failures and revision conflicts keep the draft recoverable.
 - Preserve optimistic concurrency. Never resolve a conflict by silently overwriting a newer revision. Serialize dependent saves and advance revisions only after confirmation.
@@ -66,37 +67,46 @@ Production-ready is an evidence-based acceptance standard for the changed behavi
 - Use semantic elements, meaningful accessible names, visible focus, keyboard-operable controls, sufficient contrast, and appropriate live regions. ARIA roles imply the corresponding keyboard behavior; do not use them as decoration.
 - Provide loading, empty, save, error, and conflict states. Keep repeated actions safe while requests are pending. Release editor instances, observers, listeners, and scheduled callbacks when their owner is destroyed.
 
-## Required verification
+## Verification scoped to the change
 
-Run checks appropriate to the change, inspect failures, and fix causes. Do not rerun broad checks without a new change or unresolved concern. Never invent successful test results.
+- Add meaningful tests when implementing new functional behavior or fixing a defect. Cover the relevant rules, data integrity, concurrency, security, or failure paths. Do not create tests just for documentation, formatting, or markup that has no behavioral consequence.
+- Select the smallest set of tests that covers the changed behavior and its affected dependencies. Use a specific test file or `--test-name-pattern` when a suite contains unrelated or expensive cases. An importer change does not automatically require autosave, API, browser, or every-document migration tests.
+- Run the selected tests after the implementation is ready for review. Rerun them only after a relevant code, data, dependency, configuration, or test change, or while investigating a failure. Reuse successful results for unchanged areas within the task and across follow-up turns; a commit, push, or merge request is not by itself a reason to repeat them.
+- Documentation-only and instruction-only changes require reviewing the diff and affected links or commands, not application tests or builds. File moves and conflict resolutions require checks only where the resulting behavior or references changed.
+- Build the affected project or library when compilation needs verification. Build dependent consumers if a public interface changed. Use a full solution or frontend build for changes that affect integration, shared contracts, build configuration, or dependency compatibility; do not rebuild both stacks for an isolated change in one.
+- Reserve broad regression runs and full acceptance checks for changes with broad impact, integration concerns, an explicit user request, or release acceptance. Expand a targeted check only when a failure or a concrete unresolved risk justifies it. Do not routinely test unrelated areas after each edit.
+- Inspect failures and fix their causes. Report the checks actually run and any relevant limitation. Never invent successful results or imply that a targeted check verified the entire application.
 
-Run from the repository root unless stated otherwise:
+The following commands are available checks, not a checklist to run for every task. Select only those relevant to the change. Run from the repository root unless stated otherwise:
 
 ```powershell
-# Code language/localization policy and module boundaries
+# For source/localization changes and dependency boundary changes, respectively
 pnpm --dir src/mastercompanion-web check:code
 pnpm --dir src/mastercompanion-web check:boundaries
 
-# For backend, project reference, or shared contract changes
+# Full backend build when integration is affected; otherwise build the affected project
 dotnet build MasterCompanion.slnx --no-restore
 
-# For frontend, localization, styles, or shared contract changes
+# Full frontend build when integration is affected; otherwise build the affected library
 pnpm --dir src/mastercompanion-web build
 
-# For content/schema/navigation changes
+# Content suite when the change affects multiple content behaviors
 pnpm --dir src/mastercompanion-web test:content
 
-# For autosave, editor lifecycle, conflict handling, or tab closing changes
+# Autosave suite when save behavior or editor/tab lifecycle is affected
 pnpm --dir src/mastercompanion-web test:autosave
+
+# Example: select an affected test instead of running an unrelated suite
+pnpm --dir src/mastercompanion-web exec node --test --test-name-pattern="Markdown headings" tools/module-sources.test.mjs
 ```
 
 - `check:code` is a guard against Polish source text and inconsistent translation catalogs; it cannot prove that every ASCII sentence is English or that the product is production-ready. Human review remains necessary.
-- Run `test:api` against a running AppHost when persistence/API behavior changes. This probe changes one material temporarily; prefer an isolated database and respect its revision-protected restore. For changes limited to rejected requests or error diagnostics, `test:api-errors` checks ProblemDetails and confirms no persisted document or revision changes. Folder backfill verification is a separate, explicit before/after probe in `tools/verify-folders.mjs`.
-- Add meaningful regression tests for changed rules, data integrity, concurrency, security, or failure behavior. Avoid tests that merely mirror markup or implementation details. Use real PostgreSQL for database-specific behavior when applicable.
-- For visible UI changes, inspect the running app in the browser, exercise the affected interactions, and check relevant console errors. A successful build is not browser verification.
+- Use `test:api` against a running AppHost when changed persistence/API behavior needs integration evidence. This probe changes one material temporarily; prefer an isolated database and respect its revision-protected restore. For changes limited to rejected requests or error diagnostics, prefer `test:api-errors`, which checks ProblemDetails and confirms no persisted document or revision changes. Do not run either for unrelated frontend, documentation, or tooling changes. Folder backfill verification is a separate, explicit before/after probe in `tools/verify-folders.mjs`.
+- Use real PostgreSQL when verifying changed database-specific behavior. Existing integration evidence remains valid until a relevant change affects it.
+- For visible UI changes, inspect the affected view and interactions in the browser and check relevant console errors. Do not repeat the full navigation/editing/map walkthrough for an isolated visual fix. A successful build is not browser verification.
 - Review the final diff for unrelated changes, source-language violations, missing localization keys, accidental secrets, broken ownership, and destructive migrations. Preserve module content and user data.
 - Builds of Angular libraries happen before the host starts. Rebuild/restart the frontend as needed; do not validate stale library output. Do not interrupt pending user saves during a restart.
 
 ## Definition of done
 
-A change is complete when it meets the requested behavior, preserves existing user data and module boundaries, handles relevant failure paths, passes applicable checks, and has current documentation. Report the concrete outcome, checks actually run, and any material limitation. Distinguish completed work, deferred scope, and unverified assumptions. These instructions guide every future change; they do not replace code review or test evidence.
+A change is complete when it meets the requested behavior, preserves existing user data and module boundaries, handles relevant failure paths, has suitable tests for new behavior, passes the selected checks for affected areas, and has current documentation. Unrelated suites and full builds are not required by default. Report the concrete outcome, checks actually run, and any material limitation. Distinguish completed work, deferred scope, and unverified assumptions. These instructions guide every future change; they do not replace code review or test evidence.

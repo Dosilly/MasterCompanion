@@ -132,6 +132,8 @@ Eksport/import nie jest elementem odbioru tej wersji. Testy konwersji i powiąza
 
 ## 8. Ostatnie odpowiedzi i dalszy krok
 
+Uzupełnienie 30 września: utrzymywane źródła modułu to osobne pliki Markdown z metadanymi oraz oddzielne manifesty, hierarchia, mapy i zasoby. Zbiorczy JSON jest wynikiem budowania. Lepszy wizualny edytor, w tym przyszła edycja źródeł modułu, pozostaje w backlogu poza minimum; szczegóły zapisano w sekcji 7 [planu wykonawczego](05-Plan-wykonawczy-MVP.md). Edycja kopii kampanii i Arcane Blight nadal są obowiązkowe.
+
 1. Użytkownik wskazał, że Arcane Blight oraz edycja muszą wejść do pierwszego tygodnia.
 2. Wystarczy edycja istniejących materiałów; tworzenie nowych osobnych notatek jest późniejszym zakresem.
 3. Wystarczy wspólny długi odpoczynek całej drużyny; wyniki mechaniki pozostają indywidualne.

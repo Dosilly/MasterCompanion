@@ -35,6 +35,18 @@ Initial setup requires internet access to download dependencies and the database
 - `src/mastercompanion-web` — Angular host, libraries, and frontend tooling.
 - [docs/planning](docs/planning) — product specifications, plans, and architecture decisions.
 
+## Module content
+
+Module defaults are maintained as individual Markdown documents with YAML metadata, alongside a small manifest, folder hierarchy, map definitions, and local assets. The module build validates these sources and compiles an embedded distribution package; generated JSON is not checked into Git. Frontend dependencies and Node.js must be available before building the .NET module.
+
+For the first module, see the [content authoring instructions](src/MasterCompanion.Modules.Ythryn/Data/Source/README.md). To prepare its package separately:
+
+```powershell
+pnpm --dir src/mastercompanion-web prepare:ythryn
+```
+
+Application edits belong to the campaign copy in PostgreSQL. Rebuilding module defaults does not overwrite campaign notes. The removed legacy POC is not required for normal builds or tests; the optional reference importer accepts an external HTML file explicitly.
+
 ## Contributing
 
 Follow the engineering and verification guidelines in [AGENTS.md](AGENTS.md). Keep general campaign behavior in the engine and adventure-specific behavior in modules. Update planning documents when scope or architecture changes.
