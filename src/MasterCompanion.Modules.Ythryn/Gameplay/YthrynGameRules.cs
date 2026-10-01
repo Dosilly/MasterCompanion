@@ -21,6 +21,16 @@ public sealed class YthrynGameRules : ICampaignGameRules
 
     public void Validate(GameSnapshot snapshot) => ReadState(snapshot);
 
+    public ModuleTransition ReconcileParty(GameSnapshot before, GameSnapshot proposed)
+    {
+        var retained = ReadState(before).Characters.ToDictionary(character => character.Id);
+        var characters = proposed.Party.Select(character => retained.TryGetValue(character.Id, out var existing)
+            ? existing : Healthy(character.Id, proposed.TimeMinutes)).ToArray();
+        var state = Serialize(new BlightState(characters));
+        Validate(proposed with { ModuleState = state });
+        return new ModuleTransition(state);
+    }
+
     public ModuleTransition Transition(GameSnapshot before, GameSnapshot proposed, JsonElement? command)
     {
         var state = ReadState(before);

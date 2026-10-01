@@ -35,22 +35,21 @@ export function isGameState(value: unknown): value is GameStateDto {
     if (!integer(minute, 1) || minute <= previous || minute > snapshot['timeMinutes']) return false;
     previous = minute;
   }
-  if (snapshot['party'].length === 0 && (snapshot['timeMinutes'] !== 0 || previous !== 0)) return false;
   const last = value['lastOperation'];
   return last === null || (record(last) && identifier(last['requestId']) && integer(last['revision'], 1) &&
     last['revision'] <= value['revision'] && typeof last['kind'] === 'string' &&
-    ['configureParty', 'advanceTime', 'longRest', 'module'].includes(last['kind']));
+    ['configureParty', 'updateParty', 'advanceTime', 'shortRest', 'longRest', 'module'].includes(last['kind']));
 }
 export function isGameRequest(value: unknown): value is GameOperationRequest {
   if (!record(value) || !identifier(value['requestId']) || !integer(value['expectedRevision'])) return false;
   const keys = Object.keys(value);
   const only = (...fields: string[]) => keys.length === fields.length && fields.every(field => keys.includes(field));
   switch (value['kind']) {
-    case 'configureParty': return only('kind', 'requestId', 'expectedRevision', 'party') &&
-      Array.isArray(value['party']) && value['party'].length > 0 && value['party'].length <= 20 && value['party'].every(character) &&
+    case 'configureParty': case 'updateParty': return only('kind', 'requestId', 'expectedRevision', 'party') &&
+      Array.isArray(value['party']) && (value['kind'] === 'updateParty' || value['party'].length > 0) && value['party'].length <= 20 && value['party'].every(character) &&
       new Set(value['party'].map(member => member.id.toLowerCase())).size === value['party'].length;
     case 'advanceTime': return only('kind', 'requestId', 'expectedRevision', 'minutes') && integer(value['minutes'], 1) && value['minutes'] <= 525_600;
-    case 'longRest': case 'undo': return only('kind', 'requestId', 'expectedRevision');
+    case 'shortRest': case 'longRest': case 'undo': return only('kind', 'requestId', 'expectedRevision');
     case 'module': return only('kind', 'requestId', 'expectedRevision', 'command') && record(value['command']);
     default: return false;
   }

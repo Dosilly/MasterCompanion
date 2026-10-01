@@ -30,6 +30,13 @@ flowchart LR
 
 Host jest jedynym miejscem, które składa konkretny silnik i konkretny moduł. Silnik nie odwołuje się do projektów ani nazw Ythryn. Moduł nie importuje implementacji silnika, jego komponentów, DbContext ani prywatnych plików. Moduły nie zależą od siebie.
 
+For the local Docker runtime, the API composition root also serves the compiled
+Angular host from `wwwroot`, with same-origin `/api` endpoints and SPA navigation.
+One application image contains both hosts; PostgreSQL remains a separate local
+container using the campaign volume. This packaging does not change library or
+module ownership. Aspire development retains separate frontend/API processes.
+See [the Docker runtime record](10-Docker-local-runtime.md) for verification.
+
 | Obszar | Właściciel |
 |---|---|
 | Nawigacja materiałów, karty, czytnik, edytor i zapis | Silnik |
@@ -66,6 +73,23 @@ The gameplay contract is now `ICampaignGameRules`, with elapsed minutes, party a
 Biblioteki są rzeczywiście budowane przez `ng-packagr`; aplikacja importuje wynik kompilacji przez publiczne entry points. Nie korzysta z aliasów do prywatnych katalogów źródłowych. Podczas rozwoju biblioteki przebudowujemy przed uruchomieniem hosta; zmiany w bibliotece wymagają ponownego uruchomienia `pnpm start`.
 
 The frontend contracts now expose `GameStateDto`, `GameAction` and `GameToolContext` through the public entry point. The engine provides `CAMPAIGN_GAME` to a dynamically loaded module tool. Its signals supply confirmed state, pending status and operation availability; `execute` returns confirmed success. The module imports only contracts, validates its opaque projection and submits module commands without importing the engine's HTTP service or persistence implementation. The host still composes the libraries.
+
+Campaign party identity and roster editing belong to the engine and are available
+to every registered module in a separate party tab. Tools refer to the confirmed
+`snapshot.party` by stable character IDs through `GameToolContext`; names are
+display data. Renaming and reordering retain those IDs. `updateParty` commits the
+roster, module state, revision and undo receipt together. The pure module contract
+`ReconcileParty(before, proposed)` preserves state for retained IDs, initializes
+additions at current game time and removes deleted IDs. Undo restores the full
+previous roster and module snapshot. Removing the last character preserves clock
+and long-rest history; later additions start at the current time.
+
+Registered content modules without adventure gameplay rules use strict neutral
+rules for party, time and undo. Only schema version 1 with an empty object is
+accepted; missing rules never discard unfamiliar saved state. Long rest advances
+480 minutes and records a recovery deadline. Short rest advances 60 minutes
+without a long-rest entry. The 30-minute building-search shortcut is an ordinary
+engine time advance; adventure outcomes remain module-owned.
 
 `GameSession` owns revision coordination and recovery. It copies and validates each action, preserves the exact request ID and body in tab session storage before POST, and allows only one dependent operation at a time. An uncertain outcome blocks other writes and permits explicit replay of that same request, including after page reload. Original receipts are followed by a current-state GET; an older receipt never becomes visible current state. Conflicts require explicit refresh. Storage or response failures do not claim success, and destruction cancels I/O while leaving the recovery request intact. Module tools keep local input associated with the current check identity.
 

@@ -14,7 +14,8 @@ public sealed record GameStateResponse(long Revision, GameSnapshot Snapshot, Jso
     GameOperationSummary? LastOperation);
 public sealed record GameExecution(int StatusCode, string? Code = null, GameStateResponse? Response = null);
 
-public sealed class GameplayService(AppDbContext db, IEnumerable<ICampaignGameRules> modules)
+public sealed class GameplayService(AppDbContext db, IEnumerable<ICampaignGameRules> modules,
+    IEnumerable<ICampaignModule>? campaignModules = null)
 {
     internal static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
     {
@@ -71,7 +72,7 @@ public sealed class GameplayService(AppDbContext db, IEnumerable<ICampaignGameRu
                 (receipt.Kind != "undo" && confirmed.LastOperation != new GameOperationSummary(receipt.RequestId, receipt.Kind, receipt.Revision)) ||
                 (confirmed.LastOperation is { } operation && (operation.RequestId == Guid.Empty ||
                     operation.Revision < 1 || operation.Revision > confirmed.Revision ||
-                    operation.Kind is not ("configureParty" or "advanceTime" or "longRest" or "module"))))
+                    operation.Kind is not ("configureParty" or "updateParty" or "advanceTime" or "shortRest" or "longRest" or "module"))))
                 throw new InvalidOperationException("The saved game receipt is inconsistent.");
             return new(200, Response: confirmed);
         }
@@ -107,10 +108,23 @@ public sealed class GameplayService(AppDbContext db, IEnumerable<ICampaignGameRu
                 var party = request.Party ?? throw new InvalidOperationException("Validated party is missing.");
                 after = before with { Party = party, ModuleState = rules.Initialize(party) };
             }
+            else if (request.Kind == "updateParty")
+            {
+                var party = request.Party ?? throw new InvalidOperationException("Validated party is missing.");
+                after = before with { Party = party };
+                var reconciliation = rules.ReconcileParty(before, after);
+                if (reconciliation.ErrorCode is not null) return new(400, reconciliation.ErrorCode);
+                after = after with { ModuleState = reconciliation.State };
+            }
             else
             {
                 if (before.Party.Count == 0) return new(409, "game_party_required");
-                var minutes = request.Kind == "longRest" ? 480 : request.Minutes ?? 0;
+                var minutes = request.Kind switch
+                {
+                    "longRest" => 480,
+                    "shortRest" => 60,
+                    _ => request.Minutes ?? 0
+                };
                 if (before.TimeMinutes > GameLimits.MaxTimeMinutes - minutes)
                     return new(400, "game_time_limit");
                 if (request.Kind == "longRest" && before.RestEnds.Count >= GameLimits.MaxRestCount)
@@ -151,7 +165,13 @@ public sealed class GameplayService(AppDbContext db, IEnumerable<ICampaignGameRu
         return new(200, Response: response);
     }
 
-    private ICampaignGameRules? FindRules(string moduleId) => modules.SingleOrDefault(x => x.ModuleId == moduleId);
+    private ICampaignGameRules? FindRules(string moduleId)
+    {
+        var rules = modules.SingleOrDefault(x => x.ModuleId == moduleId);
+        if (rules is not null) return rules;
+        return campaignModules?.SingleOrDefault(x => x.Manifest.Id == moduleId) is not null
+            ? new NeutralGameRules(moduleId) : null;
+    }
     private static GameSnapshot Empty(ICampaignGameRules rules) => new(0, [], [], rules.StateSchemaVersion, rules.Initialize([]));
     private static string Encode(GameSnapshot snapshot) => JsonSerializer.Serialize(snapshot, JsonOptions);
     private static GameSnapshot Decode(string json) => JsonSerializer.Deserialize<GameSnapshot>(json, JsonOptions)
@@ -160,7 +180,7 @@ public sealed class GameplayService(AppDbContext db, IEnumerable<ICampaignGameRu
         .Where(x => x.CampaignId == campaignId && !x.Undone && x.Kind != "undo").OrderByDescending(x => x.Revision)
         .Select(x => new GameOperationSummary(x.RequestId, x.Kind, x.Revision)).FirstOrDefaultAsync(token);
 
-    private static bool IsValidParty(IReadOnlyList<GameCharacter> party) => party.Count is > 0 and <= GameLimits.MaxPartySize &&
+    private static bool IsValidParty(IReadOnlyList<GameCharacter> party) => party.Count <= GameLimits.MaxPartySize &&
         party.All(x => x is not null && x.Id != Guid.Empty && !string.IsNullOrWhiteSpace(x.Name) &&
             x.Name.Length <= GameLimits.MaxCharacterNameLength && x.Name == x.Name.Trim() && !x.Name.Any(char.IsControl)) &&
         party.Select(x => x.Id).Distinct().Count() == party.Count;
@@ -170,9 +190,10 @@ public sealed class GameplayService(AppDbContext db, IEnumerable<ICampaignGameRu
         if (request.RequestId == Guid.Empty || request.ExpectedRevision < 0) return false;
         return request.Kind switch
         {
-            "configureParty" => request.Party is not null && IsValidParty(request.Party) && request.Minutes is null && request.Command is null,
+            "configureParty" => request.Party is { Length: > 0 } && IsValidParty(request.Party) && request.Minutes is null && request.Command is null,
+            "updateParty" => request.Party is not null && IsValidParty(request.Party) && request.Minutes is null && request.Command is null,
             "advanceTime" => request.Party is null && request.Minutes is > 0 and <= GameLimits.MaxAdvanceMinutes && request.Command is null,
-            "longRest" or "undo" => request.Party is null && request.Minutes is null && request.Command is null,
+            "shortRest" or "longRest" or "undo" => request.Party is null && request.Minutes is null && request.Command is null,
             "module" => request.Party is null && request.Minutes is null && request.Command is { ValueKind: JsonValueKind.Object },
             _ => false
         };
@@ -181,8 +202,7 @@ public sealed class GameplayService(AppDbContext db, IEnumerable<ICampaignGameRu
     private static void ValidateSnapshot(GameSnapshot snapshot, ICampaignGameRules rules)
     {
         if (snapshot.TimeMinutes is < 0 or > GameLimits.MaxTimeMinutes || snapshot.Party is null || snapshot.RestEnds is null ||
-            (snapshot.Party.Count > 0 && !IsValidParty(snapshot.Party)) || snapshot.RestEnds.Count > GameLimits.MaxRestCount ||
-            (snapshot.Party.Count == 0 && (snapshot.TimeMinutes != 0 || snapshot.RestEnds.Count != 0)) ||
+            !IsValidParty(snapshot.Party) || snapshot.RestEnds.Count > GameLimits.MaxRestCount ||
             snapshot.ModuleSchemaVersion != rules.StateSchemaVersion)
             throw new InvalidOperationException("The saved game snapshot violates the supported schema.");
         long previous = 0;

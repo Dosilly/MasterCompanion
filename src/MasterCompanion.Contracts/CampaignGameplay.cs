@@ -25,6 +25,8 @@ public interface ICampaignGameRules
     int StateSchemaVersion { get; }
     JsonElement Initialize(IReadOnlyList<GameCharacter> party);
     void Validate(GameSnapshot snapshot);
+    /// <summary>Preserve state for retained IDs, initialize additions at current time and remove deleted IDs.</summary>
+    ModuleTransition ReconcileParty(GameSnapshot before, GameSnapshot proposed);
     ModuleTransition Transition(GameSnapshot before, GameSnapshot proposed, JsonElement? command);
     JsonElement Describe(GameSnapshot snapshot);
 }

@@ -29,9 +29,9 @@ Initialization is explicit party setup. Reading a campaign with no game state re
 ## API and supported bounds
 
 - `GET /api/campaigns/{campaignId}/game` returns `revision`, `snapshot`, the module's `moduleView`, and `lastOperation` for sequential undo. Unconfigured reads do not insert a row.
-- `POST /api/campaigns/{campaignId}/game/operations` accepts `requestId`, `expectedRevision`, `kind` and only the payload appropriate to that kind. Kinds are `configureParty` (`party` of stable UUIDs and names), `advanceTime` (`minutes`), `longRest`, `module` (`command`) and `undo`.
+- `POST /api/campaigns/{campaignId}/game/operations` accepts `requestId`, `expectedRevision`, `kind` and only the payload appropriate to that kind. Kinds are `configureParty` (initial nonempty `party` of stable UUIDs and names), `updateParty` (editable `party`, including an empty roster), `advanceTime` (`minutes`), `shortRest`, `longRest`, `module` (`command`) and `undo`.
 - Ythryn commands are `resolveCheck` with `characterId`, boolean `success`, and `d6` only for successful infected rest checks, or `healCharacter` with `characterId`. Its projection lists character status, DC, failures and the next check (`kind`, `minute`, `pending`) or null.
-- JSON is limited to 64 KiB and depth 16. Unknown/duplicate properties, missing required fields and quoted numeric input are rejected. Party size is 1–20, names are trimmed and at most 100 characters without control characters. An advance is 1–525,600 minutes; total time is capped at 52,560,000 minutes and shared rest history at 10,000 entries. Limits fail explicitly without modifying state.
+- JSON is limited to 64 KiB and depth 16. Unknown/duplicate properties, missing required fields and quoted numeric input are rejected. Initial party size is 1–20; roster updates allow 0–20. Names are trimmed and at most 100 characters without control characters. An advance is 1–525,600 minutes; total time is capped at 52,560,000 minutes and shared long-rest history at 10,000 entries. Limits fail explicitly without modifying state.
 - Recovery rests must finish strictly after infection, so a rest ending at the exact infection minute is excluded. Exposure is always resolved at its original deadline; magic healing starts a new exposure interval at current engine time.
 - A replay returns the original confirmed receipt, even after later operations or undo; a frontend recovering an uncertain request must then read current state. Reusing its ID with different input gives `game_request_conflict`. New requests with an old revision give `game_revision_conflict`. Neither conflict overwrites state.
 
@@ -93,4 +93,55 @@ pnpm --dir src/mastercompanion-web build
 
 ## Remaining acceptance
 
-The gameplay and editor slices are implemented. Full acceptance with internet connectivity actually disconnected remains unverified; loopback operation and cached dependency preparation do not establish it. Finish that complete map/read/edit/save/time/rest/outcome/undo scenario before declaring the whole MVP accepted. General module authoring, composition changes after game initialization and recovery across deleted browser storage remain outside this slice.
+The gameplay and editor slices are implemented. Full acceptance with internet connectivity actually disconnected remains unverified; loopback operation and cached dependency preparation do not establish it. Finish that complete map/read/edit/save/time/rest/outcome/undo scenario before declaring the whole MVP accepted. General module authoring and recovery across deleted browser storage remain outside this slice. Party changes after initialization are covered by the following design revision.
+
+## Party and time-control design revision — 1 October 2026
+
+The campaign party is a generic engine resource, accessible in its own tab. An
+explicit editor supports renaming, adding and removing characters after setup.
+Stable retained IDs preserve all module state. Additions use current game time;
+removals and their previous state remain recoverable through sequential undo.
+The roster may become empty without resetting elapsed time or rest history.
+Registered content modules also receive generic party/time behavior when they
+provide no adventure gameplay rules; unfamiliar saved state remains an error.
+
+The game controls are building search (30 minutes), short rest (60 minutes),
+long rest (480 minutes), and a bounded custom advance. Only long rest creates
+recovery checks. Undo is an accessible arrow beside refresh and retains its
+confirmation dialog. A single registered tool renders directly without a
+redundant selector button; modules with multiple tools retain selection.
+
+Party drafts stay mounted through tab changes and closing/reopening the tab.
+Editing captures a revision; a changed revision blocks submission until explicit
+confirmation against refreshed state. Failed requests preserve the draft and
+use the existing exact-request recovery path. Draft cancellation is explicit,
+and leaving the page with unsaved edits triggers the browser guard.
+
+Verification for this revision:
+
+- 19 pure-rule cases and isolated real PostgreSQL/HTTP tests passed. New cases
+  cover infected-character rename/reorder, join-time deadlines, last-member
+  removal with retained clock/rest history, complete sequential undo, original
+  edit receipts, strict invalid payload rejection, edit/time revision races,
+  commit-failure rollback and neutral module state-corruption refusal.
+- 36 focused frontend tests passed, including party draft identity/isolation,
+  validation and stale revision handling, empty-roster decoding, exact party
+  request recovery after reload and short-rest receipts.
+- Affected backend/API, test-project and final full solution builds passed
+  without warnings or errors. Full frontend and Docker image builds passed, including code and
+  localization policy and dependency-boundary checks.
+- Browser checks used a separate UI database: party setup/edit, preserved drafts
+  through closing/reopening the tab, search then short rest (0 → 30 → 90 minutes),
+  infection retained on rename, new exposure scheduled at join time +720,
+  top undo restoring the prior roster, and a real two-window conflict retaining
+  the draft until explicit refresh/confirmation/save. Game and party views were
+  inspected at 1920×1080 in both themes; keyboard tab selection/focus worked,
+  without horizontal overflow or observed console errors.
+- The updated application container is healthy at `http://localhost:4200`.
+  Its four read-only runtime checks passed. A private backup was captured before
+  replacement; before/after hashes confirm unchanged campaign metadata, all
+  material contents/revisions, folders, maps, game snapshot and journal. The
+  existing five-character party and time were retained. No migration was needed.
+
+The PostgreSQL service and its existing volume were not replaced. Runtime
+verification made no game or material writes to the user's campaign.

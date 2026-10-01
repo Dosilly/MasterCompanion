@@ -10,13 +10,15 @@ import { buildNavigation, folderPath } from './navigation';
 import { ThemePreference } from './theme-preference';
 import { GameSession } from '../gameplay/game-session';
 import { GameView } from '../gameplay/game-view';
+import { PartyView } from '../gameplay/party-view';
 import { UiMessages, uiLocale, uiMessages } from '../../i18n/messages';
 
 @Component({
-  selector: 'mc-workspace', imports: [NgTemplateOutlet, MaterialView, MapView, GameView],
+  selector: 'mc-workspace', imports: [NgTemplateOutlet, MaterialView, MapView, GameView, PartyView],
   template: `
     <header class="app-header"><div><strong>MasterCompanion</strong><span class="campaign-name"> / {{ workspace()?.title }}</span></div>
       <div class="header-actions">
+        @if (game()) { <button (click)="openParty()" [attr.aria-pressed]="active() === '@party'">{{ ui.game.partyTitle }}</button> }
         @if (game(); as session) { <button (click)="openGame()" [attr.aria-pressed]="active() === '@game'">{{ ui.game.title }}{{ session.state() ? ' · ' + gameTime() : '' }}</button> }
         @if (workspace()?.maps?.length) { <button (click)="openMap()" [attr.aria-pressed]="active() === '@map'">{{ ui.workspace.map }}</button> }
         <button (click)="theme.toggle()" [attr.aria-pressed]="theme.dark()" [attr.aria-label]="ui.workspace.darkMode">{{ theme.dark() ? '☀ ' + ui.workspace.lightMode : '☾ ' + ui.workspace.darkMode }}</button>
@@ -47,6 +49,12 @@ import { UiMessages, uiLocale, uiMessages } from '../../i18n/messages';
         </nav>
         <main class="workspace-main">
           <div #tabStrip class="material-tabs" role="tablist" [attr.aria-label]="ui.workspace.tabsLabel" (keydown)="tabKey($event)">
+            @if (partyOpen()) {
+              <div class="material-tab" [class.is-active]="active() === '@party'" (mousedown)="preventMiddleScroll($event)" (auxclick)="middleClose('@party', $event)">
+                <button role="tab" id="tab-party" aria-controls="panel-party" data-tab-id="@party" [attr.tabindex]="active() === '@party' ? 0 : -1" [attr.aria-selected]="active() === '@party'" (click)="openParty()">{{ ui.game.partyTitle }}{{ partyView()?.dirty() ? ' •' : '' }}</button>
+                <button class="tab-close" [attr.aria-label]="ui.workspace.closeTab + ' ' + ui.game.partyTitle" (click)="close('@party')">×</button>
+              </div>
+            }
             @if (gameOpen()) {
               <div class="material-tab" [class.is-active]="active() === '@game'" (mousedown)="preventMiddleScroll($event)" (auxclick)="middleClose('@game', $event)">
                 <button role="tab" id="tab-game" aria-controls="panel-game" data-tab-id="@game" [attr.tabindex]="active() === '@game' ? 0 : -1" [attr.aria-selected]="active() === '@game'" (click)="openGame()">{{ ui.game.title }}</button>
@@ -74,7 +82,8 @@ import { UiMessages, uiLocale, uiMessages } from '../../i18n/messages';
           @if (data.maps[0]; as map) {
             <mc-map-view id="panel-map" role="tabpanel" aria-labelledby="tab-map" [hidden]="active() !== '@map'" [map]="map" (openMaterial)="open($event)" />
           }
-          @if (gameMounted()) { @if (game(); as session) { @if (campaignModule(); as module) { <mc-game-view id="panel-game" role="tabpanel" aria-labelledby="tab-game" [hidden]="active() !== '@game'" [session]="session" [module]="module" /> } } }
+          @if (partyMounted()) { @if (game(); as session) { <mc-party-view id="panel-party" role="tabpanel" aria-labelledby="tab-party" [hidden]="active() !== '@party'" [session]="session" /> } }
+          @if (gameMounted()) { @if (game(); as session) { @if (campaignModule(); as module) { <mc-game-view id="panel-game" role="tabpanel" aria-labelledby="tab-game" [hidden]="active() !== '@game'" [session]="session" [module]="module" (openParty)="openParty()" /> } } }
           @for (tab of sessions(); track tab.material.id) {
             <mc-material-view [id]="'panel-' + tab.material.id" role="tabpanel" [attr.aria-labelledby]="'tab-' + tab.material.id" [hidden]="active() !== tab.material.id" [session]="tab" [materials]="data.materials" (openMaterial)="open($event.id, $event.anchor)" />
           }
@@ -99,6 +108,9 @@ export class Workspace {
   readonly mapOpen = signal(true);
   readonly gameOpen = signal(false);
   readonly gameMounted = signal(false);
+  readonly partyOpen = signal(false);
+  readonly partyMounted = signal(false);
+  readonly partyView = viewChild(PartyView);
   readonly game = signal<GameSession | null>(null);
   readonly campaignModule = computed(() => this.modules.find(module => module.id === this.workspace()?.moduleId));
   readonly gameTime = computed(() => {
@@ -162,6 +174,7 @@ export class Workspace {
 
   openMap() { this.mapOpen.set(true); this.activate('@map'); }
   openGame() { this.gameMounted.set(true); this.gameOpen.set(true); this.activate('@game'); }
+  openParty() { this.partyMounted.set(true); this.partyOpen.set(true); this.activate('@party'); }
 
   activate(id: string, anchor?: string, focusTab = false) {
     this.active.set(id);
@@ -230,16 +243,17 @@ export class Workspace {
       this.closing.update(current => { const next = new Set(current); next.delete(id); return next; });
       if (!saved || session.dirty()) { this.activate(id); return; }
     }
-    const tabIds = [...(this.gameOpen() ? ['@game'] : []), ...(this.mapOpen() ? ['@map'] : []), ...this.sessions().map(tab => tab.material.id)];
+    const tabIds = [...(this.partyOpen() ? ['@party'] : []), ...(this.gameOpen() ? ['@game'] : []), ...(this.mapOpen() ? ['@map'] : []), ...this.sessions().map(tab => tab.material.id)];
     const index = tabIds.indexOf(id);
     if (index < 0) return;
     if (id === '@map') this.mapOpen.set(false);
     else if (id === '@game') this.gameOpen.set(false);
+    else if (id === '@party') this.partyOpen.set(false);
     else this.sessions.update(tabs => tabs.filter(tab => tab.material.id !== id));
     if (this.active() === id) this.activate(tabIds[index + 1] ?? tabIds[index - 1] ?? '');
   }
   @HostListener('window:beforeunload', ['$event'])
   protectPendingChanges(event: BeforeUnloadEvent) {
-    if (this.sessions().some(tab => tab.dirty())) { event.preventDefault(); event.returnValue = ''; }
+    if (this.sessions().some(tab => tab.dirty()) || this.partyView()?.dirty()) { event.preventDefault(); event.returnValue = ''; }
   }
 }

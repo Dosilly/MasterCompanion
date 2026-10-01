@@ -1,4 +1,4 @@
-import { Component, computed, ElementRef, forwardRef, input, OnDestroy, OnInit, signal, Type, viewChild } from '@angular/core';
+import { Component, computed, ElementRef, forwardRef, input, OnDestroy, OnInit, output, signal, Type, viewChild } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
 import { CAMPAIGN_GAME, CampaignModuleFrontend, GameAction, GameToolContext, ToolRegistration } from '@mastercompanion/contracts';
 import { GameSession } from './game-session';
@@ -9,7 +9,10 @@ import { uiMessages } from '../../i18n/messages';
   providers: [{ provide: CAMPAIGN_GAME, useExisting: forwardRef(() => GameView) }],
   template: `
     <section class="game-view" [attr.aria-label]="text.title">
-      <div class="game-heading"><h1>{{ text.title }}</h1><button type="button" [disabled]="pending()" (click)="session().load()">{{ text.refresh }}</button></div>
+      <div class="game-heading"><h1>{{ text.title }}</h1><div class="game-heading-actions">
+        <button type="button" class="game-undo" [disabled]="!canOperate() || !state()?.lastOperation" [attr.aria-label]="text.undo" [title]="text.undo" (click)="openUndo($event)"><span aria-hidden="true">↶</span></button>
+        <button type="button" [disabled]="pending()" (click)="session().load()">{{ text.refresh }}</button>
+      </div></div>
       @if (pending()) { <p role="status">{{ text.working }}</p> }
       @if (session().error(); as error) {
         <div class="game-error" role="alert"><p>{{ text.errors[error] }}</p>
@@ -19,24 +22,13 @@ import { uiMessages } from '../../i18n/messages';
       }
       @if (state(); as current) {
         @if (!current.snapshot.party.length) {
-          <form (submit)="configure($event)"><fieldset [disabled]="!canOperate()">
-            <legend>{{ text.partySetup }}</legend><p>{{ text.partyHint }}</p>
-            @for (member of partyDraft(); track member.id; let index = $index) {
-              <div class="party-row"><label [for]="'party-name-' + member.id">{{ text.characterName }} {{ index + 1 }}</label>
-                <input [id]="'party-name-' + member.id" [value]="member.name" maxlength="100" required (input)="rename(member.id, $event)">
-                <button type="button" [disabled]="partyDraft().length === 1" [attr.aria-label]="text.removeCharacter + ' ' + (member.name || (index + 1))" (click)="remove(member.id)">{{ text.removeCharacter }}</button>
-              </div>
-            }
-            <div class="game-actions"><button type="button" [disabled]="partyDraft().length >= 20" (click)="add()">{{ text.addCharacter }}</button>
-              <button type="submit">{{ text.start }}</button></div>
-          </fieldset></form>
+          <p>{{ text.emptyParty }}</p><button type="button" (click)="openParty.emit()">{{ text.manageParty }}</button>
         } @else {
           <section class="game-time" [attr.aria-label]="text.timeControls"><h2>{{ text.elapsedTime }}: {{ formatTime(current.snapshot.timeMinutes) }}</h2>
             <fieldset [disabled]="!canOperate()"><legend>{{ text.timeControls }}</legend>
               <div class="game-actions">
-                <button type="button" (click)="advance(10)">+10 {{ text.minute }}</button>
-                <button type="button" (click)="advance(60)">+1 {{ text.hour }}</button>
-                <button type="button" (click)="advance(480)">+8 {{ text.hour }}</button>
+                <button type="button" (click)="advance(30)">{{ text.searchBuilding }}</button>
+                <button type="button" (click)="execute({kind: 'shortRest'})">{{ text.shortRest }}</button>
                 <button type="button" (click)="execute({kind: 'longRest'})">{{ text.longRest }}</button>
               </div>
               <form class="custom-time" (submit)="customAdvance($event)"><label for="game-minutes">{{ text.customMinutes }}</label>
@@ -45,22 +37,16 @@ import { uiMessages } from '../../i18n/messages';
             </fieldset><p class="game-hint">{{ text.restHint }}</p>
           </section>
           @if (module().tools.length) {
-            <div class="tool-selector" [attr.aria-label]="text.tools">
+            @if (module().tools.length > 1) { <div class="tool-selector" [attr.aria-label]="text.tools">
               @for (tool of module().tools; track tool.id) {
                 <button type="button" [attr.aria-pressed]="selectedTool() === tool.id" (click)="selectTool(tool)">{{ tool.label }}</button>
               }
-            </div>
+            </div> }
             @if (toolLoading()) { <p role="status">{{ text.loadingTool }}</p> }
             @if (toolError()) { <div role="alert"><p>{{ text.toolFailed }}</p><button (click)="retryTool()">{{ text.retryTool }}</button></div> }
             @if (toolComponent(); as component) { <ng-container *ngComponentOutlet="component" /> }
           } @else { <p>{{ text.noTools }}</p> }
         }
-        <section class="game-history"><h2>{{ text.history }}</h2>
-          @if (current.lastOperation; as last) {
-            <p>{{ text.lastOperation }}: {{ operationLabel(last.kind) }}</p>
-            <button type="button" [disabled]="!canOperate()" (click)="openUndo($event)">{{ text.undo }}</button>
-          } @else { <p>{{ text.noHistory }}</p> }
-        </section>
       }
       @if (validationError(); as error) { <p class="game-error" role="alert">{{ text[error] }}</p> }
     </section>
@@ -73,13 +59,13 @@ import { uiMessages } from '../../i18n/messages';
 export class GameView implements OnInit, OnDestroy, GameToolContext {
   readonly session = input.required<GameSession>();
   readonly module = input.required<CampaignModuleFrontend>();
+  readonly openParty = output<void>();
   readonly text = uiMessages.game;
   readonly state = computed(() => this.session().state());
   readonly pending = computed(() => this.session().pending());
   readonly canOperate = computed(() => this.session().canOperate());
-  readonly partyDraft = signal([{ id: crypto.randomUUID(), name: '' }]);
   readonly minutes = signal('60');
-  readonly validationError = signal<'invalidParty' | 'invalidMinutes' | null>(null);
+  readonly validationError = signal<'invalidMinutes' | null>(null);
   readonly selectedTool = signal<string | null>(null);
   readonly toolComponent = signal<Type<unknown> | null>(null);
   readonly toolLoading = signal(false);
@@ -94,22 +80,6 @@ export class GameView implements OnInit, OnDestroy, GameToolContext {
   ngOnInit() { const tool = this.module().tools[0]; if (tool) void this.selectTool(tool); }
   ngOnDestroy() { this.destroyed = true; this.generation++; }
   async execute(action: GameAction) { this.validationError.set(null); return this.session().execute(action); }
-  add() { if (this.canOperate() && this.partyDraft().length < 20) this.partyDraft.update(members => [...members, { id: crypto.randomUUID(), name: '' }]); }
-  remove(id: string) { if (this.canOperate() && this.partyDraft().length > 1) this.partyDraft.update(members => members.filter(member => member.id !== id)); }
-  rename(id: string, event: Event) {
-    if (event.target instanceof HTMLInputElement) {
-      const name = event.target.value;
-      this.partyDraft.update(members => members.map(member => member.id === id ? { ...member, name } : member));
-    }
-  }
-  async configure(event: Event) {
-    event.preventDefault();
-    const party = this.partyDraft().map(member => ({ ...member, name: member.name.trim() }));
-    if (party.some(member => !member.name || member.name.length > 100 || /[\u0000-\u001f\u007f]/.test(member.name))) {
-      this.validationError.set('invalidParty'); return;
-    }
-    await this.execute({ kind: 'configureParty', party });
-  }
   updateMinutes(event: Event) { if (event.target instanceof HTMLInputElement) this.minutes.set(event.target.value); }
   customAdvance(event: Event) {
     event.preventDefault();
@@ -122,7 +92,9 @@ export class GameView implements OnInit, OnDestroy, GameToolContext {
   operationLabel(kind: string) {
     switch (kind) {
       case 'configureParty': return this.text.operations.configureParty;
+      case 'updateParty': return this.text.operations.updateParty;
       case 'advanceTime': return this.text.operations.advanceTime;
+      case 'shortRest': return this.text.operations.shortRest;
       case 'longRest': return this.text.operations.longRest;
       case 'module': return this.text.operations.module;
       default: return this.text.noHistory;
@@ -141,7 +113,7 @@ export class GameView implements OnInit, OnDestroy, GameToolContext {
   openUndo(event: Event) {
     const state = this.state();
     if (!this.canOperate() || !state?.lastOperation) return;
-    this.opener = event.target instanceof HTMLElement ? event.target : null;
+    this.opener = event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
     this.undoRevision = state.revision; this.undoKind.set(state.lastOperation.kind);
     this.undoDialog().nativeElement.showModal();
   }

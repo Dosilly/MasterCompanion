@@ -57,6 +57,11 @@ public static class HttpTests
             {
                 "{", "null", "[]", "{}",
                 "{" + validPrefix + "\"kind\":\"unknown\"}",
+                "{" + validPrefix + "\"kind\":\"updateParty\"}",
+                "{" + validPrefix + "\"kind\":\"updateParty\",\"party\":" + validParty + ",\"minutes\":1}",
+                "{" + validPrefix + "\"kind\":\"updateParty\",\"party\":[{\"id\":\"" + characterId.ToString("D") + "\",\"name\":\" \"}]}",
+                "{" + validPrefix + "\"kind\":\"shortRest\",\"minutes\":60}",
+                "{" + validPrefix + "\"kind\":\"shortRest\",\"command\":{}}",
                 "{\"expectedRevision\":0,\"kind\":\"configureParty\",\"party\":" + validParty + "}",
                 $"{{\"requestId\":\"{requestId:D}\",\"kind\":\"configureParty\",\"party\":{validParty}}}",
                 $"{{\"requestId\":\"{requestId:D}\",\"expectedRevision\":\"0\",\"kind\":\"configureParty\",\"party\":{validParty}}}",
@@ -118,10 +123,41 @@ public static class HttpTests
             using (var content = new StringContent(JsonSerializer.Serialize(advance with { RequestId = Guid.NewGuid() }, JsonOptions), Encoding.UTF8, "application/json"))
             using (var response = await client.PostAsync(path + "/operations", content))
                 await AssertProblemAsync(response, HttpStatusCode.Conflict, "game_revision_conflict");
+
+            var shortRest = await PostSuccessAsync(client, path,
+                new GameOperationRequest(Guid.NewGuid(), advanced.Revision, "shortRest"));
+            Require(shortRest.Revision == 3 && shortRest.Snapshot.TimeMinutes == 90 && shortRest.Snapshot.RestEnds.Count == 0,
+                "A typed HTTP short rest must advance sixty minutes without recording a completed long rest.");
+            var renameRequest = new GameOperationRequest(Guid.NewGuid(), shortRest.Revision, "updateParty",
+                [new(characterId, "Renamed HTTP character")]);
+            var renamed = await PostSuccessAsync(client, path, renameRequest);
+            Require(renamed.Revision == 4 && renamed.Snapshot.Party.Single().Id == characterId &&
+                renamed.Snapshot.Party.Single().Name == "Renamed HTTP character" &&
+                JsonElement.DeepEquals(renamed.Snapshot.ModuleState, shortRest.Snapshot.ModuleState),
+                "The HTTP party editor must retain identity and module state while changing a name.");
+            var empty = await PostSuccessAsync(client, path,
+                new GameOperationRequest(Guid.NewGuid(), renamed.Revision, "updateParty", []));
+            Require(empty.Revision == 5 && empty.Snapshot.Party.Count == 0 && empty.Snapshot.TimeMinutes == 90,
+                "An explicit empty HTTP roster must retain nonzero game time.");
+            var replayed = await PostSuccessAsync(client, path, renameRequest);
+            Require(replayed.Revision == renamed.Revision &&
+                JsonElement.DeepEquals(JsonSerializer.SerializeToElement(replayed), JsonSerializer.SerializeToElement(renamed)),
+                "Replaying a party edit through HTTP must return its original confirmed receipt.");
+            using (var response = await client.GetAsync(path))
+            {
+                var read = await ReadSuccessAsync(response);
+                Require(read.Revision == empty.Revision && read.Snapshot.Party.Count == 0,
+                    "An old party receipt must not overwrite the latest persisted HTTP roster.");
+            }
+            var restored = await PostSuccessAsync(client, path,
+                new GameOperationRequest(Guid.NewGuid(), empty.Revision, "undo"));
+            Require(restored.Revision == 6 && JsonElement.DeepEquals(JsonSerializer.SerializeToElement(restored.Snapshot),
+                JsonSerializer.SerializeToElement(renamed.Snapshot)),
+                "HTTP undo must restore the roster and owned module state removed by the latest party operation.");
             using (var response = await client.GetAsync($"/api/campaigns/{Guid.NewGuid():D}/game"))
                 await AssertProblemAsync(response, HttpStatusCode.NotFound, "campaign_not_found");
 
-            Console.WriteLine("HTTP gameplay tests passed: strict JSON, media and size limits, ProblemDetails, isolated writes and confirmed operations.");
+            Console.WriteLine("HTTP gameplay tests passed: strict JSON, media and size limits, ProblemDetails, isolated writes, party editing, short rest, receipts and undo.");
         }
         finally
         {

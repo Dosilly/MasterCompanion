@@ -16,11 +16,19 @@ builder.Services.AddSingleton<ICampaignModule, YthrynModule>();
 builder.Services.AddSingleton<ICampaignGameRules, YthrynGameRules>();
 builder.Services.AddScoped<GameplayService>();
 var connectionString = builder.Configuration.GetConnectionString("mastercompanion")
-    ?? throw new InvalidOperationException("The database connection string is missing. Start the application through MasterCompanion.AppHost.");
+    ?? throw new InvalidOperationException("The database connection string is missing. Configure ConnectionStrings__mastercompanion or start through MasterCompanion.AppHost.");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
 var app = builder.Build();
 app.UseExceptionHandler();
+if (Directory.Exists(app.Environment.WebRootPath))
+{
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
+    // Missing API routes must not return the SPA document with a success status.
+    app.MapFallback("/api/{**path}", () => Results.NotFound());
+    app.MapFallbackToFile("index.html");
+}
 app.MapDefaultEndpoints();
 GetWorkspace.Map(app);
 GetMaterial.Map(app);

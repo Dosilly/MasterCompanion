@@ -2,6 +2,14 @@
 
 Current execution evidence for gameplay is in [the gameplay implementation plan](09-Gameplay-implementation.md). The entries below preserve earlier verification history.
 
+The latest design revision adds a generic editable party tab, stable character
+resources shared with module tools, building search (30 minutes), short rest
+(1 hour), a single long-rest shortcut and undo beside refresh. A one-tool module
+renders its tool directly. Draft/conflict recovery and atomic roster undo are
+verified. The updated Docker application is running at localhost:4200 with the
+existing campaign preserved; exact checks and remaining offline acceptance are
+recorded in [the gameplay implementation plan](09-Gameplay-implementation.md).
+
 30 września 2026 · zapis historyczny przeniesiony z README
 
 Poniższy opis zachowuje stan i wyniki prób raportowane przed uporządkowaniem repozytorium. Nie jest potwierdzeniem ponownego wykonania tych prób. Oryginalny katalog POC został usunięty; gotowe dane i mapa modułu pozostają w `src/MasterCompanion.Modules.Ythryn/Data`.
@@ -57,3 +65,13 @@ Implemented the on-demand game tab, party setup, elapsed clock, time advances, s
 All 30 gameplay frontend, 6 insertion and 14 affected autosave/editor tests passed. Full frontend compilation and code/localization/dependency checks passed, followed by final scoped engine compilation. Browser checks at 1920×1080 in both themes used an isolated real PostgreSQL database and loopback API: setup, 10 h → 8 h rest → exposure → infection → recovery k6, undo, persisted Markdown/table/link, independent note saves, real two-window conflict and recovery after connection loss/page reload/API restart. The existing oversized-map-image warning remains. The user's campaign and database volume were not changed.
 
 Full internet-disconnected acceptance remains pending. Current implementation and exact evidence are detailed in [the gameplay delivery plan](09-Gameplay-implementation.md); these scoped checks do not constitute complete MVP acceptance.
+
+## Local Docker runtime — 1 October 2026
+
+The root multi-stage Dockerfile and Compose configuration now run the production
+frontend and API together at `http://localhost:4200`, with separate private
+PostgreSQL. The user's existing volume and credentials are reused. A backup was
+saved before the additive gameplay migration; before/after hashes confirmed all
+106 materials, their revisions and the remaining campaign data were preserved.
+The image build and four read-only container integration tests passed. Details and
+limits are in [the Docker runtime record](10-Docker-local-runtime.md).

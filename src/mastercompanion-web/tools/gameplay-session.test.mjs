@@ -11,18 +11,132 @@ import { HttpErrorResponse } from '@angular/common/http';
 // Exercise the real session and boundary decoder without exporting private engine implementation.
 mkdirSync('.local/tests', { recursive: true });
 const sourceDirectory = 'projects/engine/src/lib/features/gameplay';
-for (const name of ['game-wire', 'game-session']) {
+for (const name of ['game-wire', 'game-session', 'party-draft']) {
   const compiled = ts.transpileModule(readFileSync(`${sourceDirectory}/${name}.ts`, 'utf8'), {
     compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
   }).outputText.replaceAll("'./game-wire'", "'./game-wire.mjs'");
   writeFileSync(resolve(`.local/tests/${name}.mjs`), compiled);
 }
 const { GameSession } = await import(pathToFileURL(resolve('.local/tests/game-session.mjs')));
+const { isGameRequest, isGameState } = await import(pathToFileURL(resolve('.local/tests/game-wire.mjs')));
+const { PartyDraft } = await import(pathToFileURL(resolve('.local/tests/party-draft.mjs')));
 const campaignId = 'ec8bf847-08b7-4314-9e54-ffcd39b0ab8e';
 const characterId = 'da929f55-a678-482a-a8c8-13b89f2b71ad';
 const previousRequestId = '8c6e29fd-5266-42a1-9684-46ea79e99d1b';
 const advance = { kind: 'advanceTime', minutes: 60 };
 const nextTurn = () => new Promise(resolve => setImmediate(resolve));
+
+test('Party drafts preserve stable IDs and confirmed data while editing, cancelling and accepting revisions', () => {
+  const confirmed = state(4, 1080);
+  const draft = new PartyDraft();
+  draft.begin(confirmed);
+  draft.rename(characterId, 'Renamed character');
+  draft.add();
+  const newId = draft.members()[1].id;
+  draft.rename(newId, 'New character');
+  assert.equal(draft.dirty(), true);
+  assert.equal(confirmed.snapshot.party[0].name, 'Character');
+  assert.deepEqual(draft.validatedMembers(false), [
+    { id: characterId, name: 'Renamed character' }, { id: newId, name: 'New character' },
+  ]);
+  assert.equal(draft.isStale(4), false);
+  assert.equal(draft.isStale(5), true);
+  const retained = structuredClone(draft.members());
+  draft.acceptRevision(5);
+  assert.equal(draft.isStale(5), false);
+  assert.deepEqual(draft.members(), retained);
+  draft.finish();
+  assert.equal(draft.dirty(), false);
+  assert.equal(draft.editing(), false);
+  draft.begin(confirmed);
+  assert.deepEqual(draft.members(), confirmed.snapshot.party);
+});
+
+test('Party draft validation allows removal of the final active member but requires nonempty initial setup', () => {
+  const draft = new PartyDraft();
+  draft.begin(state());
+  draft.remove(characterId);
+  assert.deepEqual(draft.validatedMembers(false), []);
+  assert.equal(draft.validatedMembers(true), null);
+  draft.add();
+  const id = draft.members()[0].id;
+  for (const invalid of ['', '   ', 'a'.repeat(101), 'Invalid\u0001name']) {
+    draft.rename(id, invalid);
+    assert.equal(draft.validatedMembers(false), null);
+  }
+  draft.rename(id, ' Trimmed character ');
+  assert.deepEqual(draft.validatedMembers(false), [{ id, name: 'Trimmed character' }]);
+  for (let index = 1; index <= 25; index++) draft.add();
+  assert.equal(draft.members().length, 20);
+  assert.equal(new Set(draft.members().map(member => member.id)).size, 20);
+});
+
+test('Party edits and short rests retain strict request shapes and existing character identities', () => {
+  const base = { requestId: previousRequestId, expectedRevision: 4 };
+  assert.equal(isGameRequest({ ...base, kind: 'updateParty', party: [] }), true);
+  assert.equal(isGameRequest({ ...base, kind: 'updateParty', party: [{ id: characterId, name: 'Renamed character' }] }), true);
+  assert.equal(isGameRequest({ ...base, kind: 'shortRest' }), true);
+  for (const invalid of [
+    { ...base, kind: 'configureParty', party: [] },
+    { ...base, kind: 'updateParty' },
+    { ...base, kind: 'updateParty', party: [{ id: characterId, name: ' Character ' }] },
+    { ...base, kind: 'updateParty', party: Array.from({ length: 21 }, () => ({ id: crypto.randomUUID(), name: 'Character' })) },
+    { ...base, kind: 'updateParty', party: Array.from({ length: 2 }, () => ({ id: characterId, name: 'Character' })) },
+    { ...base, kind: 'shortRest', minutes: 60 },
+    { ...base, kind: 'shortRest', party: [] },
+  ]) assert.equal(isGameRequest(invalid), false);
+});
+
+test('Removing the last character preserves confirmed clock and long-rest history', async () => {
+  const before = state(4, 1080, previousRequestId, 'longRest');
+  before.snapshot.restEnds = [1080];
+  const f = await loaded(fixture(), before);
+  const operation = f.session.execute({ kind: 'updateParty', party: [] });
+  const write = f.requests.at(-1);
+  assert.deepEqual(write.body.party, []);
+  const receipt = state(5, 1080, write.body.requestId, 'updateParty');
+  receipt.snapshot.party = [];
+  receipt.snapshot.restEnds = [1080];
+  await confirm(f, write, receipt);
+  assert.equal(await operation, true);
+  assert.deepEqual(f.session.state().snapshot.party, []);
+  assert.deepEqual(f.session.state().snapshot.restEnds, [1080]);
+  assert.equal(f.session.state().snapshot.timeMinutes, 1080);
+  assert.equal(isGameState(receipt), true);
+});
+
+test('An uncertain party edit recovers the same roster and ID after reload', async () => {
+  const storage = memoryStorage();
+  const original = await loaded(fixture(storage));
+  const party = [{ id: characterId, name: 'Renamed character' }];
+  const operation = original.session.execute({ kind: 'updateParty', party });
+  const first = original.requests.at(-1);
+  party[0].name = 'Changed caller draft';
+  reject(first, 0);
+  assert.equal(await operation, false);
+  original.session.destroy();
+  const recovered = await loaded(fixture(storage));
+  const retry = recovered.session.retry();
+  const replay = recovered.requests.at(-1);
+  assert.deepEqual(replay.body, first.body);
+  assert.equal(replay.body.party[0].name, 'Renamed character');
+  const receipt = state(2, 0, replay.body.requestId, 'updateParty');
+  receipt.snapshot.party = first.body.party;
+  await confirm(recovered, replay, receipt);
+  assert.equal(await retry, true);
+  assert.deepEqual(recovered.session.state().snapshot.party, first.body.party);
+});
+
+test('A short rest accepts its new receipt without adding long-rest recovery history', async () => {
+  const f = await loaded(fixture(), state(3, 720, previousRequestId, 'advanceTime'));
+  const operation = f.session.execute({ kind: 'shortRest' });
+  const write = f.requests.at(-1);
+  const receipt = state(4, 780, write.body.requestId, 'shortRest');
+  await confirm(f, write, receipt);
+  assert.equal(await operation, true);
+  assert.equal(f.session.state().snapshot.timeMinutes, 780);
+  assert.deepEqual(f.session.state().snapshot.restEnds, []);
+});
 
 function state(revision = 1, minute = 0, requestId = previousRequestId, kind = 'configureParty') {
   return {

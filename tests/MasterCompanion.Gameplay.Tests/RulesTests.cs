@@ -19,7 +19,9 @@ public static class RulesTests
             InfectionRevealsOverdueRest, IndependentCharacterResults, ValidRecoveryDice,
             RecoveryGrantsImmunity, RecoverySuccessRetainsFailures, ThirdFailureTransforms, HealingRestartsExposure,
             RejectMalformedCommands, RejectInappropriateDice, RejectEarlyAndTerminalChecks,
-            RejectCorruptStates, RestMustFollowInfection, NeutralChangesPreserveRules
+            RejectCorruptStates, RestMustFollowInfection, NeutralChangesPreserveRules,
+            PartyChangesPreserveExistingCharacterState, AddedCharactersStartAtCurrentTime,
+            ShortRestDoesNotScheduleRecovery
         };
         foreach (var test in cases) test();
         Console.WriteLine($"Arcane Blight rules: {cases.Length} cases passed.");
@@ -246,6 +248,69 @@ public static class RulesTests
         Assert(Check(state).GetProperty("minute").GetInt64() == 1560, "Resolving the earliest rest must reveal the next overdue rest.");
     }
 
+    private static void PartyChangesPreserveExistingCharacterState()
+    {
+        var before = Apply(Rest(Initial(), 1080), Resolve(false));
+        before = Apply(before, Resolve(true, 6));
+        var proposed = before with
+        {
+            Party = [new(SecondId, "Renamed second"), new(FirstId, "Renamed first")]
+        };
+        var transition = Rules.ReconcileParty(before, proposed);
+        Assert(transition.ErrorCode is null, "A valid party edit must succeed.");
+        var renamed = proposed with { ModuleState = transition.State };
+        Rules.Validate(renamed);
+        foreach (var id in new[] { FirstId, SecondId })
+            Assert(JsonElement.DeepEquals(StoredCharacter(before, id), StoredCharacter(renamed, id)),
+                "Renaming and reordering must retain every stored character field by stable identity.");
+        Assert(Character(renamed).GetProperty("dc").GetInt32() == 9,
+            "A renamed infected character must retain its recovery DC.");
+
+        var removed = renamed with { Party = [renamed.Party[0]] };
+        removed = removed with { ModuleState = Rules.ReconcileParty(renamed, removed).State };
+        Rules.Validate(removed);
+        Assert(removed.ModuleState.GetProperty("characters").GetArrayLength() == 1 &&
+            JsonElement.DeepEquals(StoredCharacter(before, SecondId), StoredCharacter(removed, SecondId)),
+            "Removing one member must remove only that member's module state.");
+    }
+
+    private static void AddedCharactersStartAtCurrentTime()
+    {
+        var before = Rest(Initial(), 1560);
+        var newId = Guid.Parse("10000000-0000-0000-0000-000000000003");
+        var proposed = before with { Party = [.. before.Party, new(newId, "New arrival")] };
+        var added = proposed with { ModuleState = Rules.ReconcileParty(before, proposed).State };
+        Rules.Validate(added);
+        Assert(Check(added, newId).GetProperty("minute").GetInt64() == 2280 &&
+            !Check(added, newId).GetProperty("pending").GetBoolean(),
+            "A new party member's first exposure must be twelve hours after joining, without inherited overdue checks.");
+        Assert(JsonElement.DeepEquals(StoredCharacter(before), StoredCharacter(added)),
+            "Adding a member must preserve existing overdue checks.");
+        var empty = added with { Party = [] };
+        empty = empty with { ModuleState = Rules.ReconcileParty(added, empty).State };
+        Rules.Validate(empty);
+        Assert(empty.TimeMinutes == 1560 && empty.RestEnds.SequenceEqual([1560L]) &&
+            Rules.Describe(empty).GetProperty("characters").GetArrayLength() == 0,
+            "An empty roster must remain valid without resetting its clock or rest history.");
+        var rejoined = empty with { Party = [new(FirstId, "Returned member")] };
+        rejoined = rejoined with { ModuleState = Rules.ReconcileParty(empty, rejoined).State };
+        Assert(Check(rejoined).GetProperty("minute").GetInt64() == 2280,
+            "Rejoining after removal must initialize a new current-time state; undo is the operation that restores removed state.");
+    }
+
+    private static void ShortRestDoesNotScheduleRecovery()
+    {
+        var infected = Apply(At(Initial(), 720), Resolve(false));
+        var afterShortRest = At(infected, 780);
+        Assert(afterShortRest.RestEnds.Count == 0 &&
+            Character(afterShortRest).GetProperty("nextCheck").ValueKind == JsonValueKind.Null &&
+            JsonElement.DeepEquals(infected.ModuleState, afterShortRest.ModuleState),
+            "An hour without a completed long rest must not create an Arcane Blight recovery check or alter infection.");
+        var longRest = Rest(afterShortRest, 1260);
+        Assert(Check(longRest).GetProperty("minute").GetInt64() == 1260,
+            "The next completed long rest must still schedule recovery after a short rest.");
+    }
+
     private static GameSnapshot Initial()
     {
         GameCharacter[] party = [new(FirstId, "First"), new(SecondId, "Second")];
@@ -279,8 +344,8 @@ public static class RulesTests
     private static JsonElement Heal() => JsonSerializer.SerializeToElement(new { kind = "healCharacter", characterId = FirstId });
     private static JsonElement Character(GameSnapshot state, Guid? id = null) => Rules.Describe(state).GetProperty("characters")
         .EnumerateArray().Single(character => character.GetProperty("id").GetGuid() == (id ?? FirstId));
-    private static JsonElement StoredCharacter(GameSnapshot state) => state.ModuleState.GetProperty("characters")
-        .EnumerateArray().Single(character => character.GetProperty("id").GetGuid() == FirstId);
+    private static JsonElement StoredCharacter(GameSnapshot state, Guid? id = null) => state.ModuleState.GetProperty("characters")
+        .EnumerateArray().Single(character => character.GetProperty("id").GetGuid() == (id ?? FirstId));
     private static JsonElement Check(GameSnapshot state, Guid? id = null) => Character(state, id).GetProperty("nextCheck");
     private static JsonElement Json(string json) => JsonSerializer.Deserialize<JsonElement>(json);
 

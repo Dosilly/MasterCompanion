@@ -8,6 +8,50 @@ The application separates a reusable campaign engine from adventure modules. The
 
 The stack combines Angular, ASP.NET Core, PostgreSQL, and .NET Aspire. Aspire coordinates the local database, API, and frontend.
 
+## Run with Docker
+
+The root [Dockerfile](Dockerfile) builds the Angular libraries and production host,
+then publishes the API. One non-root application container serves both the SPA and
+`/api` on [http://localhost:4200](http://localhost:4200). PostgreSQL runs separately
+with no published port; the application port is bound to loopback only.
+
+Compose reuses the external volume `mastercompanion-postgres`. Use the **existing
+database password** when switching from Aspire, and stop Aspire before starting
+Compose so that two database processes never mount the same volume. Creating an
+environment file does not change a password in an initialized PostgreSQL volume.
+Back up an existing database before starting a newer application with migrations.
+
+Store `POSTGRES_PASSWORD` in a private, Git-ignored file such as `.local/docker.env`.
+Use single quotes around the value to preserve literal `$` characters. Do not
+commit this file. A new installation must first create the named volume and choose
+a database password; an existing Aspire installation retains its volume and password.
+
+```powershell
+# Safe if the volume already exists; this does not clear its contents.
+docker volume create mastercompanion-postgres
+docker compose --env-file .local/docker.env up -d --build --wait
+```
+
+Initial image preparation requires network access; the runtime image contains the
+compiled frontend, module content and API and does not install packages at startup.
+The container SDK is pinned by digest (.NET SDK 10.0.401), independently of the
+Windows development SDK in `global.json`. Node.js and pnpm versions are pinned in
+the Dockerfile, and frontend installation uses the existing lockfile and build policy.
+
+Read-only verification and lifecycle commands:
+
+```powershell
+node --test tools/container.test.mjs
+docker compose --env-file .local/docker.env ps
+docker compose --env-file .local/docker.env logs --tail 50 app
+docker compose --env-file .local/docker.env stop
+docker compose --env-file .local/docker.env start --wait
+```
+
+`docker compose down` removes this application's containers and networks while
+retaining the external database volume. Retain that volume to preserve campaign
+notes and game state. Run either Compose or Aspire against it at a time.
+
 ## Local development
 
 Install the .NET SDK specified in [global.json](global.json), Node.js compatible with the frontend dependencies, the pnpm version specified in [package.json](src/mastercompanion-web/package.json), and Docker with Linux container support.

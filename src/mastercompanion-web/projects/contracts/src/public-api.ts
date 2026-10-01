@@ -39,9 +39,9 @@ export interface GameStateDto {
   revision: number; snapshot: GameSnapshot; moduleView: unknown; lastOperation: GameOperationSummary | null;
 }
 export type GameAction =
-  | { kind: 'configureParty'; party: GameCharacter[] }
+  | { kind: 'configureParty' | 'updateParty'; party: GameCharacter[] }
   | { kind: 'advanceTime'; minutes: number }
-  | { kind: 'longRest' | 'undo' }
+  | { kind: 'shortRest' | 'longRest' | 'undo' }
   | { kind: 'module'; command: unknown };
 export type GameOperationRequest = GameAction & { requestId: string; expectedRevision: number };
 export interface GameToolContext {
