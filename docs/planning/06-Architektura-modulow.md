@@ -35,7 +35,7 @@ Host jest jedynym miejscem, które składa konkretny silnik i konkretny moduł. 
 | Nawigacja materiałów, karty, czytnik, edytor i zapis | Silnik |
 | Wyświetlanie mapy i otwieranie materiałów ze znaczników | Silnik |
 | Foldery i ich hierarchia, treść, ilustracje map, pozycje i cele znaczników, materiał początkowy | Implementacja modułu |
-| Reguły specyficzne dla przygody i interfejs jej narzędzi | Implementacja modułu; backend Arcane Blight is implemented, frontend tool pending |
+| Reguły specyficzne dla przygody i interfejs jej narzędzi | Implementacja modułu; Arcane Blight backend and frontend are implemented |
 | Neutralne typy folderów, materiałów i map, manifest, rejestracja narzędzi | Kontrakty |
 | Rejestracja modułów, DI, procesy, połączenie z bazą | Host / Aspire |
 
@@ -54,16 +54,22 @@ Kotwice nagłówków używają `{#id}`. Zwykły Markdown nie reprezentuje wszyst
 
 Folder ma stabilny identyfikator i opcjonalny identyfikator rodzica. Materiał wskazuje folder; nazwa grupy służy jedynie opisowi w czytniku. Hierarchia jest kopiowana do tabeli `engine.Folders`, a silnik sprawdza brak cykli i poprawność odwołań. Przy aktualizacji pierwszego fundamentu, który miał wyłącznie płaskie grupy, jednorazowo uzupełniamy foldery i przypisania istniejących materiałów. Ta aktualizacja metadanych nie zmienia dokumentów ani rewizji zapisu. Kolejne starty nie odtwarzają hierarchii z paczki.
 
-The gameplay contract is now `ICampaignGameRules`, with elapsed minutes, party and shared rest owned by the engine and versioned module JSON interpreted only by the module. `GameplayService` stores current snapshots and confirmed operation receipts under the `engine` schema. Transactions and campaign row locks protect time, module state, revisions and sequential undo together. Material documents remain outside this journal. Repeatable-read gameplay GETs keep current state and undo availability coherent; replayed receipts are validated before returning. The API is the composition root registering `YthrynGameRules`. No module-specific branch or disease column was added to the engine. Verification and the pending frontend are recorded in [the gameplay plan](09-Gameplay-implementation.md).
+The gameplay contract is now `ICampaignGameRules`, with elapsed minutes, party and shared rest owned by the engine and versioned module JSON interpreted only by the module. `GameplayService` stores current snapshots and confirmed operation receipts under the `engine` schema. Transactions and campaign row locks protect time, module state, revisions and sequential undo together. Material documents remain outside this journal. Repeatable-read gameplay GETs keep current state and undo availability coherent; replayed receipts are validated before returning. The API is the composition root registering `YthrynGameRules`. No module-specific branch or disease column was added to the engine. Verification is recorded in [the gameplay plan](09-Gameplay-implementation.md).
 
 ## Frontend
 
 - `@mastercompanion/contracts`: DTO i manifest modułu, token rejestracji, typ rejestracji komponentu narzędzia.
 - `@mastercompanion/engine`: czytnik, Tiptap, mapa, rekurencyjna nawigacja, karty, preferencja motywu i własne style. Zna kontrakty, nie importuje konkretnego modułu.
-- Biblioteka konkretnego modułu: aktualnie `@mastercompanion/ythryn` z manifestem; docelowo również komponent Arcane Blight i jego komunikacja z API tego modułu.
+- `@mastercompanion/ythryn`: manifest and lazily loaded Arcane Blight component, module projection validation, outcome commands and its own localization resources.
 - `src/main.ts`: host importujący publiczne API bibliotek i rejestrujący moduły.
 
 Biblioteki są rzeczywiście budowane przez `ng-packagr`; aplikacja importuje wynik kompilacji przez publiczne entry points. Nie korzysta z aliasów do prywatnych katalogów źródłowych. Podczas rozwoju biblioteki przebudowujemy przed uruchomieniem hosta; zmiany w bibliotece wymagają ponownego uruchomienia `pnpm start`.
+
+The frontend contracts now expose `GameStateDto`, `GameAction` and `GameToolContext` through the public entry point. The engine provides `CAMPAIGN_GAME` to a dynamically loaded module tool. Its signals supply confirmed state, pending status and operation availability; `execute` returns confirmed success. The module imports only contracts, validates its opaque projection and submits module commands without importing the engine's HTTP service or persistence implementation. The host still composes the libraries.
+
+`GameSession` owns revision coordination and recovery. It copies and validates each action, preserves the exact request ID and body in tab session storage before POST, and allows only one dependent operation at a time. An uncertain outcome blocks other writes and permits explicit replay of that same request, including after page reload. Original receipts are followed by a current-state GET; an older receipt never becomes visible current state. Conflicts require explicit refresh. Storage or response failures do not claim success, and destruction cancels I/O while leaving the recovery request intact. Module tools keep local input associated with the current check identity.
+
+Markdown insertion and material-link selection belong to the engine editor. They insert through the supported schema at the captured selection, require explicit edit mode and use the existing material autosave/revision path. Markdown is bounded to 65,536 characters, escapes raw HTML and rejects images, external links and unknown campaign targets. Existing rich blocks remain intact; cancelled or rejected Markdown stays recoverable in the mounted material view. This campaign editing path does not edit authored module sources.
 
 ## Kontrola granic i przyszłe rozszerzenia
 

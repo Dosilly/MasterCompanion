@@ -36,6 +36,24 @@
     "undo": "Cofnij",
     "redo": "Ponów",
     "contentLabel": "Treść notatki",
+    "insertMarkdown": "Wstaw Markdown",
+    "insertMaterialLink": "Link do materiału",
+    "markdownSource": "Tekst Markdown",
+    "markdownHelp": "Wstaw w miejscu kursora lub zastąp zaznaczenie. Obsługiwane są nagłówki, listy, cytaty i tabele. HTML pozostaje tekstem. Obrazy i linki zewnętrzne nie są obsługiwane.",
+    "linkFilter": "Znajdź materiał",
+    "linkTarget": "Materiał docelowy",
+    "chooseMaterial": "Wybierz materiał…",
+    "noLinkResults": "Brak materiałów pasujących do wyszukiwania.",
+    "linkHelp": "Zaznaczony tekst stanie się linkiem. Bez zaznaczenia zostanie wstawiony tytuł materiału.",
+    "cancelInsertion": "Anuluj",
+    "confirmInsertion": "Wstaw",
+    "insertionErrors": {
+      "notEditing": "Wróć do edycji i wybierz miejsce wstawienia.",
+      "emptyMarkdown": "Wpisz tekst Markdown.",
+      "markdownTooLarge": "Tekst jest zbyt długi. Wstawiaj najwyżej 65 536 znaków naraz.",
+      "invalidContent": "Nie udało się wstawić tekstu. Usuń obrazy i linki zewnętrzne; używaj linków do istniejących materiałów kampanii.",
+      "invalidMaterial": "Wybierz materiał dostępny w tej kampanii."
+    },
     "status": {
       "saved": "Zapisano",
       "waiting": "Niezapisane zmiany",
@@ -47,6 +65,31 @@
       "saveConflict": "Materiał zmieniono w innym oknie. Skopiuj swoje zmiany i odśwież stronę, aby wczytać aktualną wersję.",
       "saveFailed": "Nie udało się zapisać. Zmiany pozostają w tej karcie; ponów zapis po przywróceniu połączenia.",
       "clipboardUnavailable": "Przeglądarka nie pozwoliła skopiować tekstu. Zaznacz treść i skopiuj ją ręcznie."
+    }
+  },
+  "game": {
+    "title": "Gra", "refresh": "Odśwież stan", "working": "Zapisywanie lub wczytywanie stanu gry…",
+    "retryOperation": "Ponów oczekującą operację", "discardUnreadable": "Usuń nieczytelne żądanie i odśwież",
+    "partySetup": "Konfiguracja drużyny", "partyHint": "Dodaj postacie uczestniczące w kampanii. Konfiguracja uruchamia zegar gry od zera.",
+    "characterName": "Imię postaci", "removeCharacter": "Usuń postać", "addCharacter": "Dodaj postać", "start": "Rozpocznij grę",
+    "elapsedTime": "Czas gry", "timeControls": "Zegar gry", "minute": "min", "hour": "godz.",
+    "longRest": "Długi odpoczynek (8 godz.)", "customMinutes": "Przesuń o liczbę minut", "advance": "Przesuń czas",
+    "restHint": "Samo przesunięcie czasu nie zapisuje odpoczynku. Długi odpoczynek przesuwa zegar o 8 godzin i zapisuje jego zakończenie dla wszystkich postaci.",
+    "tools": "Narzędzia modułu", "loadingTool": "Wczytywanie narzędzia…", "toolFailed": "Nie udało się wczytać narzędzia. Spróbuj ponownie.", "retryTool": "Ponów wczytywanie narzędzia", "noTools": "Ten moduł nie udostępnia narzędzi gry.",
+    "history": "Ostatnia operacja", "lastOperation": "Operacja", "noHistory": "Brak operacji do cofnięcia.", "undo": "Cofnij ostatnią operację",
+    "undoTitle": "Cofnięcie operacji gry", "undoHint": "Przywróć stan sprzed ostatniej operacji, łącznie z czasem i stanem postaci. Notatki pozostaną zapisane.",
+    "cancel": "Anuluj", "confirmUndo": "Potwierdź cofnięcie",
+    "invalidParty": "Wpisz imię każdej postaci (najwyżej 100 znaków).", "invalidMinutes": "Wpisz całkowitą liczbę minut od 1 do 525 600.",
+    "operations": { "configureParty": "Konfiguracja drużyny", "advanceTime": "Przesunięcie czasu", "longRest": "Długi odpoczynek", "module": "Akcja modułu" },
+    "errors": {
+      "loadFailed": "Nie udało się wczytać stanu gry. Sprawdź połączenie i odśwież.",
+      "operationUncertain": "Nie udało się potwierdzić operacji. Po przywróceniu połączenia ponów oczekujące żądanie; nie zostanie wykonane drugi raz.",
+      "refreshFailed": "Operacja została zapisana, ale nie udało się wczytać aktualnego stanu. Ponów, aby go potwierdzić.",
+      "conflict": "Stan gry zmieniono w innym oknie. Odśwież przed wykonaniem kolejnej akcji.",
+      "rejected": "Ta akcja jest niedostępna dla obecnego stanu gry. Sprawdź dane i w razie potrzeby odśwież.",
+      "storageUnavailable": "Przeglądarka nie może zachować lub usunąć oczekującego żądania. Włącz pamięć sesji i ponów, aby potwierdzić wynik operacji.",
+      "invalidPending": "Zachowane oczekujące żądanie jest nieczytelne. Odśwież aktualny stan, zanim świadomie je usuniesz.",
+      "invalidResponse": "Nie udało się zweryfikować odpowiedzi gry. Odśwież lub ponów oczekujące żądanie przed kontynuowaniem."
     }
   },
   "map": {

@@ -1,4 +1,4 @@
-import { InjectionToken, Type } from '@angular/core';
+import { InjectionToken, Signal, Type } from '@angular/core';
 
 export interface RichDocument {
   type?: string;
@@ -28,3 +28,26 @@ export interface CampaignModuleFrontend {
   id: string; name: string; version: string; tools: readonly ToolRegistration[];
 }
 export const CAMPAIGN_MODULES = new InjectionToken<readonly CampaignModuleFrontend[]>('MasterCompanion campaign modules');
+
+export interface GameCharacter { id: string; name: string; }
+export interface GameSnapshot {
+  timeMinutes: number; party: GameCharacter[]; restEnds: number[];
+  moduleSchemaVersion: number; moduleState: unknown;
+}
+export interface GameOperationSummary { requestId: string; kind: string; revision: number; }
+export interface GameStateDto {
+  revision: number; snapshot: GameSnapshot; moduleView: unknown; lastOperation: GameOperationSummary | null;
+}
+export type GameAction =
+  | { kind: 'configureParty'; party: GameCharacter[] }
+  | { kind: 'advanceTime'; minutes: number }
+  | { kind: 'longRest' | 'undo' }
+  | { kind: 'module'; command: unknown };
+export type GameOperationRequest = GameAction & { requestId: string; expectedRevision: number };
+export interface GameToolContext {
+  readonly state: Signal<GameStateDto | null>;
+  readonly pending: Signal<boolean>;
+  readonly canOperate: Signal<boolean>;
+  execute(action: GameAction): Promise<boolean>;
+}
+export const CAMPAIGN_GAME = new InjectionToken<GameToolContext>('MasterCompanion campaign game');

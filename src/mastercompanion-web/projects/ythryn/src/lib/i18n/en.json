@@ -1,0 +1,23 @@
+{
+  "toolTitle": "Arcane Blight",
+  "toolDescription": "Record each character's check result. Game time and shared rest are controlled above.",
+  "invalidState": "Arcane Blight could not read the game state. Reload the game state before recording a result.",
+  "configureParty": "Configure the party above to track Arcane Blight.",
+  "loading": "Loading Arcane Blight…",
+  "status": "Status",
+  "statuses": { "healthy": "Healthy", "infected": "Infected", "immune": "Immune", "transformed": "Transformed" },
+  "dc": "DC",
+  "failures": "Failed recovery checks",
+  "checks": { "exposure": "Exposure check", "rest": "Recovery after rest" },
+  "pending": "Awaiting result",
+  "upcoming": "Upcoming",
+  "hour": "h",
+  "minute": "min",
+  "noCheck": "No check scheduled",
+  "success": "Success",
+  "failure": "Failure",
+  "dieResult": "d6 result for successful recovery",
+  "chooseDie": "Choose result",
+  "heal": "Magical healing",
+  "healingHint": "Magical healing restores health without granting immunity."
+}

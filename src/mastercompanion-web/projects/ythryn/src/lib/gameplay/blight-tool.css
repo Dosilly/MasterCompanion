@@ -1,0 +1,20 @@
+:host { display: block; }
+.blight-tool h2 { margin: 0 0 8px; font-size: 21px; }
+.description, .no-check { color: var(--muted); }
+.characters { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; }
+.character { min-width: 0; border: 1px solid var(--line); border-radius: 6px; padding: 16px; background: var(--paper); }
+.character h3 { margin: 0 0 12px; font-size: 18px; overflow-wrap: anywhere; }
+dl { display: flex; flex-wrap: wrap; gap: 12px 24px; margin: 0; }
+dt { color: var(--muted); font-size: 12px; }
+dd { margin: 0; font-weight: 600; }
+.check { display: flex; flex-direction: column; gap: 3px; padding: 10px 12px; background: var(--soft); border-left: 3px solid var(--line); }
+.check.is-pending { border-left-color: var(--accent); }
+fieldset { border: 0; padding: 0; margin: 16px 0 0; min-width: 0; }
+legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+label { display: block; margin: 0 0 6px; font-size: 13px; }
+select { max-width: 100%; padding: 7px; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 5px; font: inherit; }
+select:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.outcomes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.healing { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+.healing p { margin: 8px 0 0; color: var(--muted); font-size: 12px; }
+.projection-error { border: 1px solid var(--error-line); background: var(--error-bg); padding: 12px; }

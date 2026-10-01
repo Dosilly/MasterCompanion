@@ -36,6 +36,24 @@
     "undo": "Undo",
     "redo": "Redo",
     "contentLabel": "Note content",
+    "insertMarkdown": "Insert Markdown",
+    "insertMaterialLink": "Link to material",
+    "markdownSource": "Markdown text",
+    "markdownHelp": "Insert at the cursor or replace the selection. Headings, lists, quotes and tables are supported. HTML is kept as text. Images and external links are not supported.",
+    "linkFilter": "Find material",
+    "linkTarget": "Target material",
+    "chooseMaterial": "Choose a material…",
+    "noLinkResults": "No materials match the search.",
+    "linkHelp": "The selected text becomes a link. Without a selection, the material title is inserted.",
+    "cancelInsertion": "Cancel",
+    "confirmInsertion": "Insert",
+    "insertionErrors": {
+      "notEditing": "Return to editing and choose an insertion point.",
+      "emptyMarkdown": "Enter Markdown text.",
+      "markdownTooLarge": "The text is too long. Insert at most 65,536 characters at a time.",
+      "invalidContent": "Could not insert this text. Remove images and external links; use existing campaign material links.",
+      "invalidMaterial": "Choose a material available in this campaign."
+    },
     "status": {
       "saved": "Saved",
       "waiting": "Unsaved changes",
@@ -47,6 +65,31 @@
       "saveConflict": "The material was changed in another window. Copy your draft and refresh the page to load the current version.",
       "saveFailed": "Could not save. Your changes remain in this tab; retry after the connection is restored.",
       "clipboardUnavailable": "The browser could not copy the text. Select the content and copy it manually."
+    }
+  },
+  "game": {
+    "title": "Game", "refresh": "Refresh state", "working": "Saving or loading game state…",
+    "retryOperation": "Retry pending operation", "discardUnreadable": "Discard unreadable pending request and refresh",
+    "partySetup": "Set up the party", "partyHint": "Add the characters taking part in the campaign. Setup starts the game clock at zero.",
+    "characterName": "Character name", "removeCharacter": "Remove character", "addCharacter": "Add character", "start": "Start game",
+    "elapsedTime": "Elapsed game time", "timeControls": "Game clock", "minute": "min", "hour": "h",
+    "longRest": "Long rest (8 h)", "customMinutes": "Advance by minutes", "advance": "Advance time",
+    "restHint": "Advancing time alone does not record a rest. Long rest advances the clock by 8 hours and records its end for all characters.",
+    "tools": "Module tools", "loadingTool": "Loading tool…", "toolFailed": "Could not load the tool. Try again.", "retryTool": "Retry loading tool", "noTools": "This module has no game tools.",
+    "history": "Last operation", "lastOperation": "Operation", "noHistory": "No operation to undo.", "undo": "Undo last operation",
+    "undoTitle": "Undo game operation", "undoHint": "Restore the game state before the last operation, including time and character state. Material notes remain saved.",
+    "cancel": "Cancel", "confirmUndo": "Confirm undo",
+    "invalidParty": "Enter a name for every character (up to 100 characters).", "invalidMinutes": "Enter a whole number of minutes from 1 to 525,600.",
+    "operations": { "configureParty": "Party setup", "advanceTime": "Time advance", "longRest": "Long rest", "module": "Module action" },
+    "errors": {
+      "loadFailed": "Could not load game state. Check the connection and refresh.",
+      "operationUncertain": "The operation could not be confirmed. Retry the pending request after restoring the connection; it will not be applied twice.",
+      "refreshFailed": "The operation was saved, but current state could not be loaded. Retry to confirm the current state.",
+      "conflict": "Game state changed in another window. Refresh before performing another action.",
+      "rejected": "This action is not available for the current game state. Check the input and refresh if needed.",
+      "storageUnavailable": "The browser could not preserve or clear the pending request. Enable session storage and retry to confirm the operation's outcome.",
+      "invalidPending": "The preserved pending request is unreadable. Refresh the current state before explicitly discarding it.",
+      "invalidResponse": "The game response could not be verified. Refresh or retry the pending request before continuing."
     }
   },
   "map": {

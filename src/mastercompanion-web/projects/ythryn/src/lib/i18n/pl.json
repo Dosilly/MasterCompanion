@@ -1,0 +1,23 @@
+{
+  "toolTitle": "Arcane Blight",
+  "toolDescription": "Zapisz wynik sprawdzenia osobno dla każdego bohatera. Czas gry i wspólny odpoczynek zmienisz powyżej.",
+  "invalidState": "Nie można odczytać stanu Arcane Blight. Odśwież stan gry przed zapisaniem wyniku.",
+  "configureParty": "Skonfiguruj drużynę powyżej, aby śledzić Arcane Blight.",
+  "loading": "Wczytywanie Arcane Blight…",
+  "status": "Stan",
+  "statuses": { "healthy": "Zdrowy", "infected": "Zakażony", "immune": "Odporny", "transformed": "Przemieniony" },
+  "dc": "ST",
+  "failures": "Porażki leczenia",
+  "checks": { "exposure": "Sprawdzenie ekspozycji", "rest": "Leczenie po odpoczynku" },
+  "pending": "Oczekuje na wynik",
+  "upcoming": "Nadchodzące",
+  "hour": "h",
+  "minute": "min",
+  "noCheck": "Brak zaplanowanego sprawdzenia",
+  "success": "Sukces",
+  "failure": "Porażka",
+  "dieResult": "Wynik k6 przy sukcesie leczenia",
+  "chooseDie": "Wybierz wynik",
+  "heal": "Magiczne leczenie",
+  "healingHint": "Magiczne leczenie przywraca zdrowie bez nadawania odporności."
+}
