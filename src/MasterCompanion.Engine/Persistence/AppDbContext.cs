@@ -8,6 +8,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     public DbSet<Campaign> Campaigns => Set<Campaign>();
     public DbSet<CampaignMap> Maps => Set<CampaignMap>();
     public DbSet<CampaignFolder> Folders => Set<CampaignFolder>();
+    public DbSet<CampaignGameState> GameStates => Set<CampaignGameState>();
+    public DbSet<GameOperation> GameOperations => Set<GameOperation>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -41,5 +43,19 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
         map.Property(x => x.Id).HasMaxLength(80);
         map.Property(x => x.DefinitionJson).HasColumnType("jsonb");
         map.HasOne<Campaign>().WithMany().HasForeignKey(x => x.CampaignId);
+        var gameState = modelBuilder.Entity<CampaignGameState>();
+        gameState.HasKey(x => x.CampaignId);
+        gameState.Property(x => x.Revision).IsConcurrencyToken();
+        gameState.Property(x => x.SnapshotJson).HasColumnType("jsonb");
+        gameState.HasOne<Campaign>().WithOne().HasForeignKey<CampaignGameState>(x => x.CampaignId);
+        var operation = modelBuilder.Entity<GameOperation>();
+        operation.HasKey(x => new { x.CampaignId, x.RequestId });
+        operation.Property(x => x.Kind).HasMaxLength(40);
+        operation.Property(x => x.RequestJson).HasColumnType("jsonb");
+        operation.Property(x => x.BeforeJson).HasColumnType("jsonb");
+        operation.Property(x => x.ResponseJson).HasColumnType("jsonb");
+        operation.HasIndex(x => new { x.CampaignId, x.Revision }).IsUnique();
+        operation.HasIndex(x => new { x.CampaignId, x.Undone, x.Revision });
+        operation.HasOne<Campaign>().WithMany().HasForeignKey(x => x.CampaignId);
     }
 }

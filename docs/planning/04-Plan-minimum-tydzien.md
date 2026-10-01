@@ -1,6 +1,6 @@
 # Plan minimum — pierwszy tydzień
 
-Wersja robocza 0.5 · 30 września 2026
+Wersja robocza 0.6 · 1 października 2026
 
 **Cel:** użyteczny lokalny widok do prowadzenia całego Ythryn dostępnego w POC, z interaktywną mapą, czytelnymi notatkami, wymaganą edycją oraz czasem i Arcane Blight. Budżet użytkownika: siedem dni po około 3 godziny pracy z agentem, razem około 21 godzin. Testujemy i opisujemy uruchomienie na Windows. Wybrany stos pozostaje przenośny; nie planujemy w tym tygodniu osobnego odbioru na innych systemach.
 
@@ -10,7 +10,7 @@ Wersja robocza 0.5 · 30 września 2026
 
 Budujemy ogólny silnik MasterCompanion i kontrakt modułu. Moduł dostarcza treść, hierarchię folderów, mapy, konfigurację i własne mechaniki. Ythryn jest pierwszą implementacją tego kontraktu; jego nazwa w zakresie i scenariuszach oznacza materiał pilota, nie ograniczenie ogólnych funkcji silnika. Kampania przechowuje własną kopię materiałów i stan gry.
 
-Pierwsza wersja otwiera jedną lokalną kampanię Ythryn, przygotowaną z dostarczonej referencji. Obowiązkowo przenosimy wszystkie 16 dokumentów i 142 sekcje aktu 7 oraz mapę Ythryn z 29 znacznikami. Obejmuje to komnaty iglicy, spotkania, frakcje i dodatkowe materiały MG. Próbna lokacja Y4 służy tylko weryfikacji konwersji i edytora; nie jest zakresem końcowego rezultatu. Akt 6 pozostaje poza pilotem.
+Pierwsza wersja otwiera jedną lokalną kampanię Ythryn, przygotowaną z dostarczonej referencji. Rozliczenie pierwotnej konwersji obejmuje wszystkie 16 dokumentów i 142 sekcje aktu 7 oraz mapę Ythryn z 29 znacznikami. Po uporządkowaniu nawigacji utrzymywana paczka ma 106 materiałów w 10 folderach: usunięto strony pełniące wyłącznie funkcję indeksu, a sekcje pięciu dokumentów Fenes scalono w pełne dokumenty z zachowaniem treści i kotwic. Obejmuje to komnaty iglicy, spotkania, frakcje i dodatkowe materiały MG. Próbna lokacja Y4 służy tylko weryfikacji konwersji i edytora; nie jest zakresem końcowego rezultatu. Akt 6 pozostaje poza pilotem.
 
 Osoba prowadząca czyta, przechodzi między materiałami, włącza edycję istniejących opisów i obsługuje czas oraz Arcane Blight. Dane i własne zmiany zachowują się po restarcie. Kampania zaczyna się przy wejściu do miasta, z czasem 0 i zdrową drużyną. Nie tworzymy teraz nowych osobnych notatek; własne uwagi można dopisywać do materiałów. Długi odpoczynek obejmuje całą drużynę, a rzuty rozstrzygamy osobno dla każdego bohatera.
 
@@ -38,7 +38,7 @@ Projektujemy dla Full HD na jednym monitorze. Dopasowanie wyglądu i ergonomii g
 |---|---|---|
 | Uruchomienie | Aspire: Angular, jedno API .NET i PostgreSQL; dane przetrzymują restart. Instrukcja dla Windows. | Gotowy instalator i samodzielna paczka dla nietechnicznych MG, odbiór macOS/Linux. |
 | Kampania | Jedna automatycznie przygotowana kampania Ythryn. | Lista wielu kampanii, kreator pustej kampanii, wybieranie różnych modułów. |
-| Materiały | Całe Ythryn z POC: 16 dokumentów, 142 sekcje, mapa i powiązania; przygotowana nawigacja, prosty filtr nazw, szeroki czytnik, karty, linki wewnętrzne. | Pełne wyszukiwanie po treści i rozbudowane filtry, panel odwołań, zarządzanie typami i szablonami. |
+| Materiały | Całe Ythryn z POC; obecnie 106 materiałów w 10 folderach, mapa i powiązania. Historyczne rozliczenie obejmuje 16 dokumentów i 142 sekcje źródłowe; przygotowana nawigacja, prosty filtr nazw, szeroki czytnik, karty, linki wewnętrzne. | Pełne wyszukiwanie po treści i rozbudowane filtry, panel odwołań, zarządzanie typami i szablonami. |
 | Edycja | Tiptap, edycja istniejącego dokumentu, autosave i mały pasek formatowania. Zachowanie tabel, obrazów, wyróżnień i zwijanych sekcji bez utraty treści po zapisie. | Tworzenie nowych osobnych notatek, rozbudowane menu, tworzenie i konfigurowanie własnych bloków, zaawansowany pasek tabel, regularna edycja źródła, pełna historia wersji dokumentów. |
 | Wprowadzanie treści | Podstawowe wklejanie obsługiwanego HTML. Jawna akcja „Wstaw Markdown” pozostaje w propozycji ograniczonego edytora; nie rozwijamy osobnego procesu importowania plików. | Import całych stron, sejfów, zbiorów Markdown, pobieranie i przetwarzanie dowolnych zewnętrznych załączników. |
 | Obrazy | Przeniesione lokalne zasoby pilota, renderowane także w edytorze; pełna mapa w oryginalnej rozdzielczości. | Menedżer zasobów i bogata obsługa wgrywania nowych obrazów. |
@@ -68,7 +68,7 @@ Maps/GetMap
 Assets/GetAsset
 ```
 
-Nawigacja dostaje listę nazw i identyfikatorów materiałów. Zachowujemy jednostki źródłowe: 142 sekcje są osiągalnymi materiałami, uporządkowanymi w 16 grupach dokumentów. Kliknięcie znacznika otwiera jego konkretny opis; nie przewija wielkiego zbiorczego dokumentu lokacji. Karty powstają tylko po otwarciu materiału, nie otwieramy wszystkich 142 naraz. Model i rekomendowane endpointy opisuje plan wykonawczy.
+Nawigacja dostaje listę nazw i identyfikatorów materiałów. Obecnie 106 materiałów jest osiągalnych w 10 folderach. Lokacje Y1–Y29 i komnaty Y19 są bezpośrednio w jednym folderze lokacji; Fenes ma pięć pełnych dokumentów w folderze bohaterki. Dawne identyfikatory scalonych sekcji pozostają kotwicami. Historyczne 142 sekcje nie oznaczają obecnie 142 osobnych materiałów. Kliknięcie znacznika otwiera jego konkretny opis; nie przewija wielkiego zbiorczego dokumentu lokacji. Karty powstają tylko po otwarciu materiału, nie otwieramy wszystkich naraz. Model i rekomendowane endpointy opisuje plan wykonawczy.
 
 Czas i mechanika wymagają również:
 
@@ -102,7 +102,7 @@ Zasoby przechowujemy lokalnie pod identyfikatorami niezależnymi od fizycznych �
 
 ## 6. Siedem dni — proponowany podział budżetu
 
-Poniższe sloty są przydziałem 21 godzin pracy użytkownika z agentem, nie zweryfikowaną estymacją. Dni 1–4 przeznaczamy na cały główny widok z ograniczoną edycją, dni 5–6 na wymagane narzędzia, a dzień 7 pozostawiamy na odbiór, poprawki i instrukcję. Edycja i Arcane Blight są częścią odbioru pierwszego tygodnia. Testy reguł i ryzykowna próba konwersji zaczynają się przed końcowym odbiorem; nie odkładamy ich wszystkich na dzień 7.
+Poniższe sloty zachowują pierwotny przydział 21 godzin pracy użytkownika z agentem, nie zweryfikowaną estymację ani bieżący harmonogram. Liczby 16/142 w zadaniach konwersji odnoszą się do historycznego rozliczenia źródła; aktualna nawigacja ma 106 materiałów w 10 folderach. Dni 1–4 przeznaczamy na cały główny widok z ograniczoną edycją, dni 5–6 na wymagane narzędzia, a dzień 7 pozostawiamy na odbiór, poprawki i instrukcję. Edycja i Arcane Blight są częścią odbioru pierwszego tygodnia. Testy reguł i ryzykowna próba konwersji zaczynają się przed końcowym odbiorem; nie odkładamy ich wszystkich na dzień 7. Bieżącą kolejność prac opisuje [plan implementacji gry](09-Gameplay-implementation.md).
 
 | Dzień | Cel slotu do trzech godzin | Punkt sprawdzenia |
 |---|---|---|
@@ -118,7 +118,7 @@ Dzień 7 zostawia 3 godziny na sprawdzenie i poprawki, ale nie stanowi gwarancji
 
 ## 7. Odbiór minimum
 
-1. Uruchamiam aplikację lokalnie na Windows. Raport migracji rozlicza 16 dokumentów, 142 sekcje i 29 znaczników; wszystkie dostępne teksty Ythryn są osiągalne w nawigacji. Żaden znacznik nie kieruje do nieistniejącego materiału. Przegląd obejmuje także komnaty Y19, tabele i materiały dodatkowe.
+1. Uruchamiam aplikację lokalnie na Windows. Historyczny raport migracji rozlicza 16 dokumentów, 142 sekcje i 29 znaczników; utrzymywana paczka zawiera obecnie 106 materiałów w 10 folderach. Wszystkie dostępne teksty Ythryn są osiągalne w nawigacji, także sekcje scalonych dokumentów Fenes. Żaden znacznik nie kieruje do nieistniejącego materiału. Przegląd obejmuje także komnaty Y19, tabele i materiały dodatkowe.
 2. Otwieram Y4 z mapy, czytam długi opis, przechodzę do innego materiału i wracam w poprzednie miejsce. Mapa zachowuje powiększenie i przesunięcie. Każdy odnośnik źródłowy jest rozliczony; nie ma pozornie działających linków do nieobecnych treści.
 3. Włączam edycję, zmieniam treść i potwierdzam zachowanie jej po restarcie. Czytelność i istniejące elementy dokumentu są zachowane. Klikanie w trybie czytania nie otwiera edytora. Błąd zapisu jest widoczny i nie kasuje tekstu z karty.
 4. Po przygotowaniu środowiska odłączam internet, ponownie uruchamiam aplikację i wykonuję ten sam przebieg. Dane startowe nie nadpisują zmian. Potrzebne materiały nie wymagają otwarcia Obsidiana ani strony internetowej.
@@ -138,4 +138,6 @@ Uzupełnienie 30 września: utrzymywane źródła modułu to osobne pliki Markdo
 2. Wystarczy edycja istniejących materiałów; tworzenie nowych osobnych notatek jest późniejszym zakresem.
 3. Wystarczy wspólny długi odpoczynek całej drużyny; wyniki mechaniki pozostają indywidualne.
 
-Zakres minimum nie wymaga ponownego potwierdzania tych decyzji. Następny dokument rozpisuje [konkretne zadania i propozycję techniczną](05-Plan-wykonawczy-MVP.md). Nadal pracujemy nad planem; odpowiedzi o zakresie nie stanowią same w sobie polecenia rozpoczęcia implementacji.
+Zakres minimum nie wymaga ponownego potwierdzania tych decyzji. [Plan wykonawczy](05-Plan-wykonawczy-MVP.md) zachowuje pełny zakres i pierwotny podział budżetu.
+
+Execution update, 1 October: the user explicitly requested planning, parallel work where possible, and starting implementation. The [gameplay implementation plan](09-Gameplay-implementation.md) defines the current delivery order and the shared contract required before parallel rule and persistence work. Frontend gameplay, remaining editor features and full offline acceptance remain subsequent work; this authorization does not constitute evidence that those features are complete.

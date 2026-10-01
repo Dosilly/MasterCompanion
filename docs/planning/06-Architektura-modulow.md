@@ -1,5 +1,11 @@
 # Granica silnika i modułów
 
+## Gameplay contract — 1 October 2026
+
+The first gameplay slice uses `ICampaignGameRules` in `MasterCompanion.Contracts`. The engine owns elapsed minutes, party IDs, shared rest ends, revisions and transactionally stored snapshots and operation receipts. A module owns the schema, validation and transformation of its JSON state and its tool projection. Pure rules receive neutral snapshots; they never import engine persistence or EF Core. The API registers concrete implementations.
+
+Campaign-scoped operations must atomically update time, module state, revision and history. Sequential undo restores the last active snapshot while advancing revision; material saves remain independent. Request IDs preserve the original receipt for safe retries and reject reuse with different input. See [the gameplay implementation plan](09-Gameplay-implementation.md) for delivery order and acceptance evidence.
+
 30 września 2026 · rozpoczęta implementacja fundamentu
 
 Użytkownik wymaga mocnej granicy między silnikiem wyświetlającym materiały a modułami kampanii. Wprowadzamy osobne projekty .NET i osobno kompilowane biblioteki Angulara. Vertical slices pozostają sposobem organizacji przypadków użycia wewnątrz projektu odpowiedzialnego za daną funkcję.
@@ -29,7 +35,7 @@ Host jest jedynym miejscem, które składa konkretny silnik i konkretny moduł. 
 | Nawigacja materiałów, karty, czytnik, edytor i zapis | Silnik |
 | Wyświetlanie mapy i otwieranie materiałów ze znaczników | Silnik |
 | Foldery i ich hierarchia, treść, ilustracje map, pozycje i cele znaczników, materiał początkowy | Implementacja modułu |
-| Reguły specyficzne dla przygody i interfejs jej narzędzi | Implementacja modułu; w pilocie Arcane Blight, jeszcze do implementacji |
+| Reguły specyficzne dla przygody i interfejs jej narzędzi | Implementacja modułu; backend Arcane Blight is implemented, frontend tool pending |
 | Neutralne typy folderów, materiałów i map, manifest, rejestracja narzędzi | Kontrakty |
 | Rejestracja modułów, DI, procesy, połączenie z bazą | Host / Aspire |
 
@@ -48,7 +54,7 @@ Kotwice nagłówków używają `{#id}`. Zwykły Markdown nie reprezentuje wszyst
 
 Folder ma stabilny identyfikator i opcjonalny identyfikator rodzica. Materiał wskazuje folder; nazwa grupy służy jedynie opisowi w czytniku. Hierarchia jest kopiowana do tabeli `engine.Folders`, a silnik sprawdza brak cykli i poprawność odwołań. Przy aktualizacji pierwszego fundamentu, który miał wyłącznie płaskie grupy, jednorazowo uzupełniamy foldery i przypisania istniejących materiałów. Ta aktualizacja metadanych nie zmienia dokumentów ani rewizji zapisu. Kolejne starty nie odtwarzają hierarchii z paczki.
 
-Przed implementacją zegara i Arcane Blight należy ustalić kontrakt operacji gry: wspólny czas i cofanie muszą wywoływać reguły modułu przez jawny interfejs. Nie dodajemy wyjątków `if moduleId == ythryn` do silnika. Stan zarazy nie staje się kolumnami w ogólnym modelu bohatera. Sposób utrwalenia i atomowość zmiany czasu oraz stanu modułu wymagają sprawdzenia przy tym slice.
+The gameplay contract is now `ICampaignGameRules`, with elapsed minutes, party and shared rest owned by the engine and versioned module JSON interpreted only by the module. `GameplayService` stores current snapshots and confirmed operation receipts under the `engine` schema. Transactions and campaign row locks protect time, module state, revisions and sequential undo together. Material documents remain outside this journal. Repeatable-read gameplay GETs keep current state and undo availability coherent; replayed receipts are validated before returning. The API is the composition root registering `YthrynGameRules`. No module-specific branch or disease column was added to the engine. Verification and the pending frontend are recorded in [the gameplay plan](09-Gameplay-implementation.md).
 
 ## Frontend
 

@@ -1,5 +1,7 @@
 # Migawka stanu implementacji
 
+Current execution evidence for gameplay is in [the gameplay implementation plan](09-Gameplay-implementation.md). The entries below preserve earlier verification history.
+
 30 września 2026 · zapis historyczny przeniesiony z README
 
 Poniższy opis zachowuje stan i wyniki prób raportowane przed uporządkowaniem repozytorium. Nie jest potwierdzeniem ponownego wykonania tych prób. Oryginalny katalog POC został usunięty; gotowe dane i mapa modułu pozostają w `src/MasterCompanion.Modules.Ythryn/Data`.
@@ -39,3 +41,11 @@ The user explicitly authorized replacing all materials in the existing local cam
 All 16 content and source-tool tests passed, including exact preservation of consolidated section content, schema round trips, navigation order, internal links, map targets, and portable export of colon-containing IDs on Windows. The code/localization check and the affected .NET module build passed; the build reported no warnings or errors. API evidence from the running PostgreSQL-backed campaign confirmed exact source content at replacement, the final 106 materials and 10 folders, unchanged maps, and increasing revisions. A stale save returned a revision conflict without changing the document. During the final read, the tomb-tapper encounter had a subsequent campaign save at revision 3; that later save was preserved, while the remaining 105 documents still matched the source package.
 
 Browser checks at 1920×1080 covered map navigation to Y19, search, the single-page recovery report and observatory correspondence, and both themes without horizontal page overflow. No console errors were observed. Angular's existing oversized-map-image performance warning remains. No frontend implementation changed; no frontend rebuild, application restart, or database-volume removal was needed. General module upgrades and visual module authoring remain deferred.
+
+## Gameplay backend — 1 October 2026
+
+The first gameplay backend slice now implements party setup, elapsed time, shared rest, module-owned Arcane Blight outcomes and healing, idempotent operation receipts, revision conflicts and sequential undo. State and operation history are separate from material documents and committed atomically. A neutral `ICampaignGameRules` contract keeps module rules independent of engine persistence. The new additive EF migration and API registration are prepared; the local user's campaign has not been migrated or initialized with game state during this work.
+
+Verification passed 16 pure-rule cases, real PostgreSQL integration tests (concurrency, receipts, undo, material isolation, rollback at commit, corrupt data rejection and cancellation), and real HTTP boundary tests. Test database restart preserved state, journal and authored material hashes. The full backend solution and final affected backend/test project compiled without warnings or errors. Code/localization, dependency boundaries and EF model/migration consistency checks passed. All database probes used an isolated disposable test container; no user database volume was removed or changed.
+
+The next slice is the gameplay frontend: party setup, time controls, shared rest, module tool, outcome inputs and undo. The backend has no gameplay UI yet; no browser or complete offline acceptance is claimed. Insert Markdown and selecting internal material links remain after gameplay integration. See [the delivery plan](09-Gameplay-implementation.md) for the API contract, bounds and repeatable checks.

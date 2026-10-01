@@ -1,10 +1,12 @@
 # Plan wykonawczy MVP — MasterCompanion
 
-Wersja robocza 0.4 · 30 września 2026
+Wersja robocza 0.5 · 1 października 2026
 
 **Zakres:** pełne Ythryn z POC, mapa, czytelne materiały, edycja istniejących opisów, autosave, czas, Arcane Blight, wspólny odpoczynek i cofanie ostatnich operacji. Edycja i Arcane Blight są obowiązkowe w pierwszym tygodniu. Budżet: około 21 godzin pracy użytkownika z agentem. Implementacja fundamentu została rozpoczęta; bieżący stan i weryfikację opisuje [implementation status](07-Stan-implementacji.md). Mocna granica silnika i modułów jest nowym wymaganiem użytkownika i została uwzględniona w [architekturze](06-Architektura-modulow.md).
 
 [Plan minimum](04-Plan-minimum-tydzien.md) rozdziela funkcje pierwszej wersji od backlogu. [Warsztat](03-Plan-implementacji.md) zachowuje uzgodnienia i ich kontekst. Poniższe wybory szczegółów technicznych są rekomendacjami autora planu w ramach przyjętego stosu; nie przedstawiamy ich jako osobnych odpowiedzi użytkownika.
+
+Execution update, 1 October: the user requested parallel work where possible and starting implementation. The [gameplay implementation plan](09-Gameplay-implementation.md) defines the current delivery order, neutral operation contract, and acceptance for the first backend slice. Rules and persistence can proceed in parallel after the shared contract is defined; frontend gameplay follows verification of the API contract. The existing source reorganization remains intact: 106 materials, 10 folders and 29 map markers. Historical 16-document, 142-section and 18-folder counts remain evidence of earlier conversion and migration stages, not the current navigation totals.
 
 Plan dotyczy ogólnego silnika MasterCompanion i kontraktu modułu. Ythryn jest konkretną implementacją wybraną do pilota i źródłem materiałów do odbioru. Funkcje czytnika, edycji, hierarchii folderów, map i kart działają na neutralnych kontraktach. Reguły Arcane Blight należą do implementacji modułu. Definicje silnika, modułu i kampanii zawiera [architektura](06-Architektura-modulow.md).
 
@@ -76,7 +78,7 @@ Slice zawiera endpoint, wejście/wyjście, walidację i zapis. Reguły Arcane Bl
 
 Pierwsza wersja korzysta z jednej przygotowanej kampanii. Materiały pozostają oddzielone od stanu gry, więc cofnięcie zegara nie zmienia notatek. Czas świata jest liczbą minut od wejścia; nie wiążemy go ze strefą czasu Windows ani datą rzeczywistą.
 
-Zachowujemy 142 jednostki treści z 16 dokumentów POC, włącznie ze stronami wprowadzającymi. Nawigacja zachowuje zagnieżdżenie dokumentów i folderów źródłowych, w tym „Wątki graczy w Ythryn → Fenes → dokumenty” oraz materiały redakcyjne. Y4 i poszczególne komnaty Y19 są konkretnymi materiałami. Karty otwieramy tylko na żądanie. Odnośniki źródłowe otrzymują mapowanie do identyfikatorów materiałów; przegląd rozlicza również odwołania bibliograficzne i brakujące cele. Liczby 16/142/29 opisują migrację źródła, a nie limit przyszłej aplikacji.
+Pierwotna konwersja rozliczyła 142 jednostki z 16 dokumentów POC. Po uporządkowaniu utrzymywana paczka zawiera 106 materiałów w 10 folderach. Usunięto strony pełniące wyłącznie funkcję indeksu; sekcje pięciu dokumentów Fenes scalono w pełne dokumenty z zachowaniem treści, tabel i kotwic. Lokacje Y1–Y29 i komnaty Y19 są bezpośrednio w jednym folderze, a „Wątki graczy w Ythryn → Fenes” zawiera pięć dokumentów. Materiały redakcyjne zachowują zagnieżdżenie. Y4 i poszczególne komnaty Y19 pozostają konkretnymi materiałami. Karty otwieramy tylko na żądanie. Odnośniki źródłowe otrzymują mapowanie do identyfikatorów materiałów i kotwic sekcji; przegląd rozlicza również odwołania bibliograficzne i brakujące cele. Liczby 16/142/29 opisują historyczną migrację źródła, a nie bieżącą liczbę materiałów ani limit przyszłej aplikacji.
 
 Kampanię przygotowujemy jeden raz. Ponowny start ani regeneracja pliku modułu nie nadpisuje edytowanych materiałów. Aktualizowanie istniejącej kampanii nową paczką modułu jest przyszłym zakresem. Baza i pliki mają trwałe lokalne miejsce przechowywania.
 
@@ -107,7 +109,7 @@ Po dodaniu wymagania mocnej granicy modułów ten fragment jest kierunkiem proje
 
 ## 5. Zadania w siedmiu dniach
 
-Każdy dzień ma budżet około 3 godzin. Agent przygotowuje kod, konwersję i sprawdzenia, a użytkownik w tym samym budżecie uruchamia, przegląda i ocenia widok. Tabela nie jest pomiarem wykonanego wdrożenia.
+Każdy dzień ma budżet około 3 godzin. Agent przygotowuje kod, konwersję i sprawdzenia, a użytkownik w tym samym budżecie uruchamia, przegląda i ocenia widok. Tabela zachowuje pierwotny podział budżetu, nie jest pomiarem wykonanego wdrożenia ani bieżącym harmonogramem. Liczby 16/142 w zadaniach konwersji odnoszą się do historycznego rozliczenia źródła; aktualna nawigacja ma 106 materiałów w 10 folderach. Bieżącą kolejność prac opisuje [plan implementacji gry](09-Gameplay-implementation.md).
 
 | Dzień | Zadania | Warunek ukończenia |
 |---|---|---|
