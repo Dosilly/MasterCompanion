@@ -1,6 +1,6 @@
 import { Component, computed, ElementRef, forwardRef, input, OnDestroy, OnInit, output, signal, Type, viewChild } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
-import { CAMPAIGN_GAME, CampaignModuleFrontend, GameAction, GameToolContext, ToolRegistration } from '@mastercompanion/contracts';
+import { CAMPAIGN_GAME, CampaignModuleFrontend, GameAction, GameToolContext, MaterialTarget, ToolRegistration } from '@mastercompanion/contracts';
 import { GameSession } from './game-session';
 import { uiMessages } from '../../i18n/messages';
 
@@ -60,6 +60,7 @@ export class GameView implements OnInit, OnDestroy, GameToolContext {
   readonly session = input.required<GameSession>();
   readonly module = input.required<CampaignModuleFrontend>();
   readonly openParty = output<void>();
+  readonly materialRequested = output<MaterialTarget>();
   readonly text = uiMessages.game;
   readonly state = computed(() => this.session().state());
   readonly pending = computed(() => this.session().pending());
@@ -80,6 +81,7 @@ export class GameView implements OnInit, OnDestroy, GameToolContext {
   ngOnInit() { const tool = this.module().tools[0]; if (tool) void this.selectTool(tool); }
   ngOnDestroy() { this.destroyed = true; this.generation++; }
   async execute(action: GameAction) { this.validationError.set(null); return this.session().execute(action); }
+  openMaterial(target: MaterialTarget): void { this.materialRequested.emit(target); }
   updateMinutes(event: Event) { if (event.target instanceof HTMLInputElement) this.minutes.set(event.target.value); }
   customAdvance(event: Event) {
     event.preventDefault();

@@ -39,7 +39,7 @@ public sealed class GameplayService(AppDbContext db, IEnumerable<ICampaignGameRu
         var state = await db.GameStates.AsNoTracking().SingleOrDefaultAsync(x => x.CampaignId == campaignId, token);
         if (state is { Revision: < 1 }) throw new InvalidOperationException("The saved game revision is invalid.");
         var snapshot = state is null ? Empty(rules) : Decode(state.SnapshotJson);
-        ValidateSnapshot(snapshot, rules);
+        snapshot = UpgradeSnapshot(snapshot, rules);
         return new(200, Response: new(state?.Revision ?? 0, snapshot, rules.Describe(snapshot),
             await LastOperationAsync(campaignId, token)));
     }
@@ -83,7 +83,7 @@ public sealed class GameplayService(AppDbContext db, IEnumerable<ICampaignGameRu
         if (request.ExpectedRevision != revision) return new(409, "game_revision_conflict");
         if (revision == long.MaxValue) return new(409, "game_revision_limit");
         var before = state is null ? Empty(rules) : Decode(state.SnapshotJson);
-        ValidateSnapshot(before, rules);
+        before = UpgradeSnapshot(before, rules);
         GameSnapshot after;
         GameOperationSummary? last;
         if (request.Kind == "undo")
@@ -92,7 +92,7 @@ public sealed class GameplayService(AppDbContext db, IEnumerable<ICampaignGameRu
                 .OrderByDescending(x => x.Revision).FirstOrDefaultAsync(token);
             if (target is null) return new(409, "game_nothing_to_undo");
             after = Decode(target.BeforeJson);
-            ValidateSnapshot(after, rules);
+            after = UpgradeSnapshot(after, rules);
             target.Undone = true;
             last = await db.GameOperations.AsNoTracking()
                 .Where(x => x.CampaignId == campaignId && !x.Undone && x.Kind != "undo" && x.RequestId != target.RequestId)
@@ -202,8 +202,7 @@ public sealed class GameplayService(AppDbContext db, IEnumerable<ICampaignGameRu
     private static void ValidateSnapshot(GameSnapshot snapshot, ICampaignGameRules rules)
     {
         if (snapshot.TimeMinutes is < 0 or > GameLimits.MaxTimeMinutes || snapshot.Party is null || snapshot.RestEnds is null ||
-            !IsValidParty(snapshot.Party) || snapshot.RestEnds.Count > GameLimits.MaxRestCount ||
-            snapshot.ModuleSchemaVersion != rules.StateSchemaVersion)
+            !IsValidParty(snapshot.Party) || snapshot.RestEnds.Count > GameLimits.MaxRestCount)
             throw new InvalidOperationException("The saved game snapshot violates the supported schema.");
         long previous = 0;
         foreach (var minute in snapshot.RestEnds)
@@ -213,5 +212,19 @@ public sealed class GameplayService(AppDbContext db, IEnumerable<ICampaignGameRu
             previous = minute;
         }
         rules.Validate(snapshot);
+    }
+
+    private static GameSnapshot UpgradeSnapshot(GameSnapshot snapshot, ICampaignGameRules rules)
+    {
+        ValidateSnapshot(snapshot, rules);
+        var party = snapshot.Party.ToArray();
+        var restEnds = snapshot.RestEnds.ToArray();
+        var upgraded = rules.Upgrade(snapshot);
+        if (upgraded.ModuleSchemaVersion != rules.StateSchemaVersion || upgraded.TimeMinutes != snapshot.TimeMinutes ||
+            upgraded.Party is null || !upgraded.Party.SequenceEqual(party) ||
+            upgraded.RestEnds is null || !upgraded.RestEnds.SequenceEqual(restEnds))
+            throw new InvalidOperationException("A module state upgrade changed engine-owned data or returned an unsupported schema.");
+        ValidateSnapshot(upgraded, rules);
+        return upgraded;
     }
 }

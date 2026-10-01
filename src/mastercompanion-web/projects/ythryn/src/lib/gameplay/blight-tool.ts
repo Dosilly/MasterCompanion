@@ -10,6 +10,8 @@ import { BlightCharacterView, CheckDieSelection, readBlightView, resolveCheckCom
     <section class="blight-tool" aria-labelledby="blight-title">
       <h2 id="blight-title">{{ text.toolTitle }}</h2>
       <p class="description">{{ text.toolDescription }}</p>
+      <p><a href="#material/sac11d9beb0d8/sa401a28def19" (click)="openRules($event)">{{ text.rulesLink }}</a></p>
+      <p class="description">{{ text.checkScheduleHint }}</p>
       @if (!game.state()) {
         <p role="status">{{ text.loading }}</p>
       } @else if (game.state()?.snapshot?.party?.length === 0) {
@@ -27,12 +29,12 @@ import { BlightCharacterView, CheckDieSelection, readBlightView, resolveCheckCom
               @if (character.nextCheck; as check) {
                 <p class="check" [class.is-pending]="check.pending">
                   <strong>{{ text.checks[check.kind] }}</strong>
-                  <span>{{ formatMinute(check.minute) }} · {{ check.pending ? text.pending : text.upcoming }}</span>
+                  <span>{{ text.timeUntilCheck }}: {{ formatMinute(check.remainingMinutes) }} · {{ check.pending ? text.pending : text.upcoming }}</span>
                 </p>
                 @if (check.pending) {
                   <fieldset [disabled]="!game.canOperate() || game.pending()">
                     <legend>{{ text.checks[check.kind] }} — {{ character.name }}</legend>
-                    @if (check.kind === 'rest') {
+                    @if (check.kind === 'rest' || check.kind === 'recovery') {
                       <label [for]="'blight-die-' + character.id">{{ text.dieResult }}</label>
                       <select [id]="'blight-die-' + character.id" [value]="selectedDie(character) ?? ''"
                         (change)="selectDie(character.id, $event)">
@@ -74,6 +76,11 @@ export class BlightTool {
   });
   private readonly selectedDice = signal<ReadonlyMap<string, CheckDieSelection>>(new Map());
 
+  openRules(event: Event): void {
+    event.preventDefault();
+    this.game.openMaterial({ id: 'sac11d9beb0d8', anchor: 'sa401a28def19' });
+  }
+
   selectedDie(character: BlightCharacterView): number | null {
     return selectedCheckDie(character, this.selectedDice().get(character.id));
   }
@@ -83,7 +90,7 @@ export class BlightTool {
     if (!(select instanceof HTMLSelectElement) || this.game.pending()) return;
     const character = this.characters()?.find(candidate => candidate.id === id);
     const check = character?.nextCheck;
-    if (!check || !check.pending || check.kind !== 'rest') return;
+    if (!check || !check.pending || (check.kind !== 'rest' && check.kind !== 'recovery')) return;
     const die = Number(select.value);
     const updated = new Map(this.selectedDice());
     if (Number.isInteger(die) && die >= 1 && die <= 6) {

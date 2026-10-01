@@ -1,6 +1,9 @@
 {
   "toolTitle": "Arcane Blight",
   "toolDescription": "Record each character's check result. Game time and shared rest are controlled above.",
+  "rulesLink": "Arcane Blight rules",
+  "checkScheduleHint": "Healthy characters check every 12 hours. Infected characters check every 12 hours or after a long rest; each recovery check starts the next 12-hour interval.",
+  "timeUntilCheck": "Time until check",
   "invalidState": "Arcane Blight could not read the game state. Reload the game state before recording a result.",
   "configureParty": "Configure the party above to track Arcane Blight.",
   "loading": "Loading Arcane Blight…",
@@ -8,7 +11,7 @@
   "statuses": { "healthy": "Healthy", "infected": "Infected", "immune": "Immune", "transformed": "Transformed" },
   "dc": "DC",
   "failures": "Failed recovery checks",
-  "checks": { "exposure": "Exposure check", "rest": "Recovery after rest" },
+  "checks": { "exposure": "Exposure check", "rest": "Recovery after long rest", "recovery": "Recovery after 12 hours" },
   "pending": "Awaiting result",
   "upcoming": "Upcoming",
   "hour": "h",

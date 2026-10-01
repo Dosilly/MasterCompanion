@@ -21,7 +21,9 @@ public static class RulesTests
             RejectMalformedCommands, RejectInappropriateDice, RejectEarlyAndTerminalChecks,
             RejectCorruptStates, RestMustFollowInfection, NeutralChangesPreserveRules,
             PartyChangesPreserveExistingCharacterState, AddedCharactersStartAtCurrentTime,
-            ShortRestDoesNotScheduleRecovery
+            ShortRestDoesNotScheduleRecovery, InfectedChecksRepeatEveryTwelveHours,
+            LongRestResetsRecoveryTimer, OverdueChecksFollowChronology,
+            CoincidentRecoveryAndRestProduceOneCheck, LegacyUpgradePreservesCharacterHistory
         };
         foreach (var test in cases) test();
         Console.WriteLine($"Arcane Blight rules: {cases.Length} cases passed.");
@@ -30,7 +32,7 @@ public static class RulesTests
     private static void InitialAndUnconfiguredStates()
     {
         var party = Array.Empty<GameCharacter>();
-        var empty = new GameSnapshot(0, party, [], 1, Rules.Initialize(party));
+        var empty = new GameSnapshot(0, party, [], Rules.StateSchemaVersion, Rules.Initialize(party));
         Rules.Validate(empty);
         Assert(Rules.Describe(empty).GetProperty("characters").GetArrayLength() == 0, "Unconfigured state must be readable.");
         var initial = Initial();
@@ -74,7 +76,9 @@ public static class RulesTests
         Assert(Check(state).GetProperty("minute").GetInt64() == 1080, "The known rest deadline must be preserved.");
         state = Apply(state, Resolve(true, 6));
         Assert(Character(state).GetProperty("dc").GetInt32() == 9, "Successful recovery must subtract d6 from DC.");
-        Assert(Character(state).GetProperty("nextCheck").ValueKind == JsonValueKind.Null, "The same rest must not be processed twice.");
+        Assert(Check(state).GetProperty("kind").GetString() == "recovery" &&
+            Check(state).GetProperty("minute").GetInt64() == 1800 && !Check(state).GetProperty("pending").GetBoolean(),
+            "Resolving a rest must restart the recovery timer without processing the same rest twice.");
     }
 
     private static void IndependentCharacterResults()
@@ -195,7 +199,7 @@ public static class RulesTests
     private static void RejectCorruptStates()
     {
         var initial = Initial();
-        AssertCorrupt(initial with { ModuleSchemaVersion = 2 });
+        AssertCorrupt(initial with { ModuleSchemaVersion = 3 });
         AssertCorrupt(initial with { TimeMinutes = -1 });
         AssertCorrupt(initial with { TimeMinutes = GameLimits.MaxTimeMinutes + 1 });
         AssertCorrupt(initial with { ModuleState = Json("null") });
@@ -220,6 +224,11 @@ public static class RulesTests
         AssertCorrupt(Mutate(infected, "dc", JsonValue.Create(14)));
         AssertCorrupt(Mutate(infected, "lastResolvedRest", JsonValue.Create(900)));
         AssertCorrupt(Mutate(infected, "failures", JsonValue.Create(3)));
+        AssertCorrupt(Mutate(infected, "nextRecovery", JsonValue.Create(1441)));
+        AssertCorrupt(Mutate(infected, "recoveryStartedAt", JsonValue.Create(721)));
+        AssertCorrupt(Mutate(infected, "lastResolvedRecovery", JsonValue.Create(1080)));
+        AssertCorrupt(Mutate(infected, "recoveryChecks", JsonValue.Create(-1)));
+        AssertCorrupt(Mutate(infected, "recoveryChecks", JsonValue.Create(19)));
         var missingField = JsonNode.Parse(initial.ModuleState.GetRawText()) as JsonObject
             ?? throw new InvalidOperationException("Test state must be an object.");
         var missingCharacters = missingField["characters"] as JsonArray
@@ -233,7 +242,9 @@ public static class RulesTests
     private static void RestMustFollowInfection()
     {
         var state = Apply(Rest(Initial(), 720), Resolve(false));
-        Assert(Character(state).GetProperty("nextCheck").ValueKind == JsonValueKind.Null, "Rest at the infection instant must not count as recovery after infection.");
+        Assert(Check(state).GetProperty("kind").GetString() == "recovery" &&
+            Check(state).GetProperty("minute").GetInt64() == 1440,
+            "Rest at the infection instant must not count as recovery after infection or suppress the periodic timer.");
         state = Rest(state, 1200);
         Assert(Check(state).GetProperty("minute").GetInt64() == 1200, "Recovery must use the first rest after infection.");
     }
@@ -303,18 +314,153 @@ public static class RulesTests
         var infected = Apply(At(Initial(), 720), Resolve(false));
         var afterShortRest = At(infected, 780);
         Assert(afterShortRest.RestEnds.Count == 0 &&
-            Character(afterShortRest).GetProperty("nextCheck").ValueKind == JsonValueKind.Null &&
+            Check(afterShortRest).GetProperty("kind").GetString() == "recovery" &&
+            Check(afterShortRest).GetProperty("minute").GetInt64() == 1440 &&
+            !Check(afterShortRest).GetProperty("pending").GetBoolean() &&
             JsonElement.DeepEquals(infected.ModuleState, afterShortRest.ModuleState),
-            "An hour without a completed long rest must not create an Arcane Blight recovery check or alter infection.");
+            "An hour without a completed long rest must preserve the existing periodic recovery timer and infection.");
         var longRest = Rest(afterShortRest, 1260);
         Assert(Check(longRest).GetProperty("minute").GetInt64() == 1260,
             "The next completed long rest must still schedule recovery after a short rest.");
     }
 
+    private static void InfectedChecksRepeatEveryTwelveHours()
+    {
+        var infected = Apply(At(Initial(), 720), Resolve(false));
+        Assert(Check(infected).GetProperty("kind").GetString() == "recovery" &&
+            Check(infected).GetProperty("minute").GetInt64() == 1440,
+            "Infection must schedule its first recovery check twelve hours after the exposure deadline.");
+        AssertError(At(infected, 1439), Resolve(true, 6), "game_check_not_due");
+        var recovered = Apply(At(infected, 1440), Resolve(true, 6));
+        Assert(Character(recovered).GetProperty("dc").GetInt32() == 9 &&
+            Check(recovered).GetProperty("minute").GetInt64() == 2160,
+            "A periodic recovery success must reduce DC by d6 and start another twelve-hour interval.");
+        for (var failure = 1; failure <= 3; failure++)
+        {
+            recovered = Apply(At(recovered, 1440 + failure * 720), Resolve(false));
+            Assert(Character(recovered).GetProperty("failures").GetInt32() == failure,
+                "Periodic recovery failures must use the same cumulative failure counter as long rests.");
+        }
+        Assert(Character(recovered).GetProperty("status").GetString() == "transformed" &&
+            Character(recovered).GetProperty("nextCheck").ValueKind == JsonValueKind.Null,
+            "Three periodic failures must transform the character and stop further checks.");
+
+        var immune = infected;
+        foreach (var die in new[] { 6, 6, 3 })
+            immune = Apply(At(immune, Check(immune).GetProperty("minute").GetInt64()), Resolve(true, die));
+        Assert(Character(immune).GetProperty("status").GetString() == "immune" &&
+            Character(immune).GetProperty("nextCheck").ValueKind == JsonValueKind.Null,
+            "Periodic successes that lower DC to zero must grant immunity and stop the timer.");
+    }
+
+    private static void LongRestResetsRecoveryTimer()
+    {
+        var infected = Apply(At(Initial(), 720), Resolve(false));
+        var state = Apply(Rest(infected, 1200), Resolve(true, 4));
+        Assert(Check(state).GetProperty("kind").GetString() == "recovery" &&
+            Check(state).GetProperty("minute").GetInt64() == 1920,
+            "A long-rest outcome must replace the old 1440-minute timer with twelve hours from the rest end.");
+        state = At(state, 1440);
+        Assert(!Check(state).GetProperty("pending").GetBoolean(),
+            "The replaced timer must not cause a second check at its original deadline.");
+        AssertError(state, Resolve(false), "game_check_not_due");
+        Assert(Check(state, SecondId).GetProperty("kind").GetString() == "exposure" &&
+            Check(state, SecondId).GetProperty("minute").GetInt64() == 720,
+            "A long rest must not reset the healthy character's independent exposure timer.");
+        state = Apply(At(state, 1920), Resolve(false));
+        Assert(Character(state).GetProperty("dc").GetInt32() == 11 &&
+            Character(state).GetProperty("failures").GetInt32() == 1,
+            "Periodic recovery after a rest must preserve the accumulated DC and failures.");
+    }
+
+    private static void OverdueChecksFollowChronology()
+    {
+        var infected = Apply(At(Initial(), 720), Resolve(false));
+        var overdue = Rest(At(infected, 1200), 1680);
+        Assert(Check(overdue).GetProperty("kind").GetString() == "recovery" &&
+            Check(overdue).GetProperty("minute").GetInt64() == 1440,
+            "A periodic deadline before a later long rest must be resolved first, even if both are overdue.");
+        overdue = Apply(overdue, Resolve(false));
+        Assert(Check(overdue).GetProperty("kind").GetString() == "rest" &&
+            Check(overdue).GetProperty("minute").GetInt64() == 1680,
+            "Resolving the periodic check must reveal the later unresolved rest.");
+        overdue = Apply(overdue, Resolve(true, 5));
+        Assert(Check(overdue).GetProperty("minute").GetInt64() == 2400 &&
+            Character(overdue).GetProperty("failures").GetInt32() == 1 &&
+            Character(overdue).GetProperty("dc").GetInt32() == 10,
+            "The later rest must reset the next deadline while retaining outcomes from the earlier periodic check.");
+
+        var distant = At(infected, 2880);
+        foreach (var deadline in new long[] { 1440, 2160, 2880 })
+        {
+            Assert(Check(distant).GetProperty("minute").GetInt64() == deadline,
+                "Several overdue periodic checks must resolve in their original deadline order.");
+            distant = Apply(distant, Resolve(true, 1));
+        }
+        Assert(Check(distant).GetProperty("minute").GetInt64() == 3600,
+            "Resolving overdue checks must advance from each event time, preserving unprocessed intervals.");
+    }
+
+    private static void CoincidentRecoveryAndRestProduceOneCheck()
+    {
+        var infected = Apply(At(Initial(), 720), Resolve(false));
+        var collision = Rest(infected, 1440);
+        Assert(Check(collision).GetProperty("kind").GetString() == "rest",
+            "A long rest ending at the periodic deadline must take priority over that timer.");
+        collision = Apply(collision, Resolve(false));
+        Assert(Character(collision).GetProperty("failures").GetInt32() == 1 &&
+            Check(collision).GetProperty("kind").GetString() == "recovery" &&
+            Check(collision).GetProperty("minute").GetInt64() == 2160 &&
+            !Check(collision).GetProperty("pending").GetBoolean(),
+            "Coincident events must produce one outcome and a single reset timer, without a duplicate failure.");
+        AssertError(collision, Resolve(false), "game_check_not_due");
+    }
+
+    private static void LegacyUpgradePreservesCharacterHistory()
+    {
+        var legacy = new GameSnapshot(1800,
+            [new(FirstId, "Authored name"), new(SecondId, "Second authored name")], [1080L, 1560L], 1,
+            JsonSerializer.SerializeToElement(new { characters = new[]
+            {
+                new { id = FirstId, status = "infected", dc = 10, failures = 1,
+                    infectedAt = (long?)720, nextExposure = (long?)null, lastResolvedRest = (long?)1560 },
+                new { id = SecondId, status = "healthy", dc = 15, failures = 0,
+                    infectedAt = (long?)null, nextExposure = (long?)2160, lastResolvedRest = (long?)null }
+            } }));
+        var original = legacy.ModuleState.GetRawText();
+        Rules.Validate(legacy);
+        Assert(Character(legacy).GetProperty("nextCheck").ValueKind == JsonValueKind.Null,
+            "Legacy projections must retain rest-only behavior for historical receipt validation.");
+        var upgraded = Rules.Upgrade(legacy);
+        Rules.Validate(upgraded);
+        Assert(upgraded.ModuleSchemaVersion == 2 && upgraded.TimeMinutes == legacy.TimeMinutes &&
+            upgraded.Party.SequenceEqual(legacy.Party) && upgraded.RestEnds.SequenceEqual(legacy.RestEnds),
+            "A pure upgrade must preserve party identities, names, time and historical rests.");
+        Assert(Character(upgraded).GetProperty("dc").GetInt32() == 10 &&
+            Character(upgraded).GetProperty("failures").GetInt32() == 1 &&
+            Check(upgraded).GetProperty("minute").GetInt64() == 2280,
+            "Legacy recovery outcomes must survive; periodic checks must begin after the last already resolved rest.");
+        Assert(JsonElement.DeepEquals(upgraded.ModuleState, Rules.Upgrade(upgraded).ModuleState) &&
+            legacy.ModuleState.GetRawText() == original,
+            "Upgrade must be idempotent and must not mutate the legacy historical payload.");
+        var failed = Apply(At(upgraded, 2280), Resolve(false));
+        Assert(Character(failed).GetProperty("failures").GetInt32() == 2 &&
+            Character(failed).GetProperty("dc").GetInt32() == 10,
+            "New periodic outcomes must accumulate with the legacy history rather than reset it.");
+
+        // The only legacy success is d6=1..6, so a seven-point reduction is impossible.
+        var corruptLegacy = Mutate(legacy, "dc", JsonValue.Create(8));
+        AssertCorrupt(corruptLegacy);
+        var rejected = false;
+        try { Rules.Upgrade(corruptLegacy); }
+        catch (InvalidOperationException) { rejected = true; }
+        Assert(rejected, "Upgrade must reject inconsistent legacy history instead of repairing it silently.");
+    }
+
     private static GameSnapshot Initial()
     {
         GameCharacter[] party = [new(FirstId, "First"), new(SecondId, "Second")];
-        return new GameSnapshot(0, party, [], 1, Rules.Initialize(party));
+        return new GameSnapshot(0, party, [], Rules.StateSchemaVersion, Rules.Initialize(party));
     }
 
     private static GameSnapshot At(GameSnapshot state, long minute)

@@ -2,6 +2,12 @@
 
 Current execution evidence for gameplay is in [the gameplay implementation plan](09-Gameplay-implementation.md). The entries below preserve earlier verification history.
 
+Arcane Blight now displays remaining time and links to its campaign rules
+heading. The user-confirmed infected recovery schedule is every 12 hours or
+after long rest, which resets the timer. Module schema 2 preserves supported
+schema 1 saves, receipts and undo. Scoped rule, PostgreSQL, HTTP and browser
+evidence is recorded in [the gameplay implementation plan](09-Gameplay-implementation.md).
+
 The latest design revision adds a generic editable party tab, stable character
 resources shared with module tools, building search (30 minutes), short rest
 (1 hour), a single long-rest shortcut and undo beside refresh. A one-tool module

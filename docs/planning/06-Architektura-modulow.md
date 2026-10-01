@@ -63,6 +63,16 @@ Folder ma stabilny identyfikator i opcjonalny identyfikator rodzica. Materiał w
 
 The gameplay contract is now `ICampaignGameRules`, with elapsed minutes, party and shared rest owned by the engine and versioned module JSON interpreted only by the module. `GameplayService` stores current snapshots and confirmed operation receipts under the `engine` schema. Transactions and campaign row locks protect time, module state, revisions and sequential undo together. Material documents remain outside this journal. Repeatable-read gameplay GETs keep current state and undo availability coherent; replayed receipts are validated before returning. The API is the composition root registering `YthrynGameRules`. No module-specific branch or disease column was added to the engine. Verification is recorded in [the gameplay plan](09-Gameplay-implementation.md).
 
+`ICampaignGameRules.Upgrade` performs a pure upgrade of supported module JSON and
+its schema version. The engine validates the original snapshot and rejects an
+upgrade that changes engine time, party identity/names/order or rest history.
+Current reads expose the supported version without writing; accepted operations
+and undo persist the upgraded module state atomically. Stored idempotent receipts
+are validated/described under their original supported schema and are never
+rewritten to a different outcome. Ythryn accepts versions 1 and 2; version 2
+adds infected recovery every 12 hours or long rest with a reset timer. Historical
+rest-only results remain intact. This changes module JSON, not EF tables.
+
 ## Frontend
 
 - `@mastercompanion/contracts`: DTO i manifest modułu, token rejestracji, typ rejestracji komponentu narzędzia.
@@ -73,6 +83,13 @@ The gameplay contract is now `ICampaignGameRules`, with elapsed minutes, party a
 Biblioteki są rzeczywiście budowane przez `ng-packagr`; aplikacja importuje wynik kompilacji przez publiczne entry points. Nie korzysta z aliasów do prywatnych katalogów źródłowych. Podczas rozwoju biblioteki przebudowujemy przed uruchomieniem hosta; zmiany w bibliotece wymagają ponownego uruchomienia `pnpm start`.
 
 The frontend contracts now expose `GameStateDto`, `GameAction` and `GameToolContext` through the public entry point. The engine provides `CAMPAIGN_GAME` to a dynamically loaded module tool. Its signals supply confirmed state, pending status and operation availability; `execute` returns confirmed success. The module imports only contracts, validates its opaque projection and submits module commands without importing the engine's HTTP service or persistence implementation. The host still composes the libraries.
+
+`GameToolContext.openMaterial(MaterialTarget)` delegates tool-to-reader navigation
+through the engine game view to the workspace. The workspace validates campaign
+material ownership, opens the existing material tab and scrolls to an optional
+stable heading anchor. A module supplies its own rules material/anchor IDs and
+localized link text without importing workspace or editor implementation. The
+HTTP/recovery session remains independent of navigation.
 
 Campaign party identity and roster editing belong to the engine and are available
 to every registered module in a separate party tab. Tools refer to the confirmed

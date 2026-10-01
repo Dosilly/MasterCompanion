@@ -1,13 +1,17 @@
 import type { GameStateDto } from '@mastercompanion/contracts';
 
 export type BlightStatus = 'healthy' | 'infected' | 'immune' | 'transformed';
-export interface BlightCheck { kind: 'exposure' | 'rest'; minute: number; pending: boolean; }
+export interface BlightCheck { kind: 'exposure' | 'rest' | 'recovery'; minute: number; remainingMinutes: number; pending: boolean; }
 export interface BlightCharacterView {
   id: string; name: string; status: BlightStatus; dc: number; failures: number;
   nextCheck: BlightCheck | null;
 }
 export interface ResolveCheckCommand { kind: 'resolveCheck'; characterId: string; success: boolean; d6?: number; }
 export interface CheckDieSelection { characterId: string; kind: BlightCheck['kind']; minute: number; die: number; }
+
+export function remainingCheckMinutes(checkMinute: number, gameMinute: number): number {
+  return Math.max(0, checkMinute - gameMinute);
+}
 
 // A retry can advance the projection outside the tool's execute promise.
 // Keep a failed request's input only while it still describes the same check.
@@ -31,7 +35,7 @@ function integer(value: unknown, min: number, max: number): value is number {
 export function readBlightView(state: GameStateDto): BlightCharacterView[] | null {
   const view = state.moduleView;
   const { party, timeMinutes, moduleSchemaVersion } = state.snapshot;
-  if (moduleSchemaVersion !== 1 || !record(view) || !Array.isArray(view['characters']) ||
+  if ((moduleSchemaVersion !== 1 && moduleSchemaVersion !== 2) || !record(view) || !Array.isArray(view['characters']) ||
       party.length === 0 || party.length > 20 || view['characters'].length !== party.length) return null;
   const names = new Map(party.map(character => [character.id, character.name]));
   if (names.size !== party.length) return null;
@@ -46,14 +50,19 @@ export function readBlightView(state: GameStateDto): BlightCharacterView[] | nul
     let nextCheck: BlightCheck | null = null;
     const rawCheck = item['nextCheck'];
     if (rawCheck !== null) {
-      if (!record(rawCheck) || (rawCheck['kind'] !== 'exposure' && rawCheck['kind'] !== 'rest') ||
+      if (!record(rawCheck) || (rawCheck['kind'] !== 'exposure' && rawCheck['kind'] !== 'rest' && rawCheck['kind'] !== 'recovery') ||
+          (moduleSchemaVersion === 1 && rawCheck['kind'] === 'recovery') ||
           !integer(rawCheck['minute'], 1, Number.MAX_SAFE_INTEGER) || typeof rawCheck['pending'] !== 'boolean' ||
           rawCheck['pending'] !== (rawCheck['minute'] <= timeMinutes)) return null;
-      nextCheck = { kind: rawCheck['kind'], minute: rawCheck['minute'], pending: rawCheck['pending'] };
+      nextCheck = {
+        kind: rawCheck['kind'], minute: rawCheck['minute'], pending: rawCheck['pending'],
+        remainingMinutes: remainingCheckMinutes(rawCheck['minute'], timeMinutes),
+      };
     }
     const characterStatus = item['status'];
     if ((characterStatus === 'healthy' && nextCheck?.kind !== 'exposure') ||
-        (characterStatus === 'infected' && nextCheck !== null && nextCheck.kind !== 'rest') ||
+        (characterStatus === 'infected' && nextCheck !== null && nextCheck.kind !== 'rest' && nextCheck.kind !== 'recovery') ||
+        (moduleSchemaVersion === 2 && characterStatus === 'infected' && nextCheck === null) ||
         ((characterStatus === 'immune' || characterStatus === 'transformed') && nextCheck !== null)) return null;
     result.push({ id, name, status: characterStatus, dc: item['dc'], failures: item['failures'], nextCheck });
   }
@@ -63,7 +72,7 @@ export function readBlightView(state: GameStateDto): BlightCharacterView[] | nul
 export function resolveCheckCommand(character: BlightCharacterView, success: boolean, die: number | null): ResolveCheckCommand | null {
   const check = character.nextCheck;
   if (!check?.pending || (character.status !== 'healthy' && character.status !== 'infected')) return null;
-  if (check.kind === 'rest' && success) {
+  if ((check.kind === 'rest' || check.kind === 'recovery') && success) {
     if (die === null || !integer(die, 1, 6)) return null;
     return { kind: 'resolveCheck', characterId: character.id, success, d6: die };
   }

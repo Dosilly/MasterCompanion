@@ -27,6 +27,12 @@ internal sealed class NeutralGameRules(string moduleId) : ICampaignGameRules
         return new ModuleTransition(before.ModuleState);
     }
 
+    public GameSnapshot Upgrade(GameSnapshot snapshot)
+    {
+        Validate(snapshot);
+        return snapshot;
+    }
+
     public ModuleTransition Transition(GameSnapshot before, GameSnapshot proposed, JsonElement? command)
     {
         Validate(before);

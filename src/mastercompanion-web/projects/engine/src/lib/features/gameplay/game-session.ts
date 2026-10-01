@@ -1,14 +1,14 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { computed, signal } from '@angular/core';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
-import type { GameAction, GameOperationRequest, GameStateDto, GameToolContext } from '@mastercompanion/contracts';
+import type { GameAction, GameOperationRequest, GameStateDto } from '@mastercompanion/contracts';
 import { isGameRequest, isGameState } from './game-wire';
 
 export type GameError = 'loadFailed' | 'operationUncertain' | 'refreshFailed' | 'conflict' | 'rejected' |
   'storageUnavailable' | 'invalidPending' | 'invalidResponse';
 export type GameStorage = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
 
-export class GameSession implements GameToolContext {
+export class GameSession {
   readonly state = signal<GameStateDto | null>(null);
   readonly pending = signal(false);
   readonly error = signal<GameError | null>(null);

@@ -21,6 +21,9 @@ public static class PersistenceTests
             await db.Database.MigrateAsync();
 
         await DeferredChecksAndMaterialIsolationAsync(connectionString);
+        await PeriodicRecoveryReceiptsAndUndoAsync(connectionString);
+        await LegacyStateAndReceiptsSurviveUpgradeAsync(connectionString);
+        await ModuleUpgradeCannotChangeEngineStateAsync(connectionString);
         await EditablePartyAndShortRestAsync(connectionString);
         await PartyRevisionAndValidationAsync(connectionString);
         await RegisteredModulesSupportNeutralGameplayAsync(connectionString);
@@ -31,7 +34,7 @@ public static class PersistenceTests
         await CorruptedReceiptsAreRejectedAsync(connectionString);
         await CorruptedRevisionsAreRejectedAsync(connectionString);
         await CancellationWhileWaitingForLockAsync(connectionString);
-        Console.WriteLine("PostgreSQL gameplay tests passed: editable parties, short rests, neutral modules, deferred checks, material isolation, receipts, undo, concurrency, input rejection, rollback, corruption rejection and cancellation.");
+        Console.WriteLine("PostgreSQL gameplay tests passed: editable parties, short rests, neutral modules, periodic recovery, legacy upgrade and receipts, module ownership, deferred checks, material isolation, undo, concurrency, input rejection, rollback, corruption rejection and cancellation.");
     }
 
     private static async Task EditablePartyAndShortRestAsync(string connectionString)
@@ -49,7 +52,9 @@ public static class PersistenceTests
         state = Success(await ExecuteAsync(connectionString, campaignId, Request(state.Revision, "shortRest")));
         Require(state.Snapshot.TimeMinutes == 780 && state.Snapshot.RestEnds.Count == 0 &&
             SameJson(state.Snapshot.ModuleState, beforeShortRest.Snapshot.ModuleState) &&
-            Character(state, first.Id).GetProperty("nextCheck").ValueKind == JsonValueKind.Null &&
+            Character(state, first.Id).GetProperty("nextCheck").GetProperty("kind").GetString() == "recovery" &&
+            Character(state, first.Id).GetProperty("nextCheck").GetProperty("minute").GetInt64() == 1440 &&
+            !Character(state, first.Id).GetProperty("nextCheck").GetProperty("pending").GetBoolean() &&
             state.LastOperation?.Kind == "shortRest",
             "A confirmed short rest must advance one hour without scheduling long-rest recovery or changing infection state.");
         state = Success(await ExecuteAsync(connectionString, campaignId, Request(state.Revision, "longRest")));
@@ -256,6 +261,181 @@ public static class PersistenceTests
                 !await db.GameOperations.AnyAsync(x => x.CampaignId == untouchedCampaign),
                 "Gameplay writes must remain scoped to the selected campaign.");
         }
+    }
+
+    private static async Task PeriodicRecoveryReceiptsAndUndoAsync(string connectionString)
+    {
+        var campaignId = await SeedCampaignAsync(connectionString);
+        var character = new GameCharacter(Guid.NewGuid(), "Periodic recovery member");
+        var state = Success(await ExecuteAsync(connectionString, campaignId,
+            Request(0, "configureParty", party: [character])));
+        state = Success(await ExecuteAsync(connectionString, campaignId, Request(state.Revision, "advanceTime", minutes: 720)));
+        state = Success(await ExecuteAsync(connectionString, campaignId, Request(state.Revision, "module",
+            command: JsonSerializer.SerializeToElement(new { kind = "resolveCheck", characterId = character.Id, success = false }))));
+        state = Success(await ExecuteAsync(connectionString, campaignId, Request(state.Revision, "longRest")));
+        AssertCheck(state, character.Id, "rest", 1200);
+        state = Success(await ExecuteAsync(connectionString, campaignId, Request(state.Revision, "module",
+            command: JsonSerializer.SerializeToElement(new { kind = "resolveCheck", characterId = character.Id, success = true, d6 = 4 }))));
+        Require(Character(state, character.Id).GetProperty("nextCheck").GetProperty("minute").GetInt64() == 1920,
+            "Confirmed long-rest recovery must persist a twelve-hour timer from its end, replacing the previous deadline.");
+        state = Success(await ExecuteAsync(connectionString, campaignId, Request(state.Revision, "advanceTime", minutes: 720)));
+        AssertCheck(state, character.Id, "recovery", 1920);
+        var before = state;
+        var recoveryRequest = Request(state.Revision, "module",
+            command: JsonSerializer.SerializeToElement(new { kind = "resolveCheck", characterId = character.Id, success = false }));
+        var receipt = Success(await ExecuteAsync(connectionString, campaignId, recoveryRequest));
+        Require(receipt.Revision == before.Revision + 1 && receipt.Snapshot.TimeMinutes == before.Snapshot.TimeMinutes &&
+            Character(receipt, character.Id).GetProperty("failures").GetInt32() == 1 &&
+            Character(receipt, character.Id).GetProperty("dc").GetInt32() == 11 &&
+            Character(receipt, character.Id).GetProperty("nextCheck").GetProperty("minute").GetInt64() == 2640,
+            "A periodic recovery must atomically persist its outcome, timer and next revision without advancing the clock.");
+        Require(SameJson(Success(await ExecuteAsync(connectionString, campaignId, recoveryRequest)), receipt),
+            "Retrying a periodic recovery must return the original receipt without incrementing failures twice.");
+        AssertFailure(await ExecuteAsync(connectionString, campaignId,
+            Request(before.Revision, "advanceTime", minutes: 1)), 409, "game_revision_conflict");
+        state = Success(await ExecuteAsync(connectionString, campaignId, Request(receipt.Revision, "undo")));
+        Require(SameJson(state.Snapshot, before.Snapshot),
+            "Undoing periodic recovery must restore its original DC, failure count and pending timer atomically.");
+        Require(SameJson(Success(await ExecuteAsync(connectionString, campaignId, recoveryRequest)), receipt) &&
+            SameJson(Success(await ReadAsync(connectionString, campaignId)), state),
+            "Replaying an undone periodic check must preserve its historical receipt without reapplying its outcome.");
+        await AssertCountsAsync(connectionString, campaignId, 1, 8);
+    }
+
+    private static async Task LegacyStateAndReceiptsSurviveUpgradeAsync(string connectionString)
+    {
+        var campaignId = await SeedCampaignAsync(connectionString);
+        var character = new GameCharacter(Guid.NewGuid(), "Preserved authored name");
+        var rules = new YthrynGameRules();
+        GameSnapshot Legacy(long? resolvedRest, int dc) => new(1080, [character], [1080L], 1,
+            JsonSerializer.SerializeToElement(new { characters = new[]
+            {
+                new { id = character.Id, status = "infected", dc, failures = 0,
+                    infectedAt = (long?)720, nextExposure = (long?)null, lastResolvedRest = resolvedRest }
+            } }));
+        var beforeLegacy = Legacy(null, 15);
+        var afterLegacy = Legacy(1080, 9);
+        var oldRequest = Request(0, "module",
+            command: JsonSerializer.SerializeToElement(new { kind = "resolveCheck", characterId = character.Id, success = true, d6 = 6 }));
+        var oldReceipt = new GameStateResponse(1, afterLegacy, rules.Describe(afterLegacy),
+            new GameOperationSummary(oldRequest.RequestId, "module", 1));
+        var jsonOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+        var originalSnapshotJson = JsonSerializer.Serialize(afterLegacy, jsonOptions);
+        var originalReceiptJson = JsonSerializer.Serialize(oldReceipt, jsonOptions);
+        await using (var db = CreateDb(connectionString))
+        {
+            db.GameStates.Add(new CampaignGameState { CampaignId = campaignId, Revision = 1, SnapshotJson = originalSnapshotJson });
+            db.GameOperations.Add(new GameOperation
+            {
+                CampaignId = campaignId, RequestId = oldRequest.RequestId, Revision = 1, Kind = "module",
+                RequestJson = JsonSerializer.Serialize(oldRequest, jsonOptions),
+                BeforeJson = JsonSerializer.Serialize(beforeLegacy, jsonOptions), ResponseJson = originalReceiptJson,
+                CreatedAtUtc = DateTime.UtcNow
+            });
+            await db.SaveChangesAsync();
+        }
+        var upgraded = Success(await ReadAsync(connectionString, campaignId));
+        Require(upgraded.Revision == 1 && upgraded.Snapshot.ModuleSchemaVersion == 2 &&
+            upgraded.Snapshot.Party.Single() == character && upgraded.Snapshot.TimeMinutes == 1080 &&
+            Character(upgraded, character.Id).GetProperty("dc").GetInt32() == 9 &&
+            Character(upgraded, character.Id).GetProperty("nextCheck").GetProperty("minute").GetInt64() == 1800,
+            "Reading legacy state must project the new timer while preserving confirmed names, IDs, clock, outcomes and revision.");
+        await using (var db = CreateDb(connectionString))
+        {
+            var stored = await db.GameStates.AsNoTracking().SingleAsync(x => x.CampaignId == campaignId);
+            Require(SameJson(JsonSerializer.Deserialize<JsonElement>(stored.SnapshotJson),
+                JsonSerializer.Deserialize<JsonElement>(originalSnapshotJson)) && stored.Revision == 1,
+                "A read-only upgrade must not rewrite the stored legacy snapshot or advance its revision.");
+        }
+        Require(SameJson(Success(await ExecuteAsync(connectionString, campaignId, oldRequest)), oldReceipt),
+            "A schema-one request retry must return its exact original rest-only receipt instead of a new projection.");
+        var advanced = Success(await ExecuteAsync(connectionString, campaignId, Request(1, "advanceTime", minutes: 720)));
+        AssertCheck(advanced, character.Id, "recovery", 1800);
+        var resolved = Success(await ExecuteAsync(connectionString, campaignId, Request(advanced.Revision, "module",
+            command: JsonSerializer.SerializeToElement(new { kind = "resolveCheck", characterId = character.Id, success = false }))));
+        Require(Character(resolved, character.Id).GetProperty("dc").GetInt32() == 9 &&
+            Character(resolved, character.Id).GetProperty("failures").GetInt32() == 1,
+            "Current recovery must accumulate with confirmed legacy outcomes after the upgrade.");
+        Require(SameJson(Success(await ExecuteAsync(connectionString, campaignId, oldRequest)), oldReceipt) &&
+            SameJson(Success(await ReadAsync(connectionString, campaignId)), resolved),
+            "An old receipt replay after current operations must not replace the latest clock, timer or outcomes.");
+        var undo = Success(await ExecuteAsync(connectionString, campaignId, Request(resolved.Revision, "undo")));
+        Require(SameJson(undo.Snapshot, advanced.Snapshot), "Undo must restore the current periodic check after upgrade.");
+        undo = Success(await ExecuteAsync(connectionString, campaignId, Request(undo.Revision, "undo")));
+        Require(SameJson(undo.Snapshot, upgraded.Snapshot), "Undoing time must preserve the upgraded legacy outcomes.");
+        undo = Success(await ExecuteAsync(connectionString, campaignId, Request(undo.Revision, "undo")));
+        Require(SameJson(undo.Snapshot, rules.Upgrade(beforeLegacy)),
+            "Undoing a historical schema-one operation must restore and upgrade its own before-state without resetting infection.");
+        Require(SameJson(Success(await ExecuteAsync(connectionString, campaignId, oldRequest)), oldReceipt),
+            "An undone legacy receipt must remain replayable with its original schema and projection.");
+        await using (var db = CreateDb(connectionString))
+        {
+            var operation = await db.GameOperations.AsNoTracking().SingleAsync(x => x.CampaignId == campaignId && x.RequestId == oldRequest.RequestId);
+            Require(operation.Undone && SameJson(JsonSerializer.Deserialize<JsonElement>(operation.ResponseJson),
+                JsonSerializer.Deserialize<JsonElement>(originalReceiptJson)),
+                "Upgrade and undo must retain the immutable historical response while marking only the operation's undo flag.");
+        }
+        await AssertCountsAsync(connectionString, campaignId, 1, 6);
+    }
+
+    private static async Task ModuleUpgradeCannotChangeEngineStateAsync(string connectionString)
+    {
+        Func<GameSnapshot, GameSnapshot>[] mutations =
+        [
+            snapshot => snapshot with { TimeMinutes = snapshot.TimeMinutes + 1 },
+            snapshot => snapshot with { Party = snapshot.Party.Select(member => member with { Name = "Unauthorized rename" }).ToArray() },
+            snapshot => snapshot with { RestEnds = [720L] },
+            snapshot =>
+            {
+                if (snapshot.Party is not IList<GameCharacter> mutableParty)
+                    throw new InvalidOperationException("The upgrade fixture needs a mutable deserialized party.");
+                mutableParty[0] = mutableParty[0] with { Name = "Unauthorized in-place rename" };
+                return snapshot;
+            },
+            snapshot =>
+            {
+                var state = RequiredObject(JsonNode.Parse(snapshot.ModuleState.GetRawText()));
+                var characters = state["characters"]?.AsArray()
+                    ?? throw new InvalidOperationException("Missing upgrade test characters.");
+                foreach (var character in characters)
+                {
+                    var item = RequiredObject(character);
+                    foreach (var field in new[] { "nextRecovery", "recoveryStartedAt", "lastResolvedRecovery", "recoveryChecks" })
+                        item.Remove(field);
+                }
+                return snapshot with { ModuleSchemaVersion = 1, ModuleState = JsonSerializer.Deserialize<JsonElement>(state.ToJsonString()) };
+            }
+        ];
+        foreach (var mutate in mutations)
+        {
+            var campaignId = await SeedCampaignAsync(connectionString);
+            var configured = Success(await ExecuteAsync(connectionString, campaignId,
+                Request(0, "configureParty", party: [new(Guid.NewGuid(), "Engine-owned member")])));
+            var confirmed = Success(await ExecuteAsync(connectionString, campaignId,
+                Request(configured.Revision, "advanceTime", minutes: 720)));
+            await using (var db = CreateDb(connectionString))
+            {
+                var hostile = new GameplayService(db, [new HostileUpgradeRules(mutate)], [new NeutralTestModule()]);
+                await AssertInvalidStoredDataAsync(() => hostile.ReadAsync(campaignId));
+                await AssertInvalidStoredDataAsync(() => hostile.ExecuteAsync(campaignId, Request(confirmed.Revision, "shortRest")));
+            }
+            Require(SameJson(Success(await ReadAsync(connectionString, campaignId)), confirmed),
+                "A module upgrade that changes engine-owned time, party or rests, or fails to reach its current schema, must leave confirmed state untouched.");
+            await AssertCountsAsync(connectionString, campaignId, 1, 2);
+        }
+    }
+
+    private sealed class HostileUpgradeRules(Func<GameSnapshot, GameSnapshot> mutate) : ICampaignGameRules
+    {
+        private readonly YthrynGameRules rules = new();
+        public string ModuleId => rules.ModuleId;
+        public int StateSchemaVersion => rules.StateSchemaVersion;
+        public JsonElement Initialize(IReadOnlyList<GameCharacter> party) => rules.Initialize(party);
+        public void Validate(GameSnapshot snapshot) => rules.Validate(snapshot);
+        public GameSnapshot Upgrade(GameSnapshot snapshot) => mutate(rules.Upgrade(snapshot));
+        public ModuleTransition ReconcileParty(GameSnapshot before, GameSnapshot proposed) => rules.ReconcileParty(before, proposed);
+        public ModuleTransition Transition(GameSnapshot before, GameSnapshot proposed, JsonElement? command) => rules.Transition(before, proposed, command);
+        public JsonElement Describe(GameSnapshot snapshot) => rules.Describe(snapshot);
     }
 
     private static async Task IdempotencyAndSequentialUndoAsync(string connectionString)

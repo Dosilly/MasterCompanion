@@ -157,7 +157,38 @@ public static class HttpTests
             using (var response = await client.GetAsync($"/api/campaigns/{Guid.NewGuid():D}/game"))
                 await AssertProblemAsync(response, HttpStatusCode.NotFound, "campaign_not_found");
 
-            Console.WriteLine("HTTP gameplay tests passed: strict JSON, media and size limits, ProblemDetails, isolated writes, party editing, short rest, receipts and undo.");
+            var recoveryState = await PostSuccessAsync(client, path,
+                new GameOperationRequest(Guid.NewGuid(), restored.Revision, "advanceTime", Minutes: 630));
+            recoveryState = await PostSuccessAsync(client, path, new GameOperationRequest(Guid.NewGuid(), recoveryState.Revision, "module",
+                Command: JsonSerializer.SerializeToElement(new { kind = "resolveCheck", characterId, success = false })));
+            recoveryState = await PostSuccessAsync(client, path, new GameOperationRequest(Guid.NewGuid(), recoveryState.Revision, "longRest"));
+            recoveryState = await PostSuccessAsync(client, path, new GameOperationRequest(Guid.NewGuid(), recoveryState.Revision, "module",
+                Command: JsonSerializer.SerializeToElement(new { kind = "resolveCheck", characterId, success = true, d6 = 5 })));
+            recoveryState = await PostSuccessAsync(client, path,
+                new GameOperationRequest(Guid.NewGuid(), recoveryState.Revision, "advanceTime", Minutes: 240));
+            var early = new GameOperationRequest(Guid.NewGuid(), recoveryState.Revision, "module",
+                Command: JsonSerializer.SerializeToElement(new { kind = "resolveCheck", characterId, success = false }));
+            using (var content = new StringContent(JsonSerializer.Serialize(early, JsonOptions), Encoding.UTF8, "application/json"))
+            using (var response = await client.PostAsync(path + "/operations", content))
+                await AssertProblemAsync(response, HttpStatusCode.BadRequest, "game_check_not_due");
+            var pending = await PostSuccessAsync(client, path,
+                new GameOperationRequest(Guid.NewGuid(), recoveryState.Revision, "advanceTime", Minutes: 480));
+            var periodicRequest = new GameOperationRequest(Guid.NewGuid(), pending.Revision, "module",
+                Command: JsonSerializer.SerializeToElement(new { kind = "resolveCheck", characterId, success = false }));
+            var periodic = await PostSuccessAsync(client, path, periodicRequest);
+            var periodicCharacter = periodic.ModuleView.GetProperty("characters").EnumerateArray().Single();
+            Require(periodic.Snapshot.TimeMinutes == 1920 && periodicCharacter.GetProperty("dc").GetInt32() == 10 &&
+                periodicCharacter.GetProperty("failures").GetInt32() == 1 &&
+                periodicCharacter.GetProperty("nextCheck").GetProperty("kind").GetString() == "recovery" &&
+                periodicCharacter.GetProperty("nextCheck").GetProperty("minute").GetInt64() == 2640,
+                "HTTP recovery must honor the rest-reset deadline and persist the periodic outcome and next timer together.");
+            Require(JsonElement.DeepEquals(JsonSerializer.SerializeToElement(await PostSuccessAsync(client, path, periodicRequest)),
+                JsonSerializer.SerializeToElement(periodic)), "An HTTP periodic retry must not increment failures twice.");
+            var undone = await PostSuccessAsync(client, path, new GameOperationRequest(Guid.NewGuid(), periodic.Revision, "undo"));
+            Require(JsonElement.DeepEquals(JsonSerializer.SerializeToElement(undone.Snapshot), JsonSerializer.SerializeToElement(pending.Snapshot)),
+                "HTTP undo must restore the periodic check and its previous recovery totals.");
+
+            Console.WriteLine("HTTP gameplay tests passed: strict JSON, media and size limits, ProblemDetails, isolated writes, party editing, short rest, periodic recovery, rest-reset timers, receipts and undo.");
         }
         finally
         {

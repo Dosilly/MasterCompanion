@@ -1,6 +1,9 @@
 {
   "toolTitle": "Arcane Blight",
   "toolDescription": "Zapisz wynik sprawdzenia osobno dla każdego bohatera. Czas gry i wspólny odpoczynek zmienisz powyżej.",
+  "rulesLink": "Zasady Tajemnej zarazy",
+  "checkScheduleHint": "Zdrowe postacie wykonują sprawdzenie co 12 godzin. Zakażone wykonują je co 12 godzin lub po długim odpoczynku; każde sprawdzenie leczenia rozpoczyna kolejny okres 12 godzin.",
+  "timeUntilCheck": "Do sprawdzenia",
   "invalidState": "Nie można odczytać stanu Arcane Blight. Odśwież stan gry przed zapisaniem wyniku.",
   "configureParty": "Skonfiguruj drużynę powyżej, aby śledzić Arcane Blight.",
   "loading": "Wczytywanie Arcane Blight…",
@@ -8,7 +11,7 @@
   "statuses": { "healthy": "Zdrowy", "infected": "Zakażony", "immune": "Odporny", "transformed": "Przemieniony" },
   "dc": "ST",
   "failures": "Porażki leczenia",
-  "checks": { "exposure": "Sprawdzenie ekspozycji", "rest": "Leczenie po odpoczynku" },
+  "checks": { "exposure": "Sprawdzenie ekspozycji", "rest": "Leczenie po długim odpoczynku", "recovery": "Leczenie po 12 godzinach" },
   "pending": "Oczekuje na wynik",
   "upcoming": "Nadchodzące",
   "hour": "h",

@@ -145,3 +145,53 @@ Verification for this revision:
 
 The PostgreSQL service and its existing volume were not replaced. Runtime
 verification made no game or material writes to the user's campaign.
+
+## Arcane Blight countdown and recovery revision — 2 October 2026
+
+The user confirmed a new recovery schedule: healthy characters continue exposure
+checks every 720 minutes; infected characters recover every 720 minutes or at
+the end of a long rest, whichever comes first. Each recovery starts the next
+720-minute interval. A rest at the exact timer deadline creates one rest check,
+not two results. An earlier overdue timer is resolved before a later rest.
+Successful recovery reduces DC by the supplied d6; failures accumulate toward
+the existing three-failure transformation. Terminal statuses remain inactive.
+
+Character cards display minutes remaining against confirmed engine time rather
+than an absolute elapsed deadline. Pending checks clamp to zero. Absolute
+deadlines remain the identity used for result and die recovery, so changing only
+the countdown does not reuse a die for a different check.
+
+The localized rules link opens the campaign copy of `Efekty magiczne` at the
+stable `Tajemna zaraza` heading through the neutral navigation contract. A tool
+hint explains the newly confirmed schedule. Existing authored campaign text is
+not overwritten; its original rest-only wording predates this rule change.
+
+Module state version 2 adds the explicit recovery timeline. The module validates
+and upgrades supported version 1 snapshots without replacing IDs, statuses,
+DCs, failures or confirmed outcomes. Reads upgrade in memory; the next accepted
+operation persists the supported state together with revision and history.
+Original version 1 receipts retain their original projection and remain
+replayable. Undo and roster edits preserve the supported timeline. Unknown or
+inconsistent state still fails explicitly.
+
+Verification:
+
+- 24 pure-rule cases passed, including 12-hour boundaries, rest reset, overdue
+  chronology, coincident event deduplication, terminal outcomes and pure legacy
+  conversion. Real PostgreSQL and HTTP tests passed for periodic receipts,
+  revision/idempotency, undo, unchanged historical receipts, read-only upgrades
+  and rejection of upgrades that alter engine-owned data (including mutation).
+- 12 focused frontend tests passed for countdowns, projection schemas, recovery
+  outcomes and die identity. Full frontend, backend solution, final affected API
+  and Docker builds passed; localization and dependency-boundary checks passed.
+- Browser checks against a separate UI database at 1920×1080 in both themes
+  confirmed 12 h → 11 h, the rules link selecting its material and scrolling to
+  the heading, independent healthy exposure, infected long-rest recovery, reset
+  to 12 h, no result at the replaced deadline, periodic outcomes and undo.
+  No console errors or horizontal overflow were observed.
+- The refreshed production app is healthy at localhost:4200. Its four read-only
+  runtime checks passed after startup readiness. A private backup and all-row
+  fingerprints confirmed unchanged persisted campaign/material/folder/map data,
+  game snapshot and journal across replacement. Current reads expose schema 2
+  without changing the user's stored version 1 snapshot or its revision. No game
+  outcomes or authored materials were written during live verification.

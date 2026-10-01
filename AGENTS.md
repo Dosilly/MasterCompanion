@@ -2,6 +2,13 @@
 
 These instructions apply to all implementation work in this repository. Read the relevant source, specifications, and existing behavior before editing. Direct user instructions take precedence. Keep changes focused on the requested outcome and verify the affected behavior before reporting completion. Verification is scoped to the change, not a requirement to run every check.
 
+## Compatibility policy
+
+- Backward compatibility is not required until the user explicitly enables it after release. A release alone does not enable this requirement.
+- Prefer a clean current design. Do not retain obsolete APIs, contracts, schema variants, aliases, adapters, upgrade paths, or fallback branches solely to support earlier versions. Remove such compatibility code when changing the affected area.
+- Breaking changes are allowed within the requested scope. Update affected producers, consumers, tests, and documentation together; do not build parallel legacy and current implementations.
+- This policy does not authorize deleting or resetting user data. Preserve authored content and game state, use explicit data migrations where needed, and keep the existing concurrency, transaction, backup, and applied-migration safeguards. Data preservation does not require permanent runtime support for obsolete formats.
+
 ## Language and localization
 
 - Write identifiers, comments, exception messages, logs, API errors, test names, assertion messages, and developer tooling output in English.

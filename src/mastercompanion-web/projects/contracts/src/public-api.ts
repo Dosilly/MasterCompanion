@@ -44,10 +44,12 @@ export type GameAction =
   | { kind: 'shortRest' | 'longRest' | 'undo' }
   | { kind: 'module'; command: unknown };
 export type GameOperationRequest = GameAction & { requestId: string; expectedRevision: number };
+export interface MaterialTarget { id: string; anchor?: string; }
 export interface GameToolContext {
   readonly state: Signal<GameStateDto | null>;
   readonly pending: Signal<boolean>;
   readonly canOperate: Signal<boolean>;
   execute(action: GameAction): Promise<boolean>;
+  openMaterial(target: MaterialTarget): void;
 }
 export const CAMPAIGN_GAME = new InjectionToken<GameToolContext>('MasterCompanion campaign game');

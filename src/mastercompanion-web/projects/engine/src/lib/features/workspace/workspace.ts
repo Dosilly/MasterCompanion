@@ -83,7 +83,7 @@ import { UiMessages, uiLocale, uiMessages } from '../../i18n/messages';
             <mc-map-view id="panel-map" role="tabpanel" aria-labelledby="tab-map" [hidden]="active() !== '@map'" [map]="map" (openMaterial)="open($event)" />
           }
           @if (partyMounted()) { @if (game(); as session) { <mc-party-view id="panel-party" role="tabpanel" aria-labelledby="tab-party" [hidden]="active() !== '@party'" [session]="session" /> } }
-          @if (gameMounted()) { @if (game(); as session) { @if (campaignModule(); as module) { <mc-game-view id="panel-game" role="tabpanel" aria-labelledby="tab-game" [hidden]="active() !== '@game'" [session]="session" [module]="module" (openParty)="openParty()" /> } } }
+          @if (gameMounted()) { @if (game(); as session) { @if (campaignModule(); as module) { <mc-game-view id="panel-game" role="tabpanel" aria-labelledby="tab-game" [hidden]="active() !== '@game'" [session]="session" [module]="module" (openParty)="openParty()" (materialRequested)="open($event.id, $event.anchor)" /> } } }
           @for (tab of sessions(); track tab.material.id) {
             <mc-material-view [id]="'panel-' + tab.material.id" role="tabpanel" [attr.aria-labelledby]="'tab-' + tab.material.id" [hidden]="active() !== tab.material.id" [session]="tab" [materials]="data.materials" (openMaterial)="open($event.id, $event.anchor)" />
           }

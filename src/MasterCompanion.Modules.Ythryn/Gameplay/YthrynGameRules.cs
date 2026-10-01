@@ -14,12 +14,32 @@ public sealed class YthrynGameRules : ICampaignGameRules
     };
 
     public string ModuleId => "ythryn";
-    public int StateSchemaVersion => 1;
+    public int StateSchemaVersion => 2;
 
     public JsonElement Initialize(IReadOnlyList<GameCharacter> party) => Serialize(
         new BlightState(party.Select(character => Healthy(character.Id, 0)).ToArray()));
 
     public void Validate(GameSnapshot snapshot) => ReadState(snapshot);
+
+    public GameSnapshot Upgrade(GameSnapshot snapshot)
+    {
+        var state = ReadState(snapshot);
+        if (snapshot.ModuleSchemaVersion == StateSchemaVersion) return snapshot;
+        var characters = state.Characters.Select(character =>
+        {
+            if (character.Status == "healthy") return character;
+            var start = character.LastResolvedRest ?? character.InfectedAt
+                ?? throw Corrupt("Infected Arcane Blight state has no infection time.");
+            return character with
+            {
+                RecoveryStartedAt = start,
+                NextRecovery = character.Status == "infected" ? checked(start + ExposureInterval) : null
+            };
+        }).ToArray();
+        var upgraded = snapshot with { ModuleSchemaVersion = StateSchemaVersion, ModuleState = Serialize(new BlightState(characters)) };
+        Validate(upgraded);
+        return upgraded;
+    }
 
     public ModuleTransition ReconcileParty(GameSnapshot before, GameSnapshot proposed)
     {
@@ -56,11 +76,11 @@ public sealed class YthrynGameRules : ICampaignGameRules
             var check = NextCheck(character, proposed);
             if (check is null || !check.Pending) return Rejected(before, "game_check_not_due");
             // A d6 belongs only to a successful recovery check, never to exposure or failure.
-            if ((check.Kind == "rest" && input.Success == true) != (input.D6 is not null))
+            if ((check.Kind != "exposure" && input.Success == true) != (input.D6 is not null))
                 return Rejected(before, "invalid_module_command");
             changed = check.Kind == "exposure"
                 ? ResolveExposure(character, check.Minute, input.Success == true)
-                : ResolveRest(character, check.Minute, input.Success == true, input.D6);
+                : ResolveRecovery(character, check, input.Success == true, input.D6);
         }
 
         var characters = state.Characters.ToArray();
@@ -75,28 +95,64 @@ public sealed class YthrynGameRules : ICampaignGameRules
         var state = ReadState(snapshot);
         return JsonSerializer.SerializeToElement(new BlightDescription(state.Characters.Select(character =>
             new CharacterDescription(character.Id, character.Status, character.Dc, character.Failures,
-                NextCheck(character, snapshot))).ToArray()), JsonOptions);
+                snapshot.ModuleSchemaVersion == 1 ? LegacyNextCheck(character, snapshot) : NextCheck(character, snapshot))).ToArray()), JsonOptions);
     }
 
     private static BlightCharacter Healthy(Guid id, long minute) =>
-        new(id, "healthy", InitialDc, 0, null, checked(minute + ExposureInterval), null);
+        new(id, "healthy", InitialDc, 0, null, checked(minute + ExposureInterval), null, null, null, null, 0);
 
     private static BlightCharacter ResolveExposure(BlightCharacter character, long minute, bool success) => success
         ? character with { NextExposure = checked(minute + ExposureInterval) }
-        : character with { Status = "infected", InfectedAt = minute, NextExposure = null };
+        : character with
+        {
+            Status = "infected", InfectedAt = minute, NextExposure = null,
+            RecoveryStartedAt = minute, NextRecovery = checked(minute + ExposureInterval)
+        };
 
-    private static BlightCharacter ResolveRest(BlightCharacter character, long minute, bool success, int? d6)
+    private static BlightCharacter ResolveRecovery(BlightCharacter character, CheckDescription check, bool success, int? d6)
     {
+        var updated = character with
+        {
+            LastResolvedRest = check.Kind == "rest" ? check.Minute : character.LastResolvedRest,
+            LastResolvedRecovery = check.Minute,
+            RecoveryChecks = character.RecoveryChecks + 1,
+            NextRecovery = checked(check.Minute + ExposureInterval)
+        };
         if (success)
         {
             var dc = Math.Max(0, character.Dc - d6.GetValueOrDefault());
-            return character with { Dc = dc, Status = dc == 0 ? "immune" : "infected", LastResolvedRest = minute };
+            return updated with { Dc = dc, Status = dc == 0 ? "immune" : "infected", NextRecovery = dc == 0 ? null : updated.NextRecovery };
         }
         var failures = character.Failures + 1;
-        return character with { Failures = failures, Status = failures == 3 ? "transformed" : "infected", LastResolvedRest = minute };
+        return updated with
+        {
+            Failures = failures, Status = failures == 3 ? "transformed" : "infected",
+            NextRecovery = failures == 3 ? null : updated.NextRecovery
+        };
     }
 
     private static CheckDescription? NextCheck(BlightCharacter character, GameSnapshot snapshot)
+    {
+        if (character.Status == "healthy" && character.NextExposure is long exposure)
+            return new CheckDescription("exposure", exposure, exposure <= snapshot.TimeMinutes);
+        if (character.Status != "infected" || character.InfectedAt is not long infectedAt) return null;
+        if (character.NextRecovery is not long recovery) throw Corrupt("Infected Arcane Blight state has no recovery timer.");
+        var processedThrough = character.LastResolvedRecovery ?? character.RecoveryStartedAt ?? infectedAt;
+        return RecoveryCheck(snapshot, processedThrough, recovery);
+    }
+
+    private static CheckDescription RecoveryCheck(GameSnapshot snapshot, long processedThrough, long recovery)
+    {
+        // The earliest event is resolved first. A simultaneous rest and timer produce one rest check.
+        foreach (var minute in snapshot.RestEnds)
+        {
+            if (minute > processedThrough && minute <= recovery)
+                return new CheckDescription("rest", minute, minute <= snapshot.TimeMinutes);
+        }
+        return new CheckDescription("recovery", recovery, recovery <= snapshot.TimeMinutes);
+    }
+
+    private static CheckDescription? LegacyNextCheck(BlightCharacter character, GameSnapshot snapshot)
     {
         if (character.Status == "healthy" && character.NextExposure is long exposure)
             return new CheckDescription("exposure", exposure, exposure <= snapshot.TimeMinutes);
@@ -112,7 +168,7 @@ public sealed class YthrynGameRules : ICampaignGameRules
 
     private BlightState ReadState(GameSnapshot snapshot)
     {
-        if (snapshot.ModuleSchemaVersion != StateSchemaVersion)
+        if (snapshot.ModuleSchemaVersion is not (1 or 2))
             throw Corrupt("Unsupported Arcane Blight state schema.");
         if (snapshot.TimeMinutes is < 0 or > GameLimits.MaxTimeMinutes || snapshot.Party.Count > GameLimits.MaxPartySize ||
             snapshot.RestEnds.Count > GameLimits.MaxRestCount || snapshot.Party.Any(character => character.Id == Guid.Empty) ||
@@ -131,7 +187,11 @@ public sealed class YthrynGameRules : ICampaignGameRules
             throw Corrupt("Arcane Blight characters do not match the party.");
         foreach (var item in items.EnumerateArray())
         {
-            if (!HasExactProperties(item, "id", "status", "dc", "failures", "infectedAt", "nextExposure", "lastResolvedRest"))
+            var validFields = snapshot.ModuleSchemaVersion == 1
+                ? HasExactProperties(item, "id", "status", "dc", "failures", "infectedAt", "nextExposure", "lastResolvedRest")
+                : HasExactProperties(item, "id", "status", "dc", "failures", "infectedAt", "nextExposure", "lastResolvedRest",
+                    "nextRecovery", "recoveryStartedAt", "lastResolvedRecovery", "recoveryChecks");
+            if (!validFields)
                 throw Corrupt("Invalid Arcane Blight character fields.");
             if (item.GetProperty("status").ValueKind != JsonValueKind.String ||
                 item.GetProperty("status").GetString() is not ("healthy" or "infected" or "immune" or "transformed"))
@@ -140,8 +200,17 @@ public sealed class YthrynGameRules : ICampaignGameRules
         BlightState state;
         try
         {
-            state = snapshot.ModuleState.Deserialize<BlightState>(JsonOptions)
-                ?? throw Corrupt("Arcane Blight state is missing.");
+            if (snapshot.ModuleSchemaVersion == 1)
+            {
+                var legacy = snapshot.ModuleState.Deserialize<LegacyBlightState>(JsonOptions)
+                    ?? throw Corrupt("Arcane Blight state is missing.");
+                state = new BlightState(legacy.Characters.Select(character => new BlightCharacter(
+                    character.Id, character.Status, character.Dc, character.Failures, character.InfectedAt,
+                    character.NextExposure, character.LastResolvedRest, null, null, null, 0)).ToArray());
+            }
+            else
+                state = snapshot.ModuleState.Deserialize<BlightState>(JsonOptions)
+                    ?? throw Corrupt("Arcane Blight state is missing.");
         }
         catch (JsonException exception)
         {
@@ -163,26 +232,63 @@ public sealed class YthrynGameRules : ICampaignGameRules
         if (character.Status == "healthy")
             return character.Dc == InitialDc && character.Failures == 0 && character.InfectedAt is null &&
                 character.LastResolvedRest is null && character.NextExposure is long exposure &&
-                exposure >= ExposureInterval && exposure <= snapshot.TimeMinutes + ExposureInterval;
+                exposure >= ExposureInterval && exposure <= snapshot.TimeMinutes + ExposureInterval &&
+                character.NextRecovery is null && character.RecoveryStartedAt is null &&
+                character.LastResolvedRecovery is null && character.RecoveryChecks == 0;
         if (character.NextExposure is not null || character.InfectedAt is not long infectedAt ||
             infectedAt < ExposureInterval || infectedAt > snapshot.TimeMinutes) return false;
         if (character.LastResolvedRest is long rest &&
             (rest <= infectedAt || !snapshot.RestEnds.Contains(rest))) return false;
-        // Successful recovery always reduces DC; failed recovery always increments failures.
-        if (character.LastResolvedRest is null && (character.Dc != InitialDc || character.Failures != 0)) return false;
-        var resolvedRests = character.LastResolvedRest is long lastRest
-            ? snapshot.RestEnds.Count(minute => minute > infectedAt && minute <= lastRest) : 0;
-        var successes = resolvedRests - character.Failures;
+        int checks;
+        if (snapshot.ModuleSchemaVersion == 1)
+        {
+            if (character.LastResolvedRest is null && (character.Dc != InitialDc || character.Failures != 0)) return false;
+            checks = character.LastResolvedRest is long lastRest
+                ? snapshot.RestEnds.Count(minute => minute > infectedAt && minute <= lastRest) : 0;
+        }
+        else
+        {
+            if (!ValidRecoveryTimeline(character, snapshot, infectedAt, out checks)) return false;
+        }
+        // Every successful recovery reduces DC by 1–6, and every failed recovery increments failures.
+        var successes = checks - character.Failures;
         if (successes < 0) return false;
         if (character.Dc > 0 && (InitialDc - character.Dc < successes || InitialDc - character.Dc > successes * 6)) return false;
         if (character.Dc == 0 && (successes * 6 < InitialDc || successes > InitialDc)) return false;
         return character.Status switch
         {
             "infected" => character.Dc > 0 && character.Failures < 3,
-            "immune" => character.Dc == 0 && character.Failures < 3 && character.LastResolvedRest is not null,
-            "transformed" => character.Dc > 0 && character.Failures == 3 && character.LastResolvedRest is not null,
+            "immune" => character.Dc == 0 && character.Failures < 3 && checks > 0,
+            "transformed" => character.Dc > 0 && character.Failures == 3 && checks > 0,
             _ => false
         };
+    }
+
+    private static bool ValidRecoveryTimeline(BlightCharacter character, GameSnapshot snapshot, long infectedAt, out int checks)
+    {
+        checks = 0;
+        // Each success reduces the initial DC by at least one; transformation needs at most three failures.
+        if (character.RecoveryStartedAt is not long start || start < infectedAt || start > snapshot.TimeMinutes ||
+            (start != infectedAt && !snapshot.RestEnds.Contains(start)) || character.RecoveryChecks is < 0 or > 18)
+            return false;
+        var legacyChecks = snapshot.RestEnds.Count(minute => minute > infectedAt && minute <= start);
+        if (start != infectedAt && (character.LastResolvedRest is not long legacyRest || legacyRest < start)) return false;
+        var through = start;
+        long? lastRest = start != infectedAt ? start : null;
+        for (var index = 0; index < character.RecoveryChecks; index++)
+        {
+            var check = RecoveryCheck(snapshot, through, checked(through + ExposureInterval));
+            if (!check.Pending) return false;
+            through = check.Minute;
+            if (check.Kind == "rest") lastRest = check.Minute;
+        }
+        if (character.LastResolvedRecovery != (character.RecoveryChecks == 0 ? null : through) ||
+            character.LastResolvedRest != lastRest)
+            return false;
+        var expectedTimer = character.Status == "infected" ? checked(through + ExposureInterval) : (long?)null;
+        if (character.NextRecovery != expectedTimer) return false;
+        checks = legacyChecks + character.RecoveryChecks;
+        return checks <= 18;
     }
 
     private static bool TryReadCommand(JsonElement element, out BlightCommand command)
@@ -227,6 +333,10 @@ public sealed class YthrynGameRules : ICampaignGameRules
     private static InvalidOperationException Corrupt(string message) => new(message);
     private sealed record BlightState(BlightCharacter[] Characters);
     private sealed record BlightCharacter(Guid Id, string Status, int Dc, int Failures,
+        long? InfectedAt, long? NextExposure, long? LastResolvedRest, long? NextRecovery,
+        long? RecoveryStartedAt, long? LastResolvedRecovery, int RecoveryChecks);
+    private sealed record LegacyBlightState(LegacyBlightCharacter[] Characters);
+    private sealed record LegacyBlightCharacter(Guid Id, string Status, int Dc, int Failures,
         long? InfectedAt, long? NextExposure, long? LastResolvedRest);
     private sealed record BlightCommand(string Kind, Guid CharacterId, bool? Success, int? D6);
     private sealed record BlightDescription(CharacterDescription[] Characters);
