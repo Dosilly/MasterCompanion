@@ -1,13 +1,19 @@
 # Gameplay implementation plan
 
-1 October 2026
+Delivery history: 1–2 October 2026
+
+**Status:** phase one accepted by the user on 2 October 2026. Full offline
+operation is no longer required; no additional application testing was requested
+for closure. See [the acceptance record](11-MVP-acceptance.md) for the final scope,
+evidence and later work. The sections below preserve the delivery sequence and
+checks actually performed.
 
 ## Delivery order
 
 1. Backend gameplay slice: neutral module contract, pure Ythryn rules, campaign-scoped state and operation journal, revision-protected API, idempotency and sequential undo. Rules/tests and engine persistence can proceed in parallel once the contract is defined.
 2. Frontend slice: party setup, engine time controls and shared rest, module-owned Arcane Blight tool, outcome input and undo. Keep tools on demand and preserve reading width. Start after the backend wire contract is verified.
 3. Editing completion: insert Markdown and select internal material links, with draft preservation and scoped editor tests. This can proceed independently of gameplay after the first slice.
-4. Acceptance: representative PostgreSQL persistence and restart checks, Full HD in both themes, and the complete scenario with networking disconnected. Record actual evidence rather than treating the preparation cache as an offline test.
+4. Acceptance: representative PostgreSQL persistence and restart checks, Full HD in both themes, and user review. Existing implementation evidence and the user's successful test report close this step. The original internet-disconnected scenario was removed from the requirements on 2 October.
 
 The existing content reorganization remains intact (106 materials, 10 folders, 29 map markers). Review its current diff separately; do not replace campaign materials as part of gameplay implementation. No publish, push or deployment is part of this work.
 
@@ -49,7 +55,7 @@ Verification on 1 October:
 
 Tests use fresh contexts and a database named `mastercompanion_gameplay_test`. The user's campaign, PostgreSQL volume and running application were not migrated, replaced or restarted during this slice. A cached image and existing package dependencies were used. Sandbox access to NuGet/Aspire settings required running restore/full solution build with elevated sandbox permissions; this was an environment restriction, not a code failure.
 
-At backend delivery, frontend, browser acceptance, offline acceptance and editor completion were still pending. The following frontend delivery records subsequent evidence. Existing content checks were reused because maintained content/tooling was unchanged during this work.
+At backend delivery, frontend, browser acceptance and editor completion were still pending. The following frontend delivery records subsequent evidence. The then-planned offline acceptance was later removed from the requirements. Existing content checks were reused because maintained content/tooling was unchanged during this work.
 
 ## Repeat the scoped checks
 
@@ -67,7 +73,7 @@ Persistence and HTTP runners apply migrations only to the named test database an
 
 The engine now offers a game tab with explicit party setup, a visible elapsed clock, bounded custom advances and shortcuts, shared long rest, refresh and confirmation before sequential undo. It mounts the game view and lazily loads registered tools when requested, preserving mounted view state across tab switching. Arrow keys, Home and End select and focus tabs; active tabs and panels have explicit accessible relationships. The reader retains its full main area when the game tab is inactive.
 
-Ythryn registers its own Arcane Blight tool. It validates the module projection, displays named characters, statuses, DCs, failures and future or pending deadlines, and records explicit independent outcomes. Successful rest checks require a selected k6 result; failures and exposure checks omit k6. Magical healing is available only for infected characters. Die selections belong to a specific character and check deadline, so successful recovery retries cannot carry a previous die into the next check.
+Ythryn registers its own Arcane Blight tool. It validates the module projection, displays named characters, statuses, DCs, failures and future or pending deadlines, and records explicit independent outcomes. Successful rest checks require a selected d6 result; failures and exposure checks omit d6. Magical healing is available only for infected characters. Die selections belong to a specific character and check deadline, so successful recovery retries cannot carry a previous die into the next check.
 
 The neutral frontend contract and engine session coordinate writes independently of notes. Exact request IDs and bodies are retained in tab session storage before POST and recovered across page reload. Pending or uncertain operations block other writes. Explicit retries replay the same request, then read current state after its original receipt. Conflicts require refresh; malformed or regressing responses never replace confirmed state. Storage failures preserve recovery, and component destruction cancels I/O without clearing a pending request. Session storage is scoped to a browser tab; it is not a backup after deleting browser data or closing the tab.
 
@@ -78,7 +84,7 @@ Verification:
 - 30 gameplay frontend tests passed: 22 session/response tests and 8 module projection/command/check-input tests. They cover exact recovery payloads, caller mutation, original receipts followed by current reads, conflict blocking, storage failures, invalid input/responses and cancellation including response-before-destruction races.
 - 6 editor insertion tests and 14 affected autosave/editor lifecycle tests passed. They cover selection replacement, preserved rich blocks, stable material links, safe rejection without mutation, explicit edit gating, revision serialization, save failures and undo.
 - Full frontend build (contracts, engine, Ythryn and host), dependency-boundary and code/localization checks passed. Final scoped engine compilation also passed after response and localization refinements. Backend behavior was unchanged, so prior PostgreSQL/API evidence was reused.
-- Browser verification against real loopback API and isolated PostgreSQL covered two-character setup, 10 hours followed by 8-hour rest, independent exposure results, infection with the overdue rest check, k6 reduction from DC 15 to 9, sequential undo, and material edits remaining saved through game undo and API restart. Markdown headings, bold text and a table persisted; the selected internal link navigated to its target. Unsafe Markdown was rejected, and cancelled text was retained.
+- Browser verification against real loopback API and isolated PostgreSQL covered two-character setup, 10 hours followed by 8-hour rest, independent exposure results, infection with the overdue rest check, d6 reduction from DC 15 to 9, sequential undo, and material edits remaining saved through game undo and API restart. Markdown headings, bold text and a table persisted; the selected internal link navigated to its target. Unsafe Markdown was rejected, and cancelled text was retained.
 - A second browser view produced a real revision conflict, disabled writes until explicit refresh and then displayed current time. Stopping the test API produced an uncertain operation; after page reload and API restart, explicit recovery advanced time once from 18 h 10 min to 18 h 20 min. No user campaign was used for these writes.
 - The affected views were inspected at 1920×1080 in both themes, including game cards, keyboard tab switching and modal insertion. Game input survived closing and reopening its tab. No horizontal page overflow or console errors were observed in the final fresh view. The existing Angular warning for the large map image remains; deliberate conflict/disconnection probes produce their expected network errors.
 
@@ -91,9 +97,9 @@ pnpm --dir src/mastercompanion-web test:autosave
 pnpm --dir src/mastercompanion-web build
 ```
 
-## Remaining acceptance
+## Acceptance closure — 2 October 2026
 
-The gameplay and editor slices are implemented. Full acceptance with internet connectivity actually disconnected remains unverified; loopback operation and cached dependency preparation do not establish it. Finish that complete map/read/edit/save/time/rest/outcome/undo scenario before declaring the whole MVP accepted. General module authoring and recovery across deleted browser storage remain outside this slice. Party changes after initialization are covered by the following design revision.
+The gameplay and editor slices are implemented and accepted by the user, who reported successful testing of the application. Full offline operation was removed from the current requirements, so the unperformed internet-disconnected scenario no longer blocks acceptance. No additional application tests were run for closure. General module authoring and recovery across deleted browser storage remain outside this slice. Party changes and the final Arcane Blight schedule are covered by the following delivery records. See [the phase-one acceptance record](11-MVP-acceptance.md).
 
 ## Party and time-control design revision — 1 October 2026
 
@@ -106,8 +112,9 @@ Registered content modules also receive generic party/time behavior when they
 provide no adventure gameplay rules; unfamiliar saved state remains an error.
 
 The game controls are building search (30 minutes), short rest (60 minutes),
-long rest (480 minutes), and a bounded custom advance. Only long rest creates
-recovery checks. Undo is an accessible arrow beside refresh and retains its
+long rest (480 minutes), and a bounded custom advance. At this delivery stage,
+only long rest created recovery checks; the following Arcane Blight revision adds
+periodic recovery. Undo is an accessible arrow beside refresh and retains its
 confirmation dialog. A single registered tool renders directly without a
 redundant selector button; modules with multiple tools retain selection.
 

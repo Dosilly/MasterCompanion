@@ -1,0 +1,92 @@
+# Implementation status
+
+## Phase one accepted — 2 October 2026
+
+The user tested the delivered application, reported that everything works
+correctly, and accepted closing phase one. The [MVP acceptance record](11-MVP-acceptance.md)
+lists the delivered scope, existing verification evidence, known limits and later
+work. Full offline operation has been removed from the current requirements;
+internet-disconnected acceptance is no longer pending. No additional application
+tests were run for this documentation closure, as explicitly requested.
+
+Current execution evidence for gameplay is in [the gameplay implementation plan](09-Gameplay-implementation.md). The entries below preserve earlier verification history.
+
+Arcane Blight now displays remaining time and links to its campaign rules
+heading. The user-confirmed infected recovery schedule is every 12 hours or
+after long rest, which resets the timer. Module schema 2 preserves supported
+schema 1 saves, receipts and undo. Scoped rule, PostgreSQL, HTTP and browser
+evidence is recorded in [the gameplay implementation plan](09-Gameplay-implementation.md).
+
+The latest design revision adds a generic editable party tab, stable character
+resources shared with module tools, building search (30 minutes), short rest
+(1 hour), a single long-rest shortcut and undo beside refresh. A one-tool module
+renders its tool directly. Draft/conflict recovery and atomic roster undo are
+verified. The updated Docker application is running at localhost:4200 with the
+existing campaign preserved; exact implementation checks are
+recorded in [the gameplay implementation plan](09-Gameplay-implementation.md).
+
+30 September 2026 · historical record moved from README
+
+The description below preserves the status and verification results reported before the repository was reorganized. It does not confirm that those checks were repeated. The original POC directory has been removed; the module's prepared data and map remain in `src/MasterCompanion.Modules.Ythryn/Data`.
+
+## Foundation status
+
+Foundation implementation had started. Navigation through 142 materials from 16 source documents, tabs, the reader, visual editing of existing descriptions, PostgreSQL autosave and a map with 29 markers were working. Editing required clicking the edit-note control. The map occupied the main area on demand. The original POC was still retained at that point.
+
+The contents tree preserved the source folder nesting, including player threads and the Fenes folder. Activating a tab expanded its path, set focus and scrolled the tree to the clearly selected material. Tabs closed through the × button or middle mouse button after persistence was confirmed. The header switched between light and dark themes, and the browser remembered the choice.
+
+At this historical foundation stage, gameplay, Markdown/link insertion and offline acceptance were still pending. Gameplay and insertion were subsequently delivered; the offline requirement was removed on 2 October. The phase-one decision above supersedes this historical task list. At the time, a material-save conflict retained text in the tab for copying before refresh.
+
+## Reported verification
+
+Checks covered compilation of all projects, conversion and reloading of all content, dependency boundaries, autosave ordering, error and conflict handling, and API reads/writes against real PostgreSQL. Full HD browser verification covered Y4, tables, a collapsible block, Polish characters, explicit edit mode, the map, markers and zoom preservation. A trial save survived a controlled Aspire restart, after which the test text was removed.
+
+After the reader fixes, 10 content, hierarchy and autosave tests passed. They also checked waiting for persistence during tab closure and refusing to close after an error or conflict. The migration against the running database added 18 folders and assignments for all 142 materials; before/after document hashes and revisions confirmed that notes were unchanged. Full HD browser checks confirmed × and middle-button closure, closing the last tab, reopening the map with its zoom preserved, focus and centering of the active material, expanding the Fenes path, revealing a material hidden by filtering, and persistence of both themes after refresh. No console errors or horizontal view overflow were observed.
+
+Aspire 13.6 logs on this Windows machine showed a recurring DCP message about subscribing to notifications through a local socket. It did not block resource startup or the checks above; separate diagnosis is needed if it affects the dashboard or environment operation.
+
+## Markdown sources and change integration
+
+A subsequent change moved the 142 materials into individual Markdown sources with YAML metadata in `src/MasterCompanion.Modules.Ythryn/Data/Source`. The manifest, folders, map definition and assets are separate. The JSON package is generated during the .NET build in the Git-ignored `Data/Generated` directory. Application editing still affects the campaign copy; rebuilding does not update its notes.
+
+Before merging, all documents, folders and the map were compared with the original package, and identical image bytes were confirmed. Verification covered .NET and Angular compilation and isolated loading of the embedded manifest, 142 documents, 18 folders and map. The application was not restarted, and campaign data was not changed. An expanded visual editor remains future work described in [the execution plan](05-MVP-execution-plan.md).
+
+While resolving PR #2 conflicts, removal of the POC directory and the documentation organization from `trunk` were preserved. Content tests use maintained sources and fixed reference data, while the Markdown export test recompiles all materials. The optional importer accepts an explicitly supplied external HTML file; its test uses a small independent example. This change removes the tests' and builds' dependency on the deleted reference directory.
+
+After merging, 13 content and module-tooling tests passed, including after the POC directory was physically removed. The .NET build completed without warnings or errors; the Angular build and boundary and code-language checks passed. An isolated .NET check confirmed the manifest, 142 documents matching the original package, 18 folders, map definition and identical image bytes. The database was not changed, and the application was not restarted.
+
+## Module content organization — 1 October 2026
+
+The maintained Ythryn sources now contain 106 materials in 10 folders. All 46 numbered location materials (Y1–Y29 and the Y19 rooms) share one location folder in adventure order. The Y19 overview includes its shared features. Nine navigation-only materials were removed, and links now target substantive documents. Fenes contains five complete documents directly under the character folder; the GM guide and four player handouts keep their original sections, tables, and stable anchors. The original 29 map targets and asset remain unchanged.
+
+The user explicitly authorized replacing all materials in the existing local campaign. A local SQL backup was saved under `.local/campaign-before-reorganization.sql`, then a campaign-scoped transaction replaced the material contents and folder hierarchy. Retained materials advanced their revisions; obsolete materials were removed. The final duplicate player-thread index was removed with a separate revision-protected transaction. This was a one-time, user-requested replacement, not an automatic module upgrade or a change to startup initialization. Future rebuilds still preserve campaign-owned edits. The backup is local and ignored by Git; restoring it requires a separately authorized operation that accounts for any subsequent edits.
+
+All 16 content and source-tool tests passed, including exact preservation of consolidated section content, schema round trips, navigation order, internal links, map targets, and portable export of colon-containing IDs on Windows. The code/localization check and the affected .NET module build passed; the build reported no warnings or errors. API evidence from the running PostgreSQL-backed campaign confirmed exact source content at replacement, the final 106 materials and 10 folders, unchanged maps, and increasing revisions. A stale save returned a revision conflict without changing the document. During the final read, the tomb-tapper encounter had a subsequent campaign save at revision 3; that later save was preserved, while the remaining 105 documents still matched the source package.
+
+Browser checks at 1920×1080 covered map navigation to Y19, search, the single-page recovery report and observatory correspondence, and both themes without horizontal page overflow. No console errors were observed. Angular's existing oversized-map-image performance warning remains. No frontend implementation changed; no frontend rebuild, application restart, or database-volume removal was needed. General module upgrades and visual module authoring remain deferred.
+
+## Gameplay backend — 1 October 2026
+
+The first gameplay backend slice now implements party setup, elapsed time, shared rest, module-owned Arcane Blight outcomes and healing, idempotent operation receipts, revision conflicts and sequential undo. State and operation history are separate from material documents and committed atomically. A neutral `ICampaignGameRules` contract keeps module rules independent of engine persistence. The new additive EF migration and API registration are prepared; the local user's campaign has not been migrated or initialized with game state during this work.
+
+Verification passed 16 pure-rule cases, real PostgreSQL integration tests (concurrency, receipts, undo, material isolation, rollback at commit, corrupt data rejection and cancellation), and real HTTP boundary tests. Test database restart preserved state, journal and authored material hashes. The full backend solution and final affected backend/test project compiled without warnings or errors. Code/localization, dependency boundaries and EF model/migration consistency checks passed. All database probes used an isolated disposable test container; no user database volume was removed or changed.
+
+The frontend delivery below follows this backend slice. See [the delivery plan](09-Gameplay-implementation.md) for the API contract, bounds and repeatable checks.
+
+## Gameplay frontend and editor completion — 1 October 2026
+
+Implemented the on-demand game tab, party setup, elapsed clock, time advances, shared rest, Ythryn's Arcane Blight tool with independent outcomes and d6, magical healing, and confirmed sequential undo. Exact pending requests survive page reload in tab session storage; retries use their original identity and read the current state after confirmation. Revision conflicts block writes until refresh. Module tools depend only on frontend contracts. The material editor now inserts bounded Markdown and selected campaign links while preserving existing rich content and cancelled drafts. Keyboard tab navigation and panel relationships are included.
+
+All 30 gameplay frontend, 6 insertion and 14 affected autosave/editor tests passed. Full frontend compilation and code/localization/dependency checks passed, followed by final scoped engine compilation. Browser checks at 1920×1080 in both themes used an isolated real PostgreSQL database and loopback API: setup, 10 h → 8 h rest → exposure → infection → recovery d6, undo, persisted Markdown/table/link, independent note saves, real two-window conflict and recovery after connection loss/page reload/API restart. The existing oversized-map-image warning remains. The user's campaign and database volume were not changed.
+
+At frontend delivery, internet-disconnected acceptance had not been performed. That requirement was removed on 2 October; phase one is now accepted as recorded above. Exact implementation evidence remains in [the gameplay delivery plan](09-Gameplay-implementation.md).
+
+## Local Docker runtime — 1 October 2026
+
+The root multi-stage Dockerfile and Compose configuration now run the production
+frontend and API together at `http://localhost:4200`, with separate private
+PostgreSQL. The user's existing volume and credentials are reused. A backup was
+saved before the additive gameplay migration; before/after hashes confirmed all
+106 materials, their revisions and the remaining campaign data were preserved.
+The image build and four read-only container integration tests passed. Details and
+limits are in [the Docker runtime record](10-Docker-local-runtime.md).

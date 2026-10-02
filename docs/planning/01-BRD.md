@@ -1,167 +1,167 @@
-# BRD — aplikacja wspierająca mistrza gry
+# BRD — game master companion
 
-Wersja robocza 0.1 · 29 września 2026
+Version 0.2 · 2 October 2026
 
-Powiązane: [koncepcja produktu](00-Koncepcja-produktu.md) · [user stories](02-User-stories.md)
+Related: [product concept](00-Product-concept.md) · [user stories](02-User-stories.md)
 
-## 1. Cel dokumentu i status
+## 1. Document purpose and status
 
-BRD opisuje potrzebę produktu, oczekiwane rezultaty, zakres i wymagania biznesowe. Nie zawiera projektu technicznego. Ustalenia użytkownika zestawiono w koncepcji; poniższe szczegółowe wymagania i granica pierwszej wersji są propozycją ich realizacji do dalszego przeglądu.
+This BRD describes the wider product vision, expected outcomes and business requirements, not a claim that every listed capability belongs to the MVP. Phase one was accepted by the user on 2 October 2026; [MVP acceptance](11-MVP-acceptance.md) defines its delivered scope and later work. Full offline operation has been removed from current requirements. Data persistence and visible save failures remain required; user-facing export/import remains later scope.
 
 ## 2. Problem
 
-MG potrzebuje jednocześnie materiałów do przygotowania i szybkiego dostępu do informacji podczas gry. Rozbudowane notatki utrudniają orientację. Mapa jest oddzielona od opisu miejsca, narzędzia od zasad, a zapiski sesji od historii świata. Śledzenie czasu i skutków rozłożonych na wiele sesji wymaga pamiętania o wielu niezależnych sprawach.
+The GM needs preparation materials and fast access to information during play. Extensive notes make orientation difficult. Maps are separate from location descriptions, tools from rules, and session notes from world history. Tracking time and effects across multiple sessions requires remembering many independent matters.
 
-Obecny HTML rozdziałów Icewind Dale pokazał wartość map otwierających notatki i narzędzi reagujących na czas. Kolejny produkt ma umożliwiać MG samodzielne dodawanie i zmienianie treści, map, znaczników i prostych narzędzi w różnych kampaniach.
+The existing Icewind Dale chapter HTML demonstrated the value of maps opening notes and tools reacting to time. The next product should let the GM add and change content, maps, markers and simple tools across different campaigns.
 
-## 3. Cele i ocena powodzenia
+## 3. Goals and success assessment
 
-| Cel | Sposób sprawdzenia w pilocie |
+| Goal | How to evaluate it in the pilot |
 |---|---|
-| Skrócić szukanie informacji przy stole. | Z mapy Ythryn MG otwiera opis lokacji i powiązanego NPC, po czym wraca do miejsca na mapie. |
-| Pozwolić dostosować gotową przygodę. | Edycja lokacji i dodanie własnego wątku są widoczne w danej kampanii, a nowa kampania z tego samego modułu zachowuje oryginał. |
-| Zapewnić swobodę budowania własnej kampanii. | Bez gotowego modułu MG tworzy foldery, obiekty, mapę i własne narzędzie. |
-| Odciążyć pamięć MG. | Po upływie kilku terminów aplikacja pokazuje wszystkie należne sprawy, także nierozstrzygnięte z wcześniejszej sesji. |
-| Zachować czytelny zapis kampanii. | Dwie sesje mają osobne zapiski; wybrane fakty trafiają do kroniki z odnośnikami do źródła. |
-| Zapewnić ciągłość pracy offline. | Przygotowanie, prowadzenie, zamknięcie i ponowne otwarcie kampanii działają bez internetu, z zachowaniem stanu. |
+| Reduce information lookup at the table. | From the Ythryn map, the GM opens a location description and a related NPC, then returns to the same map position. |
+| Allow adaptation of a ready-made adventure. | A location edit and a personal story thread are visible in that campaign; a new campaign from the same module retains the original. |
+| Support building a custom campaign. | Without a ready-made module, the GM creates folders, entities, a map and a custom tool. |
+| Reduce the GM's memory burden. | After several deadlines pass, the application shows every due matter, including unresolved ones from an earlier session. |
+| Preserve a readable campaign record. | Two sessions have separate notes; selected facts enter the chronicle with source links. |
+| Preserve continuity of campaign work. | Saved materials and game state remain available after closing and reopening the local application. |
 
-Są to kryteria jakościowe pierwszego pilota. Liczbowe cele wygody i szybkości obsługi należy ustalić po próbie prowadzenia rzeczywistej sesji, zamiast przyjmować je bez obserwacji.
+These are qualitative criteria for the initial pilot. Quantitative usability and speed targets should follow an actual session-running trial rather than be assumed without observation.
 
-## 4. Użytkownik i odpowiedzialność
+## 4. User and responsibility
 
-Jedynym aktorem korzystającym z produktu jest **mistrz gry**. Przygotowuje kampanię, prowadzi sesję, zmienia materiały i rozstrzyga przebieg świata.
+The only product actor is the **game master**. They prepare the campaign, run sessions, change materials and resolve events in the world.
 
-Właściciel produktu początkowo dostarcza moduły. Jest to sposób przygotowania zawartości, a nie dodatkowa rola wymagająca kont, panelu administracyjnego lub uprawnień w pierwszej wersji.
+The product owner initially supplies modules. This is a content preparation process, not an extra role requiring accounts, an administration panel or permissions in the first version.
 
-## 5. Zasady produktu
+## 5. Product principles
 
-- MG zachowuje kontrolę nad wydarzeniami, rzutami i konsekwencjami.
-- Przygotowanie i prowadzenie korzystają z tych samych materiałów oraz wspólnego stanu kampanii.
-- Swobodny tekst działa samodzielnie; struktura i szablony są pomocą.
-- Moduł, kampania i bieżący stan narzędzi mają odrębne znaczenie.
-- Zmiana folderu lub nazwy nie powinna zrywać powiązań materiału.
-- Czas świata jest niezależny od czasu rzeczywistego i liczby sesji.
-- Plany, robocze zapiski i ustalona historia nie są automatycznie utożsamiane.
-- Materiały i stan kampanii pozostają dostępne offline.
+- The GM retains control over events, rolls and consequences.
+- Preparation and play use the same materials and shared campaign state.
+- Free-form text works on its own; structure and templates assist it.
+- Modules, campaigns and current tool state have distinct meanings.
+- Changing a folder or name should not break material relationships.
+- World time is independent of real time and the number of sessions.
+- Plans, working notes and established history are not automatically treated as the same thing.
+- Saved campaign materials and game state remain durable across application restarts.
 
-## 6. Wymagania funkcjonalne — proponowana pierwsza wersja
+## 6. Functional requirements — wider product scope
 
-### BR-01. Rozpoczęcie i niezależność kampanii
+### BR-01. Starting and isolating campaigns
 
-MG tworzy kampanię z dostępnego modułu albo pustego zestawu. Kampania otrzymuje własną nazwę, materiały i stan początkowy. Zmiany w niej nie modyfikują modułu ani pozostałych kampanii. Można prowadzić więcej niż jedną kampanię i wracać do każdej z jej zachowanym stanem.
+The GM creates a campaign from an available module or an empty set. It receives its own name, materials and initial state. Changes do not modify the module or other campaigns. Multiple campaigns can be run and revisited with their preserved state.
 
-### BR-02. Moduł jako zestaw do ponownego użycia
+### BR-02. A module as a reusable set
 
-Moduł obejmuje treść, foldery, mapy, znaczniki, powiązania i przygotowane narzędzia. Może organizować materiały rozdziałami, ale produkt nie wymusza takiej struktury. Nowa kampania nie dziedziczy historii sesji ani wyników wcześniejszej rozgrywki w innej kampanii. Szczegóły procesu przygotowania modułu przez właściciela produktu wymagają osobnego opracowania.
+A module includes content, folders, maps, markers, relationships and prepared tools. It can organize materials into chapters, but the product does not impose that structure. A new campaign does not inherit session history or gameplay outcomes from another campaign. The product owner's module preparation process needs separate design.
 
-### BR-03. Foldery
+### BR-03. Folders
 
-MG tworzy, nazywa i przenosi foldery oraz materiały w wielopoziomowej hierarchii. Liczba poziomów nie jest z góry ograniczona do rozdziału i podrozdziału. Obiekt może być przywołany w wielu miejscach bez tworzenia osobnych kopii. Usunięcie materiału powinno pokazywać wpływ na istniejące odnośniki i dawać możliwość rezygnacji; dokładny sposób odzyskiwania usuniętych treści pozostaje do ustalenia.
+The GM creates, names and moves folders and materials in a multilevel hierarchy. Depth is not limited to chapters and subchapters. An entity can be referenced in several places without separate copies. Material deletion should show its effect on existing links and allow cancellation; the precise recovery process for deleted content remains undecided.
 
-### BR-04. Swobodna treść i podstawowe obiekty
+### BR-04. Free-form content and basic entities
 
-MG tworzy zwykłe notatki oraz obiekty NPC, lokacja i frakcja. Treść obsługuje co najmniej nagłówki, akapity, listy, tabele, obrazy i linki. Szablony oraz dodatkowe pola są opcjonalne. Nowy obiekt może zacząć się od samej nazwy i krótkiego opisu. Dane bohaterów drużyny umożliwiają przypisanie im narzędzi; nie są pełną kartą postaci danego systemu RPG.
+The GM creates ordinary notes and NPC, location and faction entities. Content supports at least headings, paragraphs, lists, tables, images and links. Templates and extra fields are optional. A new entity can begin with just a name and short description. Party character data allows tools to be assigned to characters; it is not a full character sheet for a particular RPG system.
 
-### BR-05. Linki i podgląd
+### BR-05. Links and previews
 
-MG linkuje obiekty i notatki w swobodnym tekście. Może podejrzeć powiązany materiał i wrócić do miejsca pracy bez utraty niezapisanego zapisku. Zmiana nazwy i położenia materiału zachowuje powiązania. Proponowanym uzupełnieniem jest lista materiałów odwołujących się do danego obiektu.
+The GM links entities and notes in free-form text. They can preview related material and return to their work without losing unsaved notes. Renaming or moving materials preserves relationships. A list of materials referencing an entity is a proposed addition.
 
-### BR-06. Wyszukiwanie
+### BR-06. Search
 
-MG wyszukuje materiały po nazwie i treści w obrębie kampanii, w tym zapiski poprzednich sesji i wydarzenia kroniki. Wynik wskazuje rodzaj materiału i jego położenie, żeby odróżnić plan sceny od zapisu rozegranego zdarzenia.
+The GM searches campaign materials by name and content, including previous session notes and chronicle events. Results identify material type and location to distinguish a scene plan from a played-event record.
 
-### BR-07. Mapy i znaczniki
+### BR-07. Maps and markers
 
-MG dodaje własny obraz mapy, tworzy, przesuwa, opisuje i usuwa znaczniki oraz łączy je z materiałami. Kliknięcie znacznika pokazuje powiązaną treść z możliwością zachowania dostępu do mapy. Mapa umożliwia przybliżenie i przesuwanie. Powrót z notatki lub mapy wnętrza zachowuje orientację na mapie nadrzędnej. Jedna lokacja może być wskazana na kilku mapach bez powielania opisu. Usunięcie znacznika nie usuwa lokacji.
+The GM adds a map image, creates, moves, describes and deletes markers, and links them to materials. Clicking a marker shows related content while allowing continued map access. The map supports zooming and panning. Returning from a note or interior map preserves orientation on the parent map. One location can appear on several maps without duplicated descriptions. Deleting a marker does not delete the location.
 
-### BR-08. Przygotowanie sesji
+### BR-08. Session preparation
 
-MG tworzy zapis przyszłej sesji, dodaje notatki przygotowawcze i przypina potrzebne materiały. Ma dostęp do kroniki, poprzednich sesji i nierozstrzygniętych spraw. Przypięty zestaw jest skrótem, a nie listą wymuszonych scen. Jego wykorzystanie jest opcjonalne.
+The GM creates a future session record, adds preparation notes and pins relevant materials. They can access the chronicle, previous sessions and unresolved matters. The pinned set is a shortcut rather than a mandatory scene list. Its use is optional.
 
-### BR-09. Prowadzenie sesji
+### BR-09. Running a session
 
-MG rozpoczyna lub wznawia sesję. Widok prowadzenia daje dostęp do map, materiałów, wyszukiwania, czasu, narzędzi i szybkich zapisków. Edycja oraz tworzenie materiałów nadal są dostępne. Zmiana widoku lub otwartej lokacji nie zeruje stanu gry.
+The GM starts or resumes a session. The play view provides maps, materials, search, time, tools and quick notes. Editing and material creation remain available. Changing views or the open location does not reset game state.
 
-### BR-10. Osobne zapisy sesji
+### BR-10. Separate session records
 
-Każda sesja ma własną nazwę i zapiski. Szybkie notatki są oddzielone od przygotowań i późniejszego podsumowania, ale należą do tego samego zapisu sesji. Utworzenie kolejnej sesji nie nadpisuje poprzedniej. Zakończenie sesji zachowuje aktywne narzędzia, czas oraz należne przypomnienia.
+Each session has its own name and notes. Quick notes are separate from preparations and the later summary but belong to the same session record. Creating another session does not overwrite the previous one. Ending a session preserves active tools, time and due reminders.
 
-### BR-11. Czas świata
+### BR-11. World time
 
-Główny zegar kampanii operuje dniami, godzinami i minutami. MG świadomie przesuwa czas; samo otwarcie aplikacji, pisanie notatek lub przerwa między spotkaniami nie powodują jego upływu. Osobne liczniki mogą mierzyć czas od wskazanego momentu, np. pobyt w Ythryn.
+The main campaign clock uses days, hours and minutes. The GM deliberately advances it; opening the application, writing notes or taking a break between meetings does not cause time to pass. Separate counters can track elapsed time from a specified event, such as entering Ythryn.
 
-Narzędzia mogą reagować na upływ całego czasu albo wskazaną aktywność, np. eksplorację lub zakończenie odpoczynku. Typ aktywności musi być widoczny dla MG. Sposób dodawania takich rodzajów aktywności to element do doprecyzowania przy projektowaniu obsługi narzędzi.
+Tools can react to total elapsed time or a specified activity, such as exploration or the end of a rest. The activity type must be visible to the GM. How to add these activity types needs clarification when designing tool interaction.
 
-### BR-12. Przypomnienia i rozstrzygnięcia
+### BR-12. Reminders and resolutions
 
-Przekroczenie terminu lub progu wyświetla sprawę do rozstrzygnięcia z opisem i odnośnikiem do zasad. Duży skok czasu nie gubi wcześniejszych ani powtarzających się terminów. MG widzi, ile spraw pozostaje należnych. Każde rozstrzygnięcie zostaje zapisane tylko raz.
+Crossing a deadline or threshold shows a matter to resolve with a description and rules link. Large time advances do not lose earlier or recurring deadlines. The GM sees how many matters remain due. Each resolution is saved only once.
 
-Aplikacja nie zakłada samodzielnie wyniku rzutu ani rozegrania sceny. Proste, jawnie skonfigurowane zmiany wartości mogą być automatyczne; działania wpływające na opowieść wymagają decyzji MG. Ukrycie panelu lub zmiana rozdziału nie wyłącza działającego narzędzia. Zatrzymanie go jest osobną czynnością.
+The application does not assume a roll outcome or that a scene was played. Simple, explicitly configured value changes can be automatic; actions affecting the story require the GM's decision. Hiding a panel or changing chapters does not disable an active tool. Stopping it is a separate action.
 
-### BR-13. Stan i zakres narzędzi
+### BR-13. Tool state and scope
 
-Narzędzie może dotyczyć kampanii, miejsca, frakcji lub konkretnej postaci. Narzędzie dla każdego bohatera przechowuje niezależne wyniki. Jego opis działania jest dostępny obok wartości. MG może poprawić stan oraz cofnąć ostatnią pomyłkę wraz z jej powiązanymi skutkami. Cofnięcie czasu nie może pozostawić niewidocznej sprzeczności między zegarem, wartościami i rozstrzygniętymi przypomnieniami.
+A tool can concern the campaign, a location, a faction or a particular character. Character tools store independent results for each party member. A behavior description is available beside the values. The GM can correct state and undo the latest mistake with its related effects. Undoing time must not leave a hidden contradiction between the clock, values and resolved reminders.
 
-### BR-14. Kreator prostych narzędzi
+### BR-14. Simple tool creator
 
-MG tworzy licznik, listę postępu, termin lub przypomnienie cykliczne. Ustala nazwę, opis, cel śledzenia, wartości początkowe i odpowiednie progi lub czasy. Może powiązać narzędzie z materiałem zawierającym zasady. Kreator wyjaśnia, na jakie zdarzenia narzędzie reaguje i jaki będzie ich skutek.
+The GM creates a counter, progress list, deadline or recurring reminder. They set its name, description, tracking target, initial values and appropriate thresholds or times. They can link it to rules material. The creator explains which events the tool reacts to and what effects follow.
 
-Konfigurację można wykorzystać ponownie jako wzór. Nowe użycie ma niezależne wartości; zmiana wzoru nie zmienia po cichu już działających narzędzi. Złożone mechaniki modułowe, takie jak Arcane Blight, nie wyznaczają obowiązkowego zakresu swobody początkowego kreatora.
+Configuration can be reused as a template. A new use has independent values; changing a template does not silently modify active tools. Complex module mechanics such as Arcane Blight do not define the required flexibility of the initial creator.
 
-### BR-15. Kronika
+### BR-15. Chronicle
 
-MG ręcznie tworzy wydarzenia, również na podstawie fragmentu notatki. Wydarzenie zawiera tytuł, swobodny opis, opcjonalny czas świata, linki do obiektów i opcjonalne wskazanie sesji lub zapisku źródłowego. Pierwotna notatka pozostaje dostępna.
+The GM manually creates events, including from note excerpts. An event contains a title, free-form description, optional world time, entity links and an optional source session or note reference. The original note remains available.
 
-Można opisać wydarzenia wcześniejsze niż pierwsza sesja lub bez znanej daty. MG poprawia kolejność. Jeśli podano dokładne czasy, ich relacja do ręcznej kolejności musi być czytelna; proponujemy, aby przeniesienie na sprzeczne miejsce wymagało świadomej korekty czasu albo rezygnacji z dokładnego datowania. Widok grupowania wydarzeń bez daty wymaga dopracowania.
+Events can precede the first session or have no known date. The GM can correct their order. Where exact times are supplied, their relationship to manual ordering must be clear; moving an event into a conflicting position should require deliberate time correction or removal of exact dating. Grouping undated events needs further design.
 
-### BR-16. Plany, historia narzędzi i fakty
+### BR-16. Plans, tool history and facts
 
-Plan sceny nie pojawia się automatycznie jako rozegrane wydarzenie. Historia operacji narzędzi jest dostępna oddzielnie od kroniki. MG świadomie wybiera, które informacje utrwalić jako historię kampanii. Edycja wydarzenia kroniki nie cofa automatycznie czasu ani wcześniejszych rozstrzygnięć narzędzi.
+A scene plan does not automatically appear as a played event. Tool operation history is available separately from the chronicle. The GM deliberately chooses what to preserve as campaign history. Editing a chronicle event does not automatically reverse time or previous tool resolutions.
 
-### BR-17. Trwałość, offline i kopia kampanii
+### BR-17. Persistence and campaign backup
 
-Materiały, obrazy, mapy, zapiski i narzędzia są dostępne bez połączenia z internetem. Praca pozostaje zachowana po zamknięciu aplikacji. Użytkownik widzi problem z zapisem, jeśli wystąpi. Pierwsza wersja powinna umożliwiać wykonanie i odtworzenie kompletnej kopii kampanii, bez konieczności jej ponownego ręcznego składania. Odtworzenie nie może niejawnie zastąpić innej kampanii.
+Confirmed saves remain preserved after closing the application, and save failures are visible without losing drafts. Full offline operation is not a current requirement. User-facing complete campaign backup/restore belongs to later scope: it should include content, assets and game state and must not silently replace another campaign. Phase one uses persistent local storage and documented database protection; it does not claim a campaign export/import feature.
 
-### BR-18. Niezależność od Ythryn i przyszłego hostowania
+### BR-18. Independence from Ythryn and future hosting
 
-Foldery, typy materiałów, mapy i proste narzędzia są użyteczne także w pustej kampanii bez reguł Icewind Dale. Pilot dostarcza konkretną zawartość. Przyszła wersja hostowana powinna zachować treść, powiązania i stan przenoszonej kampanii oraz podstawowy przebieg pracy MG. Wymaganie nie przesądza bieżącej technologii, chmury ani modelu synchronizacji.
+Folders, material types, maps and simple tools are useful in an empty campaign without Icewind Dale rules. The pilot supplies specific content. A future hosted version should preserve migrated campaign content, relationships, state and the GM's core workflow. This requirement does not determine the current technology, cloud or synchronization model.
 
-## 7. Zakres pilota i scenariusz odbioru
+## 7. Pilot scope and acceptance scenario
 
-Źródłem pilota są istniejące materiały aktu 7, obecna mapa i zachowanie narzędzi aplikacji HTML. Dostępne zasady i ustalenia kampanii mają pierwszeństwo przed dopisywaniem nowych. Materiały źródłowe zostają zachowane; przygotowanie pilota nie zmienia aktu 6.
+The pilot draws on existing act 7 materials, the current map and HTML tool behavior. Available rules and campaign decisions take precedence over inventing new ones. Source materials remain preserved; pilot preparation does not change act 6.
 
-1. Utworzyć dwie kampanie z modułu aktu 7 i sprawdzić niezależność ich materiałów oraz narzędzi.
-2. W pierwszej zmienić lokację, dodać NPC i połączyć go z tekstem oraz znacznikiem mapy.
-3. Przygotować sesję, następnie otworzyć Y4 z mapy i przejść do powiązanych materiałów.
-4. Przesunąć czas, wywołać należne sprawdzenia i rozstrzygnąć klątwę niezależnie dla kilku bohaterów. Duży skok czasu nie gubi sprawdzeń.
-5. Zapisać ustalenie w szybkiej notatce, po sesji utworzyć z niego wydarzenie kroniki i poprawić jego pozycję.
-6. Zamknąć aplikację, wrócić offline, rozpocząć następną sesję i potwierdzić zachowanie stanu oraz oddzielnych zapisków.
-7. Utworzyć pustą kampanię z własną mapą i narzędziem; potwierdzić brak zależności od nazw i reguł Ythryn.
-8. Odtworzyć kopię kampanii i sprawdzić materiały, obrazy, powiązania, czas, narzędzia i historię.
+1. Create two campaigns from the act 7 module and check that their materials and tools remain independent.
+2. Edit a location in the first campaign, add an NPC and link it from text and a map marker.
+3. Prepare a session, then open Y4 from the map and navigate to related materials.
+4. Advance time, trigger due checks and resolve the curse independently for several characters. Large advances preserve checks.
+5. Record a development in a quick note, create a chronicle event from it after the session and correct its position.
+6. Close and reopen the application, begin the next session and confirm preserved state and separate session notes when those later-scope features are delivered.
+7. Create an empty campaign with a custom map and tool; confirm independence from Ythryn names and rules.
+8. Restore a campaign copy and check materials, images, relationships, time, tools and history.
 
-To plan przyszłej walidacji produktu, nie raport z wykonanych testów.
+This is a future product validation plan, not a report of tests already performed.
 
-## 8. Poza pierwszą wersją i możliwości rozwoju
+## 8. Outside the first version and development opportunities
 
-- Konta graczy, widok gracza, współprowadzenie i edycja wieloosobowa.
-- Plansza taktyczna VTT, sterowanie tokenami i automatyzacja walki.
-- Publiczna biblioteka, sprzedaż i udostępnianie modułów przez użytkowników.
-- Uniwersalny kreator dowolnych reguł i pełne karty postaci wielu systemów.
-- Hosting, synchronizacja urządzeń i rozwiązywanie konfliktów wspólnej edycji.
-- Pełne kalendarze świata, daty astronomiczne i automatyczne liczenie czasu rzeczywistego.
-- Automatyczne pisanie kroniki, rozwijanie świata lub rozstrzyganie scen przez AI.
-- Automatyczne łączenie aktualizacji modułu ze zmienionymi materiałami kampanii.
-- Uniwersalny import sejfów Obsidiana i synchronizacja zewnętrznych notatek. Pilot korzysta z wybranych materiałów aktu 7; nie oznacza to obietnicy obsługi każdego sejfu.
+- Player accounts, player view, co-GM support and collaborative editing.
+- A tactical VTT board, token control and combat automation.
+- A public library, sales and user sharing of modules.
+- A universal arbitrary-rule creator and full character sheets for multiple systems.
+- Hosting, device synchronization and collaborative edit-conflict resolution.
+- Full world calendars, astronomical dates and automatic real-time tracking.
+- AI-generated chronicles, world development or scene resolutions.
+- Automatic merging of module updates into edited campaign materials.
+- Universal Obsidian vault import and external note synchronization. Using selected act 7 materials does not promise support for every vault.
 
-## 9. Ryzyka produktowe i decyzje do późniejszego dopracowania
+## 9. Product risks and decisions for later refinement
 
-| Ryzyko | Kierunek ograniczenia |
+| Risk | Mitigation direction |
 |---|---|
-| Formularze utrudnią szybki zapis pomysłu. | Nazwa i swobodna treść wystarczają; szablony i dodatkowe pola są opcjonalne. |
-| Kreator narzędzi stanie się osobnym językiem programowania. | Cztery proste rodzaje na początek; złożone przypadki przygotowane w module. |
-| Duży skok czasu zasypie MG powiadomieniami. | Czytelne grupowanie zaległości z zachowaniem liczby i czasu wystąpień; sposób obsługi do sprawdzenia w pilocie. |
-| Materiał pilota stanie się sztywną strukturą całego produktu. | Obowiązkowa walidacja pustej kampanii i narzędzi o innych nazwach oraz wartościach. |
-| Kronika pomiesza plany z historią. | Ręczne utrwalanie wydarzeń, źródło zapisku i oddzielna historia narzędzi. |
-| Aktualizacja modułu nadpisze autorskie zmiany. | Pierwsza wersja zachowuje niezależność istniejącej kampanii; scalanie aktualizacji jest poza zakresem. |
+| Forms impede quickly recording an idea. | A name and free-form content suffice; templates and extra fields are optional. |
+| The tool creator becomes a separate programming language. | Start with four simple types; modules prepare complex cases. |
+| A large time advance overwhelms the GM with notifications. | Clearly group overdue matters while preserving occurrence counts and times; evaluate interaction in the pilot. |
+| Pilot materials become a rigid structure for the whole product. | Validate an empty campaign and tools with different names and values. |
+| The chronicle confuses plans with history. | Manual event recording, source notes and separate tool history. |
+| A module update overwrites authored changes. | The first version preserves existing campaign independence; update merging is outside scope. |
 
-Do opracowania przy projektowaniu doświadczenia pozostają: szczegółowe pola obiektów, wygląd podglądu materiałów przy mapie, obsługa wydarzeń bez daty, dokładne możliwości kreatora, cofanie kilku kolejnych operacji, odzyskiwanie skasowanych treści i sposób dostarczania modułów przez właściciela produktu.
+Experience design still needs detailed entity fields, map-adjacent material previews, undated event handling, exact creator capabilities, multiple sequential undo, deleted-content recovery and the product owner's module delivery process.

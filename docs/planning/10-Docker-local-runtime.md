@@ -62,7 +62,8 @@ observed in the fresh browser view. Browser checks performed no campaign writes.
 
 Stable build/start/stop/verification commands are in the root README. Use either
 Aspire or Compose against the existing volume at a time. Image preparation needs
-network access; starting a prepared runtime installs no packages. This delivery
-does not itself establish full acceptance with host internet connectivity
-disconnected. No cloud deployment, account system or external publication is
-included.
+network access; starting a prepared runtime installs no packages. Full offline
+operation is not a current requirement, following the user's decision on
+2 October 2026. No internet-disconnected acceptance was performed. Phase one is
+accepted in [the MVP acceptance record](11-MVP-acceptance.md). No cloud deployment,
+account system or external publication is included.

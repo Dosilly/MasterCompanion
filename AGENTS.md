@@ -16,7 +16,7 @@ These instructions apply to all implementation work in this repository. Read the
 - The UI currently uses Polish resources. Polish campaign content, original reference files, translated resources, and source-specific test fixtures are data; preserve their language and spelling. Never translate user notes as a code cleanup.
 - Maintain matching keys and placeholders across locale catalogs. Include accessible labels and error/recovery messages in localization.
 - Do not display raw exception details or backend diagnostic text in the UI. Map stable error codes or HTTP outcomes to localized messages.
-- Existing Polish product specifications may remain in Polish. New code-facing instructions and technical diagnostics must use English.
+- Write all project documentation, product specifications, plans and repository instructions in English. Preserve source-specific names and campaign content in their original language. Technical diagnostics must also use English.
 
 ## Architecture and ownership
 
@@ -28,7 +28,7 @@ These instructions apply to all implementation work in this repository. Read the
 - Never add module-specific identifiers, branch conditions, or game rules to the engine. Extend the explicit contract when cross-boundary behavior is needed.
 - Organize backend use cases as vertical slices, with endpoint, input/output, validation, and persistence together. Shared code must have a demonstrated purpose. Do not add generic repositories, mediator frameworks, microservices, or Module Federation just to match a pattern.
 - Cross-module operations must use explicit contracts and preserve ownership. Before implementing game operations, define atomic changes of engine time, module state, revision, and undo history.
-- Document meaningful changes to contracts and ownership in `docs/planning/06-Architektura-modulow.md`. Keep plans and implementation status in `docs/planning/`; keep `README.md` in English with stable project information and no current implementation status. Preserve historical workshop decisions as history.
+- Document meaningful changes to contracts and ownership in `docs/planning/06-Module-architecture.md`. Keep plans and implementation status in `docs/planning/`; keep `README.md` in English with stable project information and no current implementation status. Preserve historical workshop decisions as history.
 
 ## Production-ready implementation standard
 
@@ -62,7 +62,7 @@ Production-ready is an evidence-based acceptance standard for the changed behavi
 - Treat material documents, links, filenames, module packages, and assets as untrusted input. Render through the supported document schema; reject unsafe URL schemes and prevent path traversal. Do not introduce arbitrary HTML/script execution.
 - Keep secrets out of source, logs, screenshots, fixtures, and committed configuration. Use environment/configuration providers; do not hardcode credentials or a developer's runtime paths.
 - Keep local development endpoints bound to loopback. The agreed MVP has no accounts or login; do not add them incidentally. Before network/cloud exposure, explicitly design and implement authentication, authorization, transport security, origin protection, secret handling, and database access restrictions.
-- Offline operation must not require CDNs, remote fonts, telemetry, third-party APIs, or runtime package downloads after environment preparation. Distinguish an offline package install from an acceptance test with networking disconnected.
+- Full offline operation is not a current requirement or an MVP acceptance gate. Do not schedule internet-disconnected acceptance unless the user reinstates this requirement. Local operation, durable persistence, data safety, and recovery from failed requests remain required.
 - Keep .NET, Angular, Docker, and storage choices portable. Windows is the current acceptance platform; AWS is a future deployment target, not a dependency of normal local operation.
 - Do not publish, push, merge, deploy, delete user data, or change external services unless authorized by the user. Use repository/project-scoped process control; do not terminate unrelated processes.
 

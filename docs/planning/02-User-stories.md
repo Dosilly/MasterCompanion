@@ -1,265 +1,284 @@
-# User stories — aplikacja wspierająca MG
+# User stories — game master companion
 
-Wersja robocza 0.1 · 29 września 2026
+Version 0.2 · 2 October 2026
 
-Powiązane: [koncepcja](00-Koncepcja-produktu.md) · [BRD](01-BRD.md)
+Related: [concept](00-Product-concept.md) · [BRD](01-BRD.md)
 
-Wszystkie historie dotyczą jednego aktora: **mistrza gry**. Opisują proponowany zakres pierwszej wersji. Kryteria są podstawą przyszłego przeglądu i odbioru; nie oznaczają, że aplikacja została zaimplementowana lub przetestowana.
+All stories concern the game master and describe the wider product vision. Phase one was accepted by the user on 2 October 2026; [MVP acceptance](11-MVP-acceptance.md) distinguishes its delivered behavior from later scope. These criteria do not claim implementation or verification of every story. Full offline operation has been removed from current requirements.
 
-## Kampania i materiały
+## Campaign and materials
 
-### US-01. Rozpoczęcie kampanii z modułu
+### US-01. Starting a campaign from a module
 
-Jako MG chcę rozpocząć kampanię z przygotowanego modułu, aby otrzymać gotową bazę do własnej gry.
+As a GM, I want to start a campaign from a prepared module so that I have a ready-made foundation for my game.
 
 **BRD:** BR-01, BR-02.
 
-**Kryteria akceptacji:**
-- Po wybraniu modułu i nazwaniu kampanii mam dostęp do jego folderów, treści, map, powiązań i narzędzi.
-- Narzędzia mają opisane wartości początkowe; nie dziedziczą wyników innej rozgrywki.
-- Zmiana treści lub wartości w tej kampanii nie zmienia modułu ani drugiej kampanii utworzonej z niego.
-- Mogę wrócić do każdej kampanii z jej niezależnym stanem.
+**Acceptance criteria:**
 
-### US-02. Rozpoczęcie własnej kampanii
+- After choosing a module and naming the campaign, I can access its folders, content, maps, relationships and tools.
+- Tools have documented initial values and do not inherit another game's outcomes.
+- Changing content or values in this campaign does not change the module or a second campaign created from it.
+- I can return to each campaign with its independent state.
 
-Jako MG chcę zacząć bez gotowej przygody, aby budować własny świat tymi samymi narzędziami.
+### US-02. Starting a custom campaign
+
+As a GM, I want to start without a ready-made adventure so that I can build my own world using the same tools.
 
 **BRD:** BR-01, BR-18.
 
-**Kryteria akceptacji:**
-- Mogę wybrać „Własną kampanię” bez wskazania gotowego modułu.
-- Mogę tworzyć foldery, notatki, obiekty, mapy, narzędzia i sesje.
-- Kampania nie otrzymuje obowiązkowych rozdziałów, bohaterów, zasad ani nazw Ythryn.
+**Acceptance criteria:**
 
-### US-03. Organizacja w folderach
+- I can choose "Custom campaign" without selecting a ready-made module.
+- I can create folders, notes, entities, maps, tools and sessions.
+- The campaign receives no mandatory Ythryn chapters, characters, rules or names.
 
-Jako MG chcę organizować materiały w zagnieżdżonych folderach, aby układ odpowiadał mojej kampanii.
+### US-03. Folder organization
+
+As a GM, I want to organize materials in nested folders so that their layout fits my campaign.
 
 **BRD:** BR-03.
 
-**Kryteria akceptacji:**
-- Mogę utworzyć np. „Region → Miasto → Dzielnica → Lokacje” oraz osobną gałąź wątków.
-- Mogę zmienić nazwy i przenieść folder z zawartością.
-- Przeniesienie lub zmiana nazwy notatki zachowuje linki, znaczniki i powiązania wydarzeń.
-- Przed usunięciem powiązanego materiału widzę wpływ na odnośniki i mogę anulować czynność.
+**Acceptance criteria:**
 
-### US-04. Swobodny tekst i obiekty
+- I can create a structure such as "Region → City → District → Locations" and a separate story-thread branch.
+- I can rename and move a folder with its contents.
+- Moving or renaming a note preserves links, markers and event relationships.
+- Before deleting linked material, I see the effect on references and can cancel.
 
-Jako MG chcę pisać swobodnie i oznaczać ważne elementy jako NPC, lokacje lub frakcje, aby zachować własny sposób notowania oraz uporządkowane powiązania.
+### US-04. Free-form text and entities
+
+As a GM, I want to write freely and identify important elements as NPCs, locations or factions so that I preserve my own note-taking style and organized relationships.
 
 **BRD:** BR-04.
 
-**Kryteria akceptacji:**
-- Mogę utworzyć zwykłą notatkę albo obiekt z nazwą i krótkim opisem.
-- Mogę używać nagłówków, list, tabel, obrazów i linków.
-- Dodatkowe pola i szablon są opcjonalne; mogę zmienić układ treści szablonu.
-- Edycja materiału kampanii jest dostępna zarówno podczas przygotowań, jak i prowadzenia sesji.
+**Acceptance criteria:**
 
-### US-05. Linkowanie i szybki podgląd
+- I can create an ordinary note or an entity with a name and short description.
+- I can use headings, lists, tables, images and links.
+- Extra fields and templates are optional; I can change a template's content layout.
+- Campaign materials can be edited during preparation and play.
 
-Jako MG chcę linkować materiały w tekście i szybko je podejrzeć, aby sprawdzać informacje bez gubienia bieżącej sceny.
+### US-05. Linking and quick previews
+
+As a GM, I want to link materials in text and preview them quickly so that I can check information without losing the current scene.
 
 **BRD:** BR-05.
 
-**Kryteria akceptacji:**
-- W opisie karczmy mogę wskazać istniejącego gospodarza i jego frakcję.
-- Podgląd pokazuje aktualną treść wskazanego obiektu, a nie osobną kopię.
-- Po podglądzie wracam do poprzedniego miejsca bez utraty zapisku.
-- Przy obiekcie mogę odnaleźć materiały, które do niego odsyłają.
+**Acceptance criteria:**
 
-### US-06. Wyszukiwanie w kampanii
+- An inn description can reference its existing innkeeper and faction.
+- A preview shows the referenced entity's current content rather than a separate copy.
+- After previewing, I return to my previous position without losing notes.
+- I can find the materials that refer to an entity.
 
-Jako MG chcę wyszukać nazwę lub fragment treści, aby odnaleźć materiał niezależnie od folderu i sesji.
+### US-06. Campaign search
+
+As a GM, I want to search for a name or text fragment so that I can find material regardless of its folder or session.
 
 **BRD:** BR-06.
 
-**Kryteria akceptacji:**
-- Wyniki obejmują materiały kampanii, zapiski sesji i wydarzenia kroniki.
-- Wynik wskazuje typ i pochodzenie materiału, np. notatkę przygotowawczą lub wydarzenie kroniki.
-- Otwarcie wyniku nie zmienia stanu gry ani nie gubi bieżących zapisków.
+**Acceptance criteria:**
 
-## Mapy
+- Results include campaign materials, session notes and chronicle events.
+- A result identifies the material's type and source, such as a preparation note or chronicle event.
+- Opening a result does not change game state or lose current notes.
 
-### US-07. Przygotowanie mapy
+## Maps
 
-Jako MG chcę dodać mapę i umieścić na niej znaczniki, aby przygotować przestrzenny dostęp do notatek.
+### US-07. Preparing a map
+
+As a GM, I want to add a map and place markers on it so that I can access notes spatially.
 
 **BRD:** BR-07.
 
-**Kryteria akceptacji:**
-- Mogę dodać własny obraz mapy i korzystać z niego offline.
-- Mogę utworzyć, nazwać, przesunąć i usunąć znacznik oraz zmienić jego powiązanie.
-- Znacznik może wskazywać istniejącą lokację lub inny materiał.
-- Ta sama lokacja może mieć znaczniki na dwóch mapach; usunięcie jednego nie usuwa lokacji ani drugiego znacznika.
+**Acceptance criteria:**
 
-### US-08. Prowadzenie z mapy
+- I can add my own map image and use it in the campaign when map authoring is delivered.
+- I can create, name, move and delete a marker and change its relationship.
+- A marker can point to an existing location or other material.
+- A location can have markers on two maps; removing one does not remove the location or the other marker.
 
-Jako MG chcę otwierać materiały z mapy i przechodzić do map wnętrz, aby prowadzić eksplorację bez ciągłego szukania dokumentów.
+### US-08. Running play from a map
+
+As a GM, I want to open materials from maps and navigate to interior maps so that I can run exploration without repeatedly searching for documents.
 
 **BRD:** BR-07, BR-09.
 
-**Kryteria akceptacji:**
-- Mogę przybliżać i przesuwać mapę.
-- Kliknięcie znacznika otwiera jego materiał, a powrót zachowuje położenie i powiększenie mapy.
-- Lokacja może prowadzić do własnej mapy z kolejnymi znacznikami.
-- Przejście do mapy wnętrza i powrót nie zmieniają czasu, narzędzi ani bieżącej sesji.
+**Acceptance criteria:**
 
-## Przygotowanie i zapis sesji
+- I can zoom and pan the map.
+- Clicking a marker opens its material; returning preserves map position and zoom.
+- A location can lead to its own map with further markers.
+- Visiting an interior map and returning does not change time, tools or the current session.
 
-### US-09. Przygotowanie kolejnego spotkania
+## Session preparation and records
 
-Jako MG chcę przygotować osobny zapis przyszłej sesji i przypiąć materiały, aby mieć pod ręką potrzebne informacje.
+### US-09. Preparing the next meeting
+
+As a GM, I want to prepare a separate future-session record and pin materials so that relevant information is close at hand.
 
 **BRD:** BR-08.
 
-**Kryteria akceptacji:**
-- Mogę nadać sesji nazwę, dopisać przygotowania i przypiąć istniejące materiały.
-- Przypięcie nie tworzy kopii notatki.
-- Mam dostęp do poprzednich sesji, kroniki i nierozstrzygniętych przypomnień.
-- Podczas gry mogę sięgnąć poza przypięty zestaw i zmienić plan.
+**Acceptance criteria:**
 
-### US-10. Szybkie notatki podczas gry
+- I can name a session, add preparations and pin existing materials.
+- Pinning does not copy the note.
+- I can access previous sessions, the chronicle and unresolved reminders.
+- During play, I can go beyond the pinned set and change the plan.
 
-Jako MG chcę zapisywać ustalenia w bieżącej sesji, aby nie przerywać prowadzenia i nie mieszać zapisków z różnych spotkań.
+### US-10. Quick notes during play
+
+As a GM, I want to record developments in the current session so that I do not interrupt play or mix notes from different meetings.
 
 **BRD:** BR-09, BR-10.
 
-**Kryteria akceptacji:**
-- Widzę, do której sesji trafia zapisek, i mogę linkować w nim obiekty.
-- Szybkie zapiski są odróżnione od przygotowań tej sesji.
-- Mogę dopisać nowego NPC lub zmienić lokację podczas gry.
-- Otwieranie map i materiałów nie usuwa wpisanej treści.
+**Acceptance criteria:**
 
-### US-11. Zamknięcie i kontynuacja
+- I can see which session receives a note and link entities in it.
+- Quick notes are distinguished from that session's preparation.
+- I can add an NPC or change a location during play.
+- Opening maps and materials does not remove entered content.
 
-Jako MG chcę zakończyć sesję i później rozpocząć nową, aby zachować odrębne zapiski przy ciągłym stanie kampanii.
+### US-11. Closing and continuing
+
+As a GM, I want to end a session and later start another so that notes stay separate while campaign state remains continuous.
 
 **BRD:** BR-10, BR-17.
 
-**Kryteria akceptacji:**
-- Mogę dopisać podsumowanie zakończonej sesji i sprawy na kolejne spotkanie.
-- Nowa sesja ma własne zapiski; nie nadpisuje poprzedniej.
-- Czas, stany narzędzi i nierozstrzygnięte przypomnienia przechodzą do dalszej gry bez zerowania.
-- Zamknięcie i ponowne uruchomienie aplikacji zachowuje te informacje.
+**Acceptance criteria:**
 
-## Czas i narzędzia
+- I can add a summary of a completed session and matters for the next meeting.
+- A new session has its own notes and does not overwrite the previous one.
+- Time, tool states and unresolved reminders carry into further play without resetting.
+- Closing and reopening the application preserves this information.
 
-### US-12. Świadome przesuwanie czasu
+## Time and tools
 
-Jako MG chcę przesuwać czas świata w dniach, godzinach i minutach, aby odwzorowywać działania drużyny niezależnie od czasu rzeczywistego.
+### US-12. Deliberately advancing time
+
+As a GM, I want to advance world time in days, hours and minutes so that I can represent party activities independently of real time.
 
 **BRD:** BR-11.
 
-**Kryteria akceptacji:**
-- Mogę dodać określony czas i zobaczyć jego nową wartość.
-- Upływ rzeczywistej godziny ani rozpoczęcie nowej sesji nie przesuwają zegara gry.
-- Mogę śledzić czas od osobnego momentu, np. wejścia do Ythryn.
-- Jeśli narzędzie rozróżnia eksplorację i odpoczynek, widzę rodzaj wykonywanej czynności i jego wpływ na czas.
+**Acceptance criteria:**
 
-### US-13. Terminy do rozstrzygnięcia
+- I can add a specified amount of time and see its new value.
+- A real hour passing or a new session starting does not advance the game clock.
+- I can track elapsed time from a separate event, such as entering Ythryn.
+- If a tool distinguishes exploration from rest, I see the activity type and its effect on time.
 
-Jako MG chcę widzieć należne przypomnienia wraz z zasadami, aby nie przeoczyć zdarzeń zależnych od czasu.
+### US-13. Deadlines to resolve
+
+As a GM, I want to see due reminders with their rules so that I do not overlook time-dependent events.
 
 **BRD:** BR-12.
 
-**Kryteria akceptacji:**
-- Po osiągnięciu terminu widzę nazwę sprawy, jej czas, cel śledzenia i opis działania.
-- Skok o kilka okresów zachowuje wszystkie należne wystąpienia, z czytelną liczbą zaległości.
-- Wpisuję wynik albo świadomie rozstrzygam sprawę; aplikacja nie zakłada wyniku rzutu lub rozegrania sceny.
-- Zapisany wynik nie jest naliczany drugi raz przy ponownym otwarciu panelu.
-- Zmiana otwartego folderu, mapy lub sesji nie wyłącza aktywnego narzędzia.
+**Acceptance criteria:**
 
-### US-14. Stan osobny dla każdego bohatera
+- At a deadline, I see the matter's name, time, tracking target and behavior description.
+- Advancing several periods preserves every due occurrence with a clear overdue count.
+- I enter a result or deliberately resolve the matter; the application does not assume a roll outcome or that a scene was played.
+- A saved result is not applied again when I reopen the panel.
+- Changing the open folder, map or session does not disable an active tool.
 
-Jako MG chcę przypisać to samo narzędzie kilku bohaterom, aby śledzić ich niezależne wyniki.
+### US-14. Independent state for each character
+
+As a GM, I want to assign the same tool to several characters so that I can track their independent results.
 
 **BRD:** BR-04, BR-13.
 
-**Kryteria akceptacji:**
-- Mogę dodać bohaterów o własnych nazwach i przypisać im narzędzie.
-- Wynik jednego bohatera nie zmienia wyniku pozostałych.
-- Widzę bieżące wartości, stan i należne sprawy każdej postaci.
-- W pilocie Arcane Blight pozwala osobno śledzić stan zakażenia, wyniki i aktualne ST zgodnie z przygotowanymi zasadami modułu.
+**Acceptance criteria:**
 
-### US-15. Utworzenie prostego narzędzia
+- I can add characters with custom names and assign a tool to them.
+- One character's result does not change the others' results.
+- I see each character's current values, status and due matters.
+- In the pilot, Arcane Blight tracks infection, results and current DC independently, using the prepared module rules.
 
-Jako MG chcę stworzyć własny licznik, checklistę, termin lub przypomnienie cykliczne, aby śledzić sprawy nieprzewidziane w module.
+### US-15. Creating a simple tool
 
-**BRD:** BR-14.
-
-**Kryteria akceptacji:**
-- Wybieram rodzaj narzędzia i określam jego nazwę, opis, zakres oraz wartości lub terminy właściwe dla tego rodzaju.
-- Mogę dodać próg albo powiązać narzędzie z notatką zasad.
-- Przed użyciem rozumiem, co uruchamia zmianę lub przypomnienie i jaki będzie skutek.
-- Narzędzie działa również w pustej kampanii i nie wymaga pisania kodu.
-
-### US-16. Ponowne użycie wzoru narzędzia
-
-Jako MG chcę zachować ustawienia narzędzia jako wzór, aby wykorzystać je ponownie bez kopiowania wyników wcześniejszej gry.
+As a GM, I want to create a counter, checklist, deadline or recurring reminder so that I can track matters not anticipated by the module.
 
 **BRD:** BR-14.
 
-**Kryteria akceptacji:**
-- Z zachowanego wzoru mogę utworzyć nowe narzędzie z niezależnym stanem.
-- Nowe użycie nie dziedziczy rozstrzygniętych przypomnień ani historii starego.
-- Edycja wzoru nie zmienia niejawnie działającego narzędzia.
-- Wzór przygotowany przeze mnie jest dostępny do użycia w innej mojej kampanii.
+**Acceptance criteria:**
 
-### US-17. Korekta pomyłki
+- I select the tool type and define its name, description, scope and appropriate values or deadlines.
+- I can add a threshold or link the tool to a rules note.
+- Before use, I understand what triggers a change or reminder and what effect follows.
+- The tool works in an empty campaign and does not require writing code.
 
-Jako MG chcę poprawić błędny wpis lub cofnąć ostatnią operację, aby nie musieć ręcznie odtwarzać stanu gry.
+### US-16. Reusing a tool template
+
+As a GM, I want to save a tool's settings as a template so that I can reuse it without copying earlier gameplay results.
+
+**BRD:** BR-14.
+
+**Acceptance criteria:**
+
+- I can create a new tool with independent state from a saved template.
+- A new use does not inherit resolved reminders or the old tool's history.
+- Editing a template does not silently change an active tool.
+- A template I prepared is available in another campaign of mine.
+
+### US-17. Correcting a mistake
+
+As a GM, I want to correct an entry or undo the latest operation so that I do not have to reconstruct game state manually.
 
 **BRD:** BR-13, BR-16.
 
-**Kryteria akceptacji:**
-- Mogę poprawić omyłkowo wpisaną wartość i zobaczyć zapis tej korekty.
-- Cofnięcie ostatniego dodania czasu usuwa wynikające wyłącznie z niego nowe przypomnienia i przywraca powiązane wartości.
-- Jeśli po zmianie czasu były dalsze rozstrzygnięcia, aplikacja pokazuje zależności i nie wykonuje częściowego cofnięcia pozostawiającego sprzeczny stan.
-- Historia tych operacji pozostaje oddzielona od kroniki opowieści.
+**Acceptance criteria:**
 
-## Kronika i trwałość
+- I can correct an accidentally entered value and see a record of the correction.
+- Undoing the latest time advance removes new reminders caused only by it and restores related values.
+- If later resolutions followed a time advance, the application shows dependencies and does not perform a partial undo that leaves contradictory state.
+- Operation history remains separate from the narrative chronicle.
 
-### US-18. Wydarzenie z zapisku lub od zera
+## Chronicle and persistence
 
-Jako MG chcę ręcznie tworzyć wydarzenia kroniki, aby zachowywać istotne fakty zamiast wszystkich roboczych notatek.
+### US-18. Creating an event from a note or from scratch
 
-**BRD:** BR-15, BR-16.
-
-**Kryteria akceptacji:**
-- Mogę utworzyć wydarzenie od zera lub z wybranego fragmentu zapisku.
-- Mogę zmienić tytuł i treść, dodać powiązane obiekty oraz opcjonalny czas świata.
-- Wydarzenie utworzone z zapisku wskazuje źródłową sesję; oryginalny zapisek pozostaje zachowany.
-- Żaden plan sceny ani wynik licznika nie trafia do kroniki bez mojego wyboru.
-
-### US-19. Układanie historii świata
-
-Jako MG chcę poprawiać kolejność i treść wydarzeń, aby kronika odzwierciedlała ustaloną historię także wtedy, gdy nie znam wszystkich dat.
+As a GM, I want to create chronicle events manually so that I preserve significant facts rather than every working note.
 
 **BRD:** BR-15, BR-16.
 
-**Kryteria akceptacji:**
-- Mogę dodać wydarzenie sprzed pierwszej sesji albo bez dokładnego czasu.
-- Mogę zmienić kolejność wydarzeń; dokładne czasy nie są po cichu pozostawiane w sprzeczności z nową kolejnością.
-- Przy wydarzeniu widzę powiązane postacie, miejsca i ewentualną sesję źródłową.
-- Poprawienie opisu lub kolejności kroniki nie przesuwa zegara gry i nie zmienia stanu narzędzi.
+**Acceptance criteria:**
 
-### US-20. Pełna praca offline i odtworzenie kampanii
+- I can create an event from scratch or from a selected note excerpt.
+- I can change its title and content, add related entities and optional world time.
+- An event created from a note references the source session; the original note remains preserved.
+- No scene plan or counter result enters the chronicle without my choice.
 
-Jako MG chcę pracować bez internetu i mieć kompletną kopię kampanii, aby móc kontynuować grę po przerwie lub odtworzeniu danych.
+### US-19. Organizing world history
+
+As a GM, I want to correct event order and content so that the chronicle reflects established history even when some dates are unknown.
+
+**BRD:** BR-15, BR-16.
+
+**Acceptance criteria:**
+
+- I can add an event before the first session or without an exact time.
+- I can change event order; exact times are not silently left inconsistent with the new order.
+- An event shows related characters, locations and any source session.
+- Correcting chronicle descriptions or order does not advance the game clock or change tool state.
+
+### US-20. Persistence and campaign restore
+
+As a game master, I want saved work to survive a break and a complete campaign copy to support recovery. Persistence is delivered in phase one; user-facing export/import and restore are later scope. Full offline operation is not required.
 
 **BRD:** BR-17, BR-18.
 
-**Kryteria akceptacji:**
-- Bez połączenia z internetem mogę tworzyć i edytować materiały, korzystać z map, prowadzić narzędzia, zapisywać sesje i kronikę.
-- Po ponownym otwarciu aplikacji odzyskuję zapisane materiały i stan; ewentualny problem z zapisem jest widoczny.
-- Mogę wykonać i odtworzyć kompletną kopię obejmującą treści, obrazy, powiązania, sesje, kronikę i narzędzia.
-- Odtworzenie nie nadpisuje innej kampanii bez świadomego wyboru.
+**Acceptance criteria:**
 
-## Proponowana kolejność weryfikacji produktu
+- Reopening the application restores saved materials and state; any save problem is visible.
+- I can create and restore a complete copy containing content, images, relationships, sessions, chronicle and tools.
+- Restore does not overwrite another campaign without a deliberate choice.
 
-1. **Materiały i mapa:** US-01–08 — czy przygotowanie i dostęp do informacji są wygodniejsze niż w obecnym zestawie notatek?
-2. **Ciągłość sesji i czasu:** US-09–14, US-17 — czy MG może przeprowadzić dwie sesje bez utraty stanu i należnych spraw?
-3. **Własne klocki i kronika:** US-15–16, US-18–19 — czy własna kampania oraz ręczne budowanie historii są użyteczne poza Ythryn?
-4. **Pełny przebieg offline i odtworzenie:** US-20 — sprawdzane również podczas wcześniejszych prób, a na końcu jako kompletny scenariusz.
+## Proposed product verification order
 
-To kolejność sprawdzania założeń produktowych, nie harmonogram implementacji ani wycena.
+1. **Materials and map:** US-01–08 — are preparation and information access more convenient than in the existing notes?
+2. **Session and time continuity:** US-09–14, US-17 — can the GM run two sessions without losing state or due matters?
+3. **Custom components and chronicle:** US-15–16, US-18–19 — are custom campaigns and manual history building useful beyond Ythryn?
+4. **Persistence and restore:** US-20 — confirmed persistence belongs to phase one; user-facing complete campaign restore is verified when that later feature is delivered. No internet-disconnected scenario is required.
+
+This is an order for evaluating product assumptions, not an implementation schedule or estimate.
