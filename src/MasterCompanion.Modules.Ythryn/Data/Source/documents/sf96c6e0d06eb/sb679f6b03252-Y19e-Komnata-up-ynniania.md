@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 41
 ---
 
+**W skrócie — dla MG:** Pracownia przenoszenia mózgów do słojów z Venerandą, która chce zdobyć kostur Iriolarthasa i uruchomić obelisk Y21, oferując możliwość współpracy.
+
 **Do odczytania**
 
 > Na przyśrubowanych do podłogi stołach stoją zlewki i alembiki, a między nimi leżą igły, narzędzia chirurgiczne i skórzane rurki. Za stołami stoi ozdobna zbroja. Zamiast głowy ma słój, w którym pływa obrzmiały ludzki mózg.

@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 48
 ---
 
+**W skrócie — dla MG:** Komnata z pułapką skamienienia i ośmioma przejściami do Y19m, wymagającymi imion mistrzów szkół magii, które można poznać w muzeum Y29.
+
 **Do odczytania**
 
 *Przy oglądaniu sali od strony Y19k.*

@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 20
 ---
 
+**W skrócie — dla MG:** Opuszczone więzienie z uśpionym doppelgangerem Xerophonem, którego uwolnienie może zapewnić drużynie przewodnika po mieście i wiedzę o Rytuale Tajemnego Oktetu.
+
 **Do odczytania**
 
 > W szerokiej bramie kwadratowego budynku tkwi przekrzywiona krata. Za nią ciągną się korytarze z rzędami żelaznych drzwi. W każdych jest małe zakratowane okienko.

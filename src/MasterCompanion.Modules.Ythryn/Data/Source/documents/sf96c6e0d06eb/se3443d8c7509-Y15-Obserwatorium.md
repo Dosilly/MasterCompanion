@@ -5,13 +5,15 @@ folderId: sf96c6e0d06eb
 sortOrder: 31
 ---
 
+**W skrócie — dla MG:** Strzeżone przez mageny obserwatorium ze slaadami i zepsutym teleskopem, zawierające trzeci krok Rytuału Tajemnego Oktetu oraz odbiornik i dokumenty umożliwiające Fenes pierwszy kontakt z dawnym towarzyszem.
+
 **Do odczytania**
 
 > Pierścień kamiennych przypór podtrzymuje pochyloną wieżę. Wokół niej stoją milczący strażnicy o podobnych, obojętnych twarzach. W dachu zieje wyrwa, jakby przebił go ogromny głaz.
 
 ### Obraz miejsca — dla MG {#s8a0bacb09292}
 
-Mageny blokują wejście do wieży, a za zaspawanymi drzwiami przebywa niebieski slaad. W sali na szczycie Arcymistrzyni Astronomii, obecnie zielony slaad, pilnuje zepsutego teleskopu. Są tam również odłamek inskrypcji z trzecim krokiem rytuału i osobny odbiornik na bocznym stole, związany z poszukiwaniami Fenes.
+Mageny blokują wejście do wieży, a za zaspawanymi drzwiami przebywa niebieski slaad. W sali na szczycie Arcymistrzyni Astronomii, obecnie zielony slaad, pilnuje zepsutego teleskopu. Są tam również odłamek inskrypcji z trzecim krokiem rytuału i odbiornik związany z poszukiwaniami Fenes: miedziana tuba na kamiennym pulpicie, przy ścianie na prawo od schodów.
 
 ### Strażnicy i wejście {#s2e692ad7bd38}
 
@@ -36,6 +38,8 @@ Mageny blokują wejście do wieży, a za zaspawanymi drzwiami przebywa niebieski
 > Wielki teleskop dominuje w okrągłej komnacie o średnicy trzydziestu stóp na szczycie wieży. W jego okular wpatruje się potężny, dwunożny stwór podobny do żaby, odziany w szaty czarodzieja. Mamrocze do siebie i nie zwraca na was uwagi.
 >
 > Okna zasłaniają adamantynowe tarcze. Wielki fragment kamienia z innego budynku przebił dach i utkwił w posadzce niczym poszarpany kamienny nóż. Po jednej stronie odłamka widnieje dziwna inskrypcja.
+>
+> Na prawo od schodów stoi kamienny pulpit z miedzianą tubą rozchyloną jak kielich kwiatu.
 
 -   **Teleskop:** uszkodzony bez możliwości naprawy. Arcymistrzyni próbuje odwrócić jego działanie i wysłać siebie do gwiazd; jej plan nie może się udać.
 
@@ -59,21 +63,21 @@ Fragment ściany z Y11 nosi napis po drakońsku:
 
 **Do odczytania**
 
-*Na najwyższym piętrze, przy oglądaniu bocznego stołu.*
+*Na najwyższym piętrze, przy oglądaniu pulpitu na prawo od schodów.*
 
-> W boczny stół wpuszczono miedzianą obręcz. W środku wisi cienka srebrna blaszka, a pod popękaną skórzaną okładką wystają zszyte kartki. Ktoś przycisnął je odważnikiem, żeby nie zsuwały się z pochylonego blatu.
+> Kamienny pulpit sięga wam do pasa. Przytwierdzona do niego miedziana tuba wygina się ku górze i rozszerza w kielich wielkości ludzkiej głowy, zwrócony ku osobie stojącej przed pulpitem. W głębi kielicha błyszczy cienka srebrna tarczka. Przed tubą leży wmontowana w kamień miedziana płytka z wyrytym obrysem dłoni. Obok, pod popękaną skórzaną okładką, leżą zszyte kartki przyciśnięte odważnikiem.
 
 **Działanie i reakcje — dla MG**
 
 -   **Dodatek kampanii:** urządzenie, dokumenty i poniższe zasady to **propozycja MG**.
 
--   **Bez testu — znalezienie:** obejrzenie bocznego stołu ujawnia [list Lethry i protokół próby głosu](#material/s262b3a9f491c). Dokument jest zapisany w **Loross, alfabetem drakońskim**; stosuj [zasady odczytywania Loross](#material/s210a67f4cc8e).
+-   **Bez testu — znalezienie:** obejrzenie pulpitu ujawnia [list Lethry i protokół próby głosu](#material/s262b3a9f491c), leżące obok tuby. Dokument jest zapisany w **Loross, alfabetem drakońskim**; stosuj [zasady odczytywania Loross](#material/s210a67f4cc8e).
 
--   **Odbiornik:** nieruchoma obręcz jest osobnym urządzeniem. Działa mimo zniszczenia teleskopu. Arcymistrzyni toleruje czytanie i używanie odbiornika, dopóki bohaterowie nie przeszkadzają jej ani nie dotykają teleskopu.
+-   **Odbiornik:** tuba i płytka dłoni tworzą jedno urządzenie, trwale zamocowane w kamiennym pulpicie. Działa mimo zniszczenia teleskopu. Arcymistrzyni toleruje czytanie i używanie odbiornika, dopóki bohaterowie nie przeszkadzają jej ani nie dotykają teleskopu.
 
--   **Bez testu — uruchomienie:** po odczytaniu instrukcji Fenes dotyka obręczy, wybiera w myślach jednego dawnego towarzysza i przez **10 minut** skupia się na wspólnym przejściu przez wir. Bez kosztu PW, komórek czarów i bez pamiątki po zaginionym.
+-   **Bez testu — uruchomienie:** po odczytaniu instrukcji Fenes kładzie dłoń na płytce z jej obrysem, wybiera w myślach jednego dawnego towarzysza i przez **10 minut** skupia się na wspólnym przejściu przez wir. Gdy srebrna tarczka w głębi tuby zaczyna drgać, może mówić w stronę kielicha. Bez kosztu PW, komórek czarów i bez pamiątki po zaginionym.
 
--   **Wynik:** Fenes przekazuje do **10 słów**, rozmówca może odpowiedzieć do **10 słów**. Słychać wyłącznie głos, bez obrazu ani dźwięków otoczenia. Odbiorca nie potrzebuje przyrządu.
+-   **Wynik:** Fenes przekazuje do **10 słów**, rozmówca może odpowiedzieć do **10 słów**. Jego głos wydobywa się z kielicha tuby i słyszą go osoby stojące przy pulpicie; po wymianie srebrna tarczka nieruchomieje. Słychać wyłącznie głos, bez obrazu ani dźwięków otoczenia. Odbiorca nie potrzebuje przyrządu.
 
 -   **Limit:** jedna wymiana na **24 godziny dla całego odbiornika**. Uzyskanie odpowiedzi zużywa próbę; wywołanie bez odpowiedzi jej nie zużywa. Zdjęcie dłoni przed kontaktem przerywa przygotowanie; można zacząć ponownie.
 

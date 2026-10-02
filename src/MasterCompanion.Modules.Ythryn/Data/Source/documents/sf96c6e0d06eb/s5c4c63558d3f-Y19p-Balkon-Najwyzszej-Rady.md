@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 52
 ---
 
+**W skrócie — dla MG:** Balkon obwieszczeń z magią wzmacniającą głos, który po przybyciu do Ythryn staje się punktem obserwacyjnym Auril.
+
 **Do odczytania**
 
 > Z wysokiego balkonu widać oświetlone ulice i pochylone dachy Ythryn. W głąb iglicy prowadzą zamknięte podwójne drzwi.

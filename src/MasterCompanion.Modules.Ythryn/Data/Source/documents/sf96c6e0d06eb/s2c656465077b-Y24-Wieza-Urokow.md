@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 59
 ---
 
+**W skrócie — dla MG:** Wieża szkoły magii uroków z czwartym krokiem Rytuału Tajemnego Oktetu i Ivirą, którą utrzymuje przy życiu przeklęta korona kradnąca wspomnienia.
+
 **Do odczytania**
 
 > Dolne piętra rozpadającej się wieży pochłonął lód. Tylko z najwyższego okna sączy się różowe światło. W tej części miasta nie widać innych świateł.

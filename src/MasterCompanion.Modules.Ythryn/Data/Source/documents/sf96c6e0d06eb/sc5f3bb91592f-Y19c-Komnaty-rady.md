@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 39
 ---
 
+**W skrócie — dla MG:** Opuszczone biura rady z niedokończonym listem o kamiennym wrzecionie, wskazującym komnatę stazy Y19n.
+
 **Do odczytania**
 
 > Na stole i podłodze leżą rozsypane zwoje. Obok stoi szafka z pergaminami i komoda z przyborami do pisania. Meble i papiery pokrywa lód.

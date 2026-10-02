@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 17
 ---
 
+**W skrócie — dla MG:** Zrujnowane wieże mieszkalne dawnych czarodziejów, z laboratoriami i bibliotekami oraz gargulcami, które mogą zaatakować na mostach prowadzących do wejść.
+
 **Do odczytania**
 
 > Kamienny most prowadzi do wieży wygiętej w stronę miasta. Nad przejściem zwisa spiczasty dach, pod którym czepiają się kamienia gargulce. Drzwi u podstawy wieży stoją otworem.

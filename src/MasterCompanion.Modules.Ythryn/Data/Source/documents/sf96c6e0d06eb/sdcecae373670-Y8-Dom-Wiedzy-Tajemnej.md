@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 23
 ---
 
+**W skrócie — dla MG:** Dawna akademia magii z kielichem przyznającym losowy, jednodniowy urok, który może umożliwić otwarcie przejścia do gabinetu Iriolarthasa z Y19m.
+
 **Do odczytania**
 
 > Ze ścian wielkiego gmachu wyrasta osiem wież, zakrzywionych nad rozbitym dachem jak kły. W murach zieją wyrwy, przez które można dostać się do środka.

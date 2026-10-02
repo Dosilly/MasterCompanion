@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 16
 ---
 
+**W skrócie — dla MG:** Wejście do Ythryn z Jaskiń Głodu, z widokiem na chronioną barierą Iglicę Iriolarthasa i skamieniałymi szczątkami tomb tappera przy końcu grobli.
+
 **Do odczytania**
 
 > Zielone i fioletowe światła odbijają się w szronie na pochylonych wieżach. Nad miastem góruje ciemna cytadela. U końca lodowej grobli leży twarzą do ziemi ogromny kamienny olbrzym, a obok niego wielki młot.

@@ -52,7 +52,7 @@ Miernicza znalazła miejscową osobę znającą to przejście. Z jej pomocą spr
 
 ## Złożenie dokumentacji i przyrządów {#s877ad6c0961a}
 
-Protokoły rozmów pozostawiłam Orrenowi w **obserwatorium, na najwyższym piętrze, przy bocznym stole z miedzianą obręczą**. Tam nadal prowadzi krótkie próby na starszym odbiorniku. Uwagi dotyczące ich przebiegu należy porównywać z jego zapisami.
+Protokoły rozmów pozostawiłam Orrenowi w **obserwatorium, na najwyższym piętrze, przy kamiennym pulpicie na prawo od schodów**. Poznacie go po miedzianej tubie z szerokim kielichem i płytce z obrysem dłoni. Tam nadal prowadzi krótkie próby na starszym odbiorniku. Uwagi dotyczące ich przebiegu należy porównywać z jego zapisami.
 
 Na polecenie rady **Przyrząd Dwóch Brzegów wraz z instrukcją przekazałam do gabinetu Iriolarthasa**. Skrzynka nosi oznaczenie „Dwa Brzegi — powrót rozdzielonych podróżników”. W spisie zdawczym ujęłam również cztery płytki do zapisu śladów. To na tym przyrządzie prowadziliśmy dłuższe rozmowy i pomiary przed powrotem mierniczej.
 

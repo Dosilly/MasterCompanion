@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 21
 ---
 
+**W skrócie — dla MG:** Wejście do Iglicy Iriolarthasa, odcięte polem siłowym, za którym magiczna winda prowadzi do Y19a po uzyskaniu prawa przejścia przez rytuał lub wyłączeniu bariery.
+
 **Do odczytania**
 
 > Ze zrujnowanej dzielnicy wyrasta potężna kamienna przypora, oparta wysoko o centralną iglicę. U jej podstawy widać bramę pokrytą znakami. Wokół cytadeli delikatnie migocze powietrze.

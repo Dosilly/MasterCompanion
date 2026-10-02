@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 53
 ---
 
+**W skrócie — dla MG:** Gabinet Iriolarthasa z zagrożeniem ze strony demilicha i żywego półplanu, cennymi przedmiotami, hasłami i wiedzą o mythallarze oraz obelisku, a także Przyrządem Dwóch Brzegów dla Fenes.
+
 **Do odczytania**
 
 *Po przejściu portalem z Y19m na górny poziom.*

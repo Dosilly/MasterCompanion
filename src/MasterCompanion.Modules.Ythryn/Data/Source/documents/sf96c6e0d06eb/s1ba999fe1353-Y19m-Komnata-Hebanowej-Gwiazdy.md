@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 49
 ---
 
+**W skrócie — dla MG:** Dawna sala rady z krzesłami otwierającymi portal do gabinetu Y19q dla odpowiedniego czarodzieja lub osoby z urokiem z Y8 oraz ciemną gwiazdą grożącą klątwą.
+
 **Do odczytania**
 
 > Pośrodku komnaty powoli obraca się rój świetlistych gwiazd. Ich światło przesuwa się po ścianach i ośmiu krzesłach ustawionych wokół. Na każdym wysokim oparciu widnieje inny znak.

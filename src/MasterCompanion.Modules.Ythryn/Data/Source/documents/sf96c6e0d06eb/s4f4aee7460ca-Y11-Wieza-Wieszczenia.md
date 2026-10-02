@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 27
 ---
 
+**W skrócie — dla MG:** Wieża szkoły magii wieszczenia z kulą pozwalającą szukać osób i przedmiotów kosztem ryzyka utraty oka; odłamek z trzecim krokiem Rytuału Tajemnego Oktetu znajduje się w Y15.
+
 **Do odczytania**
 
 > Na ścianach smukłej wieży wyryto dłonie i oczy. Nad oknem, z którego pada srebrne światło, wielkie kamienne oko powoli mruga. W dachu brakuje sporego fragmentu.

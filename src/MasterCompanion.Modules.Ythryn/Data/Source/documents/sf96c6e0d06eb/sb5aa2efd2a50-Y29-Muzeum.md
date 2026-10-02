@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 64
 ---
 
+**W skrócie — dla MG:** Muzeum z nothikami, mimikami i zachowanym phaerimmem, którego galeria portretów dostarcza imion mistrzów potrzebnych do bezpiecznego przejścia przez Y19l.
+
 **Do odczytania**
 
 > Sześciokątny gmach wieńczy lśniąca kopuła. Jedno skrzydło wielkich podwójnych drzwi jest uchylone. W środku widać przewrócone posągi i odłamki na podłodze.

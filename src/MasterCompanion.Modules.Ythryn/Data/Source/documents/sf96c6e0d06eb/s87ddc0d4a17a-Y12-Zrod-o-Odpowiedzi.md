@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 28
 ---
 
+**W skrócie — dla MG:** Studnia pozwalająca zdobyć wiedzę o Ythryn przez medytację, na której dnie śpi Telepatyczny Pentakl mogący przebudzić się po nieudanej próbie lub wpuszczeniu światła.
+
 **Do odczytania**
 
 > Pośrodku placu otwiera się głęboka studnia. Na jej krawędzi błyszczy lód, a na dole niczego nie widać. Wokół ustawiono pięć kryształowych ław oświetlonych fioletową latarnią.

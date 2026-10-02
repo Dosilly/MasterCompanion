@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 45
 ---
 
+**W skrócie — dla MG:** Niewidzialny most z energii łączący salę balową Y19b z Komnatą Czarodziejstwa Y19j, którego stłumienie przez wrzeciono z Y19n odcina tę drogę na 24 godziny.
+
 **Do odczytania**
 
 > Za oknem otwiera się przerwa w murach iglicy. Naprzeciwko, około trzydziestu pięciu stóp dalej, widać drugie okno. Pomiędzy nimi nie widać żadnej kładki.

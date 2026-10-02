@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 60
 ---
 
+**W skrócie — dla MG:** Magiczna sala medytacji umożliwiająca lot wewnątrz kopuły oraz uzyskanie godzinnej iluzorycznej projekcji siebie poza salą.
+
 **Do odczytania**
 
 > Cztery bazaltowe kolumny podtrzymują wielką lustrzaną kopułę. W jej powierzchni odbijają się wieże i lodowe stalaktyty. U podstaw kolumn widać drzwi.

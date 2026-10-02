@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 22
 ---
 
+**W skrócie — dla MG:** Wieża szkoły magii przywoływania, z żywymi dłońmi strzegącymi miniatury, która otwiera przejście do półplanu trzech wiedźm i drugiego kroku Rytuału Tajemnego Oktetu.
+
 **Do odczytania**
 
 > Na ścianach wieży kamienne kręgi zachodzą jeden na drugi. Z górnego okna sączy się żółte światło. Za uszkodzonymi drzwiami słychać miotły szurające po posadzce.

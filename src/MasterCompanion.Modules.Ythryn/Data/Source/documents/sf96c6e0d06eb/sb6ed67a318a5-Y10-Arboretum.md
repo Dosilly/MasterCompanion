@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 26
 ---
 
+**W skrócie — dla MG:** Magiczne arboretum ze złym treantem Dębem Netheru, którego drewno jest potrzebne do wykonania pierwszego kroku Rytuału Tajemnego Oktetu.
+
 **Do odczytania**
 
 > W zagłębieniu pośród ruin rosną drzewa o złotych liściach. Ich gałęzie poruszają się, choć nie czuć wiatru. Ponad koronami zbiera się szara para. Na kamiennej ławce przy skraju zagajnika wyryto kratkowaną planszę; w jednym z pól tkwi szklany pionek.

@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 63
 ---
 
+**W skrócie — dla MG:** Dawny port powietrzny z unoszącą się szklaną komnatą i cennymi przedmiotami, który po przybyciu Avarice staje się jej bazą i może runąć po aktywacji wrzeciona w Y19n.
+
 **Do odczytania**
 
 > Nad zrujnowanym szczytem wysokiej wieży unosi się szklana komnata. Powoli obraca się w powietrzu. Cztery spiczaste filary obejmują ją z boków jak zęby korony.

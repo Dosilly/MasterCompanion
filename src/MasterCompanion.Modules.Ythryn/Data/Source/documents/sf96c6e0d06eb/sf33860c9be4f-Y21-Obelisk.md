@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 56
 ---
 
+**W skrócie — dla MG:** Artefakt chronomancji, którego aktywacja kosturem Iriolarthasa niszczy kostur i obelisk oraz cofa cały świat do czasu sprzed upadku Ythryn.
+
 **Do odczytania**
 
 > Czarny obelisk sięga na wysokość sześćdziesięciu stóp. Jego powierzchnię pokrywają runy. Od podstawy do połowy kamienia biegnie cienkie pęknięcie.

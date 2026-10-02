@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 57
 ---
 
+**W skrócie — dla MG:** Wieża szkoły magii iluzji, chroniona mgłą wywołującą śmiertelne wizje, w której fałszywa inskrypcja ukrywa prawdziwy szósty krok Rytuału Tajemnego Oktetu.
+
 **Do odczytania**
 
 > Obsydianową wieżę otacza delikatna mgła. Wyrzeźbione w ścianach oczy śledzą ruch przed wejściem. Najwyższe okno świeci na fioletowo.

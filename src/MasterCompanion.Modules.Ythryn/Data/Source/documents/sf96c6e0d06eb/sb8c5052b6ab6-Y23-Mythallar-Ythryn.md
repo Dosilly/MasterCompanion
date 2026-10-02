@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 58
 ---
 
+**W skrócie — dla MG:** Główny cel wyprawy: mythallar mogący zakończyć Wieczną Zimę, dostępny za barierą iglicy, broniony przez tomb tappera i blokowany przez zestrojonego z nim Iriolarthasa.
+
 **Do odczytania**
 
 > Pod wielką iglicą stoi ozdobna podstawa. Spoczywa na niej świecąca kryształowa kula, szeroka na pięćdziesiąt stóp.

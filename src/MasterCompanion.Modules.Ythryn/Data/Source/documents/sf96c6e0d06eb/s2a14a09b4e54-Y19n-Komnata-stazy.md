@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 50
 ---
 
+**W skrócie — dla MG:** Komnata z wrzecionem odpowiedzialnym za upadek Ythryn, które pod wpływem czaru co najmniej piątego kręgu tłumi magię w promieniu trzech mil na 24 godziny.
+
 **Do odczytania**
 
 > Pośrodku okrągłej sali wisi pionowo szare kamienne wrzeciono, wysokie na dziesięć stóp. Powoli obraca się w powietrzu. Ściany wokół przecina sieć pęknięć.

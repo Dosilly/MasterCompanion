@@ -53,15 +53,15 @@ sortOrder: 111
 
 ## Odbiornik w Y15 — przy stole {#s75fd49ad96d2}
 
--   **Przedmiot:** nieruchoma miedziana obręcz z drgającą srebrną blaszką, osadzona w bocznym stole na najwyższym piętrze. To osobne urządzenie, nie część teleskopu. Blaszka przekazuje dźwięk tylko podczas użycia.
+-   **Przedmiot:** kamienny pulpit sięgający pasa, przy ścianie na prawo od schodów na najwyższym piętrze. Przytwierdzona miedziana tuba wygina się ku górze i kończy kielichem wielkości ludzkiej głowy, zwróconym ku użytkownikowi. W głębi kielicha jest cienka srebrna tarczka; przed tubą wmontowano płytkę z obrysem dłoni. Tuba i płytka tworzą nieruchomy odbiornik, niezależny od teleskopu. Obok leżą list i protokół.
 
--   **Bez testu — uruchomienie:** po odczytaniu protokołu Fenes kładzie dłoń na obręczy, wybiera osobę i przez **10 minut** skupia się na dawnym przejściu. Nie wydaje komórki czaru ani PW.
+-   **Bez testu — uruchomienie:** po odczytaniu protokołu Fenes kładzie dłoń na płytce z jej obrysem, wybiera osobę i przez **10 minut** skupia się na dawnym przejściu. Gdy srebrna tarczka zaczyna drgać, mówi w stronę kielicha tuby. Nie wydaje komórki czaru ani PW.
 
--   **Bez testu — wynik:** po **10 minutach** może przekazać do **10 słów**, a odbiorca odpowiedzieć do **10 słów**. Słychać głos, bez obrazu i bez odgłosów otoczenia.
+-   **Bez testu — wynik:** po **10 minutach** może przekazać do **10 słów**, a odbiorca odpowiedzieć do **10 słów**. Odpowiedź dobiega z tuby i słyszą ją osoby przy pulpicie; po wymianie srebrna tarczka nieruchomieje. Słychać głos, bez obrazu i bez odgłosów otoczenia.
 
 -   **Przerwanie:** zdjęcie dłoni przed nawiązaniem kontaktu przerywa przygotowanie; można zacząć od nowa. Uzyskanie odpowiedzi zużywa próbę; samo wywołanie bez odpowiedzi jej nie zużywa.
 
--   **Odnowienie:** jedna wymiana na **24 godziny dla całego odbiornika**. Limit dotyczy konstrukcji; długie czekanie przy obręczy nie wydłuża wiadomości.
+-   **Odnowienie:** jedna wymiana na **24 godziny dla całego odbiornika**. Limit dotyczy konstrukcji; długie czekanie przy tubie nie wydłuża wiadomości.
 
 -   **Odpowiedź pierwszej osoby:** potwierdza, że słyszy Fenes; może podać imię albo poprosić o ponowny kontakt. Przykładowa kwestia MG: „Fenes? Słyszę cię. Spróbuj jeszcze raz, zostanę tutaj”. Nie przesądza, gdzie osoba się znajduje ani co ją spotkało.
 

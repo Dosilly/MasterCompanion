@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 18
 ---
 
+**W skrócie — dla MG:** Magiczny stadion, na którym wejście na boisko więzi uczestników do końca niebezpiecznego meczu Pioruna Łańcuchowego, a zwycięstwo daje cenny puchar działający jak kamień szczęścia.
+
 **Do odczytania**
 
 > Nad popękanymi stopniami amfiteatru słychać niskie buczenie. Z boiska wyrastają trzy metalowe maszty zakończone jak trójzęby, a na czarnym postumencie błyszczy niewielki puchar. Powietrze aż trzeszczy od elektryczności. Pod ławą leży gliniany zawodnik z piłką; ktoś starannie dokleił mu utrąconą rękę.

@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 38
 ---
 
+**W skrócie — dla MG:** Zrujnowana sala balowa, w której trzy mózgi w słojach podtrzymują iluzję trwającego przyjęcia, obejmującą także salon Y19g i bar Y19h.
+
 **Do odczytania**
 
 > Po sali płynie muzyka, a między tańczącymi krąży służba ze srebrnymi tacami słodyczy. Dwanaście osób w jedwabiach śmieje się i rozmawia, trzymając kolorowe maski na rączkach i wachlarze z piór. Jest tu ciepło.

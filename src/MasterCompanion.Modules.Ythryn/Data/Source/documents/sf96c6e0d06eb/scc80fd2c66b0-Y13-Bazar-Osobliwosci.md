@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 29
 ---
 
+**W skrócie — dla MG:** Zrujnowany bazar z bezgłowym żelaznym golemem, którego głowa pozostała w H9 w Jaskiniach Głodu i który odpowiada na ataki wymachami na oślep.
+
 **Do odczytania**
 
 > Cztery uszkodzone wieże hali targowej pochylają się ku sobie. Nad wejściem wiszą sztywne od mrozu, wyblakłe proporce. Ze środka dobiega głośny łoskot.

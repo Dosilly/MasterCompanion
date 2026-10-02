@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 19
 ---
 
+**W skrócie — dla MG:** Wieża szkoły magii odpychania, zabezpieczona runami i strzeżona przez mageny, zawiera kowadło do niszczenia przedmiotów magicznych oraz pierwszy krok Rytuału Tajemnego Oktetu.
+
 **Do odczytania**
 
 > Ściany wieży od dołu do samego dachu pokrywają drobno wykute runy. Budowla zakrzywia się ku górze jak szpon. W najwyższym oknie pali się błękitne światło.

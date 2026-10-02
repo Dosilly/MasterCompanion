@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 40
 ---
 
+**W skrócie — dla MG:** Stanowisko hypnos magena pilnującego głównego wejścia Y19a, z którym spotkanie w obu lokacjach dotyczy tego samego strażnika.
+
 **Do odczytania**
 
 > Korytarz kończy się z jednej strony wąskim oknem, z którego widać schody wejściowe. Po drugiej stronie znajduje się ciasna wartownia.

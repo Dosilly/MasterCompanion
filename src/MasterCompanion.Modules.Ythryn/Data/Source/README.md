@@ -33,6 +33,8 @@ Keep existing material IDs and section IDs unchanged: map markers, links, and ca
 
 Locations Y1–Y29, including Y19 and its rooms, belong directly to the single `Lokacje` folder in adventure order. The Y19 document contains the spire overview and shared features. Navigation-only index pages are omitted; references point to substantive materials.
 
+Every numbered location starts with a single-sentence GM summary before any read-aloud text. It identifies the place's purpose and its main threat, discovery, reward, or progression clue. Keep it consistent with the detailed description, including campaign-specific additions; it may contain spoilers and is not a player handout.
+
 Fenes has five complete documents directly inside the character folder: the GM guide, recovery report, observatory correspondence, device instructions, and measurement sheet. Their sections remain in the same Markdown file as the document. Former section material IDs are retained as heading anchors. When combining materials, update incoming links to `#material/document-id/section-id` and preserve existing tables, details, and section order. The [content reference fixture](../../../mastercompanion-web/tools/fixtures/ythryn-source.json) records section hashes from before consolidation; later intentional content changes must update the affected reference evidence.
 
 Folder IDs can contain colons. Source export encodes these IDs in portable directory names prefixed with `folder-`; material filenames also encode their IDs. YAML retains the original identifiers. Authored directories can use another portable name because their names do not determine navigation.

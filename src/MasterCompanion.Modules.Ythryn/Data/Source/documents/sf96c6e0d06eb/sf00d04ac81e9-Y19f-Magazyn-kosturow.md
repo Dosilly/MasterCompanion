@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 42
 ---
 
+**W skrócie — dla MG:** Magazyn sześciu kosturów służących jako skupienia magiczne, w tym chardalynowego egzemplarza chroniącego trzymającą go istotę przed przerażeniem i zatruciem.
+
 **Do odczytania**
 
 > W stojakach wzdłuż ścian spoczywa sześć kosturów. Część jest z drewna, jeden z fioletowego szkła. Wiele uchwytów pozostaje pustych.

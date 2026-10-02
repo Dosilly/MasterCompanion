@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 37
 ---
 
+**W skrócie — dla MG:** Punkt wejścia do iglicy z windy w Y6, obserwowany przez hypnos magena z korytarza straży Y19d.
+
 **Do odczytania**
 
 *Przy dojściu z Y6.*

@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 30
 ---
 
+**W skrócie — dla MG:** Dawna pracownia krawiecka, gdzie mageny pilnują towaru, magiczne pająki nadal szyją stroje, a podium przywołuje iluzję krawca Mixylla.
+
 **Do odczytania**
 
 > Na jedwabiach wywieszonych przed sklepem przesuwają się płomienie i całe pola gwiazd. Przed wejściem stoi sześć nieruchomych postaci. Ich twarze są tak obojętne, że trudno odróżnić je od posągów.

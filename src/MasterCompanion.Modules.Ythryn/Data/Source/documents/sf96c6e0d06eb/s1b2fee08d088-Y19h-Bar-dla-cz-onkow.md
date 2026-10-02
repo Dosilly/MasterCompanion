@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 44
 ---
 
+**W skrócie — dla MG:** Bar objęty iluzją balu z Y19b, zawierający dwanaście prawdziwych butelek starożytnego wina zachowanych dzięki magii.
+
 **Do odczytania**
 
 *Jeśli iluzja balu z Y19b nadal działa.*

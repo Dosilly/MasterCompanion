@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 47
 ---
 
+**W skrócie — dla MG:** Przejście z szybu Y19j do Komnaty prób Y19l, osłonięte kopułą siłową podtrzymywaną przez kryształ i strzeżone przez dwa żywe ostrza.
+
 **Do odczytania**
 
 *Przy oglądaniu sali z szybu od Y19j.*

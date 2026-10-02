@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 46
 ---
 
+**W skrócie — dla MG:** Komnata z żywym zaklęciem Everlastem, które chce pomóc odbudować miasto, lecz nie może ujawniać sekretów, oraz ukrytym włazem prowadzącym do kopuły Y19k.
+
 **Do odczytania**
 
 > W lustrzanych ścianach powtarzają się wasze odbicia. Od sali odchodzi jedenaście wąskich wnęk, każda ze świecącym kryształem. Powietrze cicho buczy.

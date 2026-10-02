@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 24
 ---
 
+**W skrócie — dla MG:** Biblioteka zajęta przez arcanalotha Scrivenscry'ego i pingwina Kingsporta, zawierająca wiedzę o Ythryn, zasady Pioruna Łańcuchowego oraz pierwszy raport prowadzący Fenes do odnalezienia dawnej drużyny.
+
 **Do odczytania**
 
 > Wokół ogromnego budynku leży gruz z jego kruszących się wieżyczek. Drzwi, dość wielkie dla olbrzyma, są lekko uchylone. Za nimi widać regały pełne książek.

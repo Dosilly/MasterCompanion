@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 43
 ---
 
+**W skrócie — dla MG:** Salon objęty iluzją balu z Y19b, w którym prawdziwym znaleziskiem jest magiczna skrzynka abracadabrus na stole w kształcie ośmiornicy.
+
 **Do odczytania**
 
 *Jeśli iluzja balu z Y19b nadal działa.*

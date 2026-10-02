@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 32
 ---
 
+**W skrócie — dla MG:** Dawna menażeria z maszyną tworzącą żywe stworzenia z krwi, której pełne uruchomienie kosztuje łącznie 80 PW.
+
 **Do odczytania**
 
 > Kryształową kopułę przecina sieć pęknięć. Przez otwarte wejście widać miniaturowe góry, pustynie i strumienie między drzewami. Wszystko pokrywa lód.

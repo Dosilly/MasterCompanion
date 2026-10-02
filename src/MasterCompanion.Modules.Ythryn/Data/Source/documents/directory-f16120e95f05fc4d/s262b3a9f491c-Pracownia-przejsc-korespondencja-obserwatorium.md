@@ -9,7 +9,7 @@ sortOrder: 126
 
 Orrenie,
 
-przyjęli raport. Odpis jest już w bibliotece, w dziale powrotów z wypraw. Iriolarthas zatrzymał Przyrząd Dwóch Brzegów w swoim gabinecie. Mamy przesyłać mu wyniki i prosić o dostęp, ilekroć potrzebujemy go do pracy. Zostaw starszy odbiornik na bocznym stole. Tyle przynajmniej będziemy mieli pod ręką.
+przyjęli raport. Odpis jest już w bibliotece, w dziale powrotów z wypraw. Iriolarthas zatrzymał Przyrząd Dwóch Brzegów w swoim gabinecie. Mamy przesyłać mu wyniki i prosić o dostęp, ilekroć potrzebujemy go do pracy. Zostaw starszy odbiornik na kamiennym pulpicie na prawo od schodów. Tuba wystarczy do krótkich rozmów; tyle przynajmniej będziemy mieli pod ręką.
 
 W radzie znowu pytali, jak mogliśmy słyszeć mierniczą, skoro przejście było zamknięte. Odesłałam ich do twoich protokołów. Głos docierał do nas całymi tygodniami, zanim potrafiliśmy wyznaczyć jej położenie. Ślad rachmistrza prowadził do niej pomimo odległości i różnicy sfer. Nadal nie wiem, czy różnica dat oznaczała jedynie inny upływ czasu, czy rozmawialiśmy z kimś żyjącym w innej epoce. Zostawiłam tę wątpliwość w raporcie.
 
@@ -21,15 +21,15 @@ Miernicza słyszała nas bez żadnego urządzenia. Za pierwszym razem sądziła,
 
 ## Wyciąg z protokołu dziewiątej próby {#sd9d36239f51e}
 
-Obecni: Orren, rachmistrz, pisarz. Rachmistrz utrzymuje dłoń na obręczy. Wybrano ślad mierniczej.
+Obecni: Orren, rachmistrz, pisarz. Rachmistrz utrzymuje dłoń na płytce z jej obrysem i mówi w stronę kielicha tuby. Wybrano ślad mierniczej.
 
 **Rachmistrz:** Słyszysz mnie? Wróciłem do miasta. Mam twój nóż.
 
-**Głos:** Słyszę. Zatrzymaj go dla mnie, będzie potrzebny, kiedy wrócę.
+**Głos z tuby:** Słyszę. Zatrzymaj go dla mnie, będzie potrzebny, kiedy wrócę.
 
-Połączenie urwało się. Blaszka ostygła. Próba natychmiastowego wznowienia nie dała wyniku.
+Połączenie urwało się. Srebrna tarczka w głębi tuby przestała drgać i ostygła. Próba natychmiastowego wznowienia nie dała wyniku.
 
-**Uwagi Orrena:** rachmistrz zapewnia, że przed wypadkiem nie rozmawiali o zwrocie noża. Odpowiedź odnosiła się do tego, co powiedział przy obręczy. Nie znajduję podstaw, by uznać ją za echo dawnej rozmowy.
+**Uwagi Orrena:** rachmistrz zapewnia, że przed wypadkiem nie rozmawiali o zwrocie noża. Odpowiedź odnosiła się do tego, co powiedział do tuby. Nie znajduję podstaw, by uznać ją za echo dawnej rozmowy.
 
 **Dopisek po dalszych próbach:** miernicza pamięta nasze poprzednie pytania. Kolejność się zgadza, długość przerw — nie. Po jednej dobie naszego czasu twierdziła, że czekała dłużej. Pisarz ma odtąd notować oba rachunki czasu.
 
@@ -37,15 +37,15 @@ Połączenie urwało się. Blaszka ostygła. Próba natychmiastowego wznowienia 
 
 **Orren — dla zastępującego mnie obserwatora**
 
-Poniższe uwagi dotyczą **miedzianej obręczy ze srebrną blaszką w bocznym stole**. Teleskop należy do pracowni astronomicznej; nie wymontowywać jego części do napraw naszego odbiornika.
+Poniższe uwagi dotyczą **miedzianej tuby na kamiennym pulpicie na prawo od schodów**. Jej szeroki kielich jest zwrócony ku stojącemu przed nią obserwatorowi. W głębi znajduje się srebrna tarczka, a przed tubą — płytka z obrysem dłoni. Teleskop należy do pracowni astronomicznej; nie wymontowywać jego części do napraw naszego odbiornika.
 
-1.  Uczestnik rozdzielonego przejścia kładzie dłoń na obręczy. Wybiera jedną osobę, która przeszła przez ten sam wir, i skupia się na niej.
+1.  Uczestnik rozdzielonego przejścia kładzie dłoń na płytce z jej obrysem. Wybiera jedną osobę, która przeszła przez ten sam wir, i skupia się na niej.
 
-2.  Przez dziesięć minut utrzymuje dłoń na miejscu. Gdy blaszka zacznie drgać, może mówić.
+2.  Przez dziesięć minut utrzymuje dłoń na miejscu. Gdy srebrna tarczka w głębi tuby zacznie drgać, może mówić w stronę kielicha.
 
-3.  Na wypowiedź mamy najwyżej dziesięć słów; dalszych obręcz już nie przenosi. Przed próbą warto zapisać zdanie i policzyć wyrazy. Rachmistrz dwukrotnie zużył je na samo powitanie.
+3.  Na wypowiedź mamy najwyżej dziesięć słów; dalszych odbiornik już nie przenosi. Przed próbą warto zapisać zdanie i policzyć wyrazy. Rachmistrz dwukrotnie zużył je na samo powitanie.
 
-4.  Druga osoba usłyszy głos bez własnego przyrządu. Jeśli zechce odpowiedzieć, odbiornik przekaże najwyżej dziesięć jej słów. Dźwięki otoczenia nie przechodzą.
+4.  Druga osoba usłyszy głos bez własnego przyrządu. Jeśli zechce odpowiedzieć, z kielicha tuby dobiegnie najwyżej dziesięć jej słów, słyszalnych dla osób przy pulpicie. Po wymianie srebrna tarczka nieruchomieje. Dźwięki otoczenia nie przechodzą.
 
 5.  Po wymianie odczekać pełną dobę. Wcześniejsze wznowienie niczego nie da. Jeżeli nikt nie odpowiedział, samo wywołanie nie wyczerpuje odbiornika.
 

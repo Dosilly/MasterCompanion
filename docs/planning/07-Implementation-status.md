@@ -1,5 +1,56 @@
 # Implementation status
 
+## Observatory receiver description — 2 October 2026
+
+The fixed voice receiver in Y15 is now described as a copper speaking horn on a
+waist-height stone lectern, to the right of the upper-floor stairs. A palm plate
+and a vibrating silver disc make its operation visible and easy to describe.
+Y15, the Fenes GM guide, the observatory correspondence and the recovery report
+use the same appearance, location and activation instructions. Preparation time,
+word limits, daily use and the separate portable device retain their existing rules.
+Four Markdown sources changed; stable IDs, navigation, maps and other materials
+were preserved. Five intentionally revised section hashes were updated.
+
+The four campaign documents were updated in one PostgreSQL transaction after
+a custom-format backup to `.local/receiver-before-20261002.dump`. Writes required
+the inspected document and revision to match, then advanced each revision once.
+Before/after checks confirmed exact preservation of unrelated materials, party
+data, game state and operation history. No rows were deleted.
+
+Verification passed four targeted content/source tests, module package preparation
+and read-only HTTP checks of all four documents and revisions. Full HD browser
+inspection covered Y15 in both themes and its correspondence link, with no console
+errors or horizontal overflow. Evidence is retained under `.local`. Module defaults
+will be embedded on the next image build; the running campaign already has the
+updated content. Restoring the backup must account for later campaign edits.
+
+## Location summaries — 2 October 2026
+
+All 46 numbered Ythryn location materials (Y1–Y29 and Y19a–Y19q) now start
+with a single-sentence GM summary describing their purpose and main threat,
+discovery, reward, or progression clue. Summaries precede read-aloud text and
+include existing campaign additions where relevant. The source authoring guide
+records this convention. No application implementation or content contract changed.
+
+At the user's request, the same summary paragraphs were added to the existing
+local campaign in one transaction after a custom-format PostgreSQL backup to
+`.local/location-briefs-before-20261002.dump`. Each write checked the inspected
+campaign ID, material revision and document, then advanced the revision once.
+The transaction verified every resulting document and exact preservation of all
+other material fields and rows, campaigns, folders, maps, game state and operation
+history. Two location documents had additional empty paragraphs compared with
+module defaults; these were retained. No rows or database volumes were deleted.
+
+Verification passed all 16 content/source-tool tests and module package preparation.
+A before/after comparison confirmed that source changes only prepend one paragraph
+and preserve all prior document nodes, metadata, folders and maps. Read-only HTTP
+checks confirmed all 46 campaign documents, their revisions and unchanged workspace.
+Full HD browser inspection covered Y4 in both themes and the Y19q summary, with no
+console errors or horizontal page overflow. Screenshots and transaction evidence
+are retained under the ignored `.local` directory. The running image did not need
+a restart; updated module defaults will be embedded on its next build. Backup
+restoration is a separate operation that must account for subsequent campaign edits.
+
 ## Phase one accepted — 2 October 2026
 
 The user tested the delivered application, reported that everything works

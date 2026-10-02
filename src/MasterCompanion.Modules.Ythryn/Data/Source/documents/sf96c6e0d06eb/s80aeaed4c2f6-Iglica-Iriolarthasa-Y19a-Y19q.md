@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 35
 ---
 
+**W skrócie — dla MG:** Chroniona polem siłowym siedziba Iriolarthasa, mieszcząca komnaty rady, niebezpieczne eksperymenty i drogę do gabinetu demilicha z wiedzą potrzebną do użycia mythallaru.
+
 Wysoka na **1200 stóp** obsydianowa cytadela wyrasta ze środka Ythryn i przytłacza rozmiarem wszystkie sąsiednie budowle. Otacza ją migoczące pole siłowe.
 
 -   Istoty nie mogą przez nie przejść ani teleportować się do żadnego miejsca wewnątrz.

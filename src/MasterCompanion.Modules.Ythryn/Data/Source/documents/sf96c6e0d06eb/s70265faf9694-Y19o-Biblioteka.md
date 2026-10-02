@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 51
 ---
 
+**W skrócie — dla MG:** Biblioteka rady z tropem łączącym kielich z Y8 z portalem w Y19m, zwojem przywołania komety i kluczem do balkonu Y19p.
+
 **Do odczytania**
 
 > Regały sięgają sufitu, ale wiele półek jest pustych. Książki i zwoje pokrywają podłogę tej niemal trójkątnej sali. Wystające spod lodu kartki są popękane i kruche.

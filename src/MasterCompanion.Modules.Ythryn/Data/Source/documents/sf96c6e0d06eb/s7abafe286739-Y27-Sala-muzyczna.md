@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 62
 ---
 
+**W skrócie — dla MG:** Sala koncertowa, w której podniesienie batuty przywołuje duchy orkiestry, a poprawne poprowadzenie symfonii pozwala je uwolnić, choć błędy ranią wszystkich obecnych.
+
 **Do odczytania**
 
 > Wielki budynek ma kształt buta, z którego dachu wystają trzy grube rury. Na murach wiszą stare plakaty. Wysokie drzwi prowadzą do ciemnej sali.

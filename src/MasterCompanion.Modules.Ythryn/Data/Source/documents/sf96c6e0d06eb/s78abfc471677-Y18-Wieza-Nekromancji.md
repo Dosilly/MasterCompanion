@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 34
 ---
 
+**W skrócie — dla MG:** Zawalona wieża szkoły magii nekromancji, gdzie pomoc duchowi Cadavixa w odzyskaniu ciała odsłania siódmy krok Rytuału Tajemnego Oktetu.
+
 **Do odczytania**
 
 > Z gruzowiska wystaje złamana podstawa wieży. Po kamieniach pełzają setki szarych dłoni. Chwytają odłamki i przesuwają je, ale sterta prawie się nie zmienia.

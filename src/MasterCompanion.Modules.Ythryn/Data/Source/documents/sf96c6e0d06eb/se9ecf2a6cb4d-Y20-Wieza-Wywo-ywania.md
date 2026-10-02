@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 55
 ---
 
+**W skrócie — dla MG:** Wieża szkoły magii wywoływania, gdzie rozpalenie paleniska odsłania piąty krok Rytuału Tajemnego Oktetu, lecz jednocześnie rozmraża osiem wrogich galaretowatych sześcianów.
+
 **Do odczytania**
 
 > Wieża ma szczyt szeroki i ostry jak głownia topora. Z wysoko położonego, wąskiego okna świeci czerwone światło.

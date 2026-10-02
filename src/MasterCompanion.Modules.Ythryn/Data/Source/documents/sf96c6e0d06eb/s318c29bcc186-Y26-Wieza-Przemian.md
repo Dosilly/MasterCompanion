@@ -5,6 +5,8 @@ folderId: sf96c6e0d06eb
 sortOrder: 61
 ---
 
+**W skrócie — dla MG:** Wieża szkoły magii przemian z adamantynowym posągiem Metaltry i workiem fasolek, zawierająca ósmy krok Rytuału Tajemnego Oktetu z brakującym słowem do odzyskania magią.
+
 **Do odczytania**
 
 > Ta wieża nadal stoi prosto. Jej ściany pokrywają cienkie, rozgałęzione pęknięcia. W najwyższym oknie tli się słabe światło.
