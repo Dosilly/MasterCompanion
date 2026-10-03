@@ -69,9 +69,18 @@ upgrade that changes engine time, party identity/names/order or rest history.
 Current reads expose the supported version without writing; accepted operations
 and undo persist the upgraded module state atomically. Stored idempotent receipts
 are validated/described under their original supported schema and are never
-rewritten to a different outcome. Ythryn accepts versions 1 and 2; version 2
+rewritten to a different outcome. Ythryn accepts versions 1, 2 and 3; version 2
 adds infected recovery every 12 hours or long rest with a reset timer. Historical
 rest-only results remain intact. This changes module JSON, not EF tables.
+
+Version 3 adds campaign-owned exploration checks and rival arrivals. Neutral
+module operations may carry a bounded engine time advance, committed with module
+state, revision and undo history. Ythryn alone interprets exploration, searches,
+encounter tables and arrival triggers. Existing schema-two character recovery
+history is preserved exactly; earlier exploration is not inferred from elapsed
+time. The first recorded long rest and minute 1440 produce arrival reminders,
+while actual arrival remains an explicit GM decision. See
+[the priority delivery plan](12-Encounters-and-arrivals.md) for rules and evidence.
 
 ## Frontend
 

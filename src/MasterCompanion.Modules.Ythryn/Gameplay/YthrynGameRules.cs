@@ -14,10 +14,10 @@ public sealed class YthrynGameRules : ICampaignGameRules
     };
 
     public string ModuleId => "ythryn";
-    public int StateSchemaVersion => 2;
+    public int StateSchemaVersion => 3;
 
     public JsonElement Initialize(IReadOnlyList<GameCharacter> party) => Serialize(
-        new BlightState(party.Select(character => Healthy(character.Id, 0)).ToArray()));
+        new BlightState(party.Select(character => Healthy(character.Id, 0)).ToArray(), ExpeditionRules.Initialize()));
 
     public void Validate(GameSnapshot snapshot) => ReadState(snapshot);
 
@@ -27,6 +27,7 @@ public sealed class YthrynGameRules : ICampaignGameRules
         if (snapshot.ModuleSchemaVersion == StateSchemaVersion) return snapshot;
         var characters = state.Characters.Select(character =>
         {
+            if (snapshot.ModuleSchemaVersion != 1) return character;
             if (character.Status == "healthy") return character;
             var start = character.LastResolvedRest ?? character.InfectedAt
                 ?? throw Corrupt("Infected Arcane Blight state has no infection time.");
@@ -36,17 +37,18 @@ public sealed class YthrynGameRules : ICampaignGameRules
                 NextRecovery = character.Status == "infected" ? checked(start + ExposureInterval) : null
             };
         }).ToArray();
-        var upgraded = snapshot with { ModuleSchemaVersion = StateSchemaVersion, ModuleState = Serialize(new BlightState(characters)) };
+        var upgraded = snapshot with { ModuleSchemaVersion = StateSchemaVersion, ModuleState = Serialize(new BlightState(characters, state.Adventure ?? ExpeditionRules.Initialize())) };
         Validate(upgraded);
         return upgraded;
     }
 
     public ModuleTransition ReconcileParty(GameSnapshot before, GameSnapshot proposed)
     {
-        var retained = ReadState(before).Characters.ToDictionary(character => character.Id);
+        var current = ReadState(before);
+        var retained = current.Characters.ToDictionary(character => character.Id);
         var characters = proposed.Party.Select(character => retained.TryGetValue(character.Id, out var existing)
             ? existing : Healthy(character.Id, proposed.TimeMinutes)).ToArray();
-        var state = Serialize(new BlightState(characters));
+        var state = Serialize(new BlightState(characters, current.Adventure));
         Validate(proposed with { ModuleState = state });
         return new ModuleTransition(state);
     }
@@ -59,6 +61,16 @@ public sealed class YthrynGameRules : ICampaignGameRules
             Validate(proposed with { ModuleState = before.ModuleState });
             return new ModuleTransition(before.ModuleState);
         }
+
+        if (ExpeditionRules.Handles(command.Value))
+        {
+            var result = ExpeditionRules.Apply(state.Adventure ?? throw Corrupt("Expedition state is missing."), before, proposed, command.Value);
+            if (result.ErrorCode is not null) return Rejected(before, result.ErrorCode);
+            var next = Serialize(state with { Adventure = result.State });
+            Validate(proposed with { ModuleState = next });
+            return new ModuleTransition(next);
+        }
+        if (before.TimeMinutes != proposed.TimeMinutes) return Rejected(before, "invalid_module_command");
 
         if (!TryReadCommand(command.Value, out var input))
             return Rejected(before, "invalid_module_command");
@@ -85,7 +97,7 @@ public sealed class YthrynGameRules : ICampaignGameRules
 
         var characters = state.Characters.ToArray();
         characters[index] = changed;
-        var nextState = Serialize(new BlightState(characters));
+        var nextState = Serialize(new BlightState(characters, state.Adventure));
         Validate(proposed with { ModuleState = nextState });
         return new ModuleTransition(nextState);
     }
@@ -93,9 +105,13 @@ public sealed class YthrynGameRules : ICampaignGameRules
     public JsonElement Describe(GameSnapshot snapshot)
     {
         var state = ReadState(snapshot);
-        return JsonSerializer.SerializeToElement(new BlightDescription(state.Characters.Select(character =>
+        var characters = state.Characters.Select(character =>
             new CharacterDescription(character.Id, character.Status, character.Dc, character.Failures,
-                snapshot.ModuleSchemaVersion == 1 ? LegacyNextCheck(character, snapshot) : NextCheck(character, snapshot))).ToArray()), JsonOptions);
+                snapshot.ModuleSchemaVersion == 1 ? LegacyNextCheck(character, snapshot) : NextCheck(character, snapshot))).ToArray();
+        // Historical receipts retain their original projection for idempotent replay.
+        return snapshot.ModuleSchemaVersion < 3
+            ? JsonSerializer.SerializeToElement(new BlightDescription(characters), JsonOptions)
+            : JsonSerializer.SerializeToElement(new { characters, expedition = ExpeditionRules.Describe(state.Adventure ?? throw Corrupt("Expedition state is missing."), snapshot) }, JsonOptions);
     }
 
     private static BlightCharacter Healthy(Guid id, long minute) =>
@@ -168,7 +184,7 @@ public sealed class YthrynGameRules : ICampaignGameRules
 
     private BlightState ReadState(GameSnapshot snapshot)
     {
-        if (snapshot.ModuleSchemaVersion is not (1 or 2))
+        if (snapshot.ModuleSchemaVersion is not (1 or 2 or 3))
             throw Corrupt("Unsupported Arcane Blight state schema.");
         if (snapshot.TimeMinutes is < 0 or > GameLimits.MaxTimeMinutes || snapshot.Party.Count > GameLimits.MaxPartySize ||
             snapshot.RestEnds.Count > GameLimits.MaxRestCount || snapshot.Party.Any(character => character.Id == Guid.Empty) ||
@@ -181,7 +197,7 @@ public sealed class YthrynGameRules : ICampaignGameRules
             previous = minute;
         }
 
-        if (!HasExactProperties(snapshot.ModuleState, "characters") ||
+        if (!(snapshot.ModuleSchemaVersion == 3 ? HasExactProperties(snapshot.ModuleState, "characters", "adventure") : HasExactProperties(snapshot.ModuleState, "characters")) ||
             !snapshot.ModuleState.TryGetProperty("characters", out var items) || items.ValueKind != JsonValueKind.Array ||
             items.GetArrayLength() != snapshot.Party.Count)
             throw Corrupt("Arcane Blight characters do not match the party.");
@@ -208,13 +224,22 @@ public sealed class YthrynGameRules : ICampaignGameRules
                     character.Id, character.Status, character.Dc, character.Failures, character.InfectedAt,
                     character.NextExposure, character.LastResolvedRest, null, null, null, 0)).ToArray());
             }
-            else
+            else if (snapshot.ModuleSchemaVersion == 2)
+            {
                 state = snapshot.ModuleState.Deserialize<BlightState>(JsonOptions)
                     ?? throw Corrupt("Arcane Blight state is missing.");
+            }
+            else
+            {
+                state = snapshot.ModuleState.Deserialize<BlightState>(ExpeditionRules.JsonOptions)
+                    ?? throw Corrupt("Ythryn state is missing.");
+                if (state.Adventure is null) throw Corrupt("Expedition state is missing.");
+                ExpeditionRules.Validate(state.Adventure, snapshot.TimeMinutes);
+            }
         }
         catch (JsonException exception)
         {
-            throw new InvalidOperationException("Arcane Blight state is malformed.", exception);
+            throw new InvalidOperationException("Ythryn game state is malformed.", exception);
         }
 
         var partyIds = snapshot.Party.Select(character => character.Id).ToHashSet();
@@ -331,7 +356,7 @@ public sealed class YthrynGameRules : ICampaignGameRules
     private static JsonElement Serialize(BlightState state) => JsonSerializer.SerializeToElement(state, JsonOptions);
     private static ModuleTransition Rejected(GameSnapshot snapshot, string code) => new(snapshot.ModuleState, code);
     private static InvalidOperationException Corrupt(string message) => new(message);
-    private sealed record BlightState(BlightCharacter[] Characters);
+    private sealed record BlightState(BlightCharacter[] Characters, ExpeditionState? Adventure = null);
     private sealed record BlightCharacter(Guid Id, string Status, int Dc, int Failures,
         long? InfectedAt, long? NextExposure, long? LastResolvedRest, long? NextRecovery,
         long? RecoveryStartedAt, long? LastResolvedRecovery, int RecoveryChecks);

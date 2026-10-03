@@ -35,7 +35,7 @@ function integer(value: unknown, min: number, max: number): value is number {
 export function readBlightView(state: GameStateDto): BlightCharacterView[] | null {
   const view = state.moduleView;
   const { party, timeMinutes, moduleSchemaVersion } = state.snapshot;
-  if ((moduleSchemaVersion !== 1 && moduleSchemaVersion !== 2) || !record(view) || !Array.isArray(view['characters']) ||
+  if ((moduleSchemaVersion !== 1 && moduleSchemaVersion !== 2 && moduleSchemaVersion !== 3) || !record(view) || !Array.isArray(view['characters']) ||
       party.length === 0 || party.length > 20 || view['characters'].length !== party.length) return null;
   const names = new Map(party.map(character => [character.id, character.name]));
   if (names.size !== party.length) return null;
@@ -62,7 +62,7 @@ export function readBlightView(state: GameStateDto): BlightCharacterView[] | nul
     const characterStatus = item['status'];
     if ((characterStatus === 'healthy' && nextCheck?.kind !== 'exposure') ||
         (characterStatus === 'infected' && nextCheck !== null && nextCheck.kind !== 'rest' && nextCheck.kind !== 'recovery') ||
-        (moduleSchemaVersion === 2 && characterStatus === 'infected' && nextCheck === null) ||
+        (moduleSchemaVersion >= 2 && characterStatus === 'infected' && nextCheck === null) ||
         ((characterStatus === 'immune' || characterStatus === 'transformed') && nextCheck !== null)) return null;
     result.push({ id, name, status: characterStatus, dc: item['dc'], failures: item['failures'], nextCheck });
   }

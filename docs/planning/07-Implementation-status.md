@@ -1,5 +1,16 @@
 # Implementation status
 
+## Priority encounter and arrival tools — 2–3 October 2026
+
+The user prioritized hourly exploration checks, building-search checks and rival
+arrival tracking. The user-confirmed campaign schedule is Avarice after the first
+long rest and Auril after 24 hours. Module schema 3, atomic module activities with
+time, explicit arrival confirmation, retained overdue rolls, encounter material
+links and complete undo are implemented and verified. Existing game state and authored
+materials are preserved. Automated and browser evidence are tracked in
+[the priority slice](12-Encounters-and-arrivals.md). The live user runtime has not
+been replaced during implementation.
+
 ## Observatory receiver description — 2 October 2026
 
 The fixed voice receiver in Y15 is now described as a copper speaking horn on a

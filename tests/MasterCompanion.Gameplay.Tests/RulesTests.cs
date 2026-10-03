@@ -199,7 +199,7 @@ public static class RulesTests
     private static void RejectCorruptStates()
     {
         var initial = Initial();
-        AssertCorrupt(initial with { ModuleSchemaVersion = 3 });
+        AssertCorrupt(initial with { ModuleSchemaVersion = 4 });
         AssertCorrupt(initial with { TimeMinutes = -1 });
         AssertCorrupt(initial with { TimeMinutes = GameLimits.MaxTimeMinutes + 1 });
         AssertCorrupt(initial with { ModuleState = Json("null") });
@@ -433,7 +433,7 @@ public static class RulesTests
             "Legacy projections must retain rest-only behavior for historical receipt validation.");
         var upgraded = Rules.Upgrade(legacy);
         Rules.Validate(upgraded);
-        Assert(upgraded.ModuleSchemaVersion == 2 && upgraded.TimeMinutes == legacy.TimeMinutes &&
+        Assert(upgraded.ModuleSchemaVersion == 3 && upgraded.TimeMinutes == legacy.TimeMinutes &&
             upgraded.Party.SequenceEqual(legacy.Party) && upgraded.RestEnds.SequenceEqual(legacy.RestEnds),
             "A pure upgrade must preserve party identities, names, time and historical rests.");
         Assert(Character(upgraded).GetProperty("dc").GetInt32() == 10 &&

@@ -50,7 +50,9 @@ export function isGameRequest(value: unknown): value is GameOperationRequest {
       new Set(value['party'].map(member => member.id.toLowerCase())).size === value['party'].length;
     case 'advanceTime': return only('kind', 'requestId', 'expectedRevision', 'minutes') && integer(value['minutes'], 1) && value['minutes'] <= 525_600;
     case 'shortRest': case 'longRest': case 'undo': return only('kind', 'requestId', 'expectedRevision');
-    case 'module': return only('kind', 'requestId', 'expectedRevision', 'command') && record(value['command']);
+    case 'module': return record(value['command']) &&
+      (only('kind', 'requestId', 'expectedRevision', 'command') ||
+        (only('kind', 'requestId', 'expectedRevision', 'command', 'minutes') && integer(value['minutes'], 1) && value['minutes'] <= 525_600));
     default: return false;
   }
 }

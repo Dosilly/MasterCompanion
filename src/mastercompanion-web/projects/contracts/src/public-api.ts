@@ -42,7 +42,7 @@ export type GameAction =
   | { kind: 'configureParty' | 'updateParty'; party: GameCharacter[] }
   | { kind: 'advanceTime'; minutes: number }
   | { kind: 'shortRest' | 'longRest' | 'undo' }
-  | { kind: 'module'; command: unknown };
+  | { kind: 'module'; command: unknown; minutes?: number };
 export type GameOperationRequest = GameAction & { requestId: string; expectedRevision: number };
 export interface MaterialTarget { id: string; anchor?: string; }
 export interface GameToolContext {

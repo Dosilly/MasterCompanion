@@ -106,7 +106,10 @@ public sealed class GameplayService(AppDbContext db, IEnumerable<ICampaignGameRu
                 if (before.Party.Count != 0 || before.TimeMinutes != 0 || before.RestEnds.Count != 0)
                     return new(409, "game_party_already_configured");
                 var party = request.Party ?? throw new InvalidOperationException("Validated party is missing.");
-                after = before with { Party = party, ModuleState = rules.Initialize(party) };
+                after = before with { Party = party };
+                var reconciliation = rules.ReconcileParty(before, after);
+                if (reconciliation.ErrorCode is not null) return new(400, reconciliation.ErrorCode);
+                after = after with { ModuleState = reconciliation.State };
             }
             else if (request.Kind == "updateParty")
             {
@@ -194,7 +197,7 @@ public sealed class GameplayService(AppDbContext db, IEnumerable<ICampaignGameRu
             "updateParty" => request.Party is not null && IsValidParty(request.Party) && request.Minutes is null && request.Command is null,
             "advanceTime" => request.Party is null && request.Minutes is > 0 and <= GameLimits.MaxAdvanceMinutes && request.Command is null,
             "shortRest" or "longRest" or "undo" => request.Party is null && request.Minutes is null && request.Command is null,
-            "module" => request.Party is null && request.Minutes is null && request.Command is { ValueKind: JsonValueKind.Object },
+            "module" => request.Party is null && (request.Minutes is null or > 0 and <= GameLimits.MaxAdvanceMinutes) && request.Command is { ValueKind: JsonValueKind.Object },
             _ => false
         };
     }

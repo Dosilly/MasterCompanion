@@ -84,7 +84,7 @@
     "discardPartyHint": "Odrzuć niezapisany szkic i zachowaj zapisaną drużynę.", "confirmDiscardParty": "Odrzuć szkic",
     "characterName": "Imię postaci", "removeCharacter": "Usuń postać", "addCharacter": "Dodaj postać", "start": "Rozpocznij grę",
     "elapsedTime": "Czas gry", "timeControls": "Zegar gry", "minute": "min", "hour": "godz.",
-    "searchBuilding": "Przeszukaj budynek (30 min.)", "shortRest": "Krótki odpoczynek (1 godz.)", "longRest": "Długi odpoczynek (8 godz.)", "customMinutes": "Przesuń o liczbę minut", "advance": "Przesuń czas",
+    "shortRest": "Krótki odpoczynek (1 godz.)", "longRest": "Długi odpoczynek (8 godz.)", "customMinutes": "Przesuń o liczbę minut", "advance": "Przesuń czas",
     "restHint": "Przeszukanie przesuwa czas o 30 minut, a krótki odpoczynek o godzinę. Długi odpoczynek przesuwa czas o 8 godzin i zapisuje jego zakończenie dla reguł modułu.",
     "tools": "Narzędzia modułu", "loadingTool": "Wczytywanie narzędzia…", "toolFailed": "Nie udało się wczytać narzędzia. Spróbuj ponownie.", "retryTool": "Ponów wczytywanie narzędzia", "noTools": "Ten moduł nie udostępnia narzędzi gry.",
     "noHistory": "Brak operacji do cofnięcia.", "undo": "Cofnij ostatnią operację",

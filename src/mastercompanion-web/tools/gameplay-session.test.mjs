@@ -26,6 +26,14 @@ const previousRequestId = '8c6e29fd-5266-42a1-9684-46ea79e99d1b';
 const advance = { kind: 'advanceTime', minutes: 60 };
 const nextTurn = () => new Promise(resolve => setImmediate(resolve));
 
+test('Module activities accept bounded time and preserve strict recovery request shapes', () => {
+  const base = { requestId: previousRequestId, expectedRevision: 4, kind: 'module', command: { kind: 'explore' } };
+  assert.equal(isGameRequest(base), true);
+  assert.equal(isGameRequest({ ...base, minutes: 60 }), true);
+  for (const minutes of [0, -1, 525601, 1.5, '30', null]) assert.equal(isGameRequest({ ...base, minutes }), false);
+  assert.equal(isGameRequest({ ...base, minutes: 30, party: [] }), false);
+});
+
 test('Party drafts preserve stable IDs and confirmed data while editing, cancelling and accepting revisions', () => {
   const confirmed = state(4, 1080);
   const draft = new PartyDraft();

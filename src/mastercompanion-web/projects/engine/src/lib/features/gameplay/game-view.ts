@@ -27,7 +27,6 @@ import { uiMessages } from '../../i18n/messages';
           <section class="game-time" [attr.aria-label]="text.timeControls"><h2>{{ text.elapsedTime }}: {{ formatTime(current.snapshot.timeMinutes) }}</h2>
             <fieldset [disabled]="!canOperate()"><legend>{{ text.timeControls }}</legend>
               <div class="game-actions">
-                <button type="button" (click)="advance(30)">{{ text.searchBuilding }}</button>
                 <button type="button" (click)="execute({kind: 'shortRest'})">{{ text.shortRest }}</button>
                 <button type="button" (click)="execute({kind: 'longRest'})">{{ text.longRest }}</button>
               </div>

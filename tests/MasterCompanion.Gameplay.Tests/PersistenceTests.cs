@@ -11,6 +11,103 @@ namespace MasterCompanion.Gameplay.Tests;
 
 public static class PersistenceTests
 {
+    public static async Task RunExpeditionAsync(string connectionString)
+    {
+        if (new NpgsqlConnectionStringBuilder(connectionString).Database != "mastercompanion_gameplay_test")
+            throw new InvalidOperationException("Expedition tests require an isolated mastercompanion_gameplay_test database.");
+        await using (var db = CreateDb(connectionString)) await db.Database.MigrateAsync();
+        var campaignId = await SeedCampaignAsync(connectionString);
+        var state = Success(await ExecuteAsync(connectionString, campaignId, Request(0, "configureParty", party: [new(Guid.NewGuid(), "Authored member")])));
+        var initial = state;
+        var exploration = Request(state.Revision, "module", minutes: 90, command: JsonSerializer.SerializeToElement(new { kind = "explore" }));
+        state = Success(await ExecuteAsync(connectionString, campaignId, exploration));
+        Require(state.Snapshot.TimeMinutes == 90 && state.ModuleView.GetProperty("expedition").GetProperty("pending").GetArrayLength() == 1,
+            "Exploration time, queue, revision and journal must commit together.");
+        Require(SameJson(Success(await ExecuteAsync(connectionString, campaignId, exploration)), state), "An uncertain exploration retry must not add time or checks twice.");
+        var rejected = await ExecuteAsync(connectionString, campaignId, Request(state.Revision, "module", minutes: 29,
+            command: JsonSerializer.SerializeToElement(new { kind = "searchBuilding", unnumbered = true, newBuilding = true })));
+        AssertFailure(rejected, 400, "invalid_module_command");
+        Require(SameJson(Success(await ReadAsync(connectionString, campaignId)), state), "A rejected activity must not persist its proposed time advance.");
+        var stale = await ExecuteAsync(connectionString, campaignId, Request(initial.Revision, "module", minutes: 30,
+            command: JsonSerializer.SerializeToElement(new { kind = "searchBuilding", unnumbered = true, newBuilding = true })));
+        AssertFailure(stale, 409, "game_revision_conflict");
+        var beforeSearch = state;
+        state = Success(await ExecuteAsync(connectionString, campaignId, Request(state.Revision, "module", minutes: 30,
+            command: JsonSerializer.SerializeToElement(new { kind = "searchBuilding", unnumbered = true, newBuilding = true }))));
+        Require(state.Snapshot.TimeMinutes == 120 && state.ModuleView.GetProperty("expedition").GetProperty("pending").GetArrayLength() == 3,
+            "A search crossing an exploration hour must commit both occurrences atomically.");
+        state = Success(await ExecuteAsync(connectionString, campaignId, Request(state.Revision, "undo")));
+        Require(SameJson(state.Snapshot, beforeSearch.Snapshot), "Undo must restore both engine time and the exact pending encounter queue.");
+        var beforeRest = state;
+        state = Success(await ExecuteAsync(connectionString, campaignId, Request(state.Revision, "longRest")));
+        Require(state.ModuleView.GetProperty("expedition").GetProperty("avarice").GetProperty("pending").GetBoolean() &&
+            state.ModuleView.GetProperty("expedition").GetProperty("pending").GetArrayLength() == 1,
+            "The first persisted rest must trigger Avarice's reminder without exploration rolls.");
+        var beforeArrival = state;
+        var arrival = Request(state.Revision, "module", command: JsonSerializer.SerializeToElement(new { kind = "confirmArrival", faction = "avarice", minute = state.Snapshot.TimeMinutes }));
+        state = Success(await ExecuteAsync(connectionString, campaignId, arrival));
+        Require(SameJson(Success(await ExecuteAsync(connectionString, campaignId, arrival)), state), "Arrival confirmation must be idempotent.");
+        state = Success(await ExecuteAsync(connectionString, campaignId, Request(state.Revision, "undo")));
+        Require(SameJson(state.Snapshot, beforeArrival.Snapshot), "Undo must restore the unconfirmed arrival reminder.");
+        state = Success(await ExecuteAsync(connectionString, campaignId, Request(state.Revision, "undo")));
+        Require(SameJson(state.Snapshot, beforeRest.Snapshot) && state.ModuleView.GetProperty("expedition").GetProperty("avarice").GetProperty("deadline").ValueKind == JsonValueKind.Null,
+            "Undo of the first rest must restore waiting for a long rest.");
+        var beforeRoll = state;
+        var roll = Request(state.Revision, "module", command: JsonSerializer.SerializeToElement(new { kind = "resolveEncounter", checkId = 1, roll = 100 }));
+        state = Success(await ExecuteAsync(connectionString, campaignId, roll));
+        Require(state.ModuleView.GetProperty("expedition").GetProperty("lastResult").GetProperty("outcome").GetString() == "iriolarthas",
+            "Confirmed dice results must survive a new database context.");
+        Require(SameJson(Success(await ExecuteAsync(connectionString, campaignId, roll)), state), "A roll retry must not resolve the next queued encounter.");
+        state = Success(await ExecuteAsync(connectionString, campaignId, Request(state.Revision, "undo")));
+        Require(SameJson(state.Snapshot, beforeRoll.Snapshot), "Roll undo must restore the original check identity and result.");
+        await LegacyStateAndReceiptsSurviveUpgradeAsync(connectionString);
+        await SchemaTwoExpeditionUpgradeAsync(connectionString);
+        var zeroCampaign = await SeedCampaignAsync(connectionString);
+        var zeroState = Success(await ExecuteAsync(connectionString, zeroCampaign, Request(0, "configureParty", party: [new(Guid.NewGuid(), "First roster")])));
+        zeroState = Success(await ExecuteAsync(connectionString, zeroCampaign, Request(zeroState.Revision, "module",
+            command: JsonSerializer.SerializeToElement(new { kind = "confirmArrival", faction = "avarice", minute = 0 }))));
+        zeroState = Success(await ExecuteAsync(connectionString, zeroCampaign, Request(zeroState.Revision, "updateParty", party: [])));
+        var newRoster = Success(await ExecuteAsync(connectionString, zeroCampaign, Request(zeroState.Revision, "configureParty", party: [new(Guid.NewGuid(), "Replacement roster")])));
+        Require(SameJson(zeroState.Snapshot.ModuleState.GetProperty("adventure"), newRoster.Snapshot.ModuleState.GetProperty("adventure")),
+            "Configuring an empty roster at time zero must preserve existing campaign-owned arrival state.");
+        Console.WriteLine("PostgreSQL expedition checks passed: atomic time and queue, retries, rejected activities, revision conflicts, arrival and roll undo, schema 1/2 preservation and historical receipts.");
+    }
+
+    private static async Task SchemaTwoExpeditionUpgradeAsync(string connectionString)
+    {
+        var campaignId = await SeedCampaignAsync(connectionString);
+        var party = new[] { new GameCharacter(Guid.NewGuid(), "Existing campaign member") };
+        var rules = new YthrynGameRules();
+        var module = JsonNode.Parse(rules.Initialize(party).GetRawText())?.AsObject()
+            ?? throw new InvalidOperationException("Missing upgrade fixture.");
+        module.Remove("adventure");
+        var snapshot = new GameSnapshot(480, party, [480L], 2, JsonSerializer.SerializeToElement(module));
+        var request = Request(0, "longRest");
+        var receipt = new GameStateResponse(1, snapshot, rules.Describe(snapshot), new(request.RequestId, "longRest", 1));
+        var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+        var snapshotJson = JsonSerializer.Serialize(snapshot, options);
+        await using (var db = CreateDb(connectionString))
+        {
+            db.GameStates.Add(new() { CampaignId = campaignId, Revision = 1, SnapshotJson = snapshotJson });
+            db.GameOperations.Add(new() { CampaignId = campaignId, RequestId = request.RequestId, Revision = 1, Kind = "longRest",
+                RequestJson = JsonSerializer.Serialize(request, options), BeforeJson = snapshotJson,
+                ResponseJson = JsonSerializer.Serialize(receipt, options), CreatedAtUtc = DateTime.UtcNow });
+            await db.SaveChangesAsync();
+        }
+        var read = Success(await ReadAsync(connectionString, campaignId));
+        Require(read.Revision == 1 && read.Snapshot.ModuleSchemaVersion == 3 && read.Snapshot.TimeMinutes == 480 &&
+            SameJson(snapshot.ModuleState.GetProperty("characters"), read.Snapshot.ModuleState.GetProperty("characters")) &&
+            read.ModuleView.GetProperty("expedition").GetProperty("avarice").GetProperty("pending").GetBoolean(),
+            "Existing schema-two state must expose first-rest reminders without resetting campaign data.");
+        await using (var db = CreateDb(connectionString))
+        {
+            var stored = await db.GameStates.AsNoTracking().SingleAsync(x => x.CampaignId == campaignId);
+            Require(stored.Revision == 1 && SameJson(JsonSerializer.Deserialize<JsonElement>(stored.SnapshotJson),
+                JsonSerializer.Deserialize<JsonElement>(snapshotJson)), "GET must leave stored schema-two documents and revision untouched.");
+        }
+        Require(SameJson(Success(await ExecuteAsync(connectionString, campaignId, request)), receipt), "Schema-two historical receipts must remain exactly replayable.");
+    }
+
     public static async Task RunAsync(string connectionString)
     {
         var connection = new NpgsqlConnectionStringBuilder(connectionString);
@@ -335,7 +432,7 @@ public static class PersistenceTests
             await db.SaveChangesAsync();
         }
         var upgraded = Success(await ReadAsync(connectionString, campaignId));
-        Require(upgraded.Revision == 1 && upgraded.Snapshot.ModuleSchemaVersion == 2 &&
+        Require(upgraded.Revision == 1 && upgraded.Snapshot.ModuleSchemaVersion == 3 &&
             upgraded.Snapshot.Party.Single() == character && upgraded.Snapshot.TimeMinutes == 1080 &&
             Character(upgraded, character.Id).GetProperty("dc").GetInt32() == 9 &&
             Character(upgraded, character.Id).GetProperty("nextCheck").GetProperty("minute").GetInt64() == 1800,

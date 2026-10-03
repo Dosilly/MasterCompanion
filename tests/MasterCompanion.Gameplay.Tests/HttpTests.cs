@@ -176,6 +176,25 @@ public static class HttpTests
             var periodicRequest = new GameOperationRequest(Guid.NewGuid(), pending.Revision, "module",
                 Command: JsonSerializer.SerializeToElement(new { kind = "resolveCheck", characterId, success = false }));
             var periodic = await PostSuccessAsync(client, path, periodicRequest);
+            var activityRequest = new GameOperationRequest(Guid.NewGuid(), periodic.Revision, "module", Minutes: 60,
+                Command: JsonSerializer.SerializeToElement(new { kind = "explore" }));
+            var activity = await PostSuccessAsync(client, path, activityRequest);
+            Require(activity.Snapshot.TimeMinutes == periodic.Snapshot.TimeMinutes + 60 &&
+                activity.ModuleView.GetProperty("expedition").GetProperty("pending").GetArrayLength() == 1,
+                "HTTP module activities must persist their engine time and encounter together.");
+            Require(JsonElement.DeepEquals(JsonSerializer.SerializeToElement(await PostSuccessAsync(client, path, activityRequest)),
+                JsonSerializer.SerializeToElement(activity)), "HTTP exploration retries must return the exact receipt.");
+            var malformedActivity = new GameOperationRequest(Guid.NewGuid(), activity.Revision, "module", Minutes: 29,
+                Command: JsonSerializer.SerializeToElement(new { kind = "searchBuilding", unnumbered = true, newBuilding = true }));
+            using (var content = new StringContent(JsonSerializer.Serialize(malformedActivity, JsonOptions), Encoding.UTF8, "application/json"))
+            using (var response = await client.PostAsync(path + "/operations", content))
+                await AssertProblemAsync(response, HttpStatusCode.BadRequest, "invalid_module_command");
+            using (var response = await client.GetAsync(path))
+                Require(JsonElement.DeepEquals(JsonSerializer.SerializeToElement(await ReadSuccessAsync(response)), JsonSerializer.SerializeToElement(activity)),
+                    "Rejected HTTP activities must preserve current time, checks and revision.");
+            var activityUndo = await PostSuccessAsync(client, path, new GameOperationRequest(Guid.NewGuid(), activity.Revision, "undo"));
+            Require(JsonElement.DeepEquals(JsonSerializer.SerializeToElement(activityUndo.Snapshot), JsonSerializer.SerializeToElement(periodic.Snapshot)),
+                "HTTP undo must restore the whole exploration operation.");
             var periodicCharacter = periodic.ModuleView.GetProperty("characters").EnumerateArray().Single();
             Require(periodic.Snapshot.TimeMinutes == 1920 && periodicCharacter.GetProperty("dc").GetInt32() == 10 &&
                 periodicCharacter.GetProperty("failures").GetInt32() == 1 &&
@@ -184,11 +203,11 @@ public static class HttpTests
                 "HTTP recovery must honor the rest-reset deadline and persist the periodic outcome and next timer together.");
             Require(JsonElement.DeepEquals(JsonSerializer.SerializeToElement(await PostSuccessAsync(client, path, periodicRequest)),
                 JsonSerializer.SerializeToElement(periodic)), "An HTTP periodic retry must not increment failures twice.");
-            var undone = await PostSuccessAsync(client, path, new GameOperationRequest(Guid.NewGuid(), periodic.Revision, "undo"));
+            var undone = await PostSuccessAsync(client, path, new GameOperationRequest(Guid.NewGuid(), activityUndo.Revision, "undo"));
             Require(JsonElement.DeepEquals(JsonSerializer.SerializeToElement(undone.Snapshot), JsonSerializer.SerializeToElement(pending.Snapshot)),
                 "HTTP undo must restore the periodic check and its previous recovery totals.");
 
-            Console.WriteLine("HTTP gameplay tests passed: strict JSON, media and size limits, ProblemDetails, isolated writes, party editing, short rest, periodic recovery, rest-reset timers, receipts and undo.");
+            Console.WriteLine("HTTP gameplay tests passed: strict JSON, media and size limits, ProblemDetails, isolated writes, party editing, short rest, periodic recovery, module exploration, rejected activities, receipts and undo.");
         }
         finally
         {

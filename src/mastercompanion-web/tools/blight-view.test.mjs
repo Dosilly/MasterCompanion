@@ -35,6 +35,14 @@ test('Projection links names by character ID regardless of projection order', ()
   assert.equal(view[0].nextCheck.minute, 1080);
 });
 
+test('Current expedition schema retains the existing Arcane Blight projection', () => {
+  const state = fixture(); state.snapshot.moduleSchemaVersion = 3;
+  state.moduleView.expedition = { opaque: true };
+  assert.equal(readBlightView(state).length, 2);
+  state.moduleView.characters[1].nextCheck = null;
+  assert.equal(readBlightView(state), null);
+});
+
 test('Malformed projections are rejected rather than repaired or partially displayed', () => {
   for (const mutate of [
     state => { state.moduleView = null; },
@@ -49,7 +57,7 @@ test('Malformed projections are rejected rather than repaired or partially displ
     state => { state.moduleView.characters[0].nextCheck.minute = Infinity; },
     state => { state.moduleView.characters[0].nextCheck.kind = 'unknown'; },
     state => { delete state.moduleView.characters[0].nextCheck; },
-    state => { state.snapshot.moduleSchemaVersion = 3; },
+    state => { state.snapshot.moduleSchemaVersion = 4; },
     state => { state.snapshot.party[0].id = secondId; },
   ]) {
     const state = fixture();

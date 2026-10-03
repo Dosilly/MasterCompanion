@@ -5,15 +5,17 @@ try
     if (args.Length == 0 || args is ["--rules"])
     {
         RulesTests.Run();
+        ExpeditionTests.Run();
     }
-    else if (args is ["--persistence"] or ["--http"])
+    else if (args is ["--persistence"] or ["--http"] or ["--expedition-persistence"])
     {
         var connection = Environment.GetEnvironmentVariable("MC_GAMEPLAY_TEST_CONNECTION")
             ?? throw new InvalidOperationException("Set MC_GAMEPLAY_TEST_CONNECTION to an isolated gameplay test database.");
         if (args[0] == "--http") await HttpTests.RunAsync(connection);
+        else if (args[0] == "--expedition-persistence") await PersistenceTests.RunExpeditionAsync(connection);
         else await PersistenceTests.RunAsync(connection);
     }
-    else throw new InvalidOperationException("Supported test modes: --rules, --persistence, --http.");
+    else throw new InvalidOperationException("Supported test modes: --rules, --persistence, --http, --expedition-persistence.");
 }
 catch (Exception exception)
 {

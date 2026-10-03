@@ -42,6 +42,10 @@ no application tests, builds, restarts or database writes were added.
 
 ## Later scope and known limitations
 
+Subsequent priority decision: the user selected encounter and rival-arrival tools
+as the next slice on 2–3 October. See [its plan](12-Encounters-and-arrivals.md).
+This does not change the historical phase-one acceptance scope.
+
 The following items remain outside phase one, without a newly assigned schedule:
 
 - Multiple-campaign selection, empty campaign creation, new separate notes and

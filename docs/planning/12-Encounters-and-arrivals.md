@@ -1,0 +1,105 @@
+# Priority slice: encounters and rival arrivals
+
+Decision: 2–3 October 2026. The user moved these tools to the front of the queue
+because they are needed to run the current campaign. This extends the accepted
+phase-one product without reopening its acceptance.
+
+## Campaign rules
+
+The user simplified arrivals: **Avarice is due after the first shared long rest;
+Auril is due at 24 hours from city entry.** This supersedes the glacier-opening
+pursuit deadline for these tools. Authored campaign documents retain their
+wording; the tool displays the active campaign rule.
+
+| Tool | Trigger and behavior |
+|---|---|
+| Hourly encounters | One d100 check per accumulated 60 minutes of explicit city exploration. Partial hours carry forward. Ordinary time advances and rests do not add exploration. |
+| Building encounters | A thorough search atomically adds 30 minutes of exploration. An unnumbered building adds a separate d100 check; a crossed exploration hour adds its own check. The GM identifies a first search. |
+| Avarice arrival | The first engine-owned long-rest end creates a persistent reminder, including existing rest history. Later rests do not move it. The GM confirms actual arrival separately. |
+| Auril arrival | The countdown uses confirmed engine time against minute 1440. Disable explicitly if Auril was defeated. Reaching the deadline does not record actual arrival. |
+
+A separate 20% Avarice patrol check accompanies a first building search after
+confirmed arrival, including numbered locations. Confirm arrival before recording
+affected searches. The GM manages surviving patrols, casualties, creature counts
+and narrative outcomes; the tool does not create extra surviving forces.
+
+Checks retain increasing identities and original game minutes. Resolve them in
+creation order with an explicit d100 result, 1–100 (100 represents 00). Coincident
+hourly, building and patrol checks remain separate. Table replacements depend
+on actual confirmed arrival at or before the check minute, not on deadlines.
+Confirm a backdated arrival before resolving affected overdue rolls. Previously
+confirmed outcomes remain unchanged. The latest result and stable material links
+are visible; earlier results remain in the operation journal.
+
+Exploration is bounded to 1–1440 minutes per action and pending checks to 240.
+An action exceeding capacity is rejected completely, including its time advance;
+resolve older checks and retry. Tools stay active while hidden or closed.
+
+## Ownership and data preservation
+
+Neutral module operations accept an optional bounded `minutes` advance. The
+engine validates time and owns transactions, revisions, receipts and undo.
+Ythryn validates exact activity duration: `explore` requires 1–1440 minutes,
+`searchBuilding` requires 30, and all other commands require zero. One transaction
+commits time, module state, revision and history; rejection commits none. Exact
+request replay prevents duplicate advances or rolls. Undo restores queues,
+results, confirmed arrivals and rest triggers without restoring material content.
+
+Schema 3 adds expedition state beside Arcane Blight. Pure conversion from schemas
+1 and 2 preserves party, clock, rests, outcomes and recovery history. Earlier
+exploration cannot be inferred from the total clock: tracking starts at zero.
+Existing rests and elapsed time expose arrival reminders, without inventing actual
+arrivals. GET converts in memory; accepted operations persist conversion.
+Historical receipts retain their original projections and outcomes. Invalid state
+fails explicitly. No EF table changes, migrations or authored-content replacement
+are required.
+
+Building search moves from the generic engine shortcut into the Ythryn tool so
+its encounter consequences are explicit. All Ythryn tools share one mounted
+component to preserve inputs during reader-tab switching.
+
+## Delivery and verification
+
+Backend rules and frontend controls are implemented. Completed checks:
+
+- 24 existing Arcane Blight rule cases and 9 expedition cases: boundaries,
+  coincident checks, table endpoints, arrival chronology, patrol probability,
+  queue limits, roster preservation, corruption rejection and existing recovery-state conversion.
+- 48 frontend gameplay tests, including expedition projection/action validation,
+  bounded activity requests and existing uncertain-request recovery.
+- Isolated real PostgreSQL: atomic activities, exact retries, rejection without
+  writes, revision conflicts, arrival/roll/rest undo, read-only schema 1/2
+  conversion and unchanged historical receipts.
+- Loopback HTTP: strict input, ProblemDetails, activity time, retries, rejected
+  activities with unchanged state and complete exploration undo.
+- Full backend solution and frontend builds; code/localization and dependency
+  boundaries are checked by the frontend build.
+
+Browser verification against a separate test campaign covered partial exploration,
+coincident hourly/building checks, first-rest and 24-hour reminders, explicit
+arrival confirmation, historical table variants, Auril replacements, the separate
+patrol chance, roll undo, material links and input retention during tab switching.
+The affected tools were inspected at 1920×1080 in both themes, without horizontal
+overflow or console errors; keyboard focus reached the exploration action.
+Screenshots are retained under the ignored `.local` directory. The final build
+was reloaded against the preserved test campaign after the last refinements.
+
+The user's running application and database have not been replaced or written.
+Live deployment is separate. Earlier source wording for Avarice remains in the
+campaign material; the tool explains the user-confirmed first-rest schedule.
+
+Focused commands:
+
+```powershell
+dotnet run --project tests/MasterCompanion.Gameplay.Tests -- --rules
+# Use an isolated database named mastercompanion_gameplay_test.
+dotnet run --project tests/MasterCompanion.Gameplay.Tests -- --expedition-persistence
+dotnet run --project tests/MasterCompanion.Gameplay.Tests -- --http
+pnpm --dir src/mastercompanion-web test:gameplay
+```
+
+## Deferred scope
+
+Auril's later hourly pursuit, automatic patrol casualty accounting, creature
+quantity rolls, location visit records, historical exploration import, editable
+encounter tables and a generic reminder creator remain outside this slice.
