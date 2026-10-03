@@ -22,6 +22,25 @@
       "materialLoadFailed": "Could not open the material. Please try again."
     }
   },
+  "notes": {
+    "newNote": "New note", "title": "Note title", "folder": "Folder", "create": "Create note", "cancel": "Close",
+    "retry": "Retry creation", "recover": "Recover note creation", "creating": "Creating note…",
+    "readModeHint": "The note opens in read mode. Choose Edit note to start writing.",
+    "recoveryHint": "A note creation needs confirmation. Recover it before creating another note.",
+    "discardUnreadable": "Discard unreadable recovery request",
+    "discardWarning": "This removes only unreadable recovery information from this browser. A note may already have been created; inspect the navigation before creating another.",
+    "errors": {
+      "invalidTitle": "Enter a title of 1–300 characters without control characters.",
+      "invalidFolder": "Choose a folder available in this campaign or Unfiled materials.",
+      "campaignMissing": "This campaign is no longer available. Your entered title remains here.",
+      "rejected": "The note could not be created. Review its title and folder and try again.",
+      "identityConflict": "This note identifier is already in use. Your title remains here; review existing notes before creating another.",
+      "uncertain": "The response was lost. The note may already exist. Retry creation to confirm the same note safely.",
+      "storageUnavailable": "The browser could not preserve recovery information. Your title remains here. Allow session storage and retry.",
+      "invalidPending": "The stored creation request cannot be read. Inspect existing notes before discarding its recovery information.",
+      "invalidResponse": "The creation response could not be verified. Retry creation to confirm the same note safely."
+    }
+  },
   "material": {
     "edit": "Edit note",
     "finishEditing": "Finish editing",

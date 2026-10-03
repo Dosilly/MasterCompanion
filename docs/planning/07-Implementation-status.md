@@ -1,4 +1,32 @@
 # Implementation status
+## Campaign-owned notes — 3 October 2026
+
+Implemented on `codex/campaign-notes-current`, freshly based on merged trunk
+`bdfcc9c`. New note creates an ordinary material in an existing folder or unfiled,
+opens it in read mode, and reuses explicit editing and revision-protected autosave.
+Exact pending creation requests survive browser-tab reload; uncertain responses
+retry the same identity without duplicating or resetting a note. Existing drafts,
+materials and gameplay state remain independent.
+
+Verification passed the affected API/test builds and final full solution build (zero warnings/errors), isolated real PostgreSQL/HTTP validation, concurrent retries/conflicts,
+replay after editing, cancellation, failed-write recovery, unchanged authored
+data and repeated initialization. Twelve new frontend tests and fourteen affected
+autosave/editor tests passed. Production Angular libraries and host compiled via
+the isolated UI runner, including localization and dependency-boundary checks.
+Browser test types passed.
+
+All sixteen note UI cases passed across both themes at 1920x1080 and 1536x864;
+one test's incorrect folder-expansion assumption was corrected and only that
+case was rerun in all four projects. Eight new screenshots were reviewed.
+Sixteen existing baselines were deliberately updated for the navigation action;
+pixel review confirmed significant changes stayed inside navigation. The normal
+visual comparison then passed twelve cases against all twenty-eight baselines.
+These browser fixtures establish frontend evidence; PostgreSQL evidence is separate.
+
+No migrations, module source edits or user-campaign writes were needed. The
+feature has not been merged or deployed to the user's running application.
+Full-text search is the next slice; folder authoring, rename/move/delete and
+session records remain deferred. Details: [campaign notes](14-Campaign-notes.md).
 
 ## Priority encounter and arrival tools — 2–3 October 2026
 

@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { test as base, expect, type Locator, type Page } from '@playwright/test';
+import type { MaterialDto } from '@mastercompanion/contracts';
 import { campaignFixture, campaignId, readerId, readerTitle } from './fixtures/campaign';
 
 // Read canonical localization data, without importing private library implementations.
@@ -20,18 +21,27 @@ export function text(catalog: keyof typeof catalogs, ...keys: string[]): string 
   return value;
 }
 
+interface CreationRequest { id: string; title: string; folderId: string | null; }
+
 export class TestApi {
   readonly data = campaignFixture();
   readonly saves: unknown[] = [];
+  readonly creations: CreationRequest[] = [];
+  readonly createdMaterials: MaterialDto[] = [];
+  readonly noteDocuments = new Map<string, unknown>();
   readonly unexpectedRequests: string[] = [];
   readonly expectedHttpErrors: { url: string; status: number }[] = [];
+  readonly expectedNetworkFailures: string[] = [];
   savedDocument: unknown = this.data.materials[0].document;
   revision = this.data.materials[0].revision;
   workspaceFailures = 0;
   saveMode: 'success' | 'hold' | 'conflict' = 'success';
+  creationMode: 'success' | 'hold' | 'invalid' | 'lostResponse' = 'success';
   private readonly saveGate = Promise.withResolvers<void>();
+  private readonly creationGate = Promise.withResolvers<void>();
 
   releaseSave() { this.saveGate.resolve(); }
+  releaseCreation() { this.creationGate.resolve(); }
 
   async install(page: Page, origin: string) {
     // Catch every request before navigation. API calls never leave this browser context.
@@ -51,12 +61,54 @@ export class TestApi {
           return;
         }
         if (method === 'GET' && path === `/api/campaigns/${campaignId}/game`) { await route.fulfill({ json: this.data.game }); return; }
-        const material = this.data.materials.find(item => path === `/api/materials/${item.id}`);
-        if (material && method === 'GET') {
-          await route.fulfill({ json: material.id === readerId ? { ...material, document: this.savedDocument, revision: this.revision } : material });
+        if (method === 'POST' && path === `/api/campaigns/${campaignId}/materials`) {
+          const body: unknown = request.postDataJSON();
+          if (!record(body) || typeof body['id'] !== 'string' || typeof body['title'] !== 'string' ||
+            (body['folderId'] !== null && typeof body['folderId'] !== 'string')) throw new Error('Expected the exact note creation contract.');
+          expect(Object.keys(body).sort()).toEqual(['folderId', 'id', 'title']);
+          expect(body['id']).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
+          const creation = { id: body['id'], title: body['title'], folderId: body['folderId'] };
+          this.creations.push(creation);
+          if (this.creationMode === 'hold') await this.creationGate.promise;
+          if (this.creationMode === 'invalid') {
+            const status = 400;
+            const code = 'invalid_material_creation';
+            this.expectedHttpErrors.push({ url: request.url(), status });
+            await route.fulfill({ status, json: { code, detail: 'Private fixture diagnostic must never appear in the UI.' } });
+            return;
+          }
+          const id = `note-${creation.id}`;
+          const existing = this.createdMaterials.find(item => item.id === id);
+          if (existing) {
+            expect(existing.title).toBe(creation.title);
+            expect(existing.folderId).toBe(creation.folderId);
+          }
+          const folder = this.data.workspace.folders.find(item => item.id === creation.folderId);
+          expect(creation.folderId === null || folder !== undefined, 'Creation must use a fixture-owned folder.').toBe(true);
+          const material: MaterialDto = existing ?? {
+            id, title: creation.title, folderId: creation.folderId, group: folder?.title ?? '',
+            document: { type: 'doc', content: [{ type: 'paragraph' }] }, documentSchemaVersion: 1, revision: 1,
+          };
+          if (!existing) {
+            this.createdMaterials.push(material);
+            const { title, group, folderId } = material;
+            this.data.workspace.materials.push({ id, title, group, folderId });
+          }
+          if (this.creationMode === 'lostResponse') {
+            // Commit in the intercepted fixture, then lose the response. This is frontend evidence only.
+            this.creationMode = 'success';
+            this.expectedNetworkFailures.push(request.url());
+            await route.abort('failed');
+          } else await route.fulfill({ status: existing ? 200 : 201, json: { ...material, document: this.noteDocuments.get(id) ?? material.document } });
           return;
         }
-        if (material?.id === readerId && method === 'PUT') {
+        const material = this.data.materials.find(item => path === `/api/materials/${item.id}`) ??
+          this.createdMaterials.find(item => path === `/api/materials/${item.id}`);
+        if (material && method === 'GET') {
+          await route.fulfill({ json: material.id === readerId ? { ...material, document: this.savedDocument, revision: this.revision } : { ...material, document: this.noteDocuments.get(material.id) ?? material.document } });
+          return;
+        }
+        if (material && (material.id === readerId || this.createdMaterials.includes(material)) && method === 'PUT') {
           const body: unknown = request.postDataJSON();
           this.saves.push(body);
           if (this.saveMode === 'hold') await this.saveGate.promise;
@@ -64,10 +116,19 @@ export class TestApi {
             this.expectedHttpErrors.push({ url: request.url(), status: 409 });
             await route.fulfill({ status: 409, json: { code: 'revisionConflict' } });
           } else {
-            expect(record(body) && body['expectedRevision'] === this.revision, 'Save must use the confirmed fixture revision.').toBe(true);
+            const revision = material.id === readerId ? this.revision : material.revision;
+            expect(record(body) && body['expectedRevision'] === revision, 'Save must use the confirmed fixture revision.').toBe(true);
             if (!record(body)) throw new Error('Expected a material save object.');
-            this.savedDocument = body['document'];
-            await route.fulfill({ json: { revision: ++this.revision } });
+            if (material.id === readerId) {
+              this.savedDocument = body['document'];
+              await route.fulfill({ json: { revision: ++this.revision } });
+            } else {
+              if (!record(body['document']) || body['document']['type'] !== 'doc' || !Array.isArray(body['document']['content'])) {
+                throw new Error('Expected a note document with a supported root.');
+              }
+              this.noteDocuments.set(material.id, body['document']);
+              await route.fulfill({ json: { revision: ++material.revision } });
+            }
           }
           return;
         }
@@ -94,10 +155,12 @@ export const test = base.extend<{ api: TestApi }>({
     try { await use(api); }
     finally {
       api.releaseSave();
+      api.releaseCreation();
       page.off('console', consoleListener);
       page.off('pageerror', runtimeListener);
       const unexpectedErrors = errors.filter(error => !api.expectedHttpErrors.some(response => response.url === error.url &&
-        error.message.startsWith(`Failed to load resource: the server responded with a status of ${response.status} (`)));
+        error.message.startsWith(`Failed to load resource: the server responded with a status of ${response.status} (`)) &&
+        !(api.expectedNetworkFailures.includes(error.url) && error.message === 'Failed to load resource: net::ERR_FAILED'));
       expect(api.unexpectedRequests, 'All API and external requests must have an explicit fixture.').toEqual([]);
       expect(runtimeErrors, 'The affected view must not raise browser runtime errors.').toEqual([]);
       expect(unexpectedErrors, 'The affected view must not log unexpected console errors.').toEqual([]);

@@ -5,6 +5,8 @@ import { firstValueFrom } from 'rxjs';
 import { CAMPAIGN_MODULES, MaterialDto, WorkspaceDto } from '@mastercompanion/contracts';
 import { MaterialSession } from '../materials/material-session';
 import { MaterialView } from '../materials/material-view';
+import { MaterialCreation } from '../materials/material-creation';
+import { MaterialCreationDialog } from '../materials/material-creation-dialog';
 import { MapView } from '../maps/map-view';
 import { buildNavigation, folderPath } from './navigation';
 import { ThemePreference } from './theme-preference';
@@ -14,7 +16,7 @@ import { PartyView } from '../gameplay/party-view';
 import { UiMessages, uiLocale, uiMessages } from '../../i18n/messages';
 
 @Component({
-  selector: 'mc-workspace', imports: [NgTemplateOutlet, MaterialView, MapView, GameView, PartyView],
+  selector: 'mc-workspace', imports: [NgTemplateOutlet, MaterialView, MaterialCreationDialog, MapView, GameView, PartyView],
   template: `
     <header class="app-header"><div><strong>MasterCompanion</strong><span class="campaign-name"> / {{ workspace()?.title }}</span></div>
       <div class="header-actions">
@@ -30,6 +32,13 @@ import { UiMessages, uiLocale, uiMessages } from '../../i18n/messages';
         <nav #navigation class="material-nav" [attr.aria-label]="ui.workspace.navigationLabel">
           <label for="material-search">{{ ui.workspace.materials }}</label>
           <input id="material-search" type="search" [placeholder]="ui.workspace.searchPlaceholder" [value]="search()" (input)="updateSearch($event)">
+          <button class="new-note-button" (click)="openCreation($event)">{{ ui.notes.newNote }}</button>
+          @if (creation()?.hasRecovery()) {
+            <div class="note-recovery" role="status">
+              <p>{{ ui.notes.recoveryHint }}</p>
+              <button (click)="openCreation($event)">{{ ui.notes.recover }}</button>
+            </div>
+          }
           <ng-container *ngTemplateOutlet="folderTree; context: { $implicit: folders() }" />
           <ng-template #folderTree let-nodes>
             @for (folder of nodes; track folder.id) {
@@ -89,6 +98,9 @@ import { UiMessages, uiLocale, uiMessages } from '../../i18n/messages';
           }
         </main>
       </div>
+      @if (creation(); as draft) {
+        <mc-material-creation-dialog [creation]="draft" [folders]="data.folders" (created)="acceptCreatedMaterial($event)" />
+      }
     } @else if (!loadError()) { <p class="opening-state">{{ ui.workspace.loadingCampaign }}</p> }
   `,
 })
@@ -112,6 +124,8 @@ export class Workspace {
   readonly partyMounted = signal(false);
   readonly partyView = viewChild(PartyView);
   readonly game = signal<GameSession | null>(null);
+  readonly creation = signal<MaterialCreation | null>(null);
+  private readonly creationDialog = viewChild(MaterialCreationDialog);
   readonly campaignModule = computed(() => this.modules.find(module => module.id === this.workspace()?.moduleId));
   readonly gameTime = computed(() => {
     const minutes = this.game()?.state()?.snapshot.timeMinutes ?? 0;
@@ -128,7 +142,7 @@ export class Workspace {
   private navigationRender?: AfterRenderRef;
 
   constructor() {
-    this.destroyRef.onDestroy(() => { this.navigationRender?.destroy(); this.game()?.destroy(); });
+    this.destroyRef.onDestroy(() => { this.navigationRender?.destroy(); this.game()?.destroy(); this.creation()?.destroy(); });
     void this.load();
   }
   async load() {
@@ -144,6 +158,12 @@ export class Workspace {
         const game = new GameSession(workspace.campaignId, this.http, storage);
         this.game.set(game);
         void game.load();
+      }
+      if (this.creation()?.campaignId !== workspace.campaignId) {
+        this.creation()?.destroy();
+        let storage: Storage | null = null;
+        try { storage = window.sessionStorage; } catch { /* Creation reports inaccessible recovery storage before sending. */ }
+        this.creation.set(new MaterialCreation(workspace.campaignId, this.http, storage));
       }
       // Begin in the reader. The map remains available in the same main area.
       if (!this.sessions().length && workspace.materials.length) await this.open(workspace.startMaterialId);
@@ -170,6 +190,22 @@ export class Workspace {
       this.activate(id, anchor);
     } catch { this.loadError.set('materialLoadFailed'); }
     finally { this.opening.set(false); }
+  }
+
+  openCreation(event: Event) {
+    const folderId = this.workspace()?.materials.find(material => material.id === this.active())?.folderId ?? null;
+    this.creationDialog()?.open(event, folderId);
+  }
+  acceptCreatedMaterial(material: MaterialDto) {
+    this.workspace.update(workspace => workspace === null || workspace.materials.some(item => item.id === material.id)
+      ? workspace : { ...workspace, materials: [...workspace.materials, {
+        id: material.id, title: material.title, group: material.group, folderId: material.folderId,
+      }] });
+    // Replayed confirmations never replace an existing session or its unsaved draft.
+    if (!this.sessions().some(session => session.material.id === material.id)) {
+      this.sessions.update(sessions => [...sessions, new MaterialSession(material, this.http)]);
+    }
+    this.activate(material.id);
   }
 
   openMap() { this.mapOpen.set(true); this.activate('@map'); }
@@ -254,6 +290,6 @@ export class Workspace {
   }
   @HostListener('window:beforeunload', ['$event'])
   protectPendingChanges(event: BeforeUnloadEvent) {
-    if (this.sessions().some(tab => tab.dirty()) || this.partyView()?.dirty()) { event.preventDefault(); event.returnValue = ''; }
+    if (this.sessions().some(tab => tab.dirty()) || this.partyView()?.dirty() || !this.creation()?.hasRecovery() && this.creation()?.title().trim()) { event.preventDefault(); event.returnValue = ''; }
   }
 }

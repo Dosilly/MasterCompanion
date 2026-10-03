@@ -33,6 +33,7 @@ app.MapDefaultEndpoints();
 GetWorkspace.Map(app);
 GetMaterial.Map(app);
 SaveMaterial.Map(app);
+CreateMaterial.Map(app);
 GetAsset.Map(app);
 GameplayEndpoints.Map(app);
 

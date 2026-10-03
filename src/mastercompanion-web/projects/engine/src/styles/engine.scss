@@ -101,3 +101,16 @@ dialog::backdrop { background: #0008; }
 .editor-insertion-dialog input, .editor-insertion-dialog select { width: 100%; }
 .dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
 @media (max-width: 1000px) { .game-view { padding: 18px; } .party-row { grid-template-columns: 1fr; } }
+
+.material-nav .new-note-button { border: 1px solid var(--line); background: var(--paper); text-align: center; margin: 0 0 16px; }
+.note-recovery { padding: 10px; margin-bottom: 16px; border: 1px solid var(--error-line); background: var(--error-bg); font-size: 12px; }
+.note-recovery p { margin: 0 0 8px; }
+.note-recovery button { overflow-wrap: anywhere; }
+.material-creation-dialog { width: min(560px, calc(100vw - 40px)); max-height: calc(100dvh - 48px); overflow: auto; padding: 24px; border: 1px solid var(--line); border-radius: 10px; color: var(--ink); background: var(--paper); }
+.material-creation-dialog h2 { margin-top: 0; }
+.material-creation-dialog label { display: block; margin: 12px 0 6px; }
+.material-creation-dialog input, .material-creation-dialog select { width: 100%; min-width: 0; padding: 8px 10px; border: 1px solid var(--line); border-radius: 5px; color: var(--ink); background: var(--paper); }
+.material-creation-dialog button { overflow-wrap: anywhere; }
+.creation-hint { color: var(--muted); }
+.creation-error { padding: 12px; border: 1px solid var(--error-line); background: var(--error-bg); }
+.material-creation-dialog .dialog-actions { flex-wrap: wrap; }

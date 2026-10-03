@@ -8,6 +8,7 @@ export interface RichDocument {
   text?: string;
 }
 export interface MaterialSummary { id: string; title: string; group: string; folderId: string | null; }
+export interface CreateMaterialRequest { id: string; title: string; folderId: string | null; }
 export interface CampaignFolder { id: string; title: string; parentId: string | null; }
 export interface MaterialDto extends MaterialSummary {
   document: RichDocument; documentSchemaVersion: number; revision: number;

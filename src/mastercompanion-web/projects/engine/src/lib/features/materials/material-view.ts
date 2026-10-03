@@ -11,7 +11,7 @@ import { InsertionError, InsertionSelection, insertMarkdown, insertMaterialLink 
   template: `
     <div class="material-scroll" (click)="followLink($event)">
       <div class="reading-bar">
-        <span class="breadcrumb">{{ session().material.group }}</span>
+        <span class="breadcrumb">{{ session().material.group || ui.workspace.unfiledMaterials }}</span>
         <div class="actions">
           <span class="save-state" role="status" aria-live="polite">{{ statusLabel() }}</span>
           <button (click)="toggleEdit()">{{ session().editing() ? ui.material.finishEditing : ui.material.edit }}</button>
@@ -57,7 +57,7 @@ import { InsertionError, InsertionSelection, insertMarkdown, insertMaterialLink 
         <select [id]="insertionId('target')" [value]="linkTarget()" (change)="updateLinkTarget($event)">
           <option value="">{{ ui.material.chooseMaterial }}</option>
           @for (material of filteredMaterials(); track material.id) {
-            <option [value]="material.id">{{ material.title }} — {{ material.group }}</option>
+            <option [value]="material.id">{{ material.title }} — {{ material.group || ui.workspace.unfiledMaterials }}</option>
           }
         </select>
         @if (filteredMaterials().length === 0) { <p role="status">{{ ui.material.noLinkResults }}</p> }

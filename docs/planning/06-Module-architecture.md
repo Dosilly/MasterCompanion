@@ -139,3 +139,28 @@ Markdown insertion and material-link selection belong to the engine editor. They
 Microfrontends are justified by a need to build, deliver and update view code independently. [Module Federation](https://webpack.js.org/concepts/module-federation/) combines separate builds in a running application and requires managing shared dependencies and their versions. [Angular libraries](https://angular.dev/tools/libraries/creating-libraries) provide separate packages and public APIs without loading code from separate deployments. Choosing libraries for the MVP follows from local operation and the budget; the required boundary remains intact.
 
 If installing code without rebuilding the host becomes necessary, the design will need contract versioning, package compatibility, loading and initialization errors, state migrations and plugin trust rules. The current code's strong boundaries help with that direction but do not make such a migration cost-free.
+
+## Campaign-owned note creation — 3 October 2026
+
+The generic engine creates ordinary materials independently of module defaults.
+`POST /api/campaigns/{campaignId}/materials` accepts a client-generated UUID,
+normalized title and optional existing campaign folder. The server owns the
+canonical `note-{UUID}` identity, empty schema-1 document, initial revision,
+group presentation data and append ordering. The endpoint bounds JSON input to
+8 KiB/depth 4 and rejects unsupported fields, duplicate properties and invalid
+campaign/folder references. No persistence schema or module contract changes
+are required.
+
+A creation UUID identifies one immutable title/folder request in this slice.
+An exact retry, including a concurrent retry, returns the current persisted
+material without resetting its document or revision. Different metadata returns
+a stable conflict. Rename/move are outside this slice; adding them later requires
+immutable creation receipts or an equivalent explicit idempotency design.
+
+The frontend public contract exports CreateMaterialRequest. The engine owns the
+creation dialog and campaign-scoped tab-session recovery request. Only confirmed
+materials enter navigation and the ordinary reader/editor lifecycle; existing
+sessions and drafts stay mounted. Creation and later autosave are independent of
+game time, module state and game undo. Unfiled presentation is localized in the
+frontend rather than persisted as UI text. Details and verification are in
+[the campaign-note delivery plan](14-Campaign-notes.md).

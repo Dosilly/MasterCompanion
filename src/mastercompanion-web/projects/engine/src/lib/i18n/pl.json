@@ -22,6 +22,25 @@
       "materialLoadFailed": "Nie udało się otworzyć materiału. Spróbuj ponownie."
     }
   },
+  "notes": {
+    "newNote": "Nowa notatka", "title": "Tytuł notatki", "folder": "Folder", "create": "Utwórz notatkę", "cancel": "Zamknij",
+    "retry": "Ponów tworzenie", "recover": "Odzyskaj tworzenie notatki", "creating": "Tworzenie notatki…",
+    "readModeHint": "Notatka otworzy się w trybie czytania. Wybierz Edytuj notatkę, aby rozpocząć pisanie.",
+    "recoveryHint": "Tworzenie notatki wymaga potwierdzenia. Odzyskaj je przed utworzeniem kolejnej notatki.",
+    "discardUnreadable": "Usuń nieczytelne dane odzyskiwania",
+    "discardWarning": "Ta czynność usuwa tylko nieczytelne dane odzyskiwania z przeglądarki. Notatka mogła już powstać; sprawdź nawigację przed utworzeniem kolejnej.",
+    "errors": {
+      "invalidTitle": "Wpisz tytuł o długości 1–300 znaków, bez znaków sterujących.",
+      "invalidFolder": "Wybierz folder dostępny w kampanii lub materiały bez folderu.",
+      "campaignMissing": "Ta kampania nie jest już dostępna. Wpisany tytuł pozostaje w tym oknie.",
+      "rejected": "Nie udało się utworzyć notatki. Sprawdź tytuł i folder, a następnie spróbuj ponownie.",
+      "identityConflict": "Ten identyfikator notatki jest już używany. Tytuł pozostaje tutaj; sprawdź istniejące notatki przed utworzeniem kolejnej.",
+      "uncertain": "Odpowiedź nie dotarła. Notatka mogła już powstać. Ponów tworzenie, aby bezpiecznie potwierdzić tę samą notatkę.",
+      "storageUnavailable": "Przeglądarka nie mogła zachować danych odzyskiwania. Tytuł pozostaje tutaj. Zezwól na przechowywanie danych sesji i ponów próbę.",
+      "invalidPending": "Nie można odczytać zapisanego żądania tworzenia. Sprawdź istniejące notatki przed usunięciem danych odzyskiwania.",
+      "invalidResponse": "Nie można potwierdzić odpowiedzi na tworzenie. Ponów tworzenie, aby bezpiecznie potwierdzić tę samą notatkę."
+    }
+  },
   "material": {
     "edit": "Edytuj notatkę",
     "finishEditing": "Zakończ edycję",

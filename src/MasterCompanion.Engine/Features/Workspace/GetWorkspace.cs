@@ -25,7 +25,7 @@ public static class GetWorkspace
                 maps = maps.Select(x => JsonSerializer.Deserialize<JsonElement>(x)),
                 folders = await db.Folders.AsNoTracking().Where(x => x.CampaignId == campaign.Id)
                     .OrderBy(x => x.SortOrder).Select(x => new { x.Id, x.Title, x.ParentId }).ToListAsync(token),
-                materials = await db.Materials.AsNoTracking().OrderBy(x => x.SortOrder)
+                materials = await db.Materials.AsNoTracking().OrderBy(x => x.SortOrder).ThenBy(x => x.Id)
                     .Where(x => x.CampaignId == campaign.Id)
                     .Select(x => new { x.Id, x.Title, x.Group, x.FolderId }).ToListAsync(token)
             });
