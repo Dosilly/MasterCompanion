@@ -6,9 +6,12 @@ export type EncounterOutcome = keyof typeof encounterMaterials;
 export interface EncounterCheck { id: number; kind: EncounterKind; minute: number; }
 export interface ArrivalView { deadline: number | null; arrivedAt: number | null; enabled: boolean; remainingMinutes: number | null; pending: boolean; }
 export interface EncounterResult { check: EncounterCheck; roll: number; outcome: EncounterOutcome; }
+export interface EncounterBand { min: number; max: number; outcome: EncounterOutcome; }
+export interface EncounterRollSelection { check: EncounterCheck; value: string; }
 export interface ExpeditionView {
   aurilEnabled: boolean; explorationMinutes: number; nextHourlyIn: number;
   pending: EncounterCheck[]; lastResult: EncounterResult | null;
+  pendingTable: EncounterBand[] | null;
   avarice: ArrivalView; auril: ArrivalView;
 }
 
@@ -37,6 +40,22 @@ function arrival(value: unknown, minute: number): value is ArrivalView {
   return value['remainingMinutes'] === (deadline === null ? null : Math.max(0, deadline - minute)) &&
     value['pending'] === (value['enabled'] && arrived === null && deadline !== null && minute >= deadline);
 }
+function readOutcome(value: unknown): EncounterOutcome | undefined {
+  return Object.keys(encounterMaterials).find((key): key is EncounterOutcome => key === value);
+}
+function readTable(value: unknown): EncounterBand[] | null {
+  if (!Array.isArray(value) || value.length === 0 || value.length > 9) return null;
+  const bands: EncounterBand[] = [];
+  let next = 1;
+  for (const raw of value) {
+    if (!record(raw) || raw['min'] !== next || !integer(raw['max'], next, 100)) return null;
+    const outcome = readOutcome(raw['outcome']);
+    if (!outcome) return null;
+    bands.push({ min: next, max: raw['max'], outcome });
+    next = raw['max'] + 1;
+  }
+  return next === 101 ? bands : null;
+}
 export function readExpeditionView(state: GameStateDto): ExpeditionView | null {
   const minute = state.snapshot.timeMinutes;
   if (state.snapshot.moduleSchemaVersion !== 3 || !record(state.moduleView)) return null;
@@ -53,17 +72,28 @@ export function readExpeditionView(state: GameStateDto): ExpeditionView | null {
     if (!check(item, minute) || (previous && (item.id <= previous.id || item.minute < previous.minute))) return null;
     pending.push(item);
   }
+  const pendingTable = readTable(view['pendingTable']);
+  if (pending.length > 0 ? pendingTable === null : view['pendingTable'] !== null) return null;
   let lastResult: EncounterResult | null = null;
   const raw = view['lastResult'];
   if (raw !== null) {
     if (!record(raw) || !check(raw['check'], minute) || !integer(raw['roll'], 1, 100) || typeof raw['outcome'] !== 'string' ||
       !Object.hasOwn(encounterMaterials, raw['outcome']) || (pending[0] && raw['check'].id >= pending[0].id)) return null;
     // Narrow through the defined outcomes; never cast untrusted response data.
-    const outcome = Object.keys(encounterMaterials).find((key): key is EncounterOutcome => key === raw['outcome']);
+    const outcome = readOutcome(raw['outcome']);
     if (!outcome) return null;
     lastResult = { check: raw['check'], roll: raw['roll'], outcome };
   }
-  return { aurilEnabled: view['aurilEnabled'], explorationMinutes: view['explorationMinutes'], nextHourlyIn: view['nextHourlyIn'], pending, lastResult, avarice, auril };
+  return { aurilEnabled: view['aurilEnabled'], explorationMinutes: view['explorationMinutes'], nextHourlyIn: view['nextHourlyIn'], pending, pendingTable, lastResult, avarice, auril };
+}
+export function selectedEncounterRoll(view: ExpeditionView, selection: EncounterRollSelection | null): string {
+  const check = view.pending[0];
+  return check && selection && check.id === selection.check.id && check.minute === selection.check.minute &&
+    check.kind === selection.check.kind ? selection.value : '';
+}
+export function encounterPreview(view: ExpeditionView, selection: EncounterRollSelection | null): EncounterOutcome | null {
+  const roll = Number(selectedEncounterRoll(view, selection));
+  return integer(roll, 1, 100) ? view.pendingTable?.find(band => roll >= band.min && roll <= band.max)?.outcome ?? null : null;
 }
 export function explorationAction(minutes: number): GameAction | null {
   return integer(minutes, 1, 1440) ? { kind: 'module', minutes, command: { kind: 'explore' } } : null;

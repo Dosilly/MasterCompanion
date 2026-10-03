@@ -66,7 +66,7 @@
     "enableAuril": "Enable Auril arrival",
     "rules": "Open rules",
     "queueTitle": "Pending encounter checks",
-    "queueHint": "Resolve checks in order. d100 accepts 1–100 (100 represents 00). Table replacements use confirmed arrival times. Confirm a past arrival before resolving affected overdue checks.",
+    "queueHint": "Resolve checks in order. Roll d100 or enter 1–100 (100 represents 00). Table replacements use confirmed arrival times. Confirm a past arrival before resolving affected overdue checks.",
     "kinds": {
       "hourly": "Hourly exploration check",
       "building": "Unnumbered building check",
@@ -97,6 +97,11 @@
       "avaricePatrol": "An Avarice patrol: a surviving group, normally five fanatics. Apply confirmed losses."
     },
     "dieName": "d100",
-    "queueLimitHint": "The queue holds 240 checks. If an activity would exceed this limit, resolve older checks before trying again. No time or checks are saved for a rejected activity."
-  }
+    "queueLimitHint": "The queue holds 240 checks. If an activity would exceed this limit, resolve older checks before trying again. No time or checks are saved for a rejected activity.",
+    "rollDie": "Roll d100",
+    "reroll": "Reroll",
+    "previewTitle": "Rolled encounter",
+    "previewHint": "Reroll as often as needed or enter your own result. Only saving closes the check and records the encounter in history."
+  },
+  "actionRequired": "Action required"
 }

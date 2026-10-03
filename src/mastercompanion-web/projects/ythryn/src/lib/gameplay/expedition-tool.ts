@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CAMPAIGN_GAME, GameAction } from '@mastercompanion/contracts';
 import { uiMessages } from '../i18n/messages';
-import { buildingAction, encounterAction, encounterMaterials, expeditionMaterials, explorationAction, Faction, readExpeditionView } from './expedition-view';
+import { buildingAction, encounterAction, encounterMaterials, encounterPreview, EncounterRollSelection, expeditionMaterials, explorationAction, Faction, readExpeditionView, selectedEncounterRoll } from './expedition-view';
+import { ActionRequired } from './action-required';
 
 @Component({
-  selector: 'mc-ythryn-expedition', changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'mc-ythryn-expedition', imports: [ActionRequired], changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="expedition-tool" aria-labelledby="expedition-title">
       <h2 id="expedition-title">{{ text.title }}</h2>
@@ -33,7 +34,7 @@ import { buildingAction, encounterAction, encounterMaterials, expeditionMaterial
             </fieldset><p>{{ text.patrolHint }}</p>
           </section>
           @for (faction of factions; track faction) {
-            <section class="tool-card" [attr.aria-labelledby]="faction + '-title'">
+            <section class="tool-card" [class.needs-action]="current[faction].pending" [id]="faction + '-arrival'" [attr.aria-labelledby]="faction + '-title'">
               <h3 [id]="faction + '-title'">{{ text.factions[faction] }}</h3>
               <p>{{ faction === 'avarice' ? text.avariceHint : text.aurilHint }}</p>
               @if (current[faction].arrivedAt; as at) { <p>{{ text.arrived }}: {{ format(at) }}</p> }
@@ -41,7 +42,10 @@ import { buildingAction, encounterAction, encounterMaterials, expeditionMaterial
               @else if (!current[faction].enabled) { <p>{{ text.disabled }}</p> }
               @else {
                 @if (current[faction].deadline === null) { <p>{{ text.waitingRest }}</p> }
-                @else { <p [class.due]="current[faction].pending" role="status">{{ current[faction].pending ? text.arrivalDue : text.untilArrival + ': ' + format(current[faction].remainingMinutes ?? 0) }}</p> }
+                @else { <p role="status">
+                  @if (current[faction].pending) { <mc-action-required>{{ text.arrivalDue }}</mc-action-required> }
+                  @else { {{ text.untilArrival }}: {{ format(current[faction].remainingMinutes ?? 0) }} }
+                </p> }
                 <form (submit)="confirm($event, faction)"><fieldset [disabled]="!game.canOperate()">
                   <legend>{{ text.confirmArrival }}</legend>
                   <label [for]="faction + '-minute'">{{ text.arrivalMinute }}</label>
@@ -57,8 +61,9 @@ import { buildingAction, encounterAction, encounterMaterials, expeditionMaterial
             </section>
           }
         </div>
-        <section class="tool-card encounter-queue" aria-labelledby="encounter-queue-title">
+        <section id="encounter-queue" class="tool-card encounter-queue" [class.needs-action]="current.pending.length > 0" aria-labelledby="encounter-queue-title">
           <h3 id="encounter-queue-title">{{ text.queueTitle }}: {{ current.pending.length }}</h3>
+          @if (current.pending.length > 0) { <p><mc-action-required>{{ ui.actionRequired }}</mc-action-required></p> }
           <p>{{ text.queueHint }}</p>
           @if (current.pending.length >= 216) { <p role="status">{{ text.queueLimitHint }}</p> }
           @if (current.pending[0]; as check) {
@@ -66,8 +71,23 @@ import { buildingAction, encounterAction, encounterMaterials, expeditionMaterial
             <form (submit)="resolve($event, check.id)"><fieldset [disabled]="!game.canOperate()">
               <legend>{{ text.resolve }}</legend><label for="encounter-roll">{{ text.roll }}</label>
               <input id="encounter-roll" type="number" min="1" max="100" step="1" required [value]="selectedRoll(check.id)" (input)="setRoll(check.id, $event)">
-              <button type="submit">{{ text.resolve }}</button>
+              <button type="button" (click)="roll(check.id)">
+                <svg class="die-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <rect x="3" y="3" width="18" height="18" rx="3" />
+                  <circle cx="8" cy="8" r="1" /><circle cx="16" cy="8" r="1" /><circle cx="12" cy="12" r="1" />
+                  <circle cx="8" cy="16" r="1" /><circle cx="16" cy="16" r="1" />
+                </svg>{{ preview() === null ? text.rollDie : text.reroll }}
+              </button>
+              <button type="submit" [disabled]="preview() === null">{{ text.resolve }}</button>
             </fieldset></form>
+            <div class="roll-preview" role="status" aria-live="polite" aria-atomic="true">
+              @if (preview(); as outcome) {
+                <h4>{{ text.previewTitle }} · {{ text.dieName }}: {{ selectedRoll(check.id) }}</h4>
+                <p>{{ text.outcomes[outcome] }}</p>
+                @if (materials[outcome]) { <button type="button" (click)="openResult(outcome)">{{ text.openEncounter }}</button> }
+              }
+            </div>
+            <p>{{ text.previewHint }}</p>
           } @else { <p>{{ text.noPending }}</p> }
           <button type="button" (click)="open('table')">{{ text.table }}</button>
           @if (current.lastResult; as result) {
@@ -87,6 +107,7 @@ import { buildingAction, encounterAction, encounterMaterials, expeditionMaterial
 export class ExpeditionTool {
   readonly game = inject(CAMPAIGN_GAME);
   readonly text = uiMessages.expedition;
+  readonly ui = uiMessages;
   readonly factions: readonly Faction[] = ['avarice', 'auril'];
   readonly materials = encounterMaterials;
   readonly view = computed(() => { const state = this.game.state(); return state ? readExpeditionView(state) : null; });
@@ -95,7 +116,8 @@ export class ExpeditionTool {
   readonly newBuilding = signal(true);
   readonly arrivalDraft = signal<Partial<Record<Faction, string>>>({});
   readonly error = signal(false);
-  private readonly rollDraft = signal<{ id: number; value: string } | null>(null);
+  private readonly rollDraft = signal<EncounterRollSelection | null>(null);
+  readonly preview = computed(() => { const view = this.view(); return view ? encounterPreview(view, this.rollDraft()) : null; });
 
   format(minute: number) { return `${Math.floor(minute / 60)} ${uiMessages.hour} ${minute % 60} ${uiMessages.minute}`; }
   open(target: keyof typeof expeditionMaterials) { this.game.openMaterial(expeditionMaterials[target]); }
@@ -104,8 +126,16 @@ export class ExpeditionTool {
   setUnnumbered(event: Event) { if (event.target instanceof HTMLInputElement) this.unnumbered.set(event.target.checked); }
   setNewBuilding(event: Event) { if (event.target instanceof HTMLInputElement) this.newBuilding.set(event.target.checked); }
   setArrival(faction: Faction, event: Event) { const input = event.target; if (input instanceof HTMLInputElement) this.arrivalDraft.update(value => ({ ...value, [faction]: input.value })); }
-  setRoll(id: number, event: Event) { if (event.target instanceof HTMLInputElement) this.rollDraft.set({ id, value: event.target.value }); }
-  selectedRoll(id: number) { const draft = this.rollDraft(); return draft?.id === id ? draft.value : ''; }
+  setRoll(id: number, event: Event) {
+    const check = this.view()?.pending[0];
+    if (this.game.canOperate() && check?.id === id && event.target instanceof HTMLInputElement)
+      this.rollDraft.set({ check, value: event.target.value });
+  }
+  roll(id: number) {
+    const check = this.view()?.pending[0];
+    if (this.game.canOperate() && check?.id === id) this.rollDraft.set({ check, value: String(Math.floor(Math.random() * 100) + 1) });
+  }
+  selectedRoll(id: number) { const view = this.view(); return view?.pending[0]?.id === id ? selectedEncounterRoll(view, this.rollDraft()) : ''; }
   async run(action: GameAction | null): Promise<boolean> {
     this.error.set(action === null);
     return action !== null && this.game.canOperate() ? this.game.execute(action) : false;

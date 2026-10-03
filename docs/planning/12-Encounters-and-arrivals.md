@@ -35,6 +35,38 @@ Exploration is bounded to 1–1440 minutes per action and pending checks to 240.
 An action exceeding capacity is rejected completely, including its time advance;
 resolve older checks and retry. Tools stay active while hidden or closed.
 
+### Visibility and dice refinement — 3 October 2026
+
+Pending encounters, rival arrivals and Arcane Blight checks show a warning icon,
+explicit action text and a highlighted card. A summary above the module tools
+links to each actionable section, including named character checks.
+
+The oldest encounter check offers a d100 button, immediate outcome preview and a
+stable encounter-material link. The GM can reroll repeatedly or adjust the number
+manually before saving. Repeated identical outcomes remain rerollable; rolls keep
+the table's original probabilities. Previewing never advances time, consumes a
+check or writes history. Explicit saving uses the existing operation path;
+unsuccessful writes retain the draft. Draft identity includes check ID, kind and
+minute so recovery or undo cannot carry it into a different check.
+
+The server projects the oldest check's active table from its confirmation rules.
+Avarice replaces 56–60 with cult fanatics only after her actual confirmed arrival
+at or before that check. Auril's two replacements and the independent 20% patrol
+table follow the same chronology. Confirming an arrival refreshes an existing
+preview without changing its selected number. Campaign documents, game schema,
+transactions and undo behavior are unchanged.
+
+Refinement evidence: 9 projection tests and 4 component behavior tests passed;
+the backend rule run passed 24 Blight and 10 expedition cases, including preview
+equivalence across all 100 rolls for ordinary, arrival-replacement and patrol
+tables. The full frontend build and code/boundary checks passed. Browser tests
+used the compiled module with an isolated in-memory context, exercised previews,
+rerolls, material-navigation callbacks, input validation and explicit saving,
+and inspected both themes at 1920×1080 without overflow or console errors.
+Screenshots are retained in `.local/module-preview/`. Existing persistence rules
+were unchanged, so the refinement did not repeat database probes or deploy the
+user's application.
+
 ## Ownership and data preservation
 
 Neutral module operations accept an optional bounded `minutes` advance. The

@@ -2,9 +2,11 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { CAMPAIGN_GAME } from '@mastercompanion/contracts';
 import { uiMessages } from '../i18n/messages';
 import { BlightCharacterView, CheckDieSelection, readBlightView, resolveCheckCommand, selectedCheckDie } from './blight-view';
+import { ActionRequired } from './action-required';
 
 @Component({
   selector: 'mc-ythryn-blight',
+  imports: [ActionRequired],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="blight-tool" aria-labelledby="blight-title">
@@ -19,7 +21,7 @@ import { BlightCharacterView, CheckDieSelection, readBlightView, resolveCheckCom
       } @else if (characters(); as party) {
         <div class="characters">
           @for (character of party; track character.id) {
-            <section class="character" [attr.aria-labelledby]="'blight-name-' + character.id">
+            <section class="character" [class.needs-action]="character.nextCheck?.pending" [id]="'blight-character-' + character.id" [attr.aria-labelledby]="'blight-name-' + character.id">
               <h3 [id]="'blight-name-' + character.id">{{ character.name }}</h3>
               <dl>
                 <div><dt>{{ text.status }}</dt><dd>{{ text.statuses[character.status] }}</dd></div>
@@ -29,7 +31,8 @@ import { BlightCharacterView, CheckDieSelection, readBlightView, resolveCheckCom
               @if (character.nextCheck; as check) {
                 <p class="check" [class.is-pending]="check.pending">
                   <strong>{{ text.checks[check.kind] }}</strong>
-                  <span>{{ text.timeUntilCheck }}: {{ formatMinute(check.remainingMinutes) }} · {{ check.pending ? text.pending : text.upcoming }}</span>
+                  @if (check.pending) { <mc-action-required>{{ text.pending }}</mc-action-required> }
+                  @else { <span>{{ text.timeUntilCheck }}: {{ formatMinute(check.remainingMinutes) }} · {{ text.upcoming }}</span> }
                 </p>
                 @if (check.pending) {
                   <fieldset [disabled]="!game.canOperate() || game.pending()">

@@ -11,6 +11,19 @@ materials are preserved. Automated and browser evidence are tracked in
 [the priority slice](12-Encounters-and-arrivals.md). The live user runtime has not
 been replaced during implementation.
 
+The 3 October refinement adds warning icons and a linked pending-action summary,
+plus d100 previews with material navigation, repeatable rerolls and manual input.
+The server supplies the active table for the oldest check using the same arrival
+chronology as confirmation. Verification passed 13 focused frontend tests, 24
+existing Blight and 10 expedition rule cases, the frontend build, and code and
+boundary checks. Browser inspection used the compiled module with an isolated
+in-memory context: manual/dice previews, rerolls, arrival replacements, material
+navigation callbacks, invalid-input prevention and explicit confirmation passed.
+Both themes were inspected at 1920×1080 without horizontal overflow or console
+errors. Screenshots are under `.local/module-preview/`. This refinement changes
+no persistence operation or database schema; no new live database probe or
+deployment was performed.
+
 ## Observatory receiver description — 2 October 2026
 
 The fixed voice receiver in Y15 is now described as a copper speaking horn on a
