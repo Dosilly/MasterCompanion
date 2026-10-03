@@ -68,7 +68,7 @@ Production-ready is an evidence-based acceptance standard for the changed behavi
 
 ## Frontend and accessibility
 
-- Readability of long notes is the primary UX requirement. Tools support the reader and must not permanently consume its useful width. Verify relevant changes at Full HD in both themes.
+- Readability of long notes is the primary UX requirement. Tools support the reader and must not permanently consume its useful width. Verify relevant changes at Full HD in both themes. Automated browser assertions and reviewed visual baselines can provide this evidence; repeating the same manual checks is unnecessary.
 - Default to read mode; enter editing explicitly. Preserve editor state, scroll position, and map pan/zoom during tab switching. Do not emit document updates for changes that only affect UI state.
 - Maintain folder nesting from module data. Active materials must have a visible selection, open ancestor folders, appropriate focus, and predictable scrolling without disturbing typing during ordinary autosave.
 - Use semantic elements, meaningful accessible names, visible focus, keyboard-operable controls, sufficient contrast, and appropriate live regions. ARIA roles imply the corresponding keyboard behavior; do not use them as decoration.
@@ -91,6 +91,11 @@ The following commands are available checks, not a checklist to run for every ta
 pnpm --dir src/mastercompanion-web check:code
 pnpm --dir src/mastercompanion-web check:boundaries
 
+# Scoped browser checks; choose the tag or spec affected by a UI change
+pnpm --dir src/mastercompanion-web test:ui --grep @reader
+pnpm --dir src/mastercompanion-web test:ui --grep @editor
+pnpm --dir src/mastercompanion-web test:ui --grep @gameplay
+
 # Full backend build when integration is affected; otherwise build the affected project
 dotnet build MasterCompanion.slnx --no-restore
 
@@ -110,7 +115,7 @@ pnpm --dir src/mastercompanion-web exec node --test --test-name-pattern="Markdow
 - `check:code` is a guard against Polish source text and inconsistent translation catalogs; it cannot prove that every ASCII sentence is English or that the product is production-ready. Human review remains necessary.
 - Use `test:api` against a running AppHost when changed persistence/API behavior needs integration evidence. This probe changes one material temporarily; prefer an isolated database and respect its revision-protected restore. For changes limited to rejected requests or error diagnostics, prefer `test:api-errors`, which checks ProblemDetails and confirms no persisted document or revision changes. Do not run either for unrelated frontend, documentation, or tooling changes. Folder backfill verification is a separate, explicit before/after probe in `tools/verify-folders.mjs`.
 - Use real PostgreSQL when verifying changed database-specific behavior. Existing integration evidence remains valid until a relevant change affects it.
-- For visible UI changes, inspect the affected view and interactions in the browser and check relevant console errors. Do not repeat the full navigation/editing/map walkthrough for an isolated visual fix. A successful build is not browser verification.
+- For visible UI changes, prefer the affected Playwright spec or tag (`@reader`, `@editor`, `@gameplay`). The suite runs independent browser contexts with four workers across both themes and two viewport sizes, checks console errors, and compares visual baselines. Inspect new designs, intentional screenshot differences and behavior not covered by the suite manually. Do not repeat covered manual walkthroughs after a successful relevant automated check. Never update visual baselines just to clear a failure; review the actual image and intended change first. See [UI test instructions](docs/planning/13-UI-tests.md). A successful build is not browser verification.
 - Review the final diff for unrelated changes, source-language violations, missing localization keys, accidental secrets, broken ownership, and destructive migrations. Preserve module content and user data.
 - Builds of Angular libraries happen before the host starts. Rebuild/restart the frontend as needed; do not validate stale library output. Do not interrupt pending user saves during a restart.
 

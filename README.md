@@ -95,6 +95,44 @@ Application edits belong to the campaign copy in PostgreSQL. Rebuilding module d
 
 Follow the engineering and verification guidelines in [AGENTS.md](AGENTS.md). Keep general campaign behavior in the engine and adventure-specific behavior in modules. Update planning documents when scope or architecture changes.
 
+### Automated browser checks
+
+The Playwright UI suite serves a dedicated production frontend on loopback port
+4310 and intercepts API calls with fresh fixtures in each browser context. It
+requires no AppHost, Docker or database and does not access a running campaign.
+Tests run concurrently with four workers, in both themes at 1920×1080 and
+1536×864. The smaller viewport represents the available CSS space at 125% scaling
+on a Full HD display; it does not emulate operating-system scaling itself.
+
+```powershell
+pnpm --dir src/mastercompanion-web exec playwright install chromium --only-shell
+pnpm --dir src/mastercompanion-web check:ui
+pnpm --dir src/mastercompanion-web test:ui
+
+# Select only the affected area; all theme/viewport variants still apply.
+pnpm --dir src/mastercompanion-web test:ui --grep @reader
+pnpm --dir src/mastercompanion-web test:ui --grep @editor
+pnpm --dir src/mastercompanion-web test:ui --grep @gameplay
+pnpm --dir src/mastercompanion-web test:ui:report
+```
+
+The first run builds the frontend once. Later runs reuse the dedicated bundle
+only if frontend sources, localization, dependencies and build configuration
+match its fingerprint. Reports and traces are saved under the ignored frontend
+`.local` directory. The server refuses an occupied port rather than reusing an
+unrelated application.
+
+Visual baselines are checked in per operating system, theme and viewport. Review
+intentional appearance changes before updating only their affected screenshots:
+
+```powershell
+pnpm --dir src/mastercompanion-web test:ui:update reader.spec.ts
+```
+
+Use the same OS and pinned Playwright browser for comparisons. A missing baseline
+fails a normal run; creating baselines for another OS requires explicit generation
+and image review. See [UI test scope and evidence](docs/planning/13-UI-tests.md).
+
 ## License
 
 Licensed under the [Apache License 2.0](LICENSE).
