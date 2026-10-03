@@ -84,9 +84,25 @@ overflow or console errors; keyboard focus reached the exploration action.
 Screenshots are retained under the ignored `.local` directory. The final build
 was reloaded against the preserved test campaign after the last refinements.
 
-The user's running application and database have not been replaced or written.
-Live deployment is separate. Earlier source wording for Avarice remains in the
-campaign material; the tool explains the user-confirmed first-rest schedule.
+Earlier source wording for Avarice remains in the campaign material; the tool
+explains the user-confirmed first-rest schedule.
+
+### Authorized local runtime update — 3 October 2026
+
+At the user's request, the production Docker image was rebuilt and only the app
+container was replaced. The existing PostgreSQL container and database volume
+were retained. With the app stopped, a custom-format database backup was saved to
+the ignored `.local/expedition-before-20261003.dump`; its archive manifest was
+verified. All 179 before/after row fingerprints matched, including material
+content and revisions, party, clock, module state and operation history.
+
+The replacement container became healthy at `http://localhost:4200`. All four
+read-only container integration tests passed. The live gameplay GET exposes
+schema 3 while preserving the original revision, time, rests and character
+outcomes. A browser check opened all four new tools alongside Arcane Blight with
+no console errors. Its screenshot is retained at
+`.local/expedition-live-20261003.png`. Verification made no gameplay or material
+writes to the user's campaign.
 
 Focused commands:
 

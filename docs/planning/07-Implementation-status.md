@@ -8,8 +8,11 @@ long rest and Auril after 24 hours. Module schema 3, atomic module activities wi
 time, explicit arrival confirmation, retained overdue rolls, encounter material
 links and complete undo are implemented and verified. Existing game state and authored
 materials are preserved. Automated and browser evidence are tracked in
-[the priority slice](12-Encounters-and-arrivals.md). The live user runtime has not
-been replaced during implementation.
+[the priority slice](12-Encounters-and-arrivals.md). On 3 October, the user
+authorized rebuilding and replacing the local app container. A verified database
+backup and 179 unchanged row fingerprints establish data preservation. The
+container is healthy; four read-only integration tests and a live browser check
+passed. The existing PostgreSQL container and volume were retained.
 
 ## Observatory receiver description — 2 October 2026
 
