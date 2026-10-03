@@ -9,7 +9,7 @@ sortOrder: 32
 
 **Do odczytania**
 
-> Kryształową kopułę przecina sieć pęknięć. Przez otwarte wejście widać miniaturowe góry, pustynie i strumienie między drzewami. Wszystko pokrywa lód.
+> Widzicie szklaną kopułę przeciętą siecią pęknięć. Drzwi przed wami stoją otworem, a za nimi rozciągają się najróżniejsze krajobrazy w miniaturze: pustynie, pasma górskie i strumienie wijące się między drzewami. Wszystko spowija lód, jakby ten mały świat zamarzł w jednej chwili.
 
 ### Obraz miejsca — dla MG {#s42e9c897c8b8}
 

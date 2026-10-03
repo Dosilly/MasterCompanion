@@ -9,7 +9,7 @@ sortOrder: 41
 
 **Do odczytania**
 
-> Na przyśrubowanych do podłogi stołach stoją zlewki i alembiki, a między nimi leżą igły, narzędzia chirurgiczne i skórzane rurki. Za stołami stoi ozdobna zbroja. Zamiast głowy ma słój, w którym pływa obrzmiały ludzki mózg.
+> Na stołach przyśrubowanych do podłogi tłoczą się zlewki i alembiki, pomiędzy którymi rozłożono igły, narzędzia chirurgiczne oraz skórzane rurki. Za tym osobliwym warsztatem stoi bogato zdobiona zbroja. Dopiero gdy spojrzycie wyżej, dostrzegacie, że w miejscu głowy osadzono szklany słój. W jego wnętrzu pływa obrzmiały ludzki mózg.
 
 ### Obraz miejsca — dla MG {#s2e7ae8c5bfb6}
 

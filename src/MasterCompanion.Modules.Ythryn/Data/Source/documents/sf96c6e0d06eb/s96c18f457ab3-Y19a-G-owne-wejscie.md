@@ -11,7 +11,7 @@ sortOrder: 37
 
 *Przy dojściu z Y6.*
 
-> Tunel kończy się podestem wysoko na ścianie cytadeli. Schody prowadzą do pary mahoniowych drzwi. Z wąskiego okna nad nimi pada światło.
+> Tunel wyprowadza was na podest wysoko na ścianie cytadeli. Stąd schody pną się ku podwójnym mahoniowym drzwiom, osadzonym w potężnym murze. Nad nimi widać wąskie okno, z którego pada światło, rozjaśniając podejście do wejścia.
 
 ### Obraz miejsca — dla MG {#s79592f7b6af9}
 

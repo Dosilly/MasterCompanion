@@ -9,7 +9,7 @@ sortOrder: 50
 
 **Do odczytania**
 
-> Pośrodku okrągłej sali wisi pionowo szare kamienne wrzeciono, wysokie na dziesięć stóp. Powoli obraca się w powietrzu. Ściany wokół przecina sieć pęknięć.
+> W samym środku okrągłej sali unosi się szare kamienne wrzeciono, wysokie na dziesięć stóp. Bez żadnej widocznej podpory wisi pionowo i powoli obraca się wokół własnej osi, a za nim po ścianach rozchodzi się sieć pęknięć. Wygląda to tak, jakby zniszczenia wokół zupełnie nie zakłóciły jego ruchu.
 
 ### Obraz miejsca — dla MG {#s47c247d4f711}
 

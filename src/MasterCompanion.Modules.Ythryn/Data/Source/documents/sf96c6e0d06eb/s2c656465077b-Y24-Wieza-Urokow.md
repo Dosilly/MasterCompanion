@@ -9,7 +9,7 @@ sortOrder: 59
 
 **Do odczytania**
 
-> Dolne piętra rozpadającej się wieży pochłonął lód. Tylko z najwyższego okna sączy się różowe światło. W tej części miasta nie widać innych świateł.
+> Dolne piętra rozpadającej się wieży giną w lodzie, lecz wysoko ponad nimi wciąż świeci jedno okno. Sączy się z niego różowy blask, jedyne światło w tej części miasta. Otaczające budowlę ruiny pozostają ciemne, więc wzrok mimowolnie wraca do tej samotnej poświaty na szczycie.
 
 ### Obraz miejsca — dla MG {#sbdd9046cc831}
 
@@ -39,7 +39,7 @@ Nad drzwiami do najwyższej komnaty namalowano krwią po drakońsku:
 
 W najwyższej sali:
 
-> Starsza kobieta siedzi sztywno na czarnym tronie, spowita lodem. Nosi koronę ze splecionych żelaznych macek, a jej czoło jest posiniaczone w miejscu, gdzie obręcz mocno wpija się w czaszkę. Ścianę za nią zdobi inskrypcja.
+> Na czarnym tronie siedzi starsza kobieta, tak nieruchoma i spowita lodem, że z początku przypomina zamarznięty posąg. Jej głowę obejmuje korona ze splecionych żelaznych macek. Obręcz wpija się mocno w czaszkę, pozostawiając na czole ciemne siniaki. Za tronem, na ścianie rozjaśnionej różowym blaskiem, widnieje inskrypcja.
 
 -   **Miejsce:** Komnatę oświetlają różowe *continual flame* migoczące w kinkietach.
 

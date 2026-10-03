@@ -171,12 +171,12 @@ Commands actually run from the worktree:
 ```powershell
 pnpm --dir src/mastercompanion-web install --frozen-lockfile --offline
 dotnet restore MasterCompanion.slnx --ignore-failed-sources
-dotnet restore tests/MasterCompanion.Materials.Tests/MasterCompanion.Materials.Tests.csproj --ignore-failed-sources
+dotnet restore tests/MasterCompanion.Materials.Tests.Integration/MasterCompanion.Materials.Tests.Integration.csproj --ignore-failed-sources
 dotnet build src/MasterCompanion.Api/MasterCompanion.Api.csproj --no-restore
-dotnet build tests/MasterCompanion.Materials.Tests/MasterCompanion.Materials.Tests.csproj --no-restore
+dotnet build tests/MasterCompanion.Materials.Tests.Integration/MasterCompanion.Materials.Tests.Integration.csproj --no-restore
 dotnet build MasterCompanion.slnx --no-restore
-# MC_MATERIALS_TEST_CONNECTION points only at an isolated loopback database.
-dotnet run --project tests/MasterCompanion.Materials.Tests -- --http
+# Start Docker; Testcontainers creates isolated PostgreSQL databases automatically.
+dotnet test tests/MasterCompanion.Materials.Tests.Integration
 pnpm --dir src/mastercompanion-web test:notes
 pnpm --dir src/mastercompanion-web test:autosave
 pnpm --dir src/mastercompanion-web check:ui
@@ -246,7 +246,7 @@ migrations. Documents, revisions and gameplay were preserved; no migration or
 campaign write was needed. The backup is local recovery evidence, not permission
 to replace later edits.
 
-`node --test tools/container.test.mjs` passed all four read-only integration tests.
+`node --test tests/e2e/container.test.mjs` passed all four read-only integration tests.
 The app and database were healthy, the app remained bound to `127.0.0.1:4200`,
 and PostgreSQL had no published port. A fresh browser view showed the new note
 action and no console errors. No live note or game operation was created for

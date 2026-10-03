@@ -1,4 +1,27 @@
 # Implementation status
+## Location read-aloud prose — 3 October 2026
+
+Revised the Polish player-facing descriptions across all 46 numbered Ythryn
+locations and the city introduction, including later room scenes and three inline
+environmental details. The prose uses connected sentences, varied rhythm and brief
+atmospheric comparisons grounded in the existing scene. Y19 now also has an exterior
+read-aloud passage. Dialogue, inscriptions, GM rules, reveal conditions, metadata,
+stable anchors, navigation and maps are preserved. The source authoring guide records
+the style convention.
+
+Verification passed five targeted content/source tests covering schema round trips,
+internal links, numbered-location order, consolidated section preservation and rich
+Markdown export. Module package preparation succeeded with 106 materials, 10 folders
+and one map. A separate comparison confirmed that edits outside the read-aloud prose
+are limited to its added Y19 label and exterior-view condition. Changes affect module
+defaults only; the running campaign, database and application were not updated.
+
+During final verification, a concurrent test-file reorganization left the relocated
+content test with unresolved imports. Its four selected checks passed using a
+temporary copy of the unchanged pre-move test definitions; that copy was removed.
+The rich Markdown export test also passed from its relocated file. The test-file
+reorganization is outside this content change.
+
 ## Campaign-owned notes — 3 October 2026
 
 Delivered to `trunk` in `cbdff13`, following implementation on

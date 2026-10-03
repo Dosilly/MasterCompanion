@@ -9,7 +9,7 @@ sortOrder: 22
 
 **Do odczytania**
 
-> Na ścianach wieży kamienne kręgi zachodzą jeden na drugi. Z górnego okna sączy się żółte światło. Za uszkodzonymi drzwiami słychać miotły szurające po posadzce.
+> Ściany wieży zdobią kamienne kręgi, zachodzące na siebie w splątanym wzorze. Wysoko nad wami z jednego z okien sączy się żółte światło, lecz uwagę przyciąga coś znacznie bliższego: zza uszkodzonych drzwi dobiega miarowe szuranie mioteł. Pośród zrujnowanego miasta ten zwyczajny odgłos sprzątania brzmi osobliwie.
 
 ### Obraz miejsca — dla MG {#sd747affd2100}
 
@@ -21,7 +21,7 @@ Niewidzialna służba nadal sprząta zrujnowaną wieżę. Na szczycie cztery ży
 
 W najwyższej komnacie:
 
-> W ścianach okrągłej komnaty o średnicy trzydziestu stóp osadzono świetliste kule. Pośrodku unoszą się cztery olbrzymie dłonie z migoczącej siły, strzegące niewielkiej ozdobnej wieży stojącej na postumencie.
+> Najwyższą komnatę, okrągłą i szeroką na trzydzieści stóp, rozświetlają kule osadzone w ścianach. W ich blasku widzicie niewielką, bogato zdobioną wieżę ustawioną na postumencie. Otaczają ją cztery olbrzymie dłonie, unoszące się w powietrzu bez ramion ani ciał. Ich kształty migoczą, jakby utkano je z samej magicznej siły, a wszystkie skupione są wokół miniatury.
 
 -   **Fakt:** Cztery unoszące się istoty to **living Bigby's hands** (patrz dodatek C). Atakują każdą inną istotę, która wejdzie do sali.
 

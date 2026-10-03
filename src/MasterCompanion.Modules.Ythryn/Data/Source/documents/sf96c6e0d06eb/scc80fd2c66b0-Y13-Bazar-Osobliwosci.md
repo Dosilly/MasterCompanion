@@ -9,7 +9,7 @@ sortOrder: 29
 
 **Do odczytania**
 
-> Cztery uszkodzone wieże hali targowej pochylają się ku sobie. Nad wejściem wiszą sztywne od mrozu, wyblakłe proporce. Ze środka dobiega głośny łoskot.
+> Cztery uszkodzone wieże hali targowej pochylają się ku sobie, jakby za chwilę miały zderzyć się nad jej dachem. Nad wejściem wiszą wyblakłe proporce, tak zesztywniałe od mrozu, że przypominają deski. Ze środka dobiega głośny łoskot, wyraźnie odcinający się od ciszy ruin. Coś w tej hali wciąż się porusza.
 
 ### Obraz miejsca — dla MG {#s3424bcb02d47}
 
@@ -21,7 +21,7 @@ Zniszczone stragany tworzą ciasne przejścia w zrujnowanej hali. Błąka się t
 
 -   **Miejsce:** W hali sprzedawano niegdyś relikty magicznych cudów. Teraz wnętrze jest labiryntem zmiażdżonych witryn sklepowych przygniecionych bryłami lodu i kamienia.
 
--   **Bez testu — przy oglądaniu witryn (dodatek MG):** „Na bocznym kontuarze leżą rzędem pęknięte oprawki okularów. Obok stoją przegródki na soczewki, a nad nimi wisi szyld z rysunkiem oka”.
+-   **Bez testu — przy oglądaniu witryn (dodatek MG):** „Przy bocznym kontuarze dostrzegacie rząd pękniętych oprawek okularów, ułożonych obok przegródek na soczewki. Nad nimi wciąż wisi szyld z rysunkiem oka, wskazujący, czym zajmował się tutejszy sprzedawca”.
 
 -   **Bez testu — Skant, jeśli pokazano mu kontuar (dodatek MG):** „Wygląda na punkt napraw. Przy tylu bibliotekach optyk zapewne nie narzekał na brak pracy”.
 

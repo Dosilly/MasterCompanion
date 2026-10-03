@@ -9,7 +9,7 @@ sortOrder: 24
 
 **Do odczytania**
 
-> Wokół ogromnego budynku leży gruz z jego kruszących się wieżyczek. Drzwi, dość wielkie dla olbrzyma, są lekko uchylone. Za nimi widać regały pełne książek.
+> U stóp ogromnego budynku zalega gruz, który odpadł z jego kruszących się wieżyczek. Prowadzące do środka drzwi są tak wielkie, że przeszedłby przez nie olbrzym, choć teraz pozostają tylko lekko uchylone. Przez szczelinę dostrzegacie regały pełne książek, ciągnące się w głąb biblioteki. Mimo zniszczeń na zewnątrz wygląda na to, że znaczna część zbiorów wciąż jest na swoim miejscu.
 
 ### Obraz miejsca — dla MG {#sd9f0eb6beb6c}
 
@@ -63,7 +63,7 @@ Bohaterowie odnajdują także dziennik **Thufeusa**, jednego z nielicznych magó
 
 *Po odnalezieniu działu poświęconego podróżom między sferami.*
 
-> Między grubymi tomami leży cienki raport spięty miedzianymi klamrami. Na okładce narysowano koło, od którego odchodzą trzy linie. Jedna wraca do początku, druga kończy się przy innym kole, a trzecia urywa się przy krawędzi pergaminu.
+> Wśród grubych tomów trafia się znacznie cieńszy raport, spięty miedzianymi klamrami. Jego okładkę zdobi prosty rysunek: koło, od którego rozchodzą się trzy linie. Jedna zatacza łuk i wraca do początku, druga dociera do kolejnego koła, a trzecia biegnie aż do krawędzi pergaminu, gdzie nagle się urywa.
 
 **Działanie i reakcje — dla MG**
 

@@ -9,7 +9,7 @@ sortOrder: 58
 
 **Do odczytania**
 
-> Pod wielką iglicą stoi ozdobna podstawa. Spoczywa na niej świecąca kryształowa kula, szeroka na pięćdziesiąt stóp.
+> U stóp wielkiej iglicy, na bogato zdobionej podstawie, spoczywa olbrzymia kryształowa kula. Ma aż pięćdziesiąt stóp średnicy, a wydobywający się z jej wnętrza blask rozświetla otaczającą ją przestrzeń. Patrząc na nią, trudno myśleć o zwykłym przedmiocie — rozmiarem dorównuje całemu budynkowi.
 
 ### Obraz miejsca — dla MG {#sfc0c119e55e2}
 

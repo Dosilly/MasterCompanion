@@ -9,7 +9,7 @@ sortOrder: 55
 
 **Do odczytania**
 
-> Wieża ma szczyt szeroki i ostry jak głownia topora. Z wysoko położonego, wąskiego okna świeci czerwone światło.
+> Wieża przed wami rozszerza się ku szczytowi, przybierając kształt ostrej głowni topora. Wysoko w tej kamiennej krawędzi wycięto wąskie okno, z którego bije czerwone światło. Z dołu wygląda ono jak rozżarzona szczelina w ciemnej budowli.
 
 ### Obraz miejsca — dla MG {#s1b749d283ec9}
 
@@ -19,7 +19,7 @@ Schody prowadzą na szczyt osmalonej wieży, do ośmiokątnej sali z centralnym 
 
 -   **Miejsce:** Wnętrze nosi ślady ognia, elektryczności i kwasu, ponieważ przez stulecia przyjmowało na siebie impet niszczycielskich czarów. Spiralne schody prowadzą do najwyższej komnaty.
 
-> Czerwone kule światła tańczą jak świetliki po ośmiokątnej sali o średnicy trzydziestu stóp. Pośrodku stoi wielkie, niepłonące palenisko. W ścianach znajduje się osiem kwadratowych wnęk o boku dziesięciu stóp, wypełnionych lodem. Z łukowego sklepienia zwisają sople.
+> Po ośmiokątnej sali, szerokiej na trzydzieści stóp, krążą czerwone kule światła, przypominające rój świetlików. Ich blask przesuwa się po wielkim palenisku stojącym pośrodku, lecz w samym palenisku nie ma ognia. W każdej ze ścian otwiera się kwadratowa wnęka o boku dziesięciu stóp, całkowicie wypełniona lodem. Nad nimi łukowe sklepienie porasta gąszcz sopli.
 
 -   **Miejsce:** Komnatę oświetla trwałe *dancing lights*.
 

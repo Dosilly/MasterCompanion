@@ -9,7 +9,7 @@ sortOrder: 42
 
 **Do odczytania**
 
-> W stojakach wzdłuż ścian spoczywa sześć kosturów. Część jest z drewna, jeden z fioletowego szkła. Wiele uchwytów pozostaje pustych.
+> Wzdłuż ścian tej nieregularnej komnaty ciągną się stojaki, na których pozostało sześć kosturów. Każdy wygląda inaczej: wśród rzeźbionego drewna uwagę przyciąga jeden z półprzezroczystego fioletowego szkła. Puste uchwyty pomiędzy nimi wskazują, że kiedyś przechowywano tu znacznie więcej podobnych przedmiotów.
 
 ### Obraz miejsca — dla MG {#s34451fa6c5b4}
 

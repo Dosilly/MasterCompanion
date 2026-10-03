@@ -9,7 +9,7 @@ sortOrder: 30
 
 **Do odczytania**
 
-> Na jedwabiach wywieszonych przed sklepem przesuwają się płomienie i całe pola gwiazd. Przed wejściem stoi sześć nieruchomych postaci. Ich twarze są tak obojętne, że trudno odróżnić je od posągów.
+> Przed sklepem wywieszono jedwabie, po których przesuwają się płomienie i całe pola gwiazd. Obrazy płyną po tkaninach, jakby każda była oknem na inne miejsce. Wejścia pilnuje sześć nieruchomych postaci o zupełnie obojętnych twarzach. Gdyby nie ich ustawienie przy drzwiach, łatwo byłoby wziąć je za kolejne posągi.
 
 ### Obraz miejsca — dla MG {#s45863fe0fe56}
 

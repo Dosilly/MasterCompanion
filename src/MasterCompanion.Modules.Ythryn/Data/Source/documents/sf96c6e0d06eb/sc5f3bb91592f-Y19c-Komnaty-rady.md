@@ -9,7 +9,7 @@ sortOrder: 39
 
 **Do odczytania**
 
-> Na stole i podłodze leżą rozsypane zwoje. Obok stoi szafka z pergaminami i komoda z przyborami do pisania. Meble i papiery pokrywa lód.
+> Zwoje leżą w nieładzie na stole i podłodze, jakby ktoś porzucił je w połowie pracy. Obok stoi szafka pełna pergaminów oraz komoda z przyborami do pisania. Wszystko, od mebli po rozsypane papiery, pokrywa lód. W tym zamarzniętym bałaganie wciąż można rozpoznać dawny pokój urzędnika.
 
 ### Obraz miejsca — dla MG {#s7ee4395675f0}
 

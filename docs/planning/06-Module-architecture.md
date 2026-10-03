@@ -84,6 +84,31 @@ while actual arrival remains an explicit GM decision. See
 
 ## Frontend
 
+### Shared UI library direction — 3 October 2026
+
+The user requested an application-owned library of reusable UI elements. The
+planned `@mastercompanion/ui` library is a neutral presentation dependency of
+both the engine and adventure-module frontends. It has no dependency on campaign
+contracts, engine implementation, concrete modules, HTTP APIs, or persistence.
+The .NET dependency boundary is unchanged. The shared library and consumer
+migration are not yet implemented.
+
+UI owns design tokens, accessible dialog/feedback primitives, and other controls
+with demonstrated shared use. It receives typed presentation inputs and projected
+content and emits interaction events. Engine features retain campaign sessions,
+material reader/editor behavior, navigation, time coordination, and persistence.
+Adventure modules retain their rules, state projections, content references,
+labels, and operation decisions. A UI retry action emits an event; the feature
+decides how to recover safely.
+
+Before the first UI-library consumer is introduced, update public entry points,
+package manifests, dependency checks, library build order, and affected tests
+together. Build the UI library before its consumers. Detailed candidates,
+delivery stages, and acceptance criteria are in
+[the reusable frontend plan](17-Reusable-frontend-ui.md).
+
+### Existing frontend libraries
+
 - `@mastercompanion/contracts`: DTOs and the module manifest, registration token and tool component registration type.
 - `@mastercompanion/engine`: reader, Tiptap, map, recursive navigation, tabs, theme preference and its own styles. It knows contracts and does not import a concrete module.
 - `@mastercompanion/ythryn`: manifest and lazily loaded Arcane Blight component, module projection validation, outcome commands and its own localization resources.

@@ -40,7 +40,7 @@ Both runtime containers reached healthy status; the application runs as UID 1654
 The published application port is bound to IPv4 loopback, and PostgreSQL has no
 published port.
 
-Four read-only integration tests in `tools/container.test.mjs` passed: health/root
+Four read-only integration tests in `tests/e2e/container.test.mjs` passed: health/root
 document, production JS/CSS assets, SPA navigation with API/asset 404s preserved,
 and existing campaign/material/map/gameplay reads through the same origin. These
 probes make no material or game writes.

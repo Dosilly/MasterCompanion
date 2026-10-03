@@ -150,10 +150,10 @@ writes to the user's campaign.
 Focused commands:
 
 ```powershell
-dotnet run --project tests/MasterCompanion.Gameplay.Tests -- --rules
-# Use an isolated database named mastercompanion_gameplay_test.
-dotnet run --project tests/MasterCompanion.Gameplay.Tests -- --expedition-persistence
-dotnet run --project tests/MasterCompanion.Gameplay.Tests -- --http
+dotnet test tests/MasterCompanion.Gameplay.Tests.Unit
+# Start Docker; Testcontainers creates isolated PostgreSQL databases automatically.
+dotnet test tests/MasterCompanion.Gameplay.Tests.Integration --filter FullyQualifiedName~Expedition
+dotnet test tests/MasterCompanion.Gameplay.Tests.Integration --filter FullyQualifiedName~HttpTests
 pnpm --dir src/mastercompanion-web test:gameplay
 ```
 

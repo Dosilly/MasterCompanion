@@ -11,7 +11,7 @@ sortOrder: 53
 
 *Po przejściu portalem z Y19m na górny poziom.*
 
-> Na górnym poziomie sali stoją stoły pełne czarodziejskich przyborów. Z ciemnego prostokąta na północnej ścianie dobiega cichy jęk. Schody po obu stronach prowadzą do okrągłego zagłębienia z regałami i drabiną na szynie.
+> Na górnym poziomie sali stoją stoły zastawione czarodziejskimi przyborami. Z obu stron prowadzą schody w dół, do okrągłego zagłębienia otoczonego regałami z przesuwaną po szynie drabiną. Zanim zdążycie przyjrzeć się całości, dociera do was cichy jęk. Dźwięk dobiega z ciemnego prostokąta na północnej ścianie.
 
 ### Obraz miejsca — dla MG {#se8149a69e830}
 
@@ -25,7 +25,7 @@ Gabinet ma dwa poziomy: górną przestrzeń z przedmiotami Iriolarthasa oraz zag
 
 Jeśli bohaterowie nie spotkali jeszcze Iriolarthasa, obecni są **demilich** i trzy **nothiki**:
 
-> Na krawędzi zagłębienia siedzą trzy aberracje, z których każda wpatruje się w was jednym ohydnym okiem. Nad środkiem dołu unosi się ludzka czaszka, a ponad nią tworzą się niewyraźne tajemne symbole.
+> Na krawędzi zagłębienia siedzą trzy pokraczne istoty, a każda śledzi was jednym wielkim, ohydnym okiem. Pomiędzy nimi, nad samym środkiem dołu, unosi się ludzka czaszka. Ponad nią pojawiają się niewyraźne tajemne symbole, formujące się w powietrzu bez widocznej dłoni, która mogłaby je kreślić.
 
 -   **Fakt:** Wszyscy rzucają inicjatywę. Informacje o zachowaniu demilicha znajdują się w [sekcji o Iriolarthasie](#material/see1129fbc486).
 
@@ -69,7 +69,7 @@ Wśród rupieci na górnym poziomie znajdują się:
 
 *Przy oglądaniu stołów na górnym poziomie.*
 
-> Między przyborami stoi niewielka drewniana skrzynka. Do wieka przymocowano mosiężną tabliczkę z dwoma połączonymi kołami i kilkoma wierszami pisma. Zatrzask jest odpięty.
+> Wśród czarodziejskich przyborów stoi niewielka drewniana skrzynka z odpiętym zatrzaskiem. Do jej wieka przymocowano mosiężną tabliczkę, na której pod znakiem dwóch połączonych kół biegnie kilka wierszy pisma. Skrzynka wygląda, jakby można było od razu unieść wieko i zajrzeć do środka.
 
 **Działanie i reakcje — dla MG**
 

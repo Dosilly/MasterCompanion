@@ -9,7 +9,7 @@ sortOrder: 56
 
 **Do odczytania**
 
-> Czarny obelisk sięga na wysokość sześćdziesięciu stóp. Jego powierzchnię pokrywają runy. Od podstawy do połowy kamienia biegnie cienkie pęknięcie.
+> Czarny obelisk wznosi się przed wami na sześćdziesiąt stóp, a jego powierzchnię pokrywają wyryte runy. Ich wzór przecina cienka rysa, biegnąca od samej podstawy aż do połowy kamienia. Na tle potężnej bryły pęknięcie wydaje się drobne, lecz ciągnie się przez znaczną część jej wysokości.
 
 ### Obraz miejsca — dla MG {#sd6ecd49a8b76}
 

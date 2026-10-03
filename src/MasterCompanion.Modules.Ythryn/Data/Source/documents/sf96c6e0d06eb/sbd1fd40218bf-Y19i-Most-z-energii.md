@@ -9,7 +9,7 @@ sortOrder: 45
 
 **Do odczytania**
 
-> Za oknem otwiera się przerwa w murach iglicy. Naprzeciwko, około trzydziestu pięciu stóp dalej, widać drugie okno. Pomiędzy nimi nie widać żadnej kładki.
+> Za oknem mury iglicy urywają się, pozostawiając otwartą przestrzeń. Po przeciwnej stronie, jakieś trzydzieści pięć stóp dalej, widzicie podobne okno prowadzące do następnej komnaty. Oba otwory leżą niemal naprzeciw siebie, lecz pomiędzy nimi nie widać mostu ani choćby wąskiej kładki — tylko przepaść.
 
 ### Obraz miejsca — dla MG {#sb58e9851d860}
 

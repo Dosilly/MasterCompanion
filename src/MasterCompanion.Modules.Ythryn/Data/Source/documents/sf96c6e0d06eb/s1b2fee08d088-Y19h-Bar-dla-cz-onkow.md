@@ -11,7 +11,7 @@ sortOrder: 44
 
 *Jeśli iluzja balu z Y19b nadal działa.*
 
-> Biesiadnicy rozmawiają tak głośno, że ich głosy zlewają się w jeden gwar. Służba przeciska się między nimi z butelkami. Za prostokątnym barem łysy, blady gospodarz nalewa wino z ozdobnej karafki.
+> W barze rozmowy nakładają się na siebie, aż pojedyncze głosy giną w głośnym gwarze biesiadników. Służba przeciska się pomiędzy gośćmi, niosąc kolejne butelki. Za prostokątnym kontuarem łysy, blady gospodarz nalewa wino z ozdobnej karafki, najwyraźniej niewzruszony całym zamieszaniem.
 
 ### Obraz miejsca — dla MG {#sa3029766d2f5}
 

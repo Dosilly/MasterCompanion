@@ -9,7 +9,7 @@ sortOrder: 49
 
 **Do odczytania**
 
-> Pośrodku komnaty powoli obraca się rój świetlistych gwiazd. Ich światło przesuwa się po ścianach i ośmiu krzesłach ustawionych wokół. Na każdym wysokim oparciu widnieje inny znak.
+> Pośrodku komnaty powoli wiruje rój świetlistych gwiazd, jakby zamknięto tu fragment nocnego nieba. Ich blask przesuwa się po ścianach i ośmiu krzesłach ustawionych wokół. Każde ma wysokie oparcie z innym znakiem, rozjaśnianym kolejno przez wędrujące światło. Puste miejsca otaczają gwiezdny wir niczym krąg oczekujący na uczestników obrad.
 
 ### Obraz miejsca — dla MG {#se93919d116d9}
 

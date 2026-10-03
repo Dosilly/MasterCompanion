@@ -8,7 +8,8 @@
     <Project Path="src/MasterCompanion.ServiceDefaults/MasterCompanion.ServiceDefaults.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/MasterCompanion.Gameplay.Tests/MasterCompanion.Gameplay.Tests.csproj" />
-    <Project Path="tests/MasterCompanion.Materials.Tests/MasterCompanion.Materials.Tests.csproj" />
+    <Project Path="tests/MasterCompanion.Gameplay.Tests.Unit/MasterCompanion.Gameplay.Tests.Unit.csproj" />
+    <Project Path="tests/MasterCompanion.Gameplay.Tests.Integration/MasterCompanion.Gameplay.Tests.Integration.csproj" />
+    <Project Path="tests/MasterCompanion.Materials.Tests.Integration/MasterCompanion.Materials.Tests.Integration.csproj" />
   </Folder>
 </Solution>

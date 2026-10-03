@@ -9,7 +9,7 @@ sortOrder: 17
 
 **Do odczytania**
 
-> Kamienny most prowadzi do wieży wygiętej w stronę miasta. Nad przejściem zwisa spiczasty dach, pod którym czepiają się kamienia gargulce. Drzwi u podstawy wieży stoją otworem.
+> Kamienny most prowadzi przed wami do wieży, której sylwetka wygina się w stronę miasta. Jej spiczasty dach zwisa nad przejściem, a tuż pod nim gargulce kurczowo trzymają się muru. Z dołu wyglądają, jakby zastygły w chwili, gdy miały rzucić się na kogoś z góry. Drzwi u podstawy wieży stoją otworem, odsłaniając wejście do zrujnowanego wnętrza.
 
 ### Obraz miejsca — dla MG {#s51b2dd41b3d7}
 
@@ -29,6 +29,6 @@ To zewnętrzne wieże dawnych magów, dostępne mostami od muru obwodowego. W ś
 
 ### Wnętrze wieży {#s39da0150136c}
 
--   **Bez testu — ślad mieszkańców (dodatek MG):** w części mieszkalnej pierwszej zwiedzanej iglicy, przy kuchennych drzwiach: „Na framudze ktoś wyciął szereg kresek, coraz wyżej. Przy ostatniej nacięcie jest krzywe, jakby nóż ześlizgnął się po drewnie”.
+-   **Bez testu — ślad mieszkańców (dodatek MG):** w części mieszkalnej pierwszej zwiedzanej iglicy, przy kuchennych drzwiach: „Na framudze dostrzegacie szereg wyciętych kresek, z których każda jest nieco wyżej od poprzedniej. Ostatnia biegnie krzywo, jakby komuś przy nacinaniu ześlizgnął się nóż”.
 
 <details id="se7adb489b89d" class="context"><summary>Tło — dla MG</summary><div data-details-content=""><p>Dwie zewnętrzne iglice odłamały się. Jedna rozbiła się w Dolinie Lodowego Wichru (patrz rozdział 2), a druga jest pogrzebana w innej części lodowca (patrz rozdział 6).</p><p>Wieże należały niegdyś do magów i mieściły laboratoria, biblioteki oraz kwatery mieszkalne. Teraz leżą w ruinie. Ogólne wyobrażenie o układzie wnętrza każdej iglicy daje <strong>mapa 2.10</strong>.</p><hr></div></details>

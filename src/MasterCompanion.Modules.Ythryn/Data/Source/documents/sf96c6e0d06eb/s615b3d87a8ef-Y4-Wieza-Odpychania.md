@@ -9,7 +9,7 @@ sortOrder: 19
 
 **Do odczytania**
 
-> Ściany wieży od dołu do samego dachu pokrywają drobno wykute runy. Budowla zakrzywia się ku górze jak szpon. W najwyższym oknie pali się błękitne światło.
+> Wieża przed wami zakrzywia się ku górze niczym olbrzymi szpon. Od podstawy aż po dach jej ściany pokrywają drobno wykute runy, tak gęste, że z oddali zlewają się w jeden misterny wzór. W najwyższym oknie pali się błękitne światło, wyraźnie odcinające się od ciemnego kamienia.
 
 ### Obraz miejsca — dla MG {#s2736d584adc7}
 
@@ -41,9 +41,9 @@ Wieża ma dwa istotne miejsca: wejście pod ścianą pokrytą runami oraz okrąg
 
 **Do odczytania po dotarciu na szczyt**
 
-> Pośrodku okrągłej komnaty o średnicy i wysokości trzydziestu stóp stoi olbrzymie kowadło pokryte jaskrawymi, błękitnymi runami. Spoczywa na nim młot ozdobiony takimi samymi znakami.
+> Na szczycie otwiera się przed wami okrągła komnata, szeroka i wysoka na trzydzieści stóp. Jej środek zajmuje olbrzymie kowadło, na którym jaskrawo świecą błękitne runy. Leżący na nim młot ozdobiono tymi samymi znakami, jakby oba przedmioty wykonano jako jeden komplet.
 >
-> Wokół kowadła stoi na straży sześć opancerzonych postaci. W głębi sali, pośród rumowiska, leżą zamarznięte zwłoki czarodzieja. Błękitne płomienie migoczą w rozmieszczonych po sali paleniskach, oświetlając wyrzeźbioną na suficie inskrypcję.
+> Sześć opancerzonych postaci stoi wokół kowadła na straży, a dalej, pośród rumowiska, dostrzegacie zamarznięte zwłoki czarodzieja. Z palenisk rozmieszczonych po sali biją błękitne płomienie. Ich blask sięga aż do sufitu, wydobywając z cienia wyrzeźbioną tam inskrypcję.
 
 -   **Strażnicy:** sześć **demos magen** nie dopuszcza nikogo do używania kowadła; walczą w jego obronie.
 

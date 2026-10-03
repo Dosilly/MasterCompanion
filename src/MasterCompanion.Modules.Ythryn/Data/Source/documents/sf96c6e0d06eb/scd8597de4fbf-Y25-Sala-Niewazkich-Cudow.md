@@ -9,7 +9,7 @@ sortOrder: 60
 
 **Do odczytania**
 
-> Cztery bazaltowe kolumny podtrzymują wielką lustrzaną kopułę. W jej powierzchni odbijają się wieże i lodowe stalaktyty. U podstaw kolumn widać drzwi.
+> Na czterech bazaltowych kolumnach wspiera się wielka lustrzana kopuła. W jej zakrzywionej powierzchni odbijają się pochylone wieże i lodowe stalaktyty, układając się w zniekształcony obraz miasta i sklepienia groty. U podstaw każdej z kolumn dostrzegacie drzwi, jakby wejść należało szukać w samych podporach.
 
 ### Obraz miejsca — dla MG {#s561b497e6384}
 
@@ -19,7 +19,7 @@ Cztery filary mieszczą windy prowadzące do sali pod kopułą. W górze unoszą
 
 -   **Fakt:** U podstaw czterech kolumn znajdują się drzwi do szybów prowadzących do kopuły. Szyby mają **60 stóp długości** i oświetla je z góry zmienne światło zorzy z wnętrza kopuły. Bohater wchodzący do kolumny lewituje do kopuły w ciągu **1 rundy**.
 
-> Wnętrze kopuły oświetla wirująca mgławica barw. W powietrzu unoszą się zamarznięte ludzkie postacie, siedzące ze skrzyżowanymi nogami i spokojnymi twarzami.
+> Wewnątrz kopuły otacza was wirująca mgławica barw, której światło przesuwa się po zawieszonych w powietrzu ludzkich postaciach. Wszystkie siedzą ze skrzyżowanymi nogami, z dłońmi na kolanach i zamkniętymi oczami. Ich ciała są zamarznięte, lecz twarze zachowały spokojny wyraz, jakby wciąż trwały w głębokiej medytacji.
 
 -   **Działanie:** Istoty w kopule zyskują szybkość lotu **30 stóp** i mogą zawisać. Wokół unosi się tuzin zwłok netherilskich uczniów, z dłońmi na kolanach i zamkniętymi oczami.
 

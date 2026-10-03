@@ -9,7 +9,7 @@ sortOrder: 20
 
 **Do odczytania**
 
-> W szerokiej bramie kwadratowego budynku tkwi przekrzywiona krata. Za nią ciągną się korytarze z rzędami żelaznych drzwi. W każdych jest małe zakratowane okienko.
+> Przed wami stoi kwadratowy budynek z szeroką bramą, w której krzywo tkwi ciężka krata. Za jej prętami widać korytarze i ciągnące się wzdłuż nich rzędy żelaznych drzwi. W każdych, na wysokości oczu, umieszczono małe zakratowane okienko. Jedne za drugimi wyglądają niemal tak samo — trudno pomylić to miejsce z czymś innym niż więzienie.
 
 ### Obraz miejsca — dla MG {#sf25c00fb288a}
 
@@ -25,7 +25,7 @@ Za wygiętą bramą ciągną się opuszczone cele. Najważniejsze znalezisko jes
 
 Jeśli bohaterowie poświęcą co najmniej **30 minut** na przeszukiwanie więzienia, trafiają na ambulatorium:
 
-> Przez szczelinę w zawalonej ścianie widzicie zrujnowane ambulatorium o boku piętnastu stóp. Pośrodku stoi stół operacyjny. Skórzane pasy biegną od jednego jego boku, wznoszą się nad blatem i zapinają po drugiej stronie. Ich ułożenie wskazuje, że do stołu przywiązano coś albo kogoś niewidzialnego.
+> Przez szczelinę w zawalonej ścianie dostrzegacie niewielkie, zrujnowane ambulatorium, o boku zaledwie piętnastu stóp. Pośrodku stoi stół operacyjny ze skórzanymi pasami, których ułożenie od razu przyciąga uwagę. Zamiast leżeć płasko, unoszą się nad blatem i opadają ku klamrom po drugiej stronie, jakby obejmowały czyjeś ciało. Na samym stole nikogo jednak nie widać.
 
 -   **Fakt:** Do stołu przywiązany jest **doppelganger Xerophon**. Czar *sequester* uczynił go niewidzialnym i wprowadził w stan zawieszonego życia.
 

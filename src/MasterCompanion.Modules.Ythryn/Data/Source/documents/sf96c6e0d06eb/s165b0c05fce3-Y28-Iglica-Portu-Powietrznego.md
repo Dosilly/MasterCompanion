@@ -9,7 +9,7 @@ sortOrder: 63
 
 **Do odczytania**
 
-> Nad zrujnowanym szczytem wysokiej wieży unosi się szklana komnata. Powoli obraca się w powietrzu. Cztery spiczaste filary obejmują ją z boków jak zęby korony.
+> Wysoko nad zrujnowanym szczytem wieży unosi się szklana komnata, powoli obracająca się w powietrzu. Nie widać niczego, co łączyłoby ją z dachem poniżej. Z czterech stron otaczają ją spiczaste filary, przypominające zęby korony, w której zamiast klejnotu zawieszono całą salę.
 
 ### Obraz miejsca — dla MG {#s99ea58dd61d3}
 

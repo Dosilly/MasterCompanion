@@ -9,7 +9,7 @@ sortOrder: 18
 
 **Do odczytania**
 
-> Nad popękanymi stopniami amfiteatru słychać niskie buczenie. Z boiska wyrastają trzy metalowe maszty zakończone jak trójzęby, a na czarnym postumencie błyszczy niewielki puchar. Powietrze aż trzeszczy od elektryczności. Pod ławą leży gliniany zawodnik z piłką; ktoś starannie dokleił mu utrąconą rękę.
+> Kiedy zbliżacie się do popękanych stopni amfiteatru, dociera do was niskie buczenie, przerywane trzaskami elektryczności. Z boiska wyrastają trzy metalowe maszty o zakończeniach przypominających trójzęby, a przy jednym z krańców areny błyszczy niewielki puchar na czarnym postumencie. Wśród tych ogromnych konstrukcji łatwo przeoczyć glinianą figurkę zawodnika z piłką, leżącą pod ławą. Ktoś starannie dokleił jej utrąconą rękę.
 
 ### Obraz miejsca — dla MG {#sf970297efd28}
 
@@ -37,7 +37,7 @@ Amfiteatr otacza owalne boisko z trzema elektrycznymi masztami. Przy jednym koń
 
 **Po pojawieniu się kopuły — Do odczytania:**
 
-> Nad płytą areny pojawiają się migoczące głowa i ramiona kobiety. Prądy elektryczne przebiegają po jej metalowych zębach, a postać drga i przeskakuje, przemawiając w dziwnym języku.
+> Nad płytą areny rozbłyskuje obraz kobiety, widocznej od ramion w górę. Jej sylwetka drga i przeskakuje, jakby co chwila miała się rozpaść, a po metalowych zębach przebiegają iskry. Gdy otwiera usta, nad boiskiem rozlega się głos przemawiający w dziwnym języku.
 
 Iluzoryczne oblicze mówi w martwym języku Netherilu, **Loross**:
 

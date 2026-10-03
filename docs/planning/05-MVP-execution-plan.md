@@ -6,6 +6,10 @@ Version 0.6 · 2 October 2026 · phase one accepted
 
 [The minimum plan](04-MVP-minimum-scope.md) separates first-version scope from backlog. [The workshop](03-Implementation-workshop.md) preserves decisions and context. Technical details below are the plan author's recommendations within the accepted stack rather than separate user answers.
 
+Near-term planning update, 3 October 2026: [campaign material preloading and folder management](15-Near-term-improvements.md) records two additional user requests for future implementation. Both remain planned; no runtime changes are included. These requests supplement the existing full-text search follow-up, without setting a delivery order or date.
+
+Navigation planning update, 4 October 2026: [URL-based workspace navigation](15-Near-term-improvements.md#improvement-url-based-workspace-navigation) is recorded for future implementation alongside workspace/tab refactoring. Scope includes direct links, browser history, and restoring the addressed view on reload while preserving sessions and drafts during in-app navigation. Routing itself does not provide unsaved-draft recovery after reload. No implementation or delivery date is included.
+
 Closure update, 2 October: the [gameplay delivery record](09-Gameplay-implementation.md) documents backend, frontend, party editing and the latest Arcane Blight schedule. Maintained module defaults contain 106 materials, 10 folders and 29 map markers. Earlier counts retain their historical meaning. User acceptance and existing verification close this plan; no additional application checks are scheduled for phase one.
 
 This plan concerns the generic MasterCompanion engine and module contract. Ythryn is the concrete pilot implementation and acceptance material source. Reader, editing, folder hierarchy, maps and tabs operate on neutral contracts. Arcane Blight rules belong to the module. [Architecture](06-Module-architecture.md) defines engine, module and campaign.

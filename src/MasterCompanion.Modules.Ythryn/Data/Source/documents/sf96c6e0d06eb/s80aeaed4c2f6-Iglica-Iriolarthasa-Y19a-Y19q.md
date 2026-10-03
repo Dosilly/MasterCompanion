@@ -7,6 +7,12 @@ sortOrder: 35
 
 **W skrócie — dla MG:** Chroniona polem siłowym siedziba Iriolarthasa, mieszcząca komnaty rady, niebezpieczne eksperymenty i drogę do gabinetu demilicha z wiedzą potrzebną do użycia mythallaru.
 
+**Do odczytania**
+
+*Przy oglądaniu iglicy z zewnątrz.*
+
+> Ze środka miasta wyrasta olbrzymia obsydianowa cytadela, przy której okoliczne wieże wyglądają jak miniatury. Jej ciemne ściany wznoszą się wysoko ponad dachami, aż trudno objąć wzrokiem całą budowlę. Wokół murów migocze delikatna poświata, przez którą zarysy iglicy lekko się załamują.
+
 Wysoka na **1200 stóp** obsydianowa cytadela wyrasta ze środka Ythryn i przytłacza rozmiarem wszystkie sąsiednie budowle. Otacza ją migoczące pole siłowe.
 
 -   Istoty nie mogą przez nie przejść ani teleportować się do żadnego miejsca wewnątrz.

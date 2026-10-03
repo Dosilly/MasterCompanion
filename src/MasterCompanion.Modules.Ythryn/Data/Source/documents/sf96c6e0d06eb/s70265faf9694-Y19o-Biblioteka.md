@@ -9,7 +9,7 @@ sortOrder: 51
 
 **Do odczytania**
 
-> Regały sięgają sufitu, ale wiele półek jest pustych. Książki i zwoje pokrywają podłogę tej niemal trójkątnej sali. Wystające spod lodu kartki są popękane i kruche.
+> Niemal trójkątną salę otaczają regały sięgające aż do sufitu, lecz na wielu półkach pozostały tylko puste miejsca. Książki i zwoje zalegają na podłodze, częściowo wmarznięte w lód. Wystające kartki są popękane i wyglądają tak krucho, jakby miały rozsypać się przy pierwszej próbie przewrócenia strony.
 
 ### Obraz miejsca — dla MG {#s047e0f295193}
 

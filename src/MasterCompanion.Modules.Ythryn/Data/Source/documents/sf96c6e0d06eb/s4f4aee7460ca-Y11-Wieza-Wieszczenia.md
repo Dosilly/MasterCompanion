@@ -9,7 +9,7 @@ sortOrder: 27
 
 **Do odczytania**
 
-> Na ścianach smukłej wieży wyryto dłonie i oczy. Nad oknem, z którego pada srebrne światło, wielkie kamienne oko powoli mruga. W dachu brakuje sporego fragmentu.
+> Smukłą wieżę pokrywają wyrzeźbione dłonie i oczy, pośród których jedno wyróżnia się rozmiarem. Umieszczone nad oknem pełnym srebrnego światła, wielkie kamienne oko powoli mruga. Ponad nim dach urywa się w poszarpanej wyrwie, jakby ktoś wyrwał z budowli cały kawałek.
 
 ### Obraz miejsca — dla MG {#s32e7580e14d7}
 
@@ -19,9 +19,9 @@ Na szczycie uszkodzonej wieży znajduje się kula na niskiej podstawie. Kula odp
 
 *Detect magic* ujawnia aurę magii wieszczenia. Na najwyższym piętrze:
 
-> Wielkie wyrwy w dachu pozwalają dostrzec ciemne, obwieszone soplami sklepienie olbrzymiej lodowej groty.
+> Przez wielkie wyrwy w dachu widać wysoko nad wami ciemne sklepienie lodowej groty, obwieszone długimi soplami. Komnata na szczycie wieży jest okrągła, ma trzydzieści stóp średnicy, a jej posadzkę zasypuje gruz.
 >
-> Srebrne światło bije ze szklanej kuli o średnicy trzech stóp, ustawionej na cylindrycznym kamiennym cokole wysokim na dwie stopy. Stoi pośrodku okrągłej, zasypanej gruzem komnaty o średnicy trzydziestu stóp. W kuli unoszą się gałki oczne niczym ryby w akwarium. Niektóre pokrywa zaćma, inne są przekrwione albo pełne ropy, Wszystkie obracają się w stronę wejścia.
+> Pośrodku, na cylindrycznym kamiennym cokole wysokim na dwie stopy, spoczywa szklana kula o średnicy trzech stóp. To z niej bije srebrny blask. Wewnątrz unoszą się gałki oczne, dryfujące niczym ryby w akwarium: jedne zmętniałe od zaćmy, inne przekrwione lub zaropiałe. Gdy stajecie w wejściu, wszystkie obracają się w waszą stronę.
 
 -   **Fakt:** Ze ścian odłamały się olbrzymie fragmenty. Zaginęła też inskrypcja zawierająca fragment Rytuału Tajemnego Oktetu związany z wieszczeniem.
 

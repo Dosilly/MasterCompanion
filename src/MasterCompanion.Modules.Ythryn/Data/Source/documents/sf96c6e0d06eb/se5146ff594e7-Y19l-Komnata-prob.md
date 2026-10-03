@@ -11,7 +11,7 @@ sortOrder: 48
 
 *Przy oglądaniu sali od strony Y19k.*
 
-> Wzdłuż ściany stoi osiem drzwi. Każde oznaczono innym symbolem, a nad całym rzędem wyryto napis drakońskimi literami.
+> Wzdłuż ściany ciągnie się rząd ośmiorga drzwi, z których każde oznaczono innym symbolem. Nad całym rzędem wyryto napis drakońskimi literami, jakby jedną instrukcję dla wszystkich tych wejść.
 
 ### Obraz miejsca — dla MG {#s8b88a626cc1e}
 

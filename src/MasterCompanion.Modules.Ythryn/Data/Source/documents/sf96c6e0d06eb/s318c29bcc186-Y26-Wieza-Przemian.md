@@ -9,7 +9,7 @@ sortOrder: 61
 
 **Do odczytania**
 
-> Ta wieża nadal stoi prosto. Jej ściany pokrywają cienkie, rozgałęzione pęknięcia. W najwyższym oknie tli się słabe światło.
+> Wśród pochylonych ruin ta wieża wciąż stoi prosto, choć jej ściany przecina gęsta sieć drobnych pęknięć. Rozgałęziają się po kamieniu niczym żyłki na liściu, zdradzając, jak mocno budowla została nadwerężona. W najwyższym oknie tli się słabe światło.
 
 ### Obraz miejsca — dla MG {#s711f9cc12bfe}
 
@@ -19,7 +19,7 @@ Pęknięta wieża prowadzi do komnaty ze ścianami pokrytymi dłońmi i twarzami
 
 -   **Sekret MG:** Metaltra użyła *true polymorph*, by przetrwać katastrofę jako adamantynowy posąg. Odwrócenie tej konkretnej przemiany wymaga *wish*, według opisu lokacji.
 
-> Wewnętrzne ściany wyrzeźbiono w odciski humanoidalnych postaci próbujących wydostać się z kamienia — chwytające dłonie i wyjące twarze, na zawsze uwięzione w skale.
+> Na wewnętrznych ścianach kamień przybiera kształty człekokształtnych sylwetek, jakby ktoś próbował wydostać się z muru. Wyciągnięte dłonie chwytają pustkę, a twarze wykrzywia niemy krzyk. Dopiero przyglądając się całości, widzicie, że to rzeźbione odciski postaci, zastygłe w skale w chwili rozpaczliwej szamotaniny.
 
 -   **Miejsce:** Na szczycie bohaterowie znajdują posąg Metaltry leżący w rogu. Przedstawia kobietę w szacie czarodziejki, zastygłą w pozie kończącej czar. Rzucany podczas katastrofy posąg uszkodził fragment inskrypcji na ścianie.
 

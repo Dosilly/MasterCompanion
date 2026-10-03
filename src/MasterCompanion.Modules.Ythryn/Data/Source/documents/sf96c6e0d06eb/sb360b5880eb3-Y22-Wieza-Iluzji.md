@@ -9,7 +9,7 @@ sortOrder: 57
 
 **Do odczytania**
 
-> Obsydianową wieżę otacza delikatna mgła. Wyrzeźbione w ścianach oczy śledzą ruch przed wejściem. Najwyższe okno świeci na fioletowo.
+> Z delikatnej mgły wyłania się obsydianowa wieża, której najwyższe okno świeci fioletowym blaskiem. W ścianach wyrzeźbiono oczy, pozornie będące tylko ozdobą ciemnego kamienia. Kiedy jednak zbliżacie się do wejścia, ich spojrzenia przesuwają się wraz z wami. Każdy wasz krok ma tu kamiennych obserwatorów.
 
 ### Obraz miejsca — dla MG {#scc5ba4373a25}
 

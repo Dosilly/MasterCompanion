@@ -9,7 +9,7 @@ sortOrder: 16
 
 **Do odczytania**
 
-> Zielone i fioletowe światła odbijają się w szronie na pochylonych wieżach. Nad miastem góruje ciemna cytadela. U końca lodowej grobli leży twarzą do ziemi ogromny kamienny olbrzym, a obok niego wielki młot.
+> Przed wami rozciąga się miasto pochylonych wież, na których szron mieni się zielonymi i fioletowymi światłami. Ponad dachami wznosi się ciemna cytadela, przytłaczająca rozmiarem okoliczne budowle. Lodowa grobla prowadzi ku ruinom, lecz u jej końca wzrok przyciąga ogromny kamienny olbrzym, leżący twarzą do ziemi. Tuż obok spoczywa młot tak wielki, że trudno wyobrazić sobie kogoś, kto zdołałby nim zamachnąć.
 
 ### Obraz miejsca — dla MG {#s1f5d3a1eb016}
 

@@ -41,7 +41,7 @@ the Dockerfile, and frontend installation uses the existing lockfile and build p
 Read-only verification and lifecycle commands:
 
 ```powershell
-node --test tools/container.test.mjs
+node --test tests/e2e/container.test.mjs
 docker compose --env-file .local/docker.env ps
 docker compose --env-file .local/docker.env logs --tail 50 app
 docker compose --env-file .local/docker.env stop
@@ -69,6 +69,26 @@ Open [http://localhost:4200](http://localhost:4200). The AppHost prints the Aspi
 
 Initial setup requires internet access to download dependencies and the database image. Aspire uses the local package cache for subsequent frontend starts. PostgreSQL stores campaign data in the persistent Docker volume `mastercompanion-postgres`; retain this volume to preserve your notes.
 
+## Tests
+
+Backend projects distinguish unit and integration tests in their names. Integration
+tests use the real API through `WebApplicationFactory` and create disposable
+PostgreSQL databases with Testcontainers; Docker must be running. They do not use
+the application's database or persistent volume.
+
+```powershell
+dotnet test tests/MasterCompanion.Gameplay.Tests.Unit
+dotnet test tests/MasterCompanion.Gameplay.Tests.Integration
+dotnet test tests/MasterCompanion.Materials.Tests.Integration
+pnpm --dir src/mastercompanion-web test:unit
+pnpm --dir src/mastercompanion-web test:integration
+```
+
+Frontend tests are grouped under `tests/unit`, `tests/integration`, and `e2e`.
+Feature scripts such as `test:autosave` and `test:gameplay` select the relevant
+cases across these levels. See [test organization](docs/planning/18-Test-organization.md)
+for conventions, infrastructure lifecycle and filtered commands.
+
 ## Repository layout
 
 - `src/MasterCompanion.Contracts` — shared backend module contracts.
@@ -77,6 +97,7 @@ Initial setup requires internet access to download dependencies and the database
 - `src/MasterCompanion.Api` — HTTP endpoints and module composition.
 - `src/MasterCompanion.AppHost` and `src/MasterCompanion.ServiceDefaults` — local orchestration and service configuration.
 - `src/mastercompanion-web` — Angular host, libraries, and frontend tooling.
+- `tests` — backend unit/integration projects and deployed-container E2E checks.
 - [docs/planning](docs/planning) — product specifications, plans, and architecture decisions.
 
 ## Module content

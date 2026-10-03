@@ -9,7 +9,7 @@ sortOrder: 26
 
 **Do odczytania**
 
-> W zagłębieniu pośród ruin rosną drzewa o złotych liściach. Ich gałęzie poruszają się, choć nie czuć wiatru. Ponad koronami zbiera się szara para. Na kamiennej ławce przy skraju zagajnika wyryto kratkowaną planszę; w jednym z pól tkwi szklany pionek.
+> Pośród ruin teren obniża się, odsłaniając zagajnik drzew o złotych liściach. Ich gałęzie kołyszą się lekko, choć wokół nie czujecie najmniejszego podmuchu, a ponad koronami zbiera się szara para. Przy skraju zagajnika stoi kamienna ławka z wyrytą kratkowaną planszą. W jednym z pól tkwi szklany pionek, jakby ktoś przerwał partię i nigdy nie wrócił, by ją dokończyć.
 
 ### Obraz miejsca — dla MG {#s19e7aa776e49}
 

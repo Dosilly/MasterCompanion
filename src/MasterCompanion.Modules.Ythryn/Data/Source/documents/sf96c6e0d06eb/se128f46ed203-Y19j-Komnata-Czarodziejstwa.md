@@ -9,7 +9,7 @@ sortOrder: 46
 
 **Do odczytania**
 
-> W lustrzanych ścianach powtarzają się wasze odbicia. Od sali odchodzi jedenaście wąskich wnęk, każda ze świecącym kryształem. Powietrze cicho buczy.
+> Lustrzane ściany odbijają wasze sylwetki, mnożąc je wokół sali. Pomiędzy odbiciami otwiera się jedenaście wąskich wnęk, a w każdej lśni kryształ. Ich blask powtarza się w lustrach razem z waszymi twarzami. Całą komnatę wypełnia ciche, jednostajne buczenie.
 
 ### Obraz miejsca — dla MG {#sa80496d35178}
 
@@ -23,7 +23,7 @@ Wkrótce po wejściu bohaterów ujawnia się istota zwana **Everlast** — żywe
 
 **Pojawienie się Everlasta — Do odczytania:**
 
-> Światło kryształów skupia się pośrodku sali. Wyłania się z niego przezroczysty, łysy mężczyzna w fioletowej szacie. Na wasz widok szeroko się uśmiecha.
+> Blask kryształów zbiega się pośrodku sali i zaczyna przybierać ludzki kształt. Po chwili stoi przed wami łysy mężczyzna w fioletowej szacie, tak przezroczysty, że wciąż widzicie przez niego wnętrze komnaty. Na wasz widok jego twarz rozjaśnia szeroki uśmiech, jakby od dawna czekał na gości.
 
 -   **Fakt:** Everlast mówi w tym samym języku co każda rozmawiająca z nim istota. Nie może atakować, nie można go zranić ani rozproszyć.
 

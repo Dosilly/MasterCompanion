@@ -11,7 +11,7 @@ sortOrder: 47
 
 *Przy oglądaniu sali z szybu od Y19j.*
 
-> Owalną salę pokrywa szron, a z sufitu zwisają długie sople. Wylot szybu otacza przezroczysta lodowa kopuła. Przy odległych podwójnych drzwiach wiszą dwa czarne ostrza, a nad nimi świeci zielony kryształ.
+> Z szybu widzicie owalną salę pokrytą szronem, z długimi soplami zwisającymi z sufitu. Sam wylot otacza przezroczysta, oblodzona kopuła, przez którą można dostrzec odległe podwójne drzwi. Tuż przy nich wiszą w powietrzu dwa czarne ostrza, których nikt nie trzyma. Nad drzwiami świeci zielony kryształ, rzucając blask na otaczający je lód.
 
 ### Obraz miejsca — dla MG {#s0a49a981bcc7}
 

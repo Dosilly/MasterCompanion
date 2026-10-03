@@ -9,7 +9,7 @@ sortOrder: 34
 
 **Do odczytania**
 
-> Z gruzowiska wystaje złamana podstawa wieży. Po kamieniach pełzają setki szarych dłoni. Chwytają odłamki i przesuwają je, ale sterta prawie się nie zmienia.
+> Z gruzowiska wystaje już tylko złamana podstawa wieży, a po otaczających ją kamieniach pełzają setki szarych dłoni. Palce wciskają się w szczeliny, chwytają odłamki i mozolnie przeciągają je z miejsca na miejsce. Choć cała sterta roi się od ruchu, rumowiska niemal nie ubywa. Wygląda to na pracę, która nie ma końca.
 
 ### Obraz miejsca — dla MG {#s86f60b118973}
 

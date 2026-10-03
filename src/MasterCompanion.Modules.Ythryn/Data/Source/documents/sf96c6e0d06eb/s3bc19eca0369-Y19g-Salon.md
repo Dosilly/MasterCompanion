@@ -11,7 +11,7 @@ sortOrder: 43
 
 *Jeśli iluzja balu z Y19b nadal działa.*
 
-> Na poduszkach odpoczywają dworzanie, palą fajki i jedzą owoce. Struny harfy poruszają się bez niczyjej pomocy. Na marmurowym stole o podstawie w kształcie ośmiornicy stoi drewniana skrzynka wysadzana klejnotami.
+> Dworzanie wygodnie rozparli się na poduszkach, paląc fajki i podjadając owoce. Towarzyszy im melodia harfy, której struny poruszają się same, choć przy instrumencie nikt nie siedzi. Pośród odpoczywających gości stoi marmurowy stół, wsparty na podstawie w kształcie ośmiornicy. Na jego blacie połyskuje drewniana skrzynka wysadzana klejnotami.
 
 ### Obraz miejsca — dla MG {#s22f9f77d8e27}
 

@@ -9,7 +9,7 @@ sortOrder: 52
 
 **Do odczytania**
 
-> Z wysokiego balkonu widać oświetlone ulice i pochylone dachy Ythryn. W głąb iglicy prowadzą zamknięte podwójne drzwi.
+> Z tego wysokiego balkonu Ythryn rozciąga się przed wami jak na dłoni. Światła znaczą przebieg ulic pomiędzy pochylonymi dachami, a z tej wysokości ruiny układają się znów w obraz całego miasta. W głąb iglicy prowadzą podwójne drzwi, teraz szczelnie zamknięte.
 
 ### Obraz miejsca — dla MG {#sa5dff8c036f2}
 

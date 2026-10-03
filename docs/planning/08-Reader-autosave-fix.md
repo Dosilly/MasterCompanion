@@ -11,7 +11,7 @@ Verification:
 - The new editor integration tests reproduced the unwanted paragraph insertion before the fix. All 14 tests in `pnpm --dir src/mastercompanion-web test:autosave` passed after the fix, covering document endings, selection, details, mode changes, actual edits, undo, in-flight changes, save failures, conflicts, and closing.
 - `pnpm --dir src/mastercompanion-web check:code` passed.
 - The affected engine library compiled with `node node_modules/@angular/cli/bin/ng.js build engine` from `src/mastercompanion-web`.
-- The targeted `Every migrated document survives` test in `tools/content.test.mjs` passed, checking shared-schema round trips for maintained documents.
+- The targeted `Every migrated document survives` test in `tests/integration/content.test.mjs` passed, checking shared-schema round trips for maintained documents.
 - Browser checks at 1920×1080 in both themes confirmed saved status during reader selection. Clicking, selecting, expanding details, and switching edit modes produced zero writes. An actual edit and undo produced two sequential writes to an isolated in-memory API. Read-only comparison of the live material before and after confirmed identical content and revision. No console errors occurred; Angular's existing oversized-map-image performance warning remains.
 
 The browser probe does not establish new backend persistence evidence; it isolates frontend save requests while preserving the local database. Backend save behavior was unchanged and reviewed in source.

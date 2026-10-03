@@ -9,7 +9,7 @@ sortOrder: 40
 
 **Do odczytania**
 
-> Korytarz kończy się z jednej strony wąskim oknem, z którego widać schody wejściowe. Po drugiej stronie znajduje się ciasna wartownia.
+> Wąski korytarz biegnie od ciasnej wartowni do okna na jego drugim końcu. Przez szczelinę w murze widać schody prowadzące do głównego wejścia. To dobre miejsce, by obserwować każdego, kto zbliża się do drzwi cytadeli.
 
 ### Obraz miejsca — dla MG {#s135b11e279e3}
 

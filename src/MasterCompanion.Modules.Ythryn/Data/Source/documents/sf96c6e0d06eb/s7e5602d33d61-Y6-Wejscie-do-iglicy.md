@@ -9,7 +9,7 @@ sortOrder: 21
 
 **Do odczytania**
 
-> Ze zrujnowanej dzielnicy wyrasta potężna kamienna przypora, oparta wysoko o centralną iglicę. U jej podstawy widać bramę pokrytą znakami. Wokół cytadeli delikatnie migocze powietrze.
+> Spośród ruin wyrasta potężna kamienna przypora, która pnie się wysoko i opiera o centralną iglicę. U jej podstawy dostrzegacie bramę pokrytą dziwnymi znakami. Wokół całej cytadeli powietrze delikatnie migocze, zniekształcając widok kamiennych ścian. Przez chwilę trudno uchwycić wzrokiem, gdzie kończy się budowla, a zaczyna otaczająca ją poświata.
 
 ### Obraz miejsca — dla MG {#s2dadc5a456f3}
 

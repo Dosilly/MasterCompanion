@@ -9,7 +9,7 @@ sortOrder: 23
 
 **Do odczytania**
 
-> Ze ścian wielkiego gmachu wyrasta osiem wież, zakrzywionych nad rozbitym dachem jak kły. W murach zieją wyrwy, przez które można dostać się do środka.
+> Przed wami wznosi się ogromny gmach, z którego ścian wyrasta osiem wież. Zakrzywiają się nad rozbitym dachem niczym kły otaczające rozwartą paszczę. W murach zieją szerokie wyrwy, odsłaniające zrujnowane sale — aby dostać się do środka, nie trzeba nawet szukać drzwi.
 
 ### Obraz miejsca — dla MG {#sed335393b556}
 
@@ -21,7 +21,7 @@ Dawna akademia ma zrujnowane sale dostępne przez wyrwy w ścianach. W audytoriu
 
 W salach nauki i wieżach nie pozostało nic do uratowania, lecz w audytorium znajduje się coś interesującego:
 
-> Osiem witraży góruje nad zrujnowanym audytorium. Pokryte szronem ławy stoją w połamanych rzędach naprzeciw podwyższonej mównicy. Na pulpicie spoczywa wysadzany klejnotami kielich. Z jego zawartości unosi się para i rozpływa w zimnym powietrzu.
+> Nad zrujnowanym audytorium góruje osiem witraży, a pod nimi ciągną się połamane rzędy oszronionych ław, zwróconych ku podwyższonej mównicy. Wśród zniszczeń wyróżnia się stojący na pulpicie kielich, wysadzany klejnotami. Z jego wnętrza unosi się delikatna para i rozpływa w zimnym powietrzu. Wygląda to tak, jakby ktoś dopiero co nalał do niego gorącego napoju.
 
 -   **Miejsce:** Każdy witraż przedstawia czarodzieja rzucającego czar z jednej z ośmiu szkół.
 

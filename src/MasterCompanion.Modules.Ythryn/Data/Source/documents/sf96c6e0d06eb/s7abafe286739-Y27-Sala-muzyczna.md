@@ -9,7 +9,7 @@ sortOrder: 62
 
 **Do odczytania**
 
-> Wielki budynek ma kształt buta, z którego dachu wystają trzy grube rury. Na murach wiszą stare plakaty. Wysokie drzwi prowadzą do ciemnej sali.
+> Wielki budynek przed wami ma osobliwy kształt buta, a z jego dachu wystają trzy grube rury. Mury wciąż oblepiają stare plakaty, zapowiadające dawne występy. Pod nimi otwierają się wysokie drzwi, za którymi wnętrze sali ginie w ciemności.
 
 ### Obraz miejsca — dla MG {#sf8f8850c84e0}
 
@@ -29,9 +29,9 @@ Zewnętrzne ściany oblepiają stare plakaty. Osoba czytająca alfabet drakońsk
 
 -   **Bez testu:** każdy bard zna utwór i otrzymuje ułatwienie przy dyrygowaniu.
 
-> Wielka sala muzyczna połyskuje lodem, a posadzkę zasypują kryształowe odłamki strąconych żyrandoli. Zamarznięte ciała publiczności leżą wśród piętrowych siedzeń, z twarzami zastygłymi w zachwycie. Na scenie trupio bladzi muzycy osunęli się na roztrzaskane instrumenty.
+> Wielką salę muzyczną pokrywa lód, w którym połyskują kryształowe odłamki strąconych żyrandoli. Wśród piętrzących się rzędów siedzeń leżą zamarznięte ciała słuchaczy, wciąż z wyrazem zachwytu na twarzach. Na scenie trupio bladzi muzycy osunęli się na roztrzaskane instrumenty. Cały widok przypomina koncert zatrzymany w jednej chwili, zanim zdążył wybrzmieć ostatni dźwięk.
 
--   **Bez testu — przy przechodzeniu między siedzeniami (dodatek MG):** „Z rękawa jednej ze słuchaczek wystaje igła z nitką. Srebrny haft na jej mankiecie urywa się w połowie kwiatu; na drugim rękawie jest już skończony”.
+-   **Bez testu — przy przechodzeniu między siedzeniami (dodatek MG):** „Z rękawa jednej ze słuchaczek wystaje igła z nitką, tuż obok niedokończonego srebrnego haftu. Kwiat na tym mankiecie urywa się w połowie, choć na drugim rękawie wyszyto go już w całości”.
 
 -   **Miejsce:** Na pulpicie z przodu sceny spoczywa batuta. Gdy bohater ją chwyta, po sali niesie się dźwięk strojonych instrumentów, a z ciał na scenie wyłania się widmowa orkiestra. Muzycy trzymają instrumenty i wyczekująco patrzą na dyrygenta. Duchów nie można odpędzić ani w żaden sposób zranić.
 

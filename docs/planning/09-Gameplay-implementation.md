@@ -60,14 +60,15 @@ At backend delivery, frontend, browser acceptance and editor completion were sti
 ## Repeat the scoped checks
 
 ```powershell
-dotnet run --project tests/MasterCompanion.Gameplay.Tests -- --rules
-# Set MC_GAMEPLAY_TEST_CONNECTION to an isolated PostgreSQL database named
-# mastercompanion_gameplay_test using local environment configuration.
-dotnet run --project tests/MasterCompanion.Gameplay.Tests -- --persistence
-dotnet run --project tests/MasterCompanion.Gameplay.Tests -- --http
+dotnet test tests/MasterCompanion.Gameplay.Tests.Unit
+# Start Docker; Testcontainers creates isolated PostgreSQL databases automatically.
+dotnet test tests/MasterCompanion.Gameplay.Tests.Integration --filter FullyQualifiedName~PersistenceTests
+dotnet test tests/MasterCompanion.Gameplay.Tests.Integration --filter FullyQualifiedName~HttpTests
 ```
 
-Persistence and HTTP runners apply migrations only to the named test database and create fresh test campaigns. Use a disposable database rather than the local campaign database.
+Persistence and HTTP tests apply migrations only to fresh Testcontainers databases.
+HTTP tests use the actual API through WebApplicationFactory. See
+[test organization](18-Test-organization.md) for the current infrastructure lifecycle.
 
 ## Frontend and editor delivery — 1 October 2026
 

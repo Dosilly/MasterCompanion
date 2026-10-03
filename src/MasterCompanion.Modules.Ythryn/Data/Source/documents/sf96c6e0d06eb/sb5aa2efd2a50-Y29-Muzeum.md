@@ -9,7 +9,7 @@ sortOrder: 64
 
 **Do odczytania**
 
-> Sześciokątny gmach wieńczy lśniąca kopuła. Jedno skrzydło wielkich podwójnych drzwi jest uchylone. W środku widać przewrócone posągi i odłamki na podłodze.
+> Nad sześciokątnym gmachem lśni kopuła, która zachowała swój blask mimo zniszczeń poniżej. Jedno skrzydło ogromnych podwójnych drzwi pozostaje uchylone, odsłaniając wnętrze muzeum. W środku posągi leżą przewrócone, a ich odłamki zaścielają podłogę tam, gdzie kiedyś stały na postumentach.
 
 ### Obraz miejsca — dla MG {#s0ad7e2340b34}
 
@@ -27,9 +27,9 @@ Muzeum ma dwa poziomy. Na dole sześć głodnych nothików krąży pośród znis
 
 Bohaterowie wchodzący schodami na górny poziom trafiają na następującą ekspozycję:
 
-> Pod sufitem przestronnego przedsionka o boku pięćdziesięciu stóp wisi lśniące, oszronione ciało długiej na trzydzieści stóp aberracji. Ma lejkowaty kształt i przypomina ukwiał. Zębatą paszczę na szerszym końcu otaczają gumowate rzęski, a wokół zwisają cztery wiotkie, cienkie kończyny zakończone szponiastymi dłońmi. Na przeciwnym końcu ciała znajduje się ogon z żądłem.
+> Na górnym poziomie wchodzicie do przestronnego przedsionka o boku pięćdziesięciu stóp. Pod jego sufitem wisi oszronione ciało dziwacznej istoty, długie na trzydzieści stóp i połyskujące w świetle. Zwęża się jak lejek, przywodząc na myśl ogromny ukwiał. Na szerszym końcu otwiera się zębata paszcza otoczona gumowatymi rzęskami, a wokół niej zwisają cztery cienkie, wiotkie kończyny ze szponiastymi dłońmi. Drugi koniec ciała przechodzi w ogon zakończony żądłem.
 >
-> Do pobliskiego postumentu przymocowano pokrytą szronem tabliczkę. Całą ekspozycję obramowują cztery kamienne filary, które — co dziwne — w ogóle nie są oszronione.
+> Na pobliskim postumencie umieszczono tabliczkę, lecz jej tekst skrywa szron. Ekspozycję otaczają cztery kamienne filary i dopiero po chwili dostrzegacie, co je wyróżnia: podczas gdy wszystko wokół pobielało od mrozu, na nich nie ma ani śladu szronu.
 
 -   **Fakt:** Filary są czterema **spitting mimics** (patrz dodatek C), strzegącymi eksponatu. Atakują każdego, kto go dotknie albo w inny sposób naruszy.
 

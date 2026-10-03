@@ -7,7 +7,7 @@ sortOrder: 9
 
 **Do odczytania**
 
-> Tunel wychodzi na ogromną grotę. Głęboko w lodzie tkwi całe miasto, oświetlone zielonymi i fioletowymi światłami. Jego wieże pochylają się w jedną stronę. Do pierwszych budynków prowadzi długa lodowa grobla.
+> Tunel otwiera się przed wami na grotę tak ogromną, że w pierwszej chwili trudno ocenić jej rozmiary. Głęboko w lodzie spoczywa całe miasto, rozświetlone zielonymi i fioletowymi blaskami. Jego wieże pochylają się w tę samą stronę, jakby zastygły pod naporem dawnej katastrofy. Ku pierwszym budynkom biegnie długa lodowa grobla, prowadząca wprost do tych pogrzebanych ruin.
 
 ### Sytuacja i zasady — dla MG {#scc1619d8dcaf}
 

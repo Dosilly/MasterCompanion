@@ -9,7 +9,7 @@ sortOrder: 38
 
 **Do odczytania**
 
-> Po sali płynie muzyka, a między tańczącymi krąży służba ze srebrnymi tacami słodyczy. Dwanaście osób w jedwabiach śmieje się i rozmawia, trzymając kolorowe maski na rączkach i wachlarze z piór. Jest tu ciepło.
+> Po wejściu do sali otula was ciepło, a do uszu docierają muzyka, śmiech i rozmowy. Dwanaścioro gości w jedwabnych strojach bawi się w najlepsze, raz po raz unosząc kolorowe maski na rączkach i wachlarze z piór. Między tańczącymi zręcznie krąży służba ze srebrnymi tacami pełnymi słodyczy. Wszystko wygląda tak, jakbyście trafili w sam środek przyjęcia.
 
 ### Obraz miejsca — dla MG {#sb868ac0b8b91}
 
@@ -35,6 +35,6 @@ Sala wygląda jak trwający bal, z gośćmi, jedzeniem i muzyką. Wszystko podtr
 
 **Po rozproszeniu iluzji — Do odczytania:**
 
-> Sala balowa leży w ruinie i pokrywa ją lód, a meble są poprzewracane oraz roztrzaskane. Nad posadzką, na której niegdyś tańczyła szlachta, powoli unoszą się trzy szklane cylindry z żelaznymi okuciami. W każdym pływa obrzmiały ludzki mózg zanurzony w oślizgłej, przezroczystej mazi.
+> Muzyka milknie, goście znikają, a wraz z nimi znika ciepło. Zamiast sali pełnej życia widzicie oblodzoną ruinę z poprzewracanymi, roztrzaskanymi meblami. Nad posadzką, na której niegdyś wirowali tancerze, powoli unoszą się trzy szklane cylindry z żelaznymi okuciami. W każdym z nich pływa obrzmiały ludzki mózg, zanurzony w przezroczystej, oślizgłej mazi.
 
 <details id="s4fe0b3e540c9" class="context"><summary>Tło — dla MG</summary><div data-details-content=""><p>Trzech netherilskich czarodziejów postanowiło kontynuować zabawę w nieśmierci i każdy stał się <strong>brain in a jar</strong> (patrz dodatek C). Nieumarła egzystencja doprowadziła ich do obłędu. Rozproszenie iluzji wprawia ich w furię. Atakują każdego gościa, który w jakikolwiek sposób zepsuje bal.</p><hr></div></details>

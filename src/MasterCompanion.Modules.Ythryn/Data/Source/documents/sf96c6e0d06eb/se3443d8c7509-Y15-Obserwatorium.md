@@ -9,7 +9,7 @@ sortOrder: 31
 
 **Do odczytania**
 
-> Pierścień kamiennych przypór podtrzymuje pochyloną wieżę. Wokół niej stoją milczący strażnicy o podobnych, obojętnych twarzach. W dachu zieje wyrwa, jakby przebił go ogromny głaz.
+> Pochyloną wieżę otacza pierścień kamiennych przypór, podtrzymujących jej nadwerężone mury. Wokół budowli stoją milczący strażnicy, wszyscy o podobnych, obojętnych twarzach. Kiedy spoglądacie wyżej, dostrzegacie ogromną wyrwę w dachu — wygląda, jakby przebił go spadający głaz.
 
 ### Obraz miejsca — dla MG {#s8a0bacb09292}
 
@@ -35,11 +35,11 @@ Mageny blokują wejście do wieży, a za zaspawanymi drzwiami przebywa niebieski
 
 **Do odczytania po dotarciu na górę**
 
-> Wielki teleskop dominuje w okrągłej komnacie o średnicy trzydziestu stóp na szczycie wieży. W jego okular wpatruje się potężny, dwunożny stwór podobny do żaby, odziany w szaty czarodzieja. Mamrocze do siebie i nie zwraca na was uwagi.
+> Na szczycie wieży trafiacie do okrągłej komnaty o średnicy trzydziestu stóp, której znaczną część zajmuje ogromny teleskop. Przy jego okularze pochyla się potężny, dwunożny stwór podobny do żaby, ubrany w szaty czarodzieja. Jest tak pochłonięty patrzeniem i mamrotaniem do siebie, że nie zwraca na was uwagi.
 >
-> Okna zasłaniają adamantynowe tarcze. Wielki fragment kamienia z innego budynku przebił dach i utkwił w posadzce niczym poszarpany kamienny nóż. Po jednej stronie odłamka widnieje dziwna inskrypcja.
+> Okna zasłonięto adamantynowymi tarczami, lecz nad głowami zieje wyrwa, przez którą wpadł fragment ściany innego budynku. Teraz sterczy z posadzki niczym poszarpane ostrze kamiennego noża. Na jednym z jego boków dostrzegacie dziwną inskrypcję.
 >
-> Na prawo od schodów stoi kamienny pulpit z miedzianą tubą rozchyloną jak kielich kwiatu.
+> Na prawo od schodów stoi jeszcze kamienny pulpit, a umocowana na nim miedziana tuba rozchyla się ku górze jak kielich kwiatu.
 
 -   **Teleskop:** uszkodzony bez możliwości naprawy. Arcymistrzyni próbuje odwrócić jego działanie i wysłać siebie do gwiazd; jej plan nie może się udać.
 
@@ -65,7 +65,7 @@ Fragment ściany z Y11 nosi napis po drakońsku:
 
 *Na najwyższym piętrze, przy oglądaniu pulpitu na prawo od schodów.*
 
-> Kamienny pulpit sięga wam do pasa. Przytwierdzona do niego miedziana tuba wygina się ku górze i rozszerza w kielich wielkości ludzkiej głowy, zwrócony ku osobie stojącej przed pulpitem. W głębi kielicha błyszczy cienka srebrna tarczka. Przed tubą leży wmontowana w kamień miedziana płytka z wyrytym obrysem dłoni. Obok, pod popękaną skórzaną okładką, leżą zszyte kartki przyciśnięte odważnikiem.
+> Kamienny pulpit sięga wam do pasa, a przytwierdzona do niego miedziana tuba wygina się ku górze. Jej wylot rozszerza się w kielich wielkości ludzkiej głowy, zwrócony wprost ku stojącej przed pulpitem osobie. W głębi połyskuje cienka srebrna tarczka. Tuż przed tubą w kamień wprawiono miedzianą płytkę z obrysem dłoni, jakby czekającą, aż ktoś przyłoży do niej rękę. Obok leżą zszyte kartki pod popękaną skórzaną okładką, przyciśnięte odważnikiem.
 
 **Działanie i reakcje — dla MG**
 

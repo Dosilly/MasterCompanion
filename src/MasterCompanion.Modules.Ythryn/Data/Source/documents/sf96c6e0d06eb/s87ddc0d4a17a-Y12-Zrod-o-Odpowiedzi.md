@@ -9,7 +9,7 @@ sortOrder: 28
 
 **Do odczytania**
 
-> Pośrodku placu otwiera się głęboka studnia. Na jej krawędzi błyszczy lód, a na dole niczego nie widać. Wokół ustawiono pięć kryształowych ław oświetlonych fioletową latarnią.
+> Pośrodku placu otwiera się studnia, której oblodzona krawędź połyskuje w świetle fioletowej latarni. Jej blask pada także na pięć kryształowych ław ustawionych wokół, lecz nie sięga dna. W głębi widać jedynie ciemność, przez którą trudno ocenić, jak daleko w dół biegnie szyb.
 
 ### Obraz miejsca — dla MG {#sd4195123d226}
 
