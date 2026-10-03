@@ -163,8 +163,8 @@ application and user database were not used. No pushes or merges were performed.
 
 ## Delivered behavior and evidence
 
-The first slice is implemented. The worktree uses merged trunk `bdfcc9c` and
-branch `codex/campaign-notes-current`; live installation is separate.
+The first slice is implemented. Implementation used merged trunk `bdfcc9c` and
+branch `codex/campaign-notes-current`. Local deployment is recorded below.
 
 Commands actually run from the worktree:
 
@@ -222,3 +222,33 @@ scoped to the browser tab's session storage. Rename, move and delete are deferre
 Next implementation slice: full-text search for campaign materials, with its own
 contract, ownership and scoped test plan before editing. This delivery does not
 include search, session records, new maps or multiple-campaign management.
+
+## Local deployment — 3 October 2026
+
+The user authorized merging into trunk and updating the existing local container.
+Both branches already pointed to `cbdff13` (`feat: add notes feature`);
+`git merge --ff-only codex/campaign-notes-current` confirmed they were up to date.
+The production image build passed frontend compilation, localization/boundary
+guards and API publication. The previous image was retained under the local tag
+`mastercompanion:before-notes-20261003` for application rollback.
+
+After graceful application shutdown, a custom-format PostgreSQL backup was saved
+to the ignored `.local/notes-before-start-20261003-cbdff13.dump` and its archive
+contents were successfully inspected. Compose replaced only `app`, using
+`up -d --no-deps --wait`; the PostgreSQL container identity and external volume
+remained unchanged. The updated image digest is
+`sha256:f29b9d192b9bf7a2be953dc8065be321b6704c637eb00cd670ae59b32a350134`.
+
+Counts and deterministic complete-row fingerprints matched across all seven
+database tables immediately before and after startup: one campaign, ten folders,
+106 materials, one map, one game state, 88 operation receipts and three applied
+migrations. Documents, revisions and gameplay were preserved; no migration or
+campaign write was needed. The backup is local recovery evidence, not permission
+to replace later edits.
+
+`node --test tools/container.test.mjs` passed all four read-only integration tests.
+The app and database were healthy, the app remained bound to `127.0.0.1:4200`,
+and PostgreSQL had no published port. A fresh browser view showed the new note
+action and no console errors. No live note or game operation was created for
+verification. Existing functional test evidence above was reused because source
+behavior did not change during deployment.

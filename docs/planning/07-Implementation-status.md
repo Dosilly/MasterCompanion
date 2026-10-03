@@ -1,8 +1,9 @@
 # Implementation status
 ## Campaign-owned notes — 3 October 2026
 
-Implemented on `codex/campaign-notes-current`, freshly based on merged trunk
-`bdfcc9c`. New note creates an ordinary material in an existing folder or unfiled,
+Delivered to `trunk` in `cbdff13`, following implementation on
+`codex/campaign-notes-current` based on `bdfcc9c`.
+New note creates an ordinary material in an existing folder or unfiled,
 opens it in read mode, and reuses explicit editing and revision-protected autosave.
 Exact pending creation requests survive browser-tab reload; uncertain responses
 retry the same identity without duplicating or resetting a note. Existing drafts,
@@ -23,8 +24,15 @@ pixel review confirmed significant changes stayed inside navigation. The normal
 visual comparison then passed twelve cases against all twenty-eight baselines.
 These browser fixtures establish frontend evidence; PostgreSQL evidence is separate.
 
-No migrations, module source edits or user-campaign writes were needed. The
-feature has not been merged or deployed to the user's running application.
+No migrations, module source edits or user-campaign writes were needed. On
+3 October, the user authorized merging and updating the local container. The
+branch was already integrated into `trunk`; the fast-forward merge confirmed
+it was up to date. The production image was rebuilt and only the app container
+was replaced. A verified custom-format backup preceded startup; all seven table
+counts and content fingerprints matched afterward, including material revisions,
+game state/history and migration history. PostgreSQL and its existing volume
+remained running. Four read-only container tests passed, and a fresh browser view
+confirmed the new note action with no console errors.
 Full-text search is the next slice; folder authoring, rename/move/delete and
 session records remain deferred. Details: [campaign notes](14-Campaign-notes.md).
 
