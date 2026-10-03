@@ -68,3 +68,7 @@ dist/
 
 # Module distribution packages are compiled from Markdown sources.
 /src/MasterCompanion.Modules.Ythryn/Data/Generated/
+
+# Windows browser baselines are versioned test inputs, not native build output.
+!/src/mastercompanion-web/e2e/snapshots/win32/
+!/src/mastercompanion-web/e2e/snapshots/win32/**
