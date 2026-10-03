@@ -5,9 +5,8 @@ using MasterCompanion.Engine.Features.Gameplay;
 using MasterCompanion.Engine.Persistence;
 using MasterCompanion.Modules.Ythryn.Gameplay;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
 
-namespace MasterCompanion.Gameplay.Tests.Integration;
+namespace MasterCompanion.Gameplay.Tests.Integration.Persistence;
 
 [Collection("PostgreSQL")]
 public sealed class UpgradePersistenceTests(PostgreSqlFixture database) : GameplayPersistenceTestBase(database)

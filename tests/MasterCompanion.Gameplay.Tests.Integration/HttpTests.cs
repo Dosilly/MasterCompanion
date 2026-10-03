@@ -1,13 +1,10 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using MasterCompanion.Contracts;
 using MasterCompanion.Engine.Features.Gameplay;
 using MasterCompanion.Engine.Persistence;
-using MasterCompanion.Modules.Ythryn.Gameplay;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Npgsql;
 
 namespace MasterCompanion.Gameplay.Tests.Integration;
 

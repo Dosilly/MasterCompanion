@@ -1,13 +1,6 @@
 using System.Text.Json;
-using System.Text.Json.Nodes;
-using MasterCompanion.Contracts;
-using MasterCompanion.Engine.Features.Gameplay;
-using MasterCompanion.Engine.Persistence;
-using MasterCompanion.Modules.Ythryn.Gameplay;
-using Microsoft.EntityFrameworkCore;
-using Npgsql;
 
-namespace MasterCompanion.Gameplay.Tests.Integration;
+namespace MasterCompanion.Gameplay.Tests.Integration.Persistence;
 
 [Collection("PostgreSQL")]
 public sealed class ExpeditionPersistenceTests(PostgreSqlFixture database) : GameplayPersistenceTestBase(database)

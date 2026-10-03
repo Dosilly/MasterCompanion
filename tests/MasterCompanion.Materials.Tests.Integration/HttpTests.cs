@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using MasterCompanion.Engine.Features.Materials;
 using MasterCompanion.Engine.Persistence;
+using MasterCompanion.Gameplay.Tests.Integration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;

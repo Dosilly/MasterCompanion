@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Logging;
 
-namespace MasterCompanion.Tests.Infrastructure;
+namespace MasterCompanion.Gameplay.Tests.Integration;
 
 public sealed class CampaignApiFactory(string connectionString) : WebApplicationFactory<Program>
 {

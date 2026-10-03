@@ -1,8 +1,8 @@
 using MasterCompanion.Contracts;
-using MasterCompanion.Engine.Features.Materials;
-using MasterCompanion.Engine.Features.Workspace;
 using MasterCompanion.Engine.Features.Assets;
 using MasterCompanion.Engine.Features.Gameplay;
+using MasterCompanion.Engine.Features.Materials;
+using MasterCompanion.Engine.Features.Workspace;
 using MasterCompanion.Engine.Persistence;
 using MasterCompanion.Modules.Ythryn;
 using MasterCompanion.Modules.Ythryn.Gameplay;
@@ -46,4 +46,7 @@ await using (var scope = app.Services.CreateAsyncScope())
 
 await app.RunAsync();
 
-public partial class Program;
+namespace MasterCompanion.Api
+{
+    public partial class Program;
+}

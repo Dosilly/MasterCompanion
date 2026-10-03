@@ -1,8 +1,7 @@
 using Npgsql;
 using Testcontainers.PostgreSql;
-using Xunit;
 
-namespace MasterCompanion.Tests.Infrastructure;
+namespace MasterCompanion.Gameplay.Tests.Integration;
 
 [CollectionDefinition("PostgreSQL")]
 public sealed class PostgreSqlCollection : ICollectionFixture<PostgreSqlFixture>;
