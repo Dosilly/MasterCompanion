@@ -58,8 +58,8 @@ Run commands and setup are documented in [README](../../README.md#automated-brow
 Examples from the repository root:
 
 ```powershell
-pnpm --dir src/mastercompanion-web test:ui --grep @editor
-pnpm --dir src/mastercompanion-web test:ui --project fullhd-dark --grep @gameplay
+pnpm --dir src/mastercompanion-web test:ui --grep '@editor'
+pnpm --dir src/mastercompanion-web test:ui --project fullhd-dark --grep '@gameplay'
 pnpm --dir src/mastercompanion-web test:ui:update reader.spec.ts
 pnpm --dir src/mastercompanion-web test:ui:server
 ```
@@ -99,6 +99,16 @@ container restart or API integration probe is required for this test tooling.
 Selection, concurrency and visual comparison follow the official Playwright
 [parallelism](https://playwright.dev/docs/test-parallel) and
 [visual comparison](https://playwright.dev/docs/test-snapshots) behavior.
+
+Before merging into trunk, the fixture was aligned with the encounter-table
+projection introduced by the module-tool refinements. The 16 gameplay baselines
+were reviewed for the pending-action summary, highlighted cards and encounter
+preview controls. A normal filtered run compared these images without updating
+them: all four gameplay cases passed with four workers in 3.2 seconds. Strict
+UI type checking, code policy and the production frontend build also passed
+on the merged tree. The unchanged reader/editor evidence above was reused.
+PowerShell filter examples quote tags because an unquoted leading `@` is
+interpreted by the shell.
 
 Map interaction, party editing, game-operation persistence, backend validation,
 contrast measurement and operating systems other than Windows are outside this

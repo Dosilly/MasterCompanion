@@ -92,9 +92,9 @@ pnpm --dir src/mastercompanion-web check:code
 pnpm --dir src/mastercompanion-web check:boundaries
 
 # Scoped browser checks; choose the tag or spec affected by a UI change
-pnpm --dir src/mastercompanion-web test:ui --grep @reader
-pnpm --dir src/mastercompanion-web test:ui --grep @editor
-pnpm --dir src/mastercompanion-web test:ui --grep @gameplay
+pnpm --dir src/mastercompanion-web test:ui --grep '@reader'
+pnpm --dir src/mastercompanion-web test:ui --grep '@editor'
+pnpm --dir src/mastercompanion-web test:ui --grep '@gameplay'
 
 # Full backend build when integration is affected; otherwise build the affected project
 dotnet build MasterCompanion.slnx --no-restore

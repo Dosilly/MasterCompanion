@@ -6,6 +6,7 @@ namespace MasterCompanion.Modules.Ythryn.Gameplay;
 
 internal sealed record EncounterCheck(long Id, string Kind, long Minute);
 internal sealed record EncounterResult(EncounterCheck Check, int Roll, string Outcome);
+internal sealed record EncounterBand(int Min, int Max, string Outcome);
 internal sealed record ExpeditionState(bool AurilEnabled,
     long? AvariceArrivedAt, long? AurilArrivedAt, long ExplorationMinutes, long NextId,
     EncounterCheck[] Pending, EncounterResult? LastResult);
@@ -91,6 +92,7 @@ internal static class ExpeditionRules
     {
         state.AurilEnabled,
         state.ExplorationMinutes, state.Pending, state.LastResult,
+        pendingTable = state.Pending.FirstOrDefault() is { } check ? Table(check, state) : null,
         nextHourlyIn = 60 - state.ExplorationMinutes % 60,
         avarice = Arrival(snapshot.RestEnds.Count == 0 ? null : snapshot.RestEnds[0], state.AvariceArrivedAt, snapshot.TimeMinutes, true),
         auril = Arrival(1440, state.AurilArrivedAt, snapshot.TimeMinutes, state.AurilEnabled)
@@ -115,6 +117,24 @@ internal static class ExpeditionRules
             <= 90 => "nothics",
             _ => "iriolarthas"
         };
+    }
+
+    // Preview and confirmation share the same rules, including the original check's arrival chronology.
+    private static EncounterBand[] Table(EncounterCheck check, ExpeditionState state)
+    {
+        var bands = new List<EncounterBand>();
+        var min = 1;
+        var outcome = Outcome(check, min, state);
+        for (var roll = 2; roll <= 100; roll++)
+        {
+            var next = Outcome(check, roll, state);
+            if (next == outcome) continue;
+            bands.Add(new(min, roll - 1, outcome));
+            min = roll;
+            outcome = next;
+        }
+        bands.Add(new(min, 100, outcome));
+        return bands.ToArray();
     }
 
     internal static void Validate(ExpeditionState state, long minute)

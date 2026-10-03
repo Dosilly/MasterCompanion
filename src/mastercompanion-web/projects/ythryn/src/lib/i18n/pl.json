@@ -66,7 +66,7 @@
     "enableAuril": "Włącz przybycie Auril",
     "rules": "Otwórz zasady",
     "queueTitle": "Zaległe sprawdzenia spotkań",
-    "queueHint": "Rozstrzygaj w kolejności. Wpisz k100 od 1 do 100 (100 oznacza 00). Zastępstwa w tabeli zależą od potwierdzonych godzin przybycia. Potwierdź wcześniejsze przybycie przed rozstrzygnięciem zaległych rzutów, których dotyczy.",
+    "queueHint": "Rozstrzygaj w kolejności. Rzuć k100 lub wpisz wynik od 1 do 100 (100 oznacza 00). Zastępstwa w tabeli zależą od potwierdzonych godzin przybycia. Potwierdź wcześniejsze przybycie przed rozstrzygnięciem zaległych rzutów, których dotyczy.",
     "kinds": {
       "hourly": "Godzinowe sprawdzenie eksploracji",
       "building": "Sprawdzenie nienumerowanego budynku",
@@ -97,6 +97,11 @@
       "avaricePatrol": "Patrol Avarice: ocalała grupa, zwykle pięciu fanatyków. Uwzględnij potwierdzone straty."
     },
     "dieName": "k100",
-    "queueLimitHint": "Kolejka mieści 240 sprawdzeń. Jeśli działanie przekroczyłoby limit, rozstrzygnij wcześniejsze sprawdzenia i spróbuj ponownie. Odrzucone działanie nie zapisuje czasu ani nowych sprawdzeń."
-  }
+    "queueLimitHint": "Kolejka mieści 240 sprawdzeń. Jeśli działanie przekroczyłoby limit, rozstrzygnij wcześniejsze sprawdzenia i spróbuj ponownie. Odrzucone działanie nie zapisuje czasu ani nowych sprawdzeń.",
+    "rollDie": "Rzuć k100",
+    "reroll": "Przelosuj",
+    "previewTitle": "Wylosowane spotkanie",
+    "previewHint": "Możesz przelosować dowolną liczbę razy lub wpisać własny wynik. Dopiero zapis zamyka sprawdzenie i utrwala spotkanie w historii."
+  },
+  "actionRequired": "Wymaga działania"
 }

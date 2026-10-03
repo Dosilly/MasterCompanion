@@ -14,6 +14,25 @@ backup and 179 unchanged row fingerprints establish data preservation. The
 container is healthy; four read-only integration tests and a live browser check
 passed. The existing PostgreSQL container and volume were retained.
 
+The 3 October refinement adds warning icons and a linked pending-action summary,
+plus d100 previews with material navigation, repeatable rerolls and manual input.
+The server supplies the active table for the oldest check using the same arrival
+chronology as confirmation. Verification passed 13 focused frontend tests, 24
+existing Blight and 10 expedition rule cases, the frontend build, and code and
+boundary checks. Browser inspection used the compiled module with an isolated
+in-memory context: manual/dice previews, rerolls, arrival replacements, material
+navigation callbacks, invalid-input prevention and explicit confirmation passed.
+Both themes were inspected at 1920×1080 without horizontal overflow or console
+errors. Screenshots are under `.local/module-preview/`. This refinement changes
+no persistence operation or database schema. At the user's subsequent request,
+the changes were merged into local `trunk` and the app container was rebuilt and
+replaced. A verified backup is saved at `.local/module-tools-before-20261003.dump`;
+all 195 database row fingerprints matched before and after replacement. The
+existing PostgreSQL container and volume were retained. Four read-only container
+tests, the new live preview projection and a browser game-view check passed.
+The live screenshot is `.local/module-tools-live-20261003.png`. Remote branches
+were not pushed; unrelated changes in the primary checkout were preserved.
+
 ## Observatory receiver description — 2 October 2026
 
 The fixed voice receiver in Y15 is now described as a copper speaking horn on a

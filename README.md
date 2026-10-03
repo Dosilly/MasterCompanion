@@ -110,9 +110,9 @@ pnpm --dir src/mastercompanion-web check:ui
 pnpm --dir src/mastercompanion-web test:ui
 
 # Select only the affected area; all theme/viewport variants still apply.
-pnpm --dir src/mastercompanion-web test:ui --grep @reader
-pnpm --dir src/mastercompanion-web test:ui --grep @editor
-pnpm --dir src/mastercompanion-web test:ui --grep @gameplay
+pnpm --dir src/mastercompanion-web test:ui --grep '@reader'
+pnpm --dir src/mastercompanion-web test:ui --grep '@editor'
+pnpm --dir src/mastercompanion-web test:ui --grep '@gameplay'
 pnpm --dir src/mastercompanion-web test:ui:report
 ```
 

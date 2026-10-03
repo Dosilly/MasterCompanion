@@ -10,7 +10,11 @@ input[type='number'] { width: 7rem; max-width: 100%; padding: .45rem; background
 .choice { display: flex; align-items: center; gap: .5rem; width: 100%; }
 button { padding: .5rem .8rem; margin-right: .4rem; border: 1px solid var(--line); border-radius: .3rem; background: var(--paper); color: var(--ink); cursor: pointer; }
 button:disabled { opacity: .55; cursor: default; }
+.die-icon { width: 1.3rem; height: 1.3rem; vertical-align: -.25rem; margin-right: .4rem; fill: none; stroke: currentColor; stroke-width: 1.5; }
+.die-icon circle { fill: currentColor; stroke: none; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.due { color: var(--accent); font-weight: 700; }
+.needs-action { border-color: var(--error-line); border-left-width: 4px; }
+.roll-preview:not(:empty) { padding: 1rem; background: var(--soft); border-radius: .4rem; }
+.roll-preview h4 { margin: 0; }
 .encounter-queue { margin-top: 1rem; }
 .last-result { margin-top: 1rem; border-top: 1px solid var(--line); }

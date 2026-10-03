@@ -58,6 +58,13 @@ export function campaignFixture(): { workspace: WorkspaceDto; materials: [Materi
         expedition: {
           aurilEnabled: true, explorationMinutes: 90, nextHourlyIn: 30,
           pending: [{ id: 1, kind: 'hourly', minute: 60 }, { id: 2, kind: 'building', minute: 90 }], lastResult: null,
+          pendingTable: [
+            { min: 1, max: 50, outcome: 'none' }, { min: 51, max: 55, outcome: 'tombTapper' },
+            { min: 56, max: 60, outcome: 'livingHands' }, { min: 61, max: 65, outcome: 'spittingMimics' },
+            { min: 66, max: 70, outcome: 'gargoyles' }, { min: 71, max: 75, outcome: 'galvanPatrol' },
+            { min: 76, max: 80, outcome: 'hypnosPatrol' }, { min: 81, max: 90, outcome: 'nothics' },
+            { min: 91, max: 100, outcome: 'iriolarthas' },
+          ],
           avarice: { deadline: 480, arrivedAt: null, enabled: true, remainingMinutes: 0, pending: true },
           auril: { deadline: 1440, arrivedAt: null, enabled: true, remainingMinutes: 0, pending: true },
         },

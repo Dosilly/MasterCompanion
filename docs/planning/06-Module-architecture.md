@@ -100,6 +100,17 @@ stable heading anchor. A module supplies its own rules material/anchor IDs and
 localized link text without importing workspace or editor implementation. The
 HTTP/recovery session remains independent of navigation.
 
+The Ythryn expedition projection includes `pendingTable`: contiguous d100 bands
+(`min`, `max`, `outcome`) for the oldest queued check, or null for an empty queue.
+The backend derives these bands from the same outcome function used at
+confirmation, including arrivals at the original check minute and the separate
+patrol chance. The module frontend validates complete 1–100 coverage and known
+outcome identifiers. Dice rolls, manual adjustments and repeated previews are
+local inputs; only explicit confirmation submits the existing revision-protected
+operation. No persisted schema or neutral engine contract changes are needed.
+Module-owned pending summaries and warning icons derive from confirmed expedition
+and character projections and link to the relevant tool controls.
+
 Campaign party identity and roster editing belong to the engine and are available
 to every registered module in a separate party tab. Tools refer to the confirmed
 `snapshot.party` by stable character IDs through `GameToolContext`; names are

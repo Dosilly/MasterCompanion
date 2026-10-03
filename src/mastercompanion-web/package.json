@@ -18,7 +18,7 @@
     "test:content": "node --test tools/content.test.mjs tools/module-sources.test.mjs",
     "test:autosave": "node --test tools/autosave.test.mjs tools/material-editor.test.mjs",
     "test:editor": "node --test tools/editor-insertion.test.mjs",
-    "test:gameplay": "node --test tools/gameplay-session.test.mjs tools/blight-view.test.mjs tools/expedition-view.test.mjs",
+    "test:gameplay": "node --test tools/gameplay-session.test.mjs tools/blight-view.test.mjs tools/expedition-view.test.mjs tools/expedition-tool.test.mjs",
     "test:api": "node tools/verify-api.mjs",
     "test:api-errors": "node tools/verify-api.mjs --errors-only"
   },

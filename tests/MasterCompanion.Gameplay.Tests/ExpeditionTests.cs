@@ -12,7 +12,7 @@ public static class ExpeditionTests
     {
         var cases = new Action[] { ExplorationAndSearch, RestAndArrivalDeadlines, ArrivalReplacements,
             TableBoundaries, PatrolChance, StrictCommandsAndQueueBounds, UpgradePreservesCurrentState, RosterPreservesExpedition,
-            RejectCorruptExpeditionState };
+            RejectCorruptExpeditionState, PreviewMatchesConfirmation };
         foreach (var test in cases) test();
         Console.WriteLine($"Ythryn expedition rules: {cases.Length} cases passed.");
     }
@@ -106,6 +106,37 @@ public static class ExpeditionTests
             "A first building search must apply the separate 20% chance after actual arrival, including numbered locations.");
         var repeat = Apply(state, new { kind = "searchBuilding", unnumbered = false, newBuilding = false }, 30);
         Require(Queue(repeat).GetArrayLength() == 0, "Repeat searches must not create a new-building patrol roll.");
+    }
+    private static void PreviewMatchesConfirmation()
+    {
+        Require(View(Initial()).GetProperty("pendingTable").ValueKind == JsonValueKind.Null,
+            "An empty queue must not offer a preview for an invented check.");
+        var ordinary = Apply(Initial(), new { kind = "explore" }, 180);
+        var laterArrival = Apply(ordinary, new { kind = "confirmArrival", faction = "avarice", minute = 120 });
+        var replacement = Roll(laterArrival, 50);
+        var bothArrivals = Apply(replacement, new { kind = "confirmArrival", faction = "auril", minute = 120 });
+        var avarice = Apply(Initial(), new { kind = "confirmArrival", faction = "avarice", minute = 0 });
+        var patrol = Apply(avarice, new { kind = "searchBuilding", unnumbered = false, newBuilding = true }, 30);
+        foreach (var state in new[] { ordinary, laterArrival, replacement, bothArrivals, patrol })
+        {
+            var before = state.ModuleState.GetRawText();
+            var table = View(state).GetProperty("pendingTable").EnumerateArray().ToArray();
+            Require(table[0].GetProperty("min").GetInt32() == 1 && table[^1].GetProperty("max").GetInt32() == 100,
+                "The preview table must cover every d100 result.");
+            for (var roll = 1; roll <= 100; roll++)
+            {
+                var band = table.Single(row => row.GetProperty("min").GetInt32() <= roll && row.GetProperty("max").GetInt32() >= roll);
+                Require(band.GetProperty("outcome").GetString() == Outcome(Roll(state, roll)),
+                    "Preview and confirmation must agree for every roll, arrival chronology and patrol chance.");
+            }
+            Require(state.ModuleState.GetRawText() == before, "Reading or trying preview results must preserve confirmed state.");
+        }
+        Require(View(laterArrival).GetProperty("pendingTable")[2].GetProperty("outcome").GetString() == "livingHands" &&
+            View(replacement).GetProperty("pendingTable")[2].GetProperty("outcome").GetString() == "cultFanatics",
+            "Avarice preview replacements start at actual arrival, including backdated queued checks.");
+        Require(View(bothArrivals).GetProperty("pendingTable")[3].GetProperty("outcome").GetString() == "coldlightWalkers" &&
+            View(bothArrivals).GetProperty("pendingTable")[4].GetProperty("outcome").GetString() == "frostGiantPatrol",
+            "Both Auril replacements must appear in the preview after actual arrival.");
     }
     private static void StrictCommandsAndQueueBounds()
     {
