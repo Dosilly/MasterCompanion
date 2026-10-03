@@ -64,8 +64,19 @@ used the compiled module with an isolated in-memory context, exercised previews,
 rerolls, material-navigation callbacks, input validation and explicit saving,
 and inspected both themes at 1920×1080 without overflow or console errors.
 Screenshots are retained in `.local/module-preview/`. Existing persistence rules
-were unchanged, so the refinement did not repeat database probes or deploy the
-user's application.
+were unchanged, so the refinement did not repeat persistence-write probes.
+
+At the user's subsequent request, implementation commit `d9b31f6` was merged
+into local `trunk` and its Docker app image was rebuilt. Only the app container
+was replaced; the existing PostgreSQL container and volume were retained.
+A custom-format backup with a verified archive manifest was saved to
+`.local/module-tools-before-20261003.dump`. All 195 database row fingerprints
+matched before and after replacement, including documents, revisions and game
+history. The app reached healthy status at `http://localhost:4200`; four read-only
+container tests passed. A live GET confirmed the new `pendingTable` projection,
+and the game view loaded without console errors or campaign writes. Its screenshot
+is `.local/module-tools-live-20261003.png`. Remote branches were not pushed, and
+uncommitted work in the primary checkout was preserved.
 
 ## Ownership and data preservation
 

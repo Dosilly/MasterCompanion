@@ -21,8 +21,14 @@ in-memory context: manual/dice previews, rerolls, arrival replacements, material
 navigation callbacks, invalid-input prevention and explicit confirmation passed.
 Both themes were inspected at 1920×1080 without horizontal overflow or console
 errors. Screenshots are under `.local/module-preview/`. This refinement changes
-no persistence operation or database schema; no new live database probe or
-deployment was performed.
+no persistence operation or database schema. At the user's subsequent request,
+the changes were merged into local `trunk` and the app container was rebuilt and
+replaced. A verified backup is saved at `.local/module-tools-before-20261003.dump`;
+all 195 database row fingerprints matched before and after replacement. The
+existing PostgreSQL container and volume were retained. Four read-only container
+tests, the new live preview projection and a browser game-view check passed.
+The live screenshot is `.local/module-tools-live-20261003.png`. Remote branches
+were not pushed; unrelated changes in the primary checkout were preserved.
 
 ## Observatory receiver description — 2 October 2026
 
