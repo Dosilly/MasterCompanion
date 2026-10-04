@@ -27,3 +27,9 @@ Module compilation passed with the existing 109 materials, 11 folders and one ma
 Four scoped content cases passed: schema round trips, internal links, consolidated
 section references and lossless Markdown export. The code/localization guard and
 formatting of the changed reference fixture also passed.
+
+Local delivery completed from merged `trunk` (`4509514`) using image
+`mastercompanion:fenes-case-4509514`. The application container is healthy;
+the health endpoint and player-material route return HTTP 200. API readback
+matches all three compiled documents. Replaying the atomic update leaves
+their revisions unchanged.
