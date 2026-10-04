@@ -101,7 +101,35 @@
     "rollDie": "Roll d100",
     "reroll": "Reroll",
     "previewTitle": "Rolled encounter",
-    "previewHint": "Reroll as often as needed or enter your own result. Only saving closes the check and records the encounter in history."
+    "previewHint": "Reroll as often as needed or enter your own result. Only saving closes the check and records the encounter in history.",
+    "conversionHint": "Confirmation immediately converts all remaining cult fanatics into Auril’s coldlight walkers. Record earlier losses first; undo restores the entire arrival and conversion."
   },
-  "actionRequired": "Action required"
+  "actionRequired": "Action required",
+  "forces": {
+    "title": "Rival forces",
+    "hint": "Record confirmed losses, including those before arrival. Encounter rolls do not deduct troops. Use Undo last operation to correct a loss. Existing campaigns start with source counts; enter any earlier losses.",
+    "beforeArrival": "Before confirmed arrival",
+    "arrived": "Arrival confirmed",
+    "remaining": "Remaining",
+    "dead": "Dead",
+    "converted": "Cultists converted to coldlight walkers",
+    "recordLoss": "Record losses",
+    "lossCount": "Number lost",
+    "invalidLoss": "Enter a positive whole number no greater than the remaining force.",
+    "unavailable": "Could not verify force counts. Refresh game state.",
+    "factions": {
+      "avarice": "Avarice",
+      "auril": "Auril"
+    },
+    "units": {
+      "cultFanatics": "Cult fanatics",
+      "gargoyles": "Gargoyles",
+      "ravens": "Raven familiar",
+      "mountainGoats": "Mountain goats",
+      "frostGiantSkeletons": "Frost giant skeletons",
+      "snowGolems": "Snow golems",
+      "winterWolves": "Winter wolves",
+      "coldlightWalkers": "Coldlight walkers"
+    }
+  }
 }

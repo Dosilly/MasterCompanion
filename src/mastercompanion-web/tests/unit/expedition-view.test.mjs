@@ -11,7 +11,7 @@ import {
 } from '../../projects/ythryn/src/lib/gameplay/expedition-view';
 function fixture() {
   return {
-    snapshot: { timeMinutes: 1500, restEnds: [480], moduleSchemaVersion: 3 },
+    snapshot: { timeMinutes: 1500, restEnds: [480], moduleSchemaVersion: 4 },
     moduleView: {
       expedition: {
         aurilEnabled: true,

@@ -116,7 +116,7 @@ describe('Arcane Blight projection and commands', () => {
         delete state.moduleView.characters[0].nextCheck;
       },
       (state) => {
-        state.snapshot.moduleSchemaVersion = 4;
+        state.snapshot.moduleSchemaVersion = 5;
       },
       (state) => {
         state.snapshot.party[0].id = secondId;

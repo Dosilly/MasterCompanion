@@ -9,10 +9,10 @@ namespace MasterCompanion.Modules.Ythryn.Gameplay;
 public sealed class YthrynGameRules : ICampaignGameRules
 {
     public string ModuleId => "ythryn";
-    public int StateSchemaVersion => 3;
+    public int StateSchemaVersion => 4;
 
     public JsonElement Initialize(IReadOnlyList<GameCharacter> party) => Serialize(
-        new BlightState(party.Select(character => Healthy(character.Id, 0)).ToArray(), ExpeditionRules.Initialize()));
+        new BlightState(party.Select(character => Healthy(character.Id, 0)).ToArray(), ExpeditionRules.Initialize(), RivalForcesRules.Initialize()));
 
     public void Validate(GameSnapshot snapshot) => ReadState(snapshot);
 
@@ -44,7 +44,12 @@ public sealed class YthrynGameRules : ICampaignGameRules
                 NextRecovery = character.Status == "infected" ? checked(start + ExposureInterval) : null
             };
         }).ToArray();
-        var upgraded = snapshot with { ModuleSchemaVersion = StateSchemaVersion, ModuleState = Serialize(new BlightState(characters, state.Adventure ?? ExpeditionRules.Initialize())) };
+        var adventure = state.Adventure ?? ExpeditionRules.Initialize();
+        var upgraded = snapshot with
+        {
+            ModuleSchemaVersion = StateSchemaVersion,
+            ModuleState = Serialize(new BlightState(characters, adventure, RivalForcesRules.Upgrade(adventure)))
+        };
         Validate(upgraded);
         return upgraded;
     }
@@ -55,7 +60,7 @@ public sealed class YthrynGameRules : ICampaignGameRules
         var retained = current.Characters.ToDictionary(character => character.Id);
         var characters = proposed.Party.Select(character => retained.TryGetValue(character.Id, out var existing)
             ? existing : Healthy(character.Id, proposed.TimeMinutes)).ToArray();
-        var state = Serialize(new BlightState(characters, current.Adventure));
+        var state = Serialize(new BlightState(characters, current.Adventure, current.Forces));
         Validate(proposed with { ModuleState = state });
         return new ModuleTransition(state);
     }
@@ -69,6 +74,28 @@ public sealed class YthrynGameRules : ICampaignGameRules
             return new ModuleTransition(before.ModuleState);
         }
 
+        if (ForceLossCommandCodec.Handles(command.Value))
+        {
+            if (before.TimeMinutes != proposed.TimeMinutes)
+            {
+                return Rejected(before, "invalid_module_command");
+            }
+
+            var lossCommand = ForceLossCommandCodec.Read(command.Value);
+            if (lossCommand is null)
+            {
+                return Rejected(before, "invalid_module_command");
+            }
+            var forces = RivalForcesRules.RecordLoss(state.Forces ?? throw Corrupt("Rival forces state is missing."), lossCommand);
+            if (forces is null)
+            {
+                return Rejected(before, "invalid_module_command");
+            }
+            var next = Serialize(state with { Forces = forces });
+            Validate(proposed with { ModuleState = next });
+            return new ModuleTransition(next);
+        }
+
         if (ExpeditionRules.Handles(command.Value))
         {
             var result = ExpeditionRules.Apply(state.Adventure ?? throw Corrupt("Expedition state is missing."), before, proposed, command.Value);
@@ -77,7 +104,12 @@ public sealed class YthrynGameRules : ICampaignGameRules
                 return Rejected(before, result.ErrorCode);
             }
 
-            var next = Serialize(state with { Adventure = result.State });
+            var forces = state.Forces ?? throw Corrupt("Rival forces state is missing.");
+            if (state.Adventure.AurilArrivedAt is null && result.State.AurilArrivedAt is not null)
+            {
+                forces = RivalForcesRules.ConvertCultists(forces);
+            }
+            var next = Serialize(state with { Adventure = result.State, Forces = forces });
             Validate(proposed with { ModuleState = next });
             return new ModuleTransition(next);
         }
@@ -128,7 +160,7 @@ public sealed class YthrynGameRules : ICampaignGameRules
 
         var characters = state.Characters.ToArray();
         characters[index] = changed;
-        var nextState = Serialize(new BlightState(characters, state.Adventure));
+        var nextState = Serialize(new BlightState(characters, state.Adventure, state.Forces));
         Validate(proposed with { ModuleState = nextState });
         return new ModuleTransition(nextState);
     }
@@ -140,9 +172,15 @@ public sealed class YthrynGameRules : ICampaignGameRules
             new CharacterDescription(character.Id, character.Status, character.Dc, character.Failures,
                 snapshot.ModuleSchemaVersion == 1 ? LegacyNextCheck(character, snapshot) : NextCheck(character, snapshot))).ToArray();
         // Historical receipts retain their original projection for idempotent replay.
-        return snapshot.ModuleSchemaVersion < 3
-            ? JsonSerializer.SerializeToElement(new BlightDescription(characters), JsonOptions)
-            : JsonSerializer.SerializeToElement(new { characters, expedition = ExpeditionRules.Describe(state.Adventure ?? throw Corrupt("Expedition state is missing."), snapshot) }, JsonOptions);
+        if (snapshot.ModuleSchemaVersion < 3)
+        {
+            return JsonSerializer.SerializeToElement(new BlightDescription(characters), JsonOptions);
+        }
+
+        var expedition = ExpeditionRules.Describe(state.Adventure ?? throw Corrupt("Expedition state is missing."), snapshot);
+        return snapshot.ModuleSchemaVersion == 3
+            ? JsonSerializer.SerializeToElement(new { characters, expedition }, JsonOptions)
+            : JsonSerializer.SerializeToElement(new { characters, expedition, forces = state.Forces }, JsonOptions);
     }
 
     private static JsonElement Serialize(BlightState state) => JsonSerializer.SerializeToElement(state, JsonOptions);

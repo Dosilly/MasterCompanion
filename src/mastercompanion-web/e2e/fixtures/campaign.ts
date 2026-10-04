@@ -135,7 +135,7 @@ export function campaignFixture(): {
         timeMinutes: 1500,
         party,
         restEnds: [480],
-        moduleSchemaVersion: 3,
+        moduleSchemaVersion: 4,
         moduleState: {},
       },
       lastOperation: {
@@ -144,6 +144,17 @@ export function campaignFixture(): {
         revision: 12,
       },
       moduleView: {
+        forces: {
+          cultFanatics: 20,
+          gargoyles: 2,
+          ravens: 1,
+          mountainGoats: 10,
+          frostGiantSkeletons: 3,
+          snowGolems: 6,
+          winterWolves: 6,
+          coldlightWalkers: 0,
+          convertedCultists: 0,
+        },
         characters: [
           {
             id: party[0].id,

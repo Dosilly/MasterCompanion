@@ -375,7 +375,7 @@ public sealed class RulesTests
         var initial = Initial();
         var corrupt = scenario switch
         {
-            "schema" => initial with { ModuleSchemaVersion = 4 },
+            "schema" => initial with { ModuleSchemaVersion = 5 },
             "negativeTime" => initial with { TimeMinutes = -1 },
             "overflowTime" => initial with { TimeMinutes = GameLimits.MaxTimeMinutes + 1 },
             "nullState" => initial with { ModuleState = Json("null") },
@@ -828,7 +828,7 @@ public sealed class RulesTests
         Rules.Validate(upgraded);
 
         // Assert
-        Assert.True(upgraded.ModuleSchemaVersion == 3 && upgraded.TimeMinutes == legacy.TimeMinutes &&
+        Assert.True(upgraded.ModuleSchemaVersion == 4 && upgraded.TimeMinutes == legacy.TimeMinutes &&
             upgraded.Party.SequenceEqual(legacy.Party) && upgraded.RestEnds.SequenceEqual(legacy.RestEnds),
             "A pure upgrade must preserve party identities, names, time and historical rests.");
         Assert.True(Character(upgraded).GetProperty("dc").GetInt32() == 10 &&

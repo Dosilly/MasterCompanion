@@ -1,0 +1,76 @@
+@use './tool-controls';
+
+:host {
+  display: block;
+}
+.rival-forces {
+  margin-bottom: 2rem;
+  scroll-margin-top: 4rem;
+}
+.forces-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 25rem), 1fr));
+  gap: 1rem;
+}
+.force-card {
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+  background: var(--paper);
+}
+h3 {
+  margin-top: 0;
+}
+h4 {
+  margin: 0;
+}
+p {
+  line-height: 1.55;
+}
+ul {
+  padding: 0;
+  list-style: none;
+}
+li + li {
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+}
+fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid var(--line);
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+}
+label {
+  width: 100%;
+}
+input {
+  width: 5rem;
+  padding: 0.45rem;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 0.3rem;
+}
+button {
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 0.3rem;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+}
+fieldset:disabled {
+  opacity: 0.55;
+}
+button:disabled {
+  cursor: default;
+}
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}

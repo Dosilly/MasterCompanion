@@ -17,6 +17,14 @@ These instructions apply to all implementation work in this repository. Read the
 - Keep application correctness: scoped tests, ordinary saves, visible failures, revisions, transactions and idempotency. Do not remove working protections or weaken checks to hide failures.
 - Authentication, authorization, transport security, hosted origin/database protection, production backups and authored-data protection belong to the AWS/production stage. Complete them before exposing production data or public endpoints, not before each local change.
 
+## Feature delivery workflow
+
+- Implement every new feature on its own `codex/` branch created from `trunk`.
+- Use an isolated worktree when the current checkout contains unrelated work; preserve uncommitted changes.
+- Complete scoped verification and review, commit the feature, then merge it into `trunk`.
+- Build the local runtime image from the merged `trunk` and update the application container; verify readiness and affected behavior. Local updates require no database backup or preservation probes. Campaign replacement follows the current development data policy; production backups and authored-data protection belong to the AWS stage.
+- This workflow is standing user authorization for local feature merges and local application-container updates. It does not authorize remote pushes, publishing or external deployment. Local campaign-content replacement is permitted within authorized module updates under the current development data policy.
+
 ## Compatibility policy
 
 - Backward compatibility is not required until the user explicitly enables it after release. A release alone does not enable this requirement.

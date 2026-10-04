@@ -253,6 +253,11 @@ indexes or schema changes. This avoids a campaign backfill at the present catalo
 size. Indexed text projection, fuzzy matching and language stemming remain
 separate future scope. See [search scope and evidence](20-Material-search.md).
 
+
+## Rival forces ownership
+
+Ythryn state schema 4 owns bounded rival resource counts and the explicit `recordForceLoss` command. Auril arrival and conversion of surviving cultists commit together through the existing neutral module transition; no faction identifier enters engine code. The engine retains revision checks, campaign locking, receipts and whole-snapshot undo. Snapshot upgrades preserve existing characters and expedition state; historical receipts keep their original projections. See [rival force tracking](21-Rival-forces.md) for counts, conversion semantics and migration limits.
+
 ## Workspace URL navigation — 4 October 2026
 
 The Angular host declares routes under one persistent workspace parent. The engine

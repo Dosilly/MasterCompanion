@@ -1,6 +1,6 @@
 # Workspace URL navigation
 
-4 October 2026 · implementation verified on `codex/workspace-url-navigation`.
+4 October 2026 · implemented, merged into local `trunk` and deployed.
 
 The active material or tool now has an Angular Router address. Bookmarks,
 direct links, reload and browser Back/Forward restore that location inside the
@@ -69,6 +69,28 @@ standalone asset files retain their HTTP failures.
   Existing visual baselines passed unchanged. New routing-error screenshots
   were reviewed in both Full HD themes.
 
-Local container deployment and read-only probes are recorded after deployment.
 No database migration or content replacement is required. Production operations
 and backup infrastructure are outside this frontend feature.
+
+## Local delivery
+
+Routing commits `e782a81` and `2f63299` are included in trunk merge `039ac27`,
+together with the concurrently delivered rival-force feature. The only merge
+conflict was appended architecture documentation; both ownership sections were
+retained. Unrelated documentation edits in the original checkout remain intact.
+
+The combined source passed quality checks and 64 additional routing/gameplay
+browser cases across both themes and viewports. The production Docker build
+passed frozen-lockfile installation, frontend quality/compilation and API
+publication. The deployed image is
+`sha256:beec9900cf2015498a4ebba6e1c8e69c83d895d25b664238177b82a6817cbd94`,
+pinned as `mastercompanion:workspace-routing-039ac27` to prevent concurrent image
+builds from changing the deployment target.
+
+Only the application container was recreated. It is healthy at
+`http://localhost:4200`; the PostgreSQL container and volume were not restarted
+or replaced. All nine read-only deployed-container cases passed, including dotted
+material/map addresses, tools, SPA/API/asset behavior and persisted campaign reads.
+The first deployed probe exposed ASP.NET's static-file fallback rejection of
+dotted paths; explicit material/map SPA file endpoints corrected it and the final
+same probes passed. No material or gameplay write was used for verification.
