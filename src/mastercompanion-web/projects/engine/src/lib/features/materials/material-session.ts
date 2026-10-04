@@ -21,6 +21,7 @@ export class MaterialSession {
   constructor(
     readonly material: MaterialDto,
     private readonly http: HttpClient,
+    private readonly onConfirmedSave?: (material: MaterialDto) => void,
   ) {
     this.document = material.document;
     this.confirmedRevisionState.set(material.revision);
@@ -59,13 +60,17 @@ export class MaterialSession {
       this.error.set(null);
       try {
         const response = await firstValueFrom(
-          this.http.put<{ revision: number }>(`/api/materials/${this.material.id}`, {
-            document,
-            expectedRevision: this.confirmedRevision(),
-          }),
+          this.http.put<{ revision: number }>(
+            `/api/materials/${encodeURIComponent(this.material.id)}`,
+            {
+              document,
+              expectedRevision: this.confirmedRevision(),
+            },
+          ),
         );
         this.confirmedRevisionState.set(response.revision);
         this.savedGeneration = generation;
+        this.onConfirmedSave?.({ ...this.material, document, revision: response.revision });
       } catch (error) {
         const conflict = error instanceof HttpErrorResponse && error.status === 409;
         this.status.set(conflict ? 'conflict' : 'error');

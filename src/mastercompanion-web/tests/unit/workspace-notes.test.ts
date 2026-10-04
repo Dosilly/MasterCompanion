@@ -1,6 +1,7 @@
 import '@angular/compiler';
-import { describe, test } from 'node:test';
+import { describe, test, type TestContext } from 'node:test';
 import assert from 'node:assert/strict';
+import { HttpErrorResponse } from '@angular/common/http';
 import type { MaterialDto, RichDocument, WorkspaceDto } from '@mastercompanion/contracts';
 import { ControlledHttp } from '../support/controlled-http';
 import { WorkspaceMaterials } from '../../projects/engine/src/lib/features/workspace/workspace-materials';
@@ -8,10 +9,12 @@ import {
   buildNavigation,
   folderPath,
 } from '../../projects/engine/src/lib/features/workspace/navigation';
+
 const document = (text: string): RichDocument => ({
   type: 'doc',
   content: [{ type: 'paragraph', content: text ? [{ type: 'text', text }] : [] }],
 });
+
 function material(
   id: string,
   title: string,
@@ -25,238 +28,366 @@ function material(
     group: '',
     revision,
     documentSchemaVersion: 1,
-    document: document(''),
+    document: document('Original content'),
   };
 }
-function fixture() {
-  const transport = new ControlledHttp((value) => value);
-  const requests = transport.requests;
-  const oldMaterial = material('existing-note', 'Existing note', 'child', 9);
-  const workspace = new WorkspaceMaterials(transport.client);
-  const oldSession = workspace.acceptCreatedMaterial(oldMaterial);
-  oldSession.document = document('Unsaved campaign draft');
-  oldSession.editing.set(true);
-  oldSession.dirty.set(true);
-  oldSession.status.set('conflict');
-  workspace.initialize({
+
+function workspaceDescription(materials: MaterialDto[]): WorkspaceDto {
+  return {
     campaignId: 'campaign',
     title: 'Campaign',
     moduleId: 'test-module',
     moduleVersion: '1',
-    startMaterialId: oldMaterial.id,
+    startMaterialId: materials[0]?.id ?? null,
     maps: [],
     folders: [
       { id: 'root', title: 'Root', parentId: null },
       { id: 'child', title: 'Child', parentId: 'root' },
     ],
-    materials: [
-      { id: oldMaterial.id, title: oldMaterial.title, group: '', folderId: oldMaterial.folderId },
-    ],
-  });
-  return { workspace, oldSession, requests };
+    materials: materials.map(({ id, title, group, folderId }) => ({ id, title, group, folderId })),
+  };
 }
+
+async function fixture(t: TestContext) {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const transport = new ControlledHttp((value) => value);
+  const oldMaterial = material('existing-note', 'Existing note', 'child', 9);
+  const description = workspaceDescription([oldMaterial]);
+  const workspace = new WorkspaceMaterials(transport.client);
+  t.after(() => workspace.destroy());
+  const initializing = workspace.initialize(description);
+  transport.requests[0].response.next([oldMaterial]);
+  await initializing;
+  return { workspace, oldMaterial, description, requests: transport.requests };
+}
+
 function confirmedWorkspace(workspace: WorkspaceMaterials): WorkspaceDto {
   const value = workspace.workspace();
   assert.ok(value);
   return value;
 }
 
-describe('Confirmed notes and workspace navigation', () => {
-  test('Material reads encode a stable identifier as one URL segment', async () => {
+describe('Campaign material memory and sessions', () => {
+  test('Initialization preloads documents without creating editing sessions', async (t) => {
     const transport = new ControlledHttp((value) => value);
     const workspace = new WorkspaceMaterials(transport.client);
+    t.after(() => workspace.destroy());
+    const snapshot = [material('one', 'One'), material('two', 'Two')];
 
-    const opening = workspace.open('module:note');
-    transport.requests[0].response.next(material('module:note', 'Note'));
-    transport.requests[0].response.complete();
-    await opening;
+    const initializing = workspace.initialize(workspaceDescription(snapshot));
 
-    assert.equal(transport.requests[0].url, '/api/materials/module%3Anote');
+    assert.equal(workspace.loadState(), 'loading');
+    assert.equal(workspace.workspace(), null);
+    assert.deepEqual(workspace.sessions(), []);
+    assert.equal(transport.requests[0].url, '/api/campaigns/campaign/materials');
+
+    transport.requests[0].response.next(snapshot);
+    await initializing;
+
+    assert.equal(workspace.loadState(), 'ready');
+    assert.deepEqual(
+      confirmedWorkspace(workspace).materials.map((item) => item.id),
+      ['one', 'two'],
+    );
+    assert.deepEqual(workspace.sessions(), []);
   });
 
-  test('Destroying the workspace cancels a pending read without creating a session', async () => {
+  test('Opening, closing and reopening a cached material requires no further reads', async (t) => {
+    const { workspace, oldMaterial, requests } = await fixture(t);
+
+    const first = await workspace.open(oldMaterial.id);
+    workspace.removeConfirmedSession(first.material.id);
+    const reopened = await workspace.open(oldMaterial.id);
+
+    assert.notEqual(reopened, first);
+    assert.equal(reopened.document, oldMaterial.document);
+    assert.equal(reopened.editing(), false);
+    assert.equal(reopened.confirmedRevision(), 9);
+    assert.equal(requests.length, 1);
+    assert.deepEqual(workspace.sessions(), [reopened]);
+  });
+
+  test('A startup batch failure publishes no workspace and retry completes initialization', async (t) => {
     const transport = new ControlledHttp((value) => value);
     const workspace = new WorkspaceMaterials(transport.client);
-    const opening = workspace.open('note');
-    const rejected = assert.rejects(opening, { name: 'EmptyError' });
+    t.after(() => workspace.destroy());
+    const note = material('note', 'Note');
+    const description = workspaceDescription([note]);
+    const initializing = workspace.initialize(description);
+    const rejected = assert.rejects(initializing, /Read failed/);
 
-    workspace.destroy();
-    transport.requests[0].response.next(material('note', 'Late response'));
-    await rejected;
-
-    assert.equal(transport.requests[0].response.observed, false);
-    assert.equal(workspace.sessions().length, 0);
-    await assert.rejects(workspace.open('note'), /destroyed/);
-    assert.equal(transport.requests.length, 1);
-  });
-
-  test('Opening a persisted search result absent from startup summaries adds its canonical summary without replacing existing drafts', async () => {
-    // Arrange
-    const { workspace, oldSession, requests } = fixture();
-    const originalDraft = oldSession.document;
-    const remote = material('remote-note', 'Note created in another window', 'child', 3);
-
-    // Act
-    const opened = workspace.open(remote.id);
-    requests[0].response.next(remote);
-    requests[0].response.complete();
-    const remoteSession = await opened;
-
-    // Assert
-    assert.equal(confirmedWorkspace(workspace).materials.length, 2);
-    assert.equal(confirmedWorkspace(workspace).materials[1].id, remote.id);
-    assert.equal(remoteSession.material, remote);
-    assert.equal(remoteSession.editing(), false);
-    assert.equal(workspace.sessions()[0], oldSession);
-    assert.equal(oldSession.document, originalDraft);
-    assert.equal(oldSession.dirty(), true);
-  });
-
-  test('Concurrent opens share one read and retain the same session on later opens', async () => {
-    // Arrange
-    const transport = new ControlledHttp((value) => value);
-    const workspace = new WorkspaceMaterials(transport.client);
-
-    // Act
-    const first = workspace.open('note');
-    const second = workspace.open('note');
-
-    // Assert
-    assert.equal(transport.requests.length, 1);
-    assert.equal(transport.requests[0].url, '/api/materials/note');
-
-    // Act
-    transport.requests[0].response.next(material('note', 'Note'));
-    transport.requests[0].response.complete();
-    const [firstSession, secondSession] = await Promise.all([first, second]);
-
-    // Assert
-    assert.equal(firstSession, secondSession);
-    assert.equal(await workspace.open('note'), firstSession);
-    assert.equal(transport.requests.length, 1);
-    assert.equal(workspace.sessions().length, 1);
-  });
-
-  test('A failed read leaves no session and a subsequent open can retry', async () => {
-    // Arrange
-    const transport = new ControlledHttp((value) => value);
-    const workspace = new WorkspaceMaterials(transport.client);
-
-    // Act
-    const opening = workspace.open('note');
-    const rejected = assert.rejects(opening, /Read failed/);
     transport.requests[0].response.error(new Error('Read failed'));
     await rejected;
 
-    // Assert
-    assert.equal(workspace.sessions().length, 0);
+    assert.equal(workspace.loadState(), 'error');
+    assert.equal(workspace.workspace(), null);
+    assert.deepEqual(workspace.sessions(), []);
 
-    // Act
-    const retry = workspace.open('note');
-    transport.requests[1].response.next(material('note', 'Note'));
-    transport.requests[1].response.complete();
+    const retry = workspace.initialize(description);
+    transport.requests[1].response.next([note]);
     await retry;
 
-    // Assert
+    assert.equal(workspace.loadState(), 'ready');
+    assert.equal(confirmedWorkspace(workspace).campaignId, description.campaignId);
+    assert.equal((await workspace.open(note.id)).material, note);
     assert.equal(transport.requests.length, 2);
-    assert.equal(workspace.sessions().length, 1);
   });
 
-  test('Confirmed creation adds one summary and a read-mode session without replacing or saving current drafts', () => {
-    // Arrange
-    const { workspace, oldSession, requests } = fixture();
+  test('Confirmed save content and revision survive immediate close and reopen', async (t) => {
+    const { workspace, oldMaterial, requests } = await fixture(t);
+    const session = await workspace.open(oldMaterial.id);
+    const savedDocument = document('Confirmed edited content');
+    session.change(savedDocument);
+
+    const closing = session.prepareToClose();
+    assert.equal(requests[1].method, 'PUT');
+    assert.deepEqual(requests[1].body, { document: savedDocument, expectedRevision: 9 });
+    requests[1].response.next({ revision: 10 });
+    assert.equal(await closing, true);
+    workspace.removeConfirmedSession(oldMaterial.id);
+    const reopened = await workspace.open(oldMaterial.id);
+
+    assert.equal(reopened.document, savedDocument);
+    assert.equal(reopened.confirmedRevision(), 10);
+    assert.equal(reopened.material.revision, 10);
+    assert.equal(reopened.dirty(), false);
+    assert.equal(requests.length, 2);
+  });
+
+  for (const state of ['waiting', 'conflict'] as const) {
+    test(`Refresh preserves an existing ${state} draft while closed materials adopt remote revisions`, async (t) => {
+      const { workspace, oldMaterial, description, requests } = await fixture(t);
+      const session = await workspace.open(oldMaterial.id);
+      const draft = document('Unconfirmed local draft');
+      session.change(draft);
+      session.editing.set(true);
+      if (state === 'conflict') {
+        const saving = session.flush();
+        requests[1].response.error(new HttpErrorResponse({ status: 409 }));
+        assert.equal(await saving, false);
+      }
+      const closed = material('closed-note', 'Closed note', 'child', 4);
+      const refreshed = { ...oldMaterial, revision: 11, document: document('Remote content') };
+
+      const initializing = workspace.initialize(description);
+      requests[requests.length - 1].response.next([refreshed, closed]);
+      await initializing;
+      const existing = await workspace.open(oldMaterial.id);
+      const opened = await workspace.open(closed.id);
+
+      assert.equal(existing, session);
+      assert.equal(existing.document, draft);
+      assert.equal(existing.dirty(), true);
+      assert.equal(existing.editing(), true);
+      assert.equal(existing.status(), state);
+      assert.equal(existing.confirmedRevision(), 9);
+      assert.equal(opened.confirmedRevision(), 4);
+      assert.equal(opened.document, closed.document);
+      assert.equal(confirmedWorkspace(workspace).materials.length, 2);
+    });
+  }
+
+  test('Refreshing a closed material makes the next opening use its remote revision', async (t) => {
+    const { workspace, oldMaterial, description, requests } = await fixture(t);
+    const first = await workspace.open(oldMaterial.id);
+    workspace.removeConfirmedSession(first.material.id);
+    const current = { ...oldMaterial, revision: 10, document: document('Remote update') };
+
+    const initializing = workspace.initialize(description);
+    requests[1].response.next([current]);
+    await initializing;
+    const reopened = await workspace.open(oldMaterial.id);
+
+    assert.equal(reopened.document, current.document);
+    assert.equal(reopened.confirmedRevision(), 10);
+    assert.equal(requests.length, 2);
+  });
+
+  test('A failed refresh keeps the workspace and sessions available and can retry', async (t) => {
+    const { workspace, oldMaterial, description, requests } = await fixture(t);
+    const session = await workspace.open(oldMaterial.id);
+    const previous = confirmedWorkspace(workspace);
+    const initializing = workspace.initialize(description);
+    const rejected = assert.rejects(initializing, /Read failed/);
+
+    requests[1].response.error(new Error('Read failed'));
+    await rejected;
+
+    assert.equal(workspace.loadState(), 'error');
+    assert.equal(confirmedWorkspace(workspace), previous);
+    assert.equal(await workspace.open(oldMaterial.id), session);
+    assert.equal(requests.length, 2);
+
+    const retry = workspace.initialize(description);
+    requests[2].response.next([oldMaterial]);
+    await retry;
+
+    assert.equal(workspace.loadState(), 'ready');
+    assert.equal(await workspace.open(oldMaterial.id), session);
+  });
+
+  test('Concurrent opens of a new search result share a batch and add its canonical summary', async (t) => {
+    const { workspace, oldMaterial, requests } = await fixture(t);
+    const existing = await workspace.open(oldMaterial.id);
+    existing.change(document('Local draft'));
+    const remote = material('remote-note', 'Created in another window', 'child', 3);
+
+    const first = workspace.open(remote.id);
+    const second = workspace.open(remote.id);
+    assert.equal(requests.length, 2);
+    assert.equal(requests[1].url, '/api/campaigns/campaign/materials');
+    requests[1].response.next([oldMaterial, remote]);
+    const [firstSession, secondSession] = await Promise.all([first, second]);
+
+    assert.equal(firstSession, secondSession);
+    assert.equal(firstSession.material, remote);
+    assert.equal(firstSession.editing(), false);
+    assert.equal(workspace.sessions()[0], existing);
+    assert.deepEqual(existing.document, document('Local draft'));
+    assert.equal(existing.dirty(), true);
+    assert.deepEqual(
+      confirmedWorkspace(workspace).materials.map((item) => item.id),
+      [oldMaterial.id, remote.id],
+    );
+    assert.equal(requests.length, 2);
+  });
+
+  test('A material absent from a fresh snapshot produces a 404 without creating a session', async (t) => {
+    const { workspace, oldMaterial, requests } = await fixture(t);
+    const opening = workspace.open('missing-note');
+    const rejected = assert.rejects(opening, { status: 404 });
+
+    requests[1].response.next([oldMaterial]);
+    await rejected;
+
+    assert.deepEqual(workspace.sessions(), []);
+    assert.equal(requests.length, 2);
+  });
+
+  test('Destruction cancels startup loading and forbids subsequent session opens', async () => {
+    const transport = new ControlledHttp((value) => value);
+    const workspace = new WorkspaceMaterials(transport.client);
+    const note = material('note', 'Note');
+    const initializing = workspace.initialize(workspaceDescription([note]));
+    const rejected = assert.rejects(initializing, { name: 'EmptyError' });
+
+    workspace.destroy();
+    transport.requests[0].response.next([note]);
+    await rejected;
+
+    assert.equal(transport.requests[0].response.observed, false);
+    assert.equal(workspace.workspace(), null);
+    assert.deepEqual(workspace.sessions(), []);
+    await assert.rejects(workspace.open(note.id), /unavailable/);
+    assert.equal(transport.requests.length, 1);
+  });
+
+  test('Removing a session with an unconfirmed draft is rejected', async (t) => {
+    const { workspace, oldMaterial } = await fixture(t);
+    const session = await workspace.open(oldMaterial.id);
+    session.change(document('Recoverable draft'));
+
+    assert.throws(() => workspace.removeConfirmedSession(oldMaterial.id), /unconfirmed changes/);
+
+    assert.deepEqual(workspace.sessions(), [session]);
+    assert.equal(session.dirty(), true);
+    assert.deepEqual(session.document, document('Recoverable draft'));
+  });
+
+  test('An initialized owner rejects switching campaigns without mixing documents', async (t) => {
+    const { workspace, description, oldMaterial, requests } = await fixture(t);
+
+    await assert.rejects(
+      workspace.initialize({ ...description, campaignId: 'other-campaign' }),
+      /switch campaigns/,
+    );
+
+    assert.equal(confirmedWorkspace(workspace).campaignId, 'campaign');
+    assert.equal((await workspace.open(oldMaterial.id)).material, oldMaterial);
+    assert.equal(requests.length, 1);
+  });
+});
+
+describe('Confirmed notes and workspace navigation', () => {
+  test('Confirmed creation adds a read-mode session and keeps existing drafts and navigation', async (t) => {
+    const { workspace, oldMaterial, requests } = await fixture(t);
+    const oldSession = await workspace.open(oldMaterial.id);
+    oldSession.change(document('Unsaved campaign draft'));
+    oldSession.editing.set(true);
     const originalDraft = oldSession.document;
     const created = material('note-01234567-89ab-cdef-0123-456789abcdef', 'New note');
 
-    // Act
-    workspace.acceptCreatedMaterial(created);
+    const createdSession = workspace.acceptCreatedMaterial(created);
 
-    // Assert
     assert.equal(workspace.sessions()[0], oldSession);
     assert.equal(oldSession.document, originalDraft);
     assert.equal(oldSession.editing(), true);
     assert.equal(oldSession.dirty(), true);
-    assert.equal(oldSession.status(), 'conflict');
-    assert.equal(workspace.sessions()[1].material, created);
-    assert.equal(workspace.sessions()[1].editing(), false);
-    assert.equal(workspace.sessions()[1].dirty(), false);
-    assert.equal(requests.length, 0);
-
-    // Act
+    assert.equal(createdSession.material, created);
+    assert.equal(createdSession.editing(), false);
+    assert.equal(createdSession.dirty(), false);
+    assert.equal(requests.length, 1);
     const tree = buildNavigation(
       confirmedWorkspace(workspace).folders,
       confirmedWorkspace(workspace).materials,
       'Unfiled',
     );
-
-    // Assert
     const unfiled = tree.find((folder) => folder.id === '@unfiled');
     assert.ok(unfiled);
     assert.equal(unfiled.materials[0].id, created.id);
+
+    workspace.removeConfirmedSession(created.id);
+    const reopened = await workspace.open(created.id);
+
+    assert.equal(reopened.material, created);
+    assert.equal(requests.length, 1);
   });
-  test('Duplicate confirmations preserve an existing new-note editor and append neither duplicate tab nor summary', () => {
-    // Arrange
-    const { workspace } = fixture();
+
+  test('Duplicate confirmations preserve a new-note draft and add no duplicate summary or session', async (t) => {
+    const { workspace } = await fixture(t);
     const created = material('note-01234567-89ab-cdef-0123-456789abcdef', 'New note', 'child');
-
-    // Act
-    workspace.acceptCreatedMaterial(created);
-    // Arrange
-    const session = workspace.sessions()[1];
-
-    // Act
-    session.document = document('New note draft');
+    const session = workspace.acceptCreatedMaterial(created);
+    session.change(document('New note draft'));
     session.editing.set(true);
-    session.dirty.set(true);
-    workspace.acceptCreatedMaterial({
+
+    const replay = workspace.acceptCreatedMaterial({
       ...created,
       revision: 5,
       document: document('Remote revision'),
     });
 
-    // Assert
-    assert.equal(workspace.sessions().length, 2);
+    assert.equal(replay, session);
+    assert.equal(workspace.sessions().length, 1);
     assert.equal(confirmedWorkspace(workspace).materials.length, 2);
-    assert.equal(workspace.sessions()[1], session);
     assert.deepEqual(session.document, document('New note draft'));
     assert.equal(session.editing(), true);
     assert.equal(session.dirty(), true);
-
-    // Act
     const tree = buildNavigation(
       confirmedWorkspace(workspace).folders,
       confirmedWorkspace(workspace).materials,
       'Unfiled',
     );
-
-    // Assert
     assert.deepEqual(
       tree[0].children[0].materials.map((item) => item.id),
       ['existing-note', created.id],
     );
-
-    // Act
-    const actual1 = folderPath(confirmedWorkspace(workspace).folders, created.folderId);
-
-    // Assert
-    assert.deepEqual(actual1, ['root', 'child']);
+    assert.deepEqual(folderPath(confirmedWorkspace(workspace).folders, created.folderId), [
+      'root',
+      'child',
+    ]);
   });
-  test('Recovery uses the confirmed current document and revision in the ordinary material session', () => {
-    // Arrange
-    const { workspace } = fixture();
+
+  test('Recovery opens the confirmed current document and revision in the ordinary session', async (t) => {
+    const { workspace } = await fixture(t);
     const current = {
-      ...material('note-01234567-89ab-cdef-0123-456789abcdef', 'Recovered note', null, 6),
+      ...material('recovered-note', 'Recovered note', null, 6),
       document: document('Confirmed remote content'),
     };
 
-    // Act
-    workspace.acceptCreatedMaterial(current);
-    // Arrange
-    const session = workspace.sessions()[1];
+    const session = workspace.acceptCreatedMaterial(current);
 
-    // Assert
-    assert.deepEqual(session.document, document('Confirmed remote content'));
-    assert.equal(session.material.revision, 6);
+    assert.equal(session.document, current.document);
+    assert.equal(session.confirmedRevision(), 6);
     assert.equal(session.status(), 'saved');
     assert.equal(session.editing(), false);
   });

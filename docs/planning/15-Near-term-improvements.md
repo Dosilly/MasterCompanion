@@ -1,12 +1,12 @@
 # Near-term improvements
 
-3 October 2026 · planned, not implemented
+3 October 2026 · recorded roadmap; delivery status updated 4 October 2026
 
-The user requested recording the improvements below for future implementation.
-URL-based navigation was added on 4 October 2026. This document authorizes
-planning only. Delivery order and dates are
-not set; the existing full-text search follow-up in
-[campaign notes](14-Campaign-notes.md) remains planned.
+The user requested the improvements below, then authorized search, URL navigation
+and campaign material memory. Search and routing have been delivered; material
+memory is implemented and verified. Folder management remains planned. See
+[search delivery](20-Material-search.md), [routing delivery](22-Workspace-routing.md)
+and [material memory](23-Campaign-material-memory.md) for current evidence.
 
 Related: [execution plan](05-MVP-execution-plan.md),
 [engine and module ownership](06-Module-architecture.md),
@@ -14,11 +14,13 @@ Related: [execution plan](05-MVP-execution-plan.md),
 
 ## Improvement: preload campaign materials at startup
 
-Opening a material currently fetches its document from the API and database.
-Switching between open tabs reuses the existing session, but closing and reopening
-a material fetches it again. The desired behavior is to load all current campaign
-materials when opening the campaign and reuse them in browser memory during that
-workspace session.
+4 October 2026 · implemented and verified. See
+[material memory delivery](23-Campaign-material-memory.md).
+
+The original workspace fetched a material on opening and again after closing its
+tab. Campaign startup now preloads persisted documents and keeps confirmed content
+in browser memory independently of material sessions. The scope below preserves
+the original request and acceptance criteria.
 
 ### Planned scope
 

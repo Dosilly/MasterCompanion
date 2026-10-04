@@ -1,9 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { computed, signal } from '@angular/core';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
-import { getSchema } from '@tiptap/core';
-import type { CreateMaterialRequest, MaterialDto, RichDocument } from '@mastercompanion/contracts';
-import { documentExtensions } from '../../editor-schema.mjs';
+import { isMaterialResponse } from './material-response';
+import type { CreateMaterialRequest, MaterialDto } from '@mastercompanion/contracts';
 
 export type CreationError =
   | 'invalidTitle'
@@ -43,48 +42,13 @@ export function isCreationRequest(value: unknown): value is CreateMaterialReques
     validFolder(value['folderId'])
   );
 }
-function richDocument(value: unknown, depth = 0): value is RichDocument {
-  if (depth > 64 || !record(value) || typeof value['type'] !== 'string') {
-    return false;
-  }
-  return (
-    (value['attrs'] === undefined || record(value['attrs'])) &&
-    (value['text'] === undefined || typeof value['text'] === 'string') &&
-    (value['content'] === undefined ||
-      (Array.isArray(value['content']) &&
-        value['content'].every((node) => richDocument(node, depth + 1)))) &&
-    (value['marks'] === undefined ||
-      (Array.isArray(value['marks']) &&
-        value['marks'].every(
-          (mark) =>
-            record(mark) &&
-            typeof mark['type'] === 'string' &&
-            (mark['attrs'] === undefined || record(mark['attrs'])),
-        )))
-  );
-}
 function creationResponse(value: unknown, request: CreateMaterialRequest): value is MaterialDto {
-  if (
-    !record(value) ||
-    value['id'] !== `note-${request.id}` ||
-    value['title'] !== request.title ||
-    value['folderId'] !== request.folderId ||
-    typeof value['group'] !== 'string' ||
-    value['documentSchemaVersion'] !== 1 ||
-    typeof value['revision'] !== 'number' ||
-    !Number.isSafeInteger(value['revision']) ||
-    value['revision'] < 1 ||
-    !richDocument(value['document']) ||
-    value['document'].type !== 'doc'
-  ) {
-    return false;
-  }
-  try {
-    getSchema(documentExtensions()).nodeFromJSON(value['document']).check();
-    return true;
-  } catch {
-    return false;
-  }
+  return (
+    isMaterialResponse(value) &&
+    value.id === `note-${request.id}` &&
+    value.title === request.title &&
+    value.folderId === request.folderId
+  );
 }
 
 export class MaterialCreation {

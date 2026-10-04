@@ -12,11 +12,17 @@
     "closeTab": "Close tab",
     "closeTabHint": "Close tab (also with the middle mouse button)",
     "loadingCampaign": "Loading campaign…",
+    "refreshMaterials": "Refresh materials",
     "emptyWithMap": "Select a material from the navigation or open the map.",
     "emptyMaterials": "Select a material from the navigation.",
     "errors": {
       "campaignLoadFailed": "Could not load the campaign. Check that the backend and database are running."
     }
+  },
+  "materialCache": {
+    "loading": "Loading campaign materials…",
+    "loadFailed": "Could not load campaign materials. Previously loaded documents and open drafts are still available. Try again.",
+    "refreshHint": "Load saved changes from other windows. Open documents keep their current content; close and reopen a saved tab to view refreshed content."
   },
   "search": {
     "label": "Search materials",

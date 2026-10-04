@@ -16,6 +16,7 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { CAMPAIGN_MODULES, MaterialDto, WorkspaceDto } from '@mastercompanion/contracts';
@@ -69,6 +70,9 @@ export class Workspace {
   );
   readonly materialSearch = signal<MaterialSearch | null>(null);
   readonly loadError = signal<keyof UiMessages['workspace']['errors'] | null>(null);
+  readonly materialLoadState = this.materials.loadState;
+  readonly refreshing = signal(false);
+  private loadRequest?: Promise<void>;
   readonly opening = computed(() => this.routing.state().kind === 'pending');
   private readonly openMaps = signal<readonly string[]>([]);
   private readonly mountedMaps = signal<readonly string[]>([]);
@@ -131,16 +135,36 @@ export class Workspace {
     });
     void this.load();
   }
-  async load() {
+  load(): Promise<void> {
+    if (this.loadRequest) {
+      return this.loadRequest;
+    }
+    this.refreshing.set(true);
+    this.loadRequest = this.loadWorkspace().finally(() => {
+      this.refreshing.set(false);
+      this.loadRequest = undefined;
+    });
+    return this.loadRequest;
+  }
+
+  private async loadWorkspace(): Promise<void> {
     this.loadError.set(null);
     try {
-      const workspace = await firstValueFrom(this.http.get<WorkspaceDto>('/api/workspace'));
+      const workspace = await firstValueFrom(
+        this.http.get<WorkspaceDto>('/api/workspace').pipe(takeUntilDestroyed(this.destroyRef)),
+      );
       if (!this.modules.some((module) => module.id === workspace.moduleId)) {
         throw new Error('No frontend implementation is registered for the campaign module.');
       }
-      this.materials.initialize(workspace);
-      this.materialSearch()?.destroy();
-      this.materialSearch.set(new MaterialSearch(workspace.campaignId, this.http));
+      await this.materials.initialize(workspace);
+      if (this.destroyRef.destroyed) {
+        return;
+      }
+      if (!this.materialSearch()) {
+        this.materialSearch.set(new MaterialSearch(workspace.campaignId, this.http));
+      } else {
+        this.materialSearch()?.refresh();
+      }
       if (this.game()?.campaignId !== workspace.campaignId) {
         this.game()?.destroy();
         let storage: Storage | null = null;
@@ -163,9 +187,11 @@ export class Workspace {
         }
         this.creation.set(new MaterialCreation(workspace.campaignId, this.http, storage));
       }
-      await this.routing.initialize(workspace);
+      await this.routing.initialize(this.workspace() ?? workspace);
     } catch {
-      this.loadError.set('campaignLoadFailed');
+      if (!this.destroyRef.destroyed && this.materialLoadState() !== 'error') {
+        this.loadError.set('campaignLoadFailed');
+      }
     }
   }
   async open(id: string, anchor?: string) {

@@ -24,14 +24,16 @@ test('A note found after workspace loading opens and joins navigation without re
 }) => {
   // Arrange
   const result = { ...linkedResult, id: 'note-created-in-another-tab', title: 'Another tab note' };
-  api.createdMaterials.push({
+  await openReader(page);
+  const freshMaterial = {
     ...api.data.materials[1],
     id: result.id,
     title: result.title,
     revision: 1,
-  });
+  };
+  api.createdMaterials.push(freshMaterial);
+  api.data.workspace.materials.push(freshMaterial);
   api.searchResponses.set('another tab', { results: [result], hasMore: false });
-  await openReader(page);
   const reader = page
     .locator(`#panel-${readerId}`)
     .getByLabel(text('engine', 'material', 'contentLabel'));
@@ -53,6 +55,8 @@ test('A note found after workspace loading opens and joins navigation without re
   );
   await mountedReader?.dispose();
   expect(api.saves).toHaveLength(0);
+  expect(api.bulkReads).toEqual([1, 2]);
+  expect(api.materialReads).toEqual([]);
 });
 
 test('A failed result open preserves the query and results so opening can be retried @search', async ({
@@ -60,16 +64,22 @@ test('A failed result open preserves the query and results so opening can be ret
   api,
 }) => {
   // Arrange
-  api.searchResponses.set('content', { results: [linkedResult], hasMore: false });
-  api.materialReadFailures.set(linkedId, 1);
   await openReader(page);
+  const fresh = { ...api.data.materials[1], id: 'retry-search-material' };
+  api.createdMaterials.push(fresh);
+  api.data.workspace.materials.push(fresh);
+  api.searchResponses.set('content', {
+    results: [{ ...linkedResult, id: fresh.id }],
+    hasMore: false,
+  });
+  api.bulkFailures = 1;
 
   // Act
   await searchFor(page).fill('content');
   await resultsFor(page).click();
 
   // Assert
-  await expect(page.getByRole('alert')).toContainText(
+  await expect(page.locator('.route-error')).toContainText(
     text('engine', 'routes', 'errors', 'materialLoadFailed'),
   );
   await expect(searchFor(page)).toHaveValue('content');
@@ -86,30 +96,33 @@ test('A failed result open preserves the query and results so opening can be ret
   expect(api.searches).toEqual(['content']);
 });
 
-test('A result opening response retains a newer phrase entered during the material read @search', async ({
+test('A result opening response retains a newer phrase entered during the cache refresh @search', async ({
   page,
   api,
 }) => {
   // Arrange
-  api.materialReadGates.set(linkedId, Promise.withResolvers<void>());
-  api.searchResponses.set('content', { results: [linkedResult], hasMore: false });
   api.searchResponses.set('new phrase', { results: [readerResult], hasMore: false });
   await openReader(page);
+  const fresh = { ...api.data.materials[1], id: 'delayed-search-material' };
+  api.createdMaterials.push(fresh);
+  api.data.workspace.materials.push(fresh);
+  api.searchResponses.set('content', {
+    results: [{ ...linkedResult, id: fresh.id }],
+    hasMore: false,
+  });
+  api.holdBulkRead(2);
 
   // Act
   await searchFor(page).fill('content');
-  const materialRequest = page.waitForRequest((request) =>
-    request.url().endsWith(`/api/materials/${linkedId}`),
-  );
   await resultsFor(page).click();
-  await materialRequest;
+  await expect.poll(() => api.bulkReads).toEqual([1, 2]);
   await searchFor(page).fill('new phrase');
 
   // Assert
   await expect(resultsFor(page).locator('.search-result-title')).toHaveText(readerTitle);
 
   // Act
-  api.releaseMaterialReads();
+  api.releaseBulkReads();
 
   // Assert
   await expect(page.getByRole('heading', { name: linkedTitle, exact: true })).toBeVisible();

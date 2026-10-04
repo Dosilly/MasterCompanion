@@ -272,3 +272,20 @@ it neither saves documents nor performs or undoes gameplay writes. Direct links
 start new material sessions in read mode. The API host serves deep SPA addresses,
 including dotted IDs, while missing API routes and assets retain HTTP failures.
 See [the routing contract and verification](22-Workspace-routing.md).
+
+## Campaign material memory — 4 October 2026
+
+`GetCampaignMaterials` is a read-only vertical slice in the engine registered by
+the API composition root. Its campaign-scoped bulk response reuses the existing
+material contract; no persistence schema or module contract changes are required.
+The frontend engine's `CampaignMaterialCache` owns confirmed snapshots while
+`WorkspaceMaterials` owns their campaign lifetime and separate editing sessions.
+`MaterialSession` synchronously publishes each confirmed save to that cache;
+queued drafts and revision conflicts remain session-owned. The supported material
+response decoder is shared by preload and note creation.
+
+Explicit refresh adopts remote changes for closed documents and preserves mounted
+sessions and their base revision. Delayed snapshots cannot roll back confirmed
+saves or omit notes created during the read. Neutral UI and adventure modules do
+not fetch, store or refresh campaign documents. See
+[material memory contract and evidence](23-Campaign-material-memory.md).

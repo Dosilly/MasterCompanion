@@ -1,7 +1,7 @@
 import '@angular/compiler';
 import { describe, test, type TestContext } from 'node:test';
 import assert from 'node:assert/strict';
-import type { RichDocument } from '@mastercompanion/contracts';
+import type { MaterialDto, RichDocument } from '@mastercompanion/contracts';
 import { ControlledHttp } from '../support/controlled-http';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MaterialSession } from '../../projects/engine/src/lib/features/materials/material-session';
@@ -27,7 +27,7 @@ function saveRequest(value: unknown): SaveRequest {
   assert.equal(value.document.type, 'doc');
   return { document: value.document, expectedRevision: value.expectedRevision };
 }
-function fixture(t: TestContext) {
+function fixture(t: TestContext, onConfirmedSave?: (material: MaterialDto) => void) {
   t.mock.timers.enable({ apis: ['setTimeout'] });
   const transport = new ControlledHttp(saveRequest);
   return {
@@ -43,11 +43,34 @@ function fixture(t: TestContext) {
         revision: 10,
       },
       transport.client,
+      onConfirmedSave,
     ),
   };
 }
 const nextTurn = () => new Promise((resolve) => setImmediate(resolve));
 describe('Material autosave', () => {
+  test('A queued save failure publishes only the confirmed document while preserving the newer draft', async (t) => {
+    const confirmed: MaterialDto[] = [];
+    const { requests, session } = fixture(t, (material) => confirmed.push(material));
+    session.change(document('first'));
+
+    const pending = session.flush();
+    session.change(document('newer draft'));
+    requests[0].response.next({ revision: 11 });
+    requests[0].response.complete();
+    await nextTurn();
+    requests[1].response.error(new HttpErrorResponse({ status: 0 }));
+    const saved = await pending;
+
+    assert.equal(saved, false);
+    assert.equal(confirmed.length, 1);
+    assert.equal(confirmed[0].revision, 11);
+    assert.deepEqual(confirmed[0].document, document('first'));
+    assert.deepEqual(session.document, document('newer draft'));
+    assert.equal(session.confirmedRevision(), 11);
+    assert.equal(session.dirty(), true);
+    assert.equal(session.status(), 'error');
+  });
   test('Changes during an in-flight save are queued with the confirmed next revision', async (t) => {
     // Arrange
     const { requests, session } = fixture(t);

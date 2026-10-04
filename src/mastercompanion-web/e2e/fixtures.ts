@@ -47,11 +47,12 @@ export class TestApi {
   readonly searches: string[] = [];
   readonly completedSearches: string[] = [];
   readonly searchResponses = new Map<string, MaterialSearchResponse>();
-  readonly materialReadFailures = new Map<string, number>();
   readonly materialReads: string[] = [];
-  readonly completedMaterialReads: string[] = [];
-  readonly materialReadGates = new Map<string, ReturnType<typeof Promise.withResolvers<void>>>();
   readonly searchGates = new Map<string, ReturnType<typeof Promise.withResolvers<void>>>();
+  readonly bulkReads: number[] = [];
+  readonly completedBulkReads: number[] = [];
+  readonly bulkReadGates = new Map<number, ReturnType<typeof Promise.withResolvers<void>>>();
+  bulkFailures = 0;
   searchFailures = 0;
   savedDocument: unknown = this.data.materials[0].document;
   revision = this.data.materials[0].revision;
@@ -75,8 +76,11 @@ export class TestApi {
       gate.resolve();
     }
   }
-  releaseMaterialReads() {
-    for (const gate of this.materialReadGates.values()) {
+  holdBulkRead(requestNumber: number) {
+    this.bulkReadGates.set(requestNumber, Promise.withResolvers<void>());
+  }
+  releaseBulkReads() {
+    for (const gate of this.bulkReadGates.values()) {
       gate.resolve();
     }
   }
@@ -93,6 +97,33 @@ export class TestApi {
         return;
       }
       if (url.origin === origin) {
+        if (method === 'GET' && path === `/api/campaigns/${campaignId}/materials`) {
+          const requestNumber = this.bulkReads.length + 1;
+          this.bulkReads.push(requestNumber);
+          const documents = structuredClone(
+            [...this.data.materials, ...this.createdMaterials].map((material) =>
+              material.id === readerId
+                ? { ...material, document: this.savedDocument, revision: this.revision }
+                : {
+                    ...material,
+                    document: this.noteDocuments.get(material.id) ?? material.document,
+                  },
+            ),
+          );
+          await this.bulkReadGates.get(requestNumber)?.promise;
+          if (this.bulkFailures > 0) {
+            this.bulkFailures--;
+            this.expectedHttpErrors.push({ url: request.url(), status: 503 });
+            await route.fulfill({
+              status: 503,
+              json: { code: 'fixtureUnavailable', detail: 'Private material preload diagnostic.' },
+            });
+          } else {
+            await route.fulfill({ json: documents });
+          }
+          this.completedBulkReads.push(requestNumber);
+          return;
+        }
         if (method === 'GET' && path === `/api/campaigns/${campaignId}/materials/search`) {
           const query = url.searchParams.get('query');
           if (query === null) {
@@ -210,24 +241,8 @@ export class TestApi {
           this.createdMaterials.find((item) => path === `/api/materials/${item.id}`);
         if (material && method === 'GET') {
           this.materialReads.push(material.id);
-          await this.materialReadGates.get(material.id)?.promise;
-          const failures = this.materialReadFailures.get(material.id) ?? 0;
-          if (failures > 0) {
-            this.materialReadFailures.set(material.id, failures - 1);
-            this.expectedHttpErrors.push({ url: request.url(), status: 503 });
-            await route.fulfill({ status: 503, json: { code: 'fixtureUnavailable' } });
-            return;
-          }
-          await route.fulfill({
-            json:
-              material.id === readerId
-                ? { ...material, document: this.savedDocument, revision: this.revision }
-                : {
-                    ...material,
-                    document: this.noteDocuments.get(material.id) ?? material.document,
-                  },
-          });
-          this.completedMaterialReads.push(material.id);
+          this.unexpectedRequests.push(`${method} ${request.url()}`);
+          await route.abort('blockedbyclient');
           return;
         }
         if (
@@ -301,7 +316,7 @@ export const test = base.extend<{ api: TestApi }>({
         api.releaseSave();
         api.releaseCreation();
         api.releaseSearches();
-        api.releaseMaterialReads();
+        api.releaseBulkReads();
         page.off('console', consoleListener);
         page.off('pageerror', runtimeListener);
         const unexpectedErrors = errors.filter(

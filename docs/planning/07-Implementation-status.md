@@ -1,5 +1,14 @@
 # Implementation status
 
+## Campaign material memory — 4 October 2026
+
+Campaign startup preloads persisted documents and retains confirmed content after
+closing tabs. Opening and reopening cached materials needs no document GET; saves
+and note creation update the same campaign-owned memory. Explicit refresh loads
+remote changes for closed documents while preserving mounted drafts, editor state
+and ordinary revision conflicts. Delayed reads cannot roll back confirmed saves.
+See [delivery, measurements and verification](23-Campaign-material-memory.md).
+
 ## Workspace URL navigation — 4 October 2026
 
 Angular Router now addresses materials, stable sections, specific maps, gameplay

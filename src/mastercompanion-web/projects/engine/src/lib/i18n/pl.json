@@ -12,11 +12,17 @@
     "closeTab": "Zamknij kartę",
     "closeTabHint": "Zamknij kartę (także środkowym przyciskiem myszy)",
     "loadingCampaign": "Wczytywanie kampanii…",
+    "refreshMaterials": "Odśwież materiały",
     "emptyWithMap": "Wybierz materiał ze spisu lub otwórz mapę.",
     "emptyMaterials": "Wybierz materiał ze spisu.",
     "errors": {
       "campaignLoadFailed": "Nie udało się wczytać kampanii. Sprawdź, czy backend i baza działają."
     }
+  },
+  "materialCache": {
+    "loading": "Wczytywanie materiałów kampanii…",
+    "loadFailed": "Nie udało się wczytać materiałów kampanii. Wcześniej wczytane dokumenty i otwarte szkice są nadal dostępne. Spróbuj ponownie.",
+    "refreshHint": "Wczytaj zapisane zmiany z innych okien. Otwarte dokumenty zachowują bieżącą treść; zamknij i otwórz ponownie zapisaną kartę, aby zobaczyć odświeżoną treść."
   },
   "search": {
     "label": "Szukaj materiałów",

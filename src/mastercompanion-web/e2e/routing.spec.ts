@@ -47,7 +47,7 @@ test('A section URL opens its enclosing details and restores the anchor on reloa
   expect(api.saves).toEqual([]);
 });
 
-test('Direct material URLs reload the same reader without loading the start material @routing', async ({
+test('Direct material URLs reload the same reader without mounting the start material @routing', async ({
   page,
   api,
 }) => {
@@ -60,7 +60,8 @@ test('Direct material URLs reload the same reader without loading the start mate
   await page.reload();
 
   await expect(page.getByRole('heading', { name: linkedTitle, exact: true })).toBeVisible();
-  expect(api.materialReads).toEqual([linkedId, linkedId]);
+  expect(api.materialReads).toEqual([]);
+  expect(api.bulkReads).toEqual([1, 2]);
   expect(api.saves).toEqual([]);
 });
 
@@ -93,7 +94,8 @@ test('Links and browser history retain the mounted reader and scroll @routing', 
   await expect.poll(() => reader.evaluate((element) => element.scrollTop)).toBe(450);
   await page.goForward();
   await expect(page.getByRole('heading', { name: linkedTitle, exact: true })).toBeVisible();
-  expect(api.materialReads).toEqual([readerId, linkedId]);
+  expect(api.materialReads).toEqual([]);
+  expect(api.bulkReads).toEqual([1]);
   expect(api.saves).toEqual([]);
   await mounted?.dispose();
 });
@@ -117,20 +119,28 @@ for (const location of ['game', 'party'] as const) {
   });
 }
 
-test('A newer history target wins when a previous material read completes late @routing', async ({
+test('A newer history target wins when a search result refresh completes late @routing', async ({
   page,
   api,
 }) => {
-  api.materialReadGates.set(linkedId, Promise.withResolvers<void>());
   await openReader(page);
-  await page.getByRole('link', { name: 'Open linked material' }).click();
-  await expect.poll(() => api.materialReads).toContain(linkedId);
+  const fresh = { ...api.data.materials[1], id: 'late-navigation-material' };
+  api.createdMaterials.push(fresh);
+  api.data.workspace.materials.push(fresh);
+  api.searchResponses.set('late material', {
+    results: [{ ...fresh, snippet: 'A recently created material.' }],
+    hasMore: false,
+  });
+  api.holdBulkRead(2);
+  await page.getByRole('searchbox').fill('late material');
+  await page.locator('.search-result').click();
+  await expect.poll(() => api.bulkReads).toEqual([1, 2]);
 
   await page.goBack();
   await expect(page).toHaveURL(new RegExp(`/materials/${readerId}$`));
-  api.releaseMaterialReads();
+  api.releaseBulkReads();
 
-  await expect.poll(() => api.completedMaterialReads).toContain(linkedId);
+  await expect.poll(() => api.completedBulkReads).toContain(2);
   await expect(page.getByRole('heading', { name: readerTitle, exact: true })).toBeVisible();
   await expect(page.getByRole('tab', { name: readerTitle, exact: true })).toHaveAttribute(
     'aria-selected',
@@ -179,7 +189,7 @@ test('A missing section offers recovery to the addressed material without duplic
 
   await expect(page).toHaveURL(new RegExp(`/materials/${linkedId}$`));
   await expect(page.getByRole('alert')).toHaveCount(0);
-  expect(api.materialReads).toEqual([linkedId]);
+  expect(api.materialReads).toEqual([]);
   expect(api.saves).toEqual([]);
 });
 
@@ -244,7 +254,7 @@ test('Closing the last material replaces its URL with an empty workspace @routin
   await expect(page.getByRole('tab')).toHaveCount(0);
   await page.reload();
   await expect(page.getByRole('tab')).toHaveCount(0);
-  expect(api.materialReads).toEqual([readerId]);
+  expect(api.materialReads).toEqual([]);
 });
 
 test('History retains an unsaved editor and a failed close preserves its URL and draft @routing', async ({

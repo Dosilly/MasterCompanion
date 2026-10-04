@@ -1,76 +1,119 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { signal } from '@angular/core';
-import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import type { MaterialDto, WorkspaceDto } from '@mastercompanion/contracts';
 import { MaterialSession } from '../materials/material-session';
+import { CampaignMaterialCache } from './campaign-material-cache';
 
-/** Owns campaign material sessions independently of their mounted views. */
+/** Owns campaign document memory and editing sessions independently of mounted views. */
 export class WorkspaceMaterials {
   private readonly workspaceState = signal<WorkspaceDto | null>(null);
   private readonly sessionState = signal<readonly MaterialSession[]>([]);
-  private readonly loading = new Map<string, Promise<MaterialSession>>();
-  private readonly stopReads = new Subject<void>();
+  private readonly loadStateValue = signal<'idle' | 'loading' | 'ready' | 'error'>('idle');
+  private cache: CampaignMaterialCache | null = null;
   private destroyed = false;
   readonly workspace = this.workspaceState.asReadonly();
   readonly sessions = this.sessionState.asReadonly();
+  readonly loadState = this.loadStateValue.asReadonly();
 
   constructor(private readonly http: HttpClient) {}
 
-  initialize(workspace: WorkspaceDto): void {
-    this.workspaceState.set(workspace);
-  }
-
-  async open(id: string): Promise<MaterialSession> {
+  async initialize(workspace: WorkspaceDto): Promise<void> {
     if (this.destroyed) {
       throw new Error('The material session owner has been destroyed.');
     }
+    if (this.cache && this.cache.campaignId !== workspace.campaignId) {
+      throw new Error('An existing workspace cannot switch campaigns.');
+    }
+    this.cache ??= new CampaignMaterialCache(workspace.campaignId, this.http);
+    this.loadStateValue.set('loading');
+    try {
+      await this.cache.refresh();
+      this.updateWorkspace(workspace);
+      this.loadStateValue.set('ready');
+    } catch (error) {
+      if (!this.destroyed) {
+        this.loadStateValue.set('error');
+      }
+      throw error;
+    }
+  }
+
+  async open(id: string): Promise<MaterialSession> {
+    const cache = this.requireCache();
     const existing = this.sessions().find((session) => session.material.id === id);
     if (existing) {
       return existing;
     }
-    const pending = this.loading.get(id);
-    if (pending) {
-      return pending;
+    if (!cache.get(id)) {
+      await cache.refresh();
+      const workspace = this.workspace();
+      if (workspace) {
+        this.updateWorkspace(workspace);
+      }
     }
-    const request = firstValueFrom(
-      this.http
-        .get<MaterialDto>(`/api/materials/${encodeURIComponent(id)}`)
-        .pipe(takeUntil(this.stopReads)),
-    )
-      .then((material) => this.acceptCreatedMaterial(material))
-      .finally(() => this.loading.delete(id));
-    this.loading.set(id, request);
-    return request;
+    const material = cache.get(id);
+    if (!material) {
+      throw new HttpErrorResponse({ status: 404, statusText: 'Material not found' });
+    }
+    return this.sessionFor(material);
   }
 
   acceptCreatedMaterial(material: MaterialDto): MaterialSession {
-    this.workspaceState.update((workspace) =>
-      workspace === null || workspace.materials.some((item) => item.id === material.id)
-        ? workspace
-        : {
-            ...workspace,
-            materials: [
-              ...workspace.materials,
-              {
-                id: material.id,
-                title: material.title,
-                group: material.group,
-                folderId: material.folderId,
-              },
-            ],
-          },
-    );
-    // Replayed confirmations must not replace a mounted editor or its newer draft.
+    this.requireCache().confirm(material);
+    const workspace = this.workspace();
+    if (workspace) {
+      this.updateWorkspace(workspace);
+    }
+    return this.sessionFor(material);
+  }
+
+  private sessionFor(material: MaterialDto): MaterialSession {
+    // Replayed confirmations and refreshes must not replace an editor or its newer draft.
     const existing = this.sessions().find((session) => session.material.id === material.id);
     if (existing) {
       return existing;
     }
-    const session = new MaterialSession(material, this.http);
+    const cache = this.requireCache();
+    const session = new MaterialSession(material, this.http, (confirmed) =>
+      cache.confirm(confirmed),
+    );
     this.sessionState.update((sessions) => [...sessions, session]);
     return session;
   }
 
+  private updateWorkspace(workspace: WorkspaceDto): void {
+    const materials = new Map(
+      this.requireCache()
+        .materials()
+        .map((material) => [material.id, material]),
+    );
+    for (const session of this.sessions()) {
+      if (!materials.has(session.material.id)) {
+        materials.set(session.material.id, session.material);
+      }
+    }
+    this.workspaceState.set({
+      ...workspace,
+      materials: [...materials.values()].map(({ id, title, group, folderId }) => ({
+        id,
+        title,
+        group,
+        folderId,
+      })),
+    });
+  }
+
+  private requireCache(): CampaignMaterialCache {
+    if (this.destroyed || !this.cache) {
+      throw new Error('The campaign material cache is unavailable.');
+    }
+    return this.cache;
+  }
+
   removeConfirmedSession(id: string): void {
+    if (this.sessions().some((session) => session.material.id === id && session.dirty())) {
+      throw new Error('A material session with unconfirmed changes cannot be removed.');
+    }
     this.sessionState.update((sessions) =>
       sessions.filter((session) => session.material.id !== id),
     );
@@ -78,7 +121,6 @@ export class WorkspaceMaterials {
 
   destroy(): void {
     this.destroyed = true;
-    this.stopReads.next();
-    this.stopReads.complete();
+    this.cache?.destroy();
   }
 }

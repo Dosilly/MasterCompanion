@@ -27,11 +27,22 @@
     </button>
   </div>
 </header>
-@if (loadError(); as error) {
-  <div class="load-error" role="alert">
-    {{ ui.workspace.errors[error] }} <button (click)="load()">{{ ui.workspace.retry }}</button>
-  </div>
-}
+<ng-template #loadStatus>
+  @if (loadError(); as error) {
+    <div class="load-error route-error" role="alert">
+      {{ ui.workspace.errors[error] }}
+      <button (click)="load()" [disabled]="refreshing()">{{ ui.workspace.retry }}</button>
+    </div>
+  } @else if (materialLoadState() === 'error') {
+    <div class="load-error route-error" role="alert">
+      {{ ui.materialCache.loadFailed }}
+      <button (click)="load()" [disabled]="refreshing()">{{ ui.workspace.retry }}</button>
+    </div>
+  }
+  @if (materialLoadState() === 'loading') {
+    <div class="opening-state" role="status">{{ ui.materialCache.loading }}</div>
+  }
+</ng-template>
 @if (workspace(); as data) {
   <div class="workspace-shell">
     <nav #navigation class="material-nav" [attr.aria-label]="ui.workspace.navigationLabel">
@@ -43,6 +54,14 @@
         />
       }
       <button class="new-note-button" (click)="openCreation($event)">{{ ui.notes.newNote }}</button>
+      <button
+        class="refresh-materials-button"
+        (click)="load()"
+        [disabled]="refreshing()"
+        [title]="ui.materialCache.refreshHint"
+      >
+        {{ ui.workspace.refreshMaterials }}
+      </button>
       @if (creation()?.hasRecovery()) {
         <div class="note-recovery" role="status">
           <p>{{ ui.notes.recoveryHint }}</p>
@@ -84,6 +103,7 @@
       }
     </nav>
     <main class="workspace-main">
+      <ng-container *ngTemplateOutlet="loadStatus" />
       @if (routeError(); as error) {
         <div class="load-error route-error" role="alert">
           {{ ui.routes.errors[error.code] }}
@@ -215,6 +235,12 @@
       (created)="acceptCreatedMaterial($event)"
     />
   }
-} @else if (!loadError()) {
-  <p class="opening-state">{{ ui.workspace.loadingCampaign }}</p>
+} @else {
+  <ng-container *ngTemplateOutlet="loadStatus" />
+  @if (!loadError() && materialLoadState() !== 'error') {
+    @if (materialLoadState() !== 'loading') {
+      <p class="opening-state" role="status">{{ ui.workspace.loadingCampaign }}</p>
+    }
+    <button (click)="load()" [disabled]="refreshing()">{{ ui.workspace.refreshMaterials }}</button>
+  }
 }
