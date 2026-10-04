@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import type { MaterialDto, WorkspaceDto } from '@mastercompanion/contracts';
 import { MaterialSession } from '../materials/material-session';
 
@@ -9,6 +9,8 @@ export class WorkspaceMaterials {
   private readonly workspaceState = signal<WorkspaceDto | null>(null);
   private readonly sessionState = signal<readonly MaterialSession[]>([]);
   private readonly loading = new Map<string, Promise<MaterialSession>>();
+  private readonly stopReads = new Subject<void>();
+  private destroyed = false;
   readonly workspace = this.workspaceState.asReadonly();
   readonly sessions = this.sessionState.asReadonly();
 
@@ -19,6 +21,9 @@ export class WorkspaceMaterials {
   }
 
   async open(id: string): Promise<MaterialSession> {
+    if (this.destroyed) {
+      throw new Error('The material session owner has been destroyed.');
+    }
     const existing = this.sessions().find((session) => session.material.id === id);
     if (existing) {
       return existing;
@@ -27,7 +32,11 @@ export class WorkspaceMaterials {
     if (pending) {
       return pending;
     }
-    const request = firstValueFrom(this.http.get<MaterialDto>(`/api/materials/${id}`))
+    const request = firstValueFrom(
+      this.http
+        .get<MaterialDto>(`/api/materials/${encodeURIComponent(id)}`)
+        .pipe(takeUntil(this.stopReads)),
+    )
       .then((material) => this.acceptCreatedMaterial(material))
       .finally(() => this.loading.delete(id));
     this.loading.set(id, request);
@@ -65,5 +74,11 @@ export class WorkspaceMaterials {
     this.sessionState.update((sessions) =>
       sessions.filter((session) => session.material.id !== id),
     );
+  }
+
+  destroy(): void {
+    this.destroyed = true;
+    this.stopReads.next();
+    this.stopReads.complete();
   }
 }

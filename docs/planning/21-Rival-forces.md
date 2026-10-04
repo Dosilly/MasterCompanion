@@ -29,3 +29,13 @@ Automatic encounter suppression after exhausted forces, creature quantity rolls,
 - Backend: 148 gameplay unit cases passed; the final force-specific rerun covers 28 cases. Isolated PostgreSQL verifies four force persistence/upgrade cases plus existing expedition and historical-upgrade coverage. Two dedicated `WebApplicationFactory` HTTP cases verify conversion, replay, complete undo and rejection without writes.
 - Frontend: 67 gameplay cases passed, with a final 12-case casualty-owner rerun. The production frontend build and all formatting, lint, typed fixture, E2E type, localization and dependency checks passed.
 - Browser: 12 gameplay cases passed against reviewed Windows baselines in light/dark at 1920×1080 and 1536×864, including rendered force counts, actual form submission, exhausted controls and keyboard focus. Existing encounter and Arcane Blight cards remain readable.
+
+### Local delivery — 4 October 2026
+
+Feature commit `997e4c4` was merged from `codex/rival-forces` into `trunk` with merge commit `32c6911`. The merged source produced image `sha256:f0c2294269523052ba405598e4887cbe616e52706f06869c67bc621b71e7c123`; frontend production quality checks, separate library/host compilation and API publication passed. The exact image was pinned as `mastercompanion:rival-forces-32c6911` for application replacement.
+
+The app was stopped with a 30-second graceful shutdown allowance. A custom-format PostgreSQL backup is retained at `.local/rival-forces-before-20261004-32c6911.dump` (154,910 bytes). `pg_restore --file /dev/null` read the complete archive successfully without restoring or modifying the database. Only the application container was recreated; the existing PostgreSQL container and external volume remained unchanged. The application returned to healthy status on the loopback endpoint.
+
+Before/after repeatable-read fingerprints matched across all seven tables: one campaign, ten folders, 106 materials, one map, one game state, 92 operations and three applied migrations. The live game snapshot and revision 92 remained unchanged; the schema-four force projection matched the snapshot's resources. All four read-only deployed-container checks passed. No live material or gameplay write was performed for verification.
+
+Evidence is retained in the ignored `.local/rival-forces-before-fingerprints-20261004.txt`, `.local/rival-forces-after-fingerprints-20261004.txt`, and live before/after projections. The backup is recovery evidence; restoring it would require accounting for subsequent user edits. The original checkout remained on its unrelated navigation branch; feature work and delivery used the isolated worktree.

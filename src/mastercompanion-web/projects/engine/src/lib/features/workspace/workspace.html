@@ -14,7 +14,7 @@
       </button>
     }
     @if (workspace()?.maps?.length) {
-      <button (click)="openMap()" [attr.aria-pressed]="active() === '@map'">
+      <button (click)="openMap()" [attr.aria-pressed]="active().startsWith('@map:')">
         {{ ui.workspace.map }}
       </button>
     }
@@ -84,6 +84,19 @@
       }
     </nav>
     <main class="workspace-main">
+      @if (routeError(); as error) {
+        <div class="load-error route-error" role="alert">
+          {{ ui.routes.errors[error.code] }}
+          @if (error.code === 'sectionNotFound') {
+            <button (click)="openMaterialWithoutSection()">{{ ui.routes.openMaterial }}</button>
+          } @else if (error.code === 'materialNotFound' || error.code === 'mapNotFound') {
+            <button (click)="load()">{{ ui.routes.refreshCampaign }}</button>
+          } @else {
+            <button (click)="routing.retry()">{{ ui.workspace.retry }}</button>
+          }
+        </div>
+      }
+
       <div
         #tabStrip
         class="material-tabs"
@@ -112,15 +125,15 @@
             (close)="close('@game')"
           />
         }
-        @if (data.maps.length && mapOpen()) {
+        @for (map of maps(); track map.id) {
           <mc-workspace-tab
-            key="@map"
-            [label]="ui.workspace.map"
+            [key]="'@map:' + map.id"
+            [label]="data.maps.length === 1 ? ui.workspace.map : map.title"
             [closeLabel]="ui.workspace.closeTab"
             [closeHint]="ui.workspace.closeTabHint"
-            [selected]="active() === '@map'"
-            (activate)="activate('@map')"
-            (close)="close('@map')"
+            [selected]="active() === '@map:' + map.id"
+            (activate)="activate('@map:' + map.id)"
+            (close)="close('@map:' + map.id)"
           />
         }
         @for (tab of sessions(); track tab.material.id) {
@@ -138,19 +151,19 @@
         }
       </div>
       @if (opening()) {
-        <div class="opening-state" role="status">{{ ui.workspace.loadingMaterial }}</div>
+        <div class="opening-state" role="status">{{ ui.routes.loading }}</div>
       }
       @if (!active()) {
         <p class="empty-workspace">
           {{ data.maps.length ? ui.workspace.emptyWithMap : ui.workspace.emptyMaterials }}
         </p>
       }
-      @if (data.maps[0]; as map) {
+      @for (map of mapViews(); track map.id) {
         <mc-map-view
-          id="panel-map"
+          [id]="'panel-map:' + map.id"
           role="tabpanel"
-          aria-labelledby="tab-map"
-          [hidden]="active() !== '@map'"
+          [attr.aria-labelledby]="'tab-map:' + map.id"
+          [hidden]="active() !== '@map:' + map.id"
           [map]="map"
           (openMaterial)="open($event)"
         />

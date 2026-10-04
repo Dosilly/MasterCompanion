@@ -70,7 +70,7 @@ test('A failed result open preserves the query and results so opening can be ret
 
   // Assert
   await expect(page.getByRole('alert')).toContainText(
-    text('engine', 'workspace', 'errors', 'materialLoadFailed'),
+    text('engine', 'routes', 'errors', 'materialLoadFailed'),
   );
   await expect(searchFor(page)).toHaveValue('content');
   await expect(resultsFor(page).locator('.search-result-title')).toHaveText(linkedTitle);
@@ -373,7 +373,7 @@ test('Opening a search result preserves map pan and zoom @search @reader', async
   await openReader(page);
   await page.getByRole('button', { name: text('engine', 'workspace', 'map'), exact: true }).click();
   await page.getByRole('button', { name: text('engine', 'map', 'zoomIn'), exact: true }).click();
-  const viewport = page.locator('#panel-map .map-viewport');
+  const viewport = page.locator('[id="panel-map:ui-search-map"] .map-viewport');
   const box = await viewport.boundingBox();
   if (!box) {
     throw new Error('Expected a visible map viewport.');
@@ -382,7 +382,7 @@ test('Opening a search result preserves map pan and zoom @search @reader', async
   await page.mouse.down();
   await page.mouse.move(box.x + box.width / 2 + 65, box.y + box.height / 2 + 40);
   await page.mouse.up();
-  const image = page.locator('#panel-map .map-image');
+  const image = page.locator('[id="panel-map:ui-search-map"] .map-image');
   await expect(image).toHaveAttribute('style', /translate\(65px, 40px\) scale\(1\.25\)/);
   const transform = await image.evaluate((element) => element.style.transform);
 
@@ -393,7 +393,7 @@ test('Opening a search result preserves map pan and zoom @search @reader', async
 
   // Assert
   expect(await image.evaluate((element) => element.style.transform)).toBe(transform);
-  await expect(page.locator('#panel-map')).toBeVisible();
+  await expect(page.locator('[id="panel-map:ui-search-map"]')).toBeVisible();
   expect(api.saves).toHaveLength(0);
 });
 

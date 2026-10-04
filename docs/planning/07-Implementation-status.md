@@ -1,4 +1,15 @@
 # Implementation status
+
+## Workspace URL navigation — 4 October 2026
+
+Angular Router now addresses materials, stable sections, specific maps, gameplay
+and party views. The persistent workspace preserves mounted editors, drafts and
+map state across history navigation. Initialization and active-tab closure replace
+history entries; missing targets have localized recovery instead of a silent
+redirect. The affected frontend/API builds, quality checks, 39 unit/server cases
+and 148 browser cases passed. See [routing delivery](22-Workspace-routing.md)
+for the address contract, precise evidence and local deployment status.
+
 ## Campaign material search — 4 October 2026
 
 Implemented on `codex/material-full-text-search` with parallel backend, frontend

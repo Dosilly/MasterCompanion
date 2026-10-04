@@ -246,3 +246,18 @@ separate future scope. See [search scope and evidence](20-Material-search.md).
 ## Rival forces ownership
 
 Ythryn state schema 4 owns bounded rival resource counts and the explicit `recordForceLoss` command. Auril arrival and conversion of surviving cultists commit together through the existing neutral module transition; no faction identifier enters engine code. The engine retains revision checks, campaign locking, receipts and whole-snapshot undo. Snapshot upgrades preserve existing characters and expedition state; historical receipts keep their original projections. See [rival force tracking](21-Rival-forces.md) for counts, conversion semantics and migration limits.
+
+## Workspace URL navigation — 4 October 2026
+
+The Angular host declares routes under one persistent workspace parent. The engine
+owns URL decoding, latest navigation intent, campaign target resolution, history
+synchronization and recovery. Workspace material sessions and mounted editor/map
+views remain independent of route activation. The neutral UI and module contracts
+are unchanged; semantic module material requests enter the same navigation owner.
+
+Material/section, specific-map, game, party and explicitly empty workspace
+addresses operate on the current single campaign. Navigation is a UI operation:
+it neither saves documents nor performs or undoes gameplay writes. Direct links
+start new material sessions in read mode. The API host serves deep SPA addresses,
+including dotted IDs, while missing API routes and assets retain HTTP failures.
+See [the routing contract and verification](22-Workspace-routing.md).

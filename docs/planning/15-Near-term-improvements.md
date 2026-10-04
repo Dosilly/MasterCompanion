@@ -92,10 +92,10 @@ change needs a new reviewed migration that preserves existing campaign data.
 
 ## Improvement: URL-based workspace navigation
 
-4 October 2026 · requested for future implementation, not implemented
+4 October 2026 · implemented and verified; see [routing delivery](22-Workspace-routing.md).
 
-The current workspace activates materials and tool tabs in memory while the
-browser URL stays unchanged. Introduce Angular Router navigation so users can
+The original workspace activated materials and tool tabs in memory while the
+browser URL stayed unchanged. Angular Router navigation now lets users
 bookmark and copy a specific location, use browser Back/Forward, and reload the
 current view without returning to the module's start material. Navigation remains
 inside the SPA without a full-page reload.
@@ -157,4 +157,5 @@ inside the SPA without a full-page reload.
   with scoped browser checks. Build the affected frontend integration and update
   navigation fixtures and documentation with the chosen route contract.
 
-No runtime code, dependencies, or campaign data changed when recording this item.
+The scope above records the original request. The delivered address contract,
+history behavior, ownership and verification are recorded in the routing plan.

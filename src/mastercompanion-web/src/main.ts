@@ -1,13 +1,18 @@
 import { Component } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { bootstrapApplication } from '@angular/platform-browser';
+import { provideRouter, RouterOutlet } from '@angular/router';
 import { CAMPAIGN_MODULES } from '@mastercompanion/contracts';
-import { Workspace } from '@mastercompanion/engine';
 import { ythrynModule } from '@mastercompanion/ythryn';
+import { appRoutes } from './app.routes';
 
-@Component({ selector: 'mc-app', imports: [Workspace], template: '<mc-workspace />' })
+@Component({ selector: 'mc-app', imports: [RouterOutlet], template: '<router-outlet />' })
 class App {}
 
 bootstrapApplication(App, {
-  providers: [provideHttpClient(), { provide: CAMPAIGN_MODULES, useValue: [ythrynModule] }],
+  providers: [
+    provideHttpClient(),
+    provideRouter(appRoutes),
+    { provide: CAMPAIGN_MODULES, useValue: [ythrynModule] },
+  ],
 }).catch((error) => console.error(error));

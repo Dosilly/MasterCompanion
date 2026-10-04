@@ -62,6 +62,34 @@ function confirmedWorkspace(workspace: WorkspaceMaterials): WorkspaceDto {
 }
 
 describe('Confirmed notes and workspace navigation', () => {
+  test('Material reads encode a stable identifier as one URL segment', async () => {
+    const transport = new ControlledHttp((value) => value);
+    const workspace = new WorkspaceMaterials(transport.client);
+
+    const opening = workspace.open('module:note');
+    transport.requests[0].response.next(material('module:note', 'Note'));
+    transport.requests[0].response.complete();
+    await opening;
+
+    assert.equal(transport.requests[0].url, '/api/materials/module%3Anote');
+  });
+
+  test('Destroying the workspace cancels a pending read without creating a session', async () => {
+    const transport = new ControlledHttp((value) => value);
+    const workspace = new WorkspaceMaterials(transport.client);
+    const opening = workspace.open('note');
+    const rejected = assert.rejects(opening, { name: 'EmptyError' });
+
+    workspace.destroy();
+    transport.requests[0].response.next(material('note', 'Late response'));
+    await rejected;
+
+    assert.equal(transport.requests[0].response.observed, false);
+    assert.equal(workspace.sessions().length, 0);
+    await assert.rejects(workspace.open('note'), /destroyed/);
+    assert.equal(transport.requests.length, 1);
+  });
+
   test('Opening a persisted search result absent from startup summaries adds its canonical summary without replacing existing drafts', async () => {
     // Arrange
     const { workspace, oldSession, requests } = fixture();

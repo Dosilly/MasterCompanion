@@ -11,14 +11,11 @@
     "tabsLabel": "Open materials",
     "closeTab": "Close tab",
     "closeTabHint": "Close tab (also with the middle mouse button)",
-    "loadingMaterial": "Loading material…",
     "loadingCampaign": "Loading campaign…",
     "emptyWithMap": "Select a material from the navigation or open the map.",
     "emptyMaterials": "Select a material from the navigation.",
     "errors": {
-      "campaignLoadFailed": "Could not load the campaign. Check that the backend and database are running.",
-      "materialNotFound": "This material is not available in the campaign.",
-      "materialLoadFailed": "Could not open the material. Please try again."
+      "campaignLoadFailed": "Could not load the campaign. Check that the backend and database are running."
     }
   },
   "search": {
@@ -31,6 +28,19 @@
       "invalidQuery": "Enter a search phrase of up to 160 characters without control characters.",
       "campaignMissing": "This campaign is no longer available. Reload the campaign and try again.",
       "failed": "Could not search materials. Try again."
+    }
+  },
+  "routes": {
+    "loading": "Opening view…",
+    "openMaterial": "Open material without the section",
+    "refreshCampaign": "Refresh campaign",
+    "errors": {
+      "invalidRoute": "This address does not identify a supported campaign location. Choose a view from navigation.",
+      "mapNotFound": "This map is not available in the current campaign.",
+      "materialNotFound": "This material is not available in the current campaign. Refresh the campaign or choose another material.",
+      "materialLoadFailed": "Could not open the requested material. Try again.",
+      "sectionNotFound": "This section is not available in the material. Open the material without the section.",
+      "navigationFailed": "Could not change the view. Try again."
     }
   },
   "notes": {

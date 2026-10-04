@@ -15,7 +15,8 @@ import {
   viewChildren,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { CAMPAIGN_MODULES, MaterialDto, WorkspaceDto } from '@mastercompanion/contracts';
 import { WorkspaceTab } from './workspace-tab';
@@ -28,6 +29,10 @@ import { MaterialSearchView } from '../materials/material-search-view';
 import { MapView } from '../maps/map-view';
 import { buildNavigation, folderPath } from './navigation';
 import { ThemePreference } from './theme-preference';
+import { WorkspaceRouting } from './workspace-routing';
+import type { WorkspaceRouteTarget } from './workspace-route-target';
+import type { WorkspaceRouteContext } from './workspace-route-context';
+import type { WorkspaceRouteResult } from './workspace-route-state';
 import { GameSession } from '../gameplay/game-session';
 import { GameView } from '../gameplay/game-view';
 import { PartyView } from '../gameplay/party-view';
@@ -58,11 +63,26 @@ export class Workspace {
   private readonly materials = new WorkspaceMaterials(this.http);
   readonly workspace = this.materials.workspace;
   readonly sessions = this.materials.sessions;
-  readonly active = signal('@map');
+  readonly active = signal('');
+  readonly routing = new WorkspaceRouting(inject(Router), (target, context) =>
+    this.applyRoute(target, context),
+  );
   readonly materialSearch = signal<MaterialSearch | null>(null);
   readonly loadError = signal<keyof UiMessages['workspace']['errors'] | null>(null);
-  readonly opening = signal(false);
-  readonly mapOpen = signal(true);
+  readonly opening = computed(() => this.routing.state().kind === 'pending');
+  private readonly openMaps = signal<readonly string[]>([]);
+  private readonly mountedMaps = signal<readonly string[]>([]);
+  readonly maps = computed(() =>
+    this.openMaps().flatMap((id) => this.workspace()?.maps.filter((map) => map.id === id) ?? []),
+  );
+  readonly mapViews = computed(() =>
+    this.mountedMaps().flatMap((id) => this.workspace()?.maps.filter((map) => map.id === id) ?? []),
+  );
+  private lastMapId: string | undefined;
+  readonly routeError = computed(() => {
+    const state = this.routing.state();
+    return state.kind === 'error' ? state : null;
+  });
   readonly gameOpen = signal(false);
   readonly gameMounted = signal(false);
   readonly partyOpen = signal(false);
@@ -91,10 +111,14 @@ export class Workspace {
     ),
   );
   private navigationRender?: AfterRenderRef;
+  private finishNavigationRender?: (found: boolean) => void;
 
   constructor() {
     this.destroyRef.onDestroy(() => {
       this.navigationRender?.destroy();
+      this.finishNavigationRender?.(false);
+      this.routing.destroy();
+      this.materials.destroy();
       this.game()?.destroy();
       this.creation()?.destroy();
       this.materialSearch()?.destroy();
@@ -139,20 +163,13 @@ export class Workspace {
         }
         this.creation.set(new MaterialCreation(workspace.campaignId, this.http, storage));
       }
-      // Begin in the reader. The map remains available in the same main area.
-      if (!this.sessions().length && workspace.materials.length) {
-        await this.open(workspace.startMaterialId);
-      }
+      await this.routing.initialize(workspace);
     } catch {
       this.loadError.set('campaignLoadFailed');
     }
   }
   async open(id: string, anchor?: string) {
-    if (!this.workspace()?.materials.some((material) => material.id === id)) {
-      this.loadError.set('materialNotFound');
-      return;
-    }
-    await this.loadAndActivateMaterial(id, anchor);
+    return this.routing.navigate({ kind: 'material', materialId: id, anchor });
   }
 
   async openSearchResult(id: string): Promise<void> {
@@ -162,27 +179,96 @@ export class Workspace {
       return;
     }
     const query = search?.query();
-    if (
-      (await this.loadAndActivateMaterial(id)) &&
-      this.materialSearch() === search &&
-      search?.query() === query
-    ) {
+    if ((await this.open(id)) && this.materialSearch() === search && search?.query() === query) {
       search?.updateQuery('');
+      this.navigationRender = afterNextRender(
+        () => {
+          const state = this.routing.state();
+          if (
+            state.kind === 'ready' &&
+            state.target.kind === 'material' &&
+            state.target.materialId === id
+          ) {
+            this.revealNavigationSelection(true);
+          }
+        },
+        { injector: this.injector },
+      );
     }
   }
 
-  private async loadAndActivateMaterial(id: string, anchor?: string): Promise<boolean> {
-    this.opening.set(true);
-    this.loadError.set(null);
-    try {
-      await this.materials.open(id);
-      this.activate(id, anchor);
-      return true;
-    } catch {
-      this.loadError.set('materialLoadFailed');
-      return false;
-    } finally {
-      this.opening.set(false);
+  private async applyRoute(
+    target: WorkspaceRouteTarget,
+    context: WorkspaceRouteContext,
+  ): Promise<WorkspaceRouteResult> {
+    if (target.kind === 'material') {
+      const searchState = this.materialSearch()?.state();
+      const knownMaterial = this.workspace()?.materials.some(
+        (material) => material.id === target.materialId,
+      );
+      const campaignSearchMatch =
+        searchState?.kind === 'ready' &&
+        searchState.results.some((material) => material.id === target.materialId);
+      if (!knownMaterial && !campaignSearchMatch) {
+        return { kind: 'error', code: 'materialNotFound' };
+      }
+      try {
+        await this.materials.open(target.materialId);
+      } catch (error) {
+        return {
+          kind: 'error',
+          code:
+            error instanceof HttpErrorResponse && error.status === 404
+              ? 'materialNotFound'
+              : 'materialLoadFailed',
+        };
+      }
+      if (!context.isCurrent()) {
+        return { kind: 'ready' };
+      }
+      const workspace = this.workspace();
+      if (workspace) {
+        this.routing.updateWorkspace(workspace);
+      }
+      const found = await this.display(target.materialId, target.anchor, context);
+      return found ? { kind: 'ready' } : { kind: 'error', code: 'sectionNotFound' };
+    }
+    if (!context.isCurrent()) {
+      return { kind: 'ready' };
+    }
+    switch (target.kind) {
+      case 'map':
+        this.lastMapId = target.mapId;
+        this.openMaps.update((ids) => (ids.includes(target.mapId) ? ids : [...ids, target.mapId]));
+        this.mountedMaps.update((ids) =>
+          ids.includes(target.mapId) ? ids : [...ids, target.mapId],
+        );
+        await this.display(`@map:${target.mapId}`, undefined, context);
+        break;
+      case 'game':
+        this.gameMounted.set(true);
+        this.gameOpen.set(true);
+        await this.display('@game', undefined, context);
+        break;
+      case 'party':
+        this.partyMounted.set(true);
+        this.partyOpen.set(true);
+        await this.display('@party', undefined, context);
+        break;
+      case 'empty':
+        await this.display('', undefined, context);
+        break;
+    }
+    return { kind: 'ready' };
+  }
+
+  openMaterialWithoutSection(): void {
+    const target = this.routeError()?.target;
+    if (target?.kind === 'material') {
+      void this.routing.navigate(
+        { kind: 'material', materialId: target.materialId },
+        { replace: true },
+      );
     }
   }
 
@@ -194,25 +280,49 @@ export class Workspace {
   }
   acceptCreatedMaterial(material: MaterialDto): void {
     this.materials.acceptCreatedMaterial(material);
-    this.activate(material.id);
+    this.materialSearch()?.updateQuery('');
+    const workspace = this.workspace();
+    if (workspace) {
+      this.routing.updateWorkspace(workspace);
+    }
+    void this.open(material.id);
   }
 
   openMap() {
-    this.mapOpen.set(true);
-    this.activate('@map');
+    const id = this.lastMapId ?? this.workspace()?.maps[0]?.id;
+    if (id) {
+      void this.routing.navigate({ kind: 'map', mapId: id });
+    }
   }
   openGame() {
-    this.gameMounted.set(true);
-    this.gameOpen.set(true);
-    this.activate('@game');
+    void this.routing.navigate({ kind: 'game' });
   }
   openParty() {
-    this.partyMounted.set(true);
-    this.partyOpen.set(true);
-    this.activate('@party');
+    void this.routing.navigate({ kind: 'party' });
   }
 
   activate(id: string, anchor?: string, focusTab = false) {
+    return this.routing.navigate(this.targetForTab(id, anchor), { focusTab });
+  }
+
+  private targetForTab(id: string, anchor?: string): WorkspaceRouteTarget {
+    if (id.startsWith('@map:')) {
+      return { kind: 'map', mapId: id.slice('@map:'.length) };
+    }
+    if (id === '@game') {
+      return { kind: 'game' };
+    }
+    if (id === '@party') {
+      return { kind: 'party' };
+    }
+    return id ? { kind: 'material', materialId: id, anchor } : { kind: 'empty' };
+  }
+
+  private display(
+    id: string,
+    anchor: string | undefined,
+    context: WorkspaceRouteContext,
+  ): Promise<boolean> {
     this.active.set(id);
     const material = this.workspace()?.materials.find((material) => material.id === id);
     if (material) {
@@ -226,28 +336,22 @@ export class Workspace {
       );
     }
     this.navigationRender?.destroy();
+    this.finishNavigationRender?.(false);
+    const rendered = new Promise<boolean>((resolve) => {
+      this.finishNavigationRender = resolve;
+    });
     this.navigationRender = afterNextRender(
       () => {
-        const nav = this.navigation()?.nativeElement;
-        const selected = nav?.querySelector<HTMLElement>('[aria-current="page"]');
-        if (nav && selected) {
-          if (!focusTab) {
-            selected.focus({ preventScroll: true });
-          }
-          const itemBounds = selected.getBoundingClientRect();
-          const navBounds = nav.getBoundingClientRect();
-          nav.scrollTo({
-            top:
-              nav.scrollTop +
-              itemBounds.top -
-              navBounds.top -
-              (nav.clientHeight - itemBounds.height) / 2,
-          });
+        if (!context.isCurrent()) {
+          this.finishNavigationRender?.(false);
+          this.finishNavigationRender = undefined;
+          return;
         }
+        this.revealNavigationSelection(!context.focusTab);
         const strip = this.tabStrip()?.nativeElement;
         const tab = strip?.querySelector<HTMLElement>('[aria-selected="true"]');
         if (strip && tab) {
-          if (focusTab) {
+          if (context.focusTab) {
             tab.focus({ preventScroll: true });
           }
           const tabBounds = tab.getBoundingClientRect();
@@ -260,14 +364,34 @@ export class Workspace {
               (strip.clientWidth - tabBounds.width) / 2,
           });
         }
-        if (anchor) {
-          this.views()
-            .find((view) => view.session().material.id === id)
-            ?.scrollToAnchor(anchor);
-        }
+        const found = anchor
+          ? (this.views()
+              .find((view) => view.session().material.id === id)
+              ?.scrollToAnchor(anchor) ?? false)
+          : true;
+        this.finishNavigationRender?.(found);
+        this.finishNavigationRender = undefined;
       },
       { injector: this.injector },
     );
+    return rendered;
+  }
+
+  private revealNavigationSelection(focus: boolean): void {
+    const nav = this.navigation()?.nativeElement;
+    const selected = nav?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!nav || !selected) {
+      return;
+    }
+    if (focus) {
+      selected.focus({ preventScroll: true });
+    }
+    const itemBounds = selected.getBoundingClientRect();
+    const navBounds = nav.getBoundingClientRect();
+    nav.scrollTo({
+      top:
+        nav.scrollTop + itemBounds.top - navBounds.top - (nav.clientHeight - itemBounds.height) / 2,
+    });
   }
 
   toggleFolder(id: string, event: Event) {
@@ -335,22 +459,21 @@ export class Workspace {
         return next;
       });
       if (!saved || session.dirty()) {
-        this.activate(id);
         return;
       }
     }
     const tabIds = [
       ...(this.partyOpen() ? ['@party'] : []),
       ...(this.gameOpen() ? ['@game'] : []),
-      ...(this.mapOpen() ? ['@map'] : []),
+      ...this.openMaps().map((mapId) => `@map:${mapId}`),
       ...this.sessions().map((tab) => tab.material.id),
     ];
     const index = tabIds.indexOf(id);
     if (index < 0) {
       return;
     }
-    if (id === '@map') {
-      this.mapOpen.set(false);
+    if (id.startsWith('@map:')) {
+      this.openMaps.update((ids) => ids.filter((mapId) => `@map:${mapId}` !== id));
     } else if (id === '@game') {
       this.gameOpen.set(false);
     } else if (id === '@party') {
@@ -359,7 +482,9 @@ export class Workspace {
       this.materials.removeConfirmedSession(id);
     }
     if (this.active() === id) {
-      this.activate(tabIds[index + 1] ?? tabIds[index - 1] ?? '');
+      await this.routing.navigate(this.targetForTab(tabIds[index + 1] ?? tabIds[index - 1] ?? ''), {
+        replace: true,
+      });
     }
   }
   @HostListener('window:beforeunload', ['$event'])

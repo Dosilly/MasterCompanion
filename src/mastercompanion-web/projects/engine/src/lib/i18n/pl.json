@@ -11,14 +11,11 @@
     "tabsLabel": "Otwarte materiały",
     "closeTab": "Zamknij kartę",
     "closeTabHint": "Zamknij kartę (także środkowym przyciskiem myszy)",
-    "loadingMaterial": "Wczytywanie materiału…",
     "loadingCampaign": "Wczytywanie kampanii…",
     "emptyWithMap": "Wybierz materiał ze spisu lub otwórz mapę.",
     "emptyMaterials": "Wybierz materiał ze spisu.",
     "errors": {
-      "campaignLoadFailed": "Nie udało się wczytać kampanii. Sprawdź, czy backend i baza działają.",
-      "materialNotFound": "Ten materiał nie jest dostępny w kampanii.",
-      "materialLoadFailed": "Nie udało się otworzyć materiału. Spróbuj ponownie."
+      "campaignLoadFailed": "Nie udało się wczytać kampanii. Sprawdź, czy backend i baza działają."
     }
   },
   "search": {
@@ -31,6 +28,19 @@
       "invalidQuery": "Wpisz frazę do 160 znaków, bez znaków sterujących.",
       "campaignMissing": "Ta kampania nie jest już dostępna. Odśwież kampanię i spróbuj ponownie.",
       "failed": "Nie udało się przeszukać materiałów. Spróbuj ponownie."
+    }
+  },
+  "routes": {
+    "loading": "Otwieranie widoku…",
+    "openMaterial": "Otwórz materiał bez sekcji",
+    "refreshCampaign": "Odśwież kampanię",
+    "errors": {
+      "invalidRoute": "Ten adres nie wskazuje obsługiwanego miejsca w kampanii. Wybierz widok z nawigacji.",
+      "mapNotFound": "Ta mapa nie jest dostępna w bieżącej kampanii.",
+      "materialNotFound": "Ten materiał nie jest dostępny w bieżącej kampanii. Odśwież kampanię lub wybierz inny materiał.",
+      "materialLoadFailed": "Nie udało się otworzyć wskazanego materiału. Spróbuj ponownie.",
+      "sectionNotFound": "Ta sekcja nie jest dostępna w materiale. Otwórz materiał bez wskazania sekcji.",
+      "navigationFailed": "Nie udało się zmienić widoku. Spróbuj ponownie."
     }
   },
   "notes": {

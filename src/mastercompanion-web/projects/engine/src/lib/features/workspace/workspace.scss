@@ -88,6 +88,10 @@
   border: 1px solid var(--error-line);
   background: var(--error-bg);
 }
+.route-error {
+  flex: none;
+  margin-bottom: 0;
+}
 .opening-state {
   padding: 16px 32px;
   color: var(--muted);
