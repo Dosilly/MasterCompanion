@@ -42,3 +42,21 @@ adjustment, the two affected rendering/link cases passed again. The Ythryn modul
 build passed with no warnings or errors; the code/localization guard and formatting
 of the changed test and reference fixture passed. Package preparation reports
 109 materials, 11 folders and one map.
+
+## Delivered locally
+
+Content commit `1b79056` was merged into local trunk as `505782e`. The runtime
+image `mastercompanion:harkan-505782e` was built from that merge, including
+frontend quality/compilation and API publication. Only the application container
+was recreated; it became healthy and returned HTTP 200 for readiness and the
+Harkan guide address.
+
+The development campaign received three new Harkan documents, six updated
+location/introduction documents and metadata changes for two existing materials
+in the renamed player-thread folder. The update also inserted the Harkan folder
+and renamed its parent. API reads confirmed exact intended documents and folder
+assignments. Replaying the same transaction left all 11 affected material
+revisions unchanged. No schema migration or automatic startup replacement was
+introduced. The first database connection lacked password authentication and
+failed before any writes; using the container's existing password environment
+completed the update without exposing credentials.
