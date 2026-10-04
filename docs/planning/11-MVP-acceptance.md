@@ -54,10 +54,16 @@ The following items remain outside phase one, without a newly assigned schedule:
 - Map/marker authoring, uploads and asset management.
 - Visual module authoring and deliberate application of module content updates
   to campaign copies with protection of authored changes.
-- Campaign export/import, archives and portable restore.
 - Session records, chronicle, additional module mechanics and a generic tool
   creator.
 - Accounts, access control, cloud hosting and synchronization.
+
+On 4 October 2026, the user removed campaign export/import, portable archives and
+user-facing archive restore from the product plan and backlog. Normal persistence
+remains required. Local development requires no backups or preservation probes
+and permits module updates to overwrite campaign notes. Production backups,
+recovery and authored-data protection belong to the AWS stage; see [data policy](21-Development-data-and-AWS-protection.md).
+These later decisions do not change historical acceptance or imply a production release.
 
 Known limits retained from delivery: the existing large-map-image performance
 warning; pending game request recovery is scoped to browser-tab session storage;

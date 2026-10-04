@@ -12,10 +12,17 @@ The worktree starts at commit `bdfcc9c` on the local branch
 `codex/campaign-notes-current`. The original checkout remains unchanged. The worktree is
 attached to the current chat; no separate user-owned chats are needed.
 
-Delivery order: ordinary campaign notes, full-text search, session records and
-pinned materials, campaign export/import, then map authoring and multiple
-campaigns. Search starts after the note creation contract is implemented and
+Current delivery order: ordinary campaign notes, full-text search, session records
+and pinned materials, then map authoring and multiple campaigns. Search starts
+after the note creation contract is implemented and
 verified. Each later slice receives its own scope and verification plan.
+
+Scope update, 4 October 2026: the user removed campaign export/import and
+archive-based state transfer from the product plan and backlog. Campaign data
+remains in the database. Local development requires no backups or preservation
+probes and permits module updates to overwrite campaign notes. Production backup
+and protection work belongs to the AWS stage; see [data policy](21-Development-data-and-AWS-protection.md).
+Possible future user accounts and hosted access need separate design.
 
 Related records: [user stories](02-User-stories.md#us-04-free-form-text-and-entities),
 [accepted MVP](11-MVP-acceptance.md), [architecture](06-Module-architecture.md).
@@ -222,8 +229,9 @@ scoped to the browser tab's session storage. Rename, move and delete are deferre
 The next implementation slice at this delivery was full-text search for campaign
 materials. It was subsequently implemented and verified on 4 October 2026; see
 [search delivery](20-Material-search.md) for its contract, scope and evidence.
-Session records and pinned materials remain next in the originally approved
-order, followed by campaign export/import, map authoring and multiple campaigns.
+Session records and pinned materials remain next in the delivery order, followed
+by map authoring and multiple campaigns. Campaign export/import was removed
+from that order on 4 October 2026.
 The separate URL, preloading and folder requests have no newly assigned order.
 
 ## Local deployment — 3 October 2026

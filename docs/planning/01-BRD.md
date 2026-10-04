@@ -1,12 +1,12 @@
 # BRD — game master companion
 
-Version 0.2 · 2 October 2026
+Version 0.3 · 4 October 2026
 
 Related: [product concept](00-Product-concept.md) · [user stories](02-User-stories.md)
 
 ## 1. Document purpose and status
 
-This BRD describes the wider product vision, expected outcomes and business requirements, not a claim that every listed capability belongs to the MVP. Phase one was accepted by the user on 2 October 2026; [MVP acceptance](11-MVP-acceptance.md) defines its delivered scope and later work. Full offline operation has been removed from current requirements. Data persistence and visible save failures remain required; user-facing export/import remains later scope.
+This BRD describes the wider product vision, expected outcomes and business requirements, not a claim that every listed capability belongs to the MVP. Phase one was accepted by the user on 2 October 2026; [MVP acceptance](11-MVP-acceptance.md) defines its delivered scope and later work. Full offline operation has been removed from current requirements. On 4 October 2026, the user removed campaign export/import and archive-based state transfer from the product plan. Normal persistence and visible save failures remain required. Local development requires no database backups and allows module updates to overwrite campaign notes; production data protection belongs to the AWS stage. See [data policy](21-Development-data-and-AWS-protection.md).
 
 ## 2. Problem
 
@@ -118,9 +118,9 @@ Events can precede the first session or have no known date. The GM can correct t
 
 A scene plan does not automatically appear as a played event. Tool operation history is available separately from the chronicle. The GM deliberately chooses what to preserve as campaign history. Editing a chronicle event does not automatically reverse time or previous tool resolutions.
 
-### BR-17. Persistence and campaign backup
+### BR-17. Durable persistence and recovery
 
-Confirmed saves remain preserved after closing the application, and save failures are visible without losing drafts. Full offline operation is not a current requirement. User-facing complete campaign backup/restore belongs to later scope: it should include content, assets and game state and must not silently replace another campaign. Phase one uses persistent local storage and documented database protection; it does not claim a campaign export/import feature.
+Normal saves persist in the database across application restarts, and save failures remain visible with recoverable drafts. During current local development, backups and restore verification are not required, local data loss is acceptable, and module updates may overwrite campaign notes. Backup coverage, retention, recovery and protection of authored production data belong to the AWS production stage and must be designed and verified before production use. Campaign export/import, portable archives and user-facing archive restore remain removed from the product plan. Full offline operation is not a current requirement. Possible future user accounts and hosted access need separate design. See [data policy](21-Development-data-and-AWS-protection.md).
 
 ### BR-18. Independence from Ythryn and future hosting
 
@@ -137,7 +137,7 @@ The pilot draws on existing act 7 materials, the current map and HTML tool behav
 5. Record a development in a quick note, create a chronicle event from it after the session and correct its position.
 6. Close and reopen the application, begin the next session and confirm preserved state and separate session notes when those later-scope features are delivered.
 7. Create an empty campaign with a custom map and tool; confirm independence from Ythryn names and rules.
-8. Restore a campaign copy and check materials, images, relationships, time, tools and history.
+8. For AWS production readiness, verify operational recovery on an isolated database copy, preserving materials, images, relationships, time, tools and history supported by the delivered scope. This is not a current local-development acceptance gate.
 
 This is a future product validation plan, not a report of tests already performed.
 
@@ -162,6 +162,6 @@ This is a future product validation plan, not a report of tests already performe
 | A large time advance overwhelms the GM with notifications. | Clearly group overdue matters while preserving occurrence counts and times; evaluate interaction in the pilot. |
 | Pilot materials become a rigid structure for the whole product. | Validate an empty campaign and tools with different names and values. |
 | The chronicle confuses plans with history. | Manual event recording, source notes and separate tool history. |
-| A module update overwrites authored changes. | The first version preserves existing campaign independence; update merging is outside scope. |
+| A module update overwrites authored production changes. | Protect authored campaign changes before production use. Current local development explicitly permits module updates to overwrite notes; production update handling belongs to the AWS stage. |
 
 Experience design still needs detailed entity fields, map-adjacent material previews, undated event handling, exact creator capabilities, multiple sequential undo, deleted-content recovery and the product owner's module delivery process.

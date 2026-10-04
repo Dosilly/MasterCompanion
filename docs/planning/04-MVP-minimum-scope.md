@@ -1,6 +1,6 @@
 # MVP minimum scope — first week
 
-Version 0.7 · 2 October 2026 · phase one accepted
+Version 0.8 · 4 October 2026 · phase one accepted on 2 October 2026
 
 **Goal:** a useful local view for running all Ythryn content available in the POC, with interactive map, readable notes, required editing, time and Arcane Blight. User budget: seven days at about 3 hours with the agent, around 21 hours total. Verify and document startup on Windows. Keep the chosen stack portable; separate acceptance on other systems is outside this week.
 
@@ -18,7 +18,7 @@ One campaign is an interface limitation in this version. Data still identifies c
 
 Accounts, users, login, roles and permissions belong to a future stage. The current application runs locally on localhost for the GM. Design the hosted access model before cloud deployment.
 
-Export/import and state transfer are explicitly deferred. Do not build their screens or archive format. Automatic POC-based campaign preparation is module delivery rather than a user import feature. Restart must not overwrite personal changes with starter data.
+On 4 October 2026, the user removed campaign export/import and archive-based state transfer from the product plan and backlog. Do not build their screens or archive format. Normal persistence remains required. Local development requires no backups or preservation probes, and module updates may overwrite campaign notes. Production backup and data protection belong to the AWS stage; see [data policy](21-Development-data-and-AWS-protection.md). Automatic POC-based campaign preparation is module delivery rather than a user import feature. Historical preservation checks below do not impose gates on subsequent local updates.
 
 ## 2. Main view
 
@@ -46,12 +46,11 @@ Design for Full HD on one monitor. Main-view appearance and ergonomics take prio
 | Time | Building search (30 minutes), short rest (60 minutes), shared long rest (480 minutes), custom advance and retained due checks. | Selected-character rests, calendar, activity editor and location clocks. |
 | Arcane Blight | Independent character states, explicit outcomes/d6, healing and sequential undo. Exposure every 12 hours; infected recovery every 12 hours or after long rest, which resets the timer. | Other mechanics, generic counter/reminder creator and rule-parameter editing UI. |
 | Party | Setup plus renaming, adding and removing characters during play; stable IDs, retained module state and sequential undo. | Rich NPC/material associations. |
-| State transfer | No export/import; ordinary local saving remains required. | Complete campaign export/import, archives, updates with pre-import backup, independent copies and branch merging. |
 | Preview | Links switch tabs while preserving context. | A separate "Preview" action with a wide window. |
 | Sessions and chronicle | Ordinary editable material can hold working notes. | Separate session records, pinned materials, chronicle and events from text. |
 | Access and cloud | Local process for the GM, without accounts/login. | Accounts, access protection, AWS hosting and possible synchronization. |
 
-The user explicitly deferred export/import and new notes and confirmed shared rest. Editing and Arcane Blight are required this week. Limiting extra editor menus, marker management and separate previews is the recommended way to fit the budget; keep those features in the product backlog.
+For the original first-week scope, the user deferred new notes and campaign export/import and confirmed shared rest. Campaign export/import was subsequently removed from the product plan on 4 October 2026. Editing and Arcane Blight were required that week. Limiting extra editor menus, marker management and separate previews was the recommended way to fit the budget; those features remain in the product backlog.
 
 ## 4. Technical foundation with limited scope
 
@@ -125,14 +124,14 @@ Accepted on 2 October 2026 based on the user's successful application testing an
 1. Start locally on Windows. Historical migration accounts for 16 documents, 142 sections and 29 markers; maintained defaults now contain 106 materials in 10 folders. All available Ythryn text is reachable, including consolidated Fenes sections. No marker targets missing material. Review includes Y19 rooms, tables and supplements.
 2. Open Y4 from the map, read a long description, switch materials and return to the previous position. Map zoom/pan is retained. Every source reference is accounted for; no apparently working links target absent content.
 3. Enter editing, change content and confirm preservation after restart. Readability and existing document elements remain intact. Reader clicks do not open editing. Save failures are visible and preserve tab text.
-4. Module defaults do not overwrite campaign edits on restart. Full offline operation and internet-disconnected acceptance are removed from this scope.
+4. Historical phase-one verification confirmed no overwrite of campaign edits on restart. Current local development permits module updates to overwrite notes under [data policy](21-Development-data-and-AWS-protection.md). Full offline operation and internet-disconnected acceptance are removed from this scope.
 
 Required time and Arcane Blight acceptance:
 
 5. Exposure and recovery remain independent for each character. Infected recovery is due every 12 hours or after long rest, which resets the timer; coincident deadlines create one check. Large advances retain overdue checks, and retries do not apply an outcome twice. Explicit d6, immunity, three-failure transformation and magical healing are included.
 6. Sequential undo restores complete game operations and time without reverting notes. Persisted game state and history survive restart.
 
-Export/import is outside this version's acceptance. Conversion/link tests protect content completeness; mechanic tests cover rules/dependencies. Verify readability, navigation, saving and failure handling in the real view rather than tests mirroring component layouts.
+Campaign export/import has been removed from the product plan and acceptance criteria. Conversion/link tests protect content completeness; mechanic tests cover rules/dependencies. Verify readability, navigation, saving and failure handling in the real view rather than tests mirroring component layouts.
 
 ## 8. Latest answers and next step
 

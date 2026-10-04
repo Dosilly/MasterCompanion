@@ -1,5 +1,16 @@
 # Engine and module boundary
 
+## Campaign persistence scope, 4 October 2026
+
+The database stores campaign-owned materials and game state. Campaign
+export/import remains removed from the plan. Current local development requires
+no backups, restore rehearsals or preservation probes; module updates may
+overwrite campaign notes. Production backup and authored-data protection belong
+to the AWS stage. Normal validation, concurrency and transaction rules remain.
+Module sources and editor content insertion remain separate responsibilities.
+See [data policy](21-Development-data-and-AWS-protection.md). This policy change
+introduces no new contracts or automatic campaign refresh mechanism.
+
 ## Quality implementation ownership, 4 October 2026
 
 Public .NET and frontend contracts have individual files and retain their existing

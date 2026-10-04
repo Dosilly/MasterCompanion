@@ -6,6 +6,17 @@ Historical workshop, version 0.20 · closure note: 2 October 2026
 
 The workshop below preserves earlier questions, answers, proposals and decisions as history. Its offline commitments (including D-02 and the earlier acceptance proposal), unfinished-task language and initial budgets are not current requirements or pending work. Use [the minimum scope](04-MVP-minimum-scope.md), [implementation status](07-Implementation-status.md), [gameplay delivery](09-Gameplay-implementation.md) and [MVP acceptance](11-MVP-acceptance.md) for the current state. The broader BRD and stories include later product scope.
 
+**Scope update, 4 October 2026:** the user removed campaign export/import,
+portable archives and archive-based state transfer from the product plan and
+backlog. Earlier transfer decisions, proposed export/import slices and delivery
+stage 5 below are superseded historical records, not future work. Campaign data
+remains in the database. Local development requires no backups or preservation
+probes, and module updates may overwrite campaign notes under [data policy](21-Development-data-and-AWS-protection.md).
+Production backups and authored-data protection belong to the AWS stage.
+Possible future user accounts and hosted access need
+separate design. Module source preparation and bounded editor content insertion
+are separate capabilities and are unaffected by this decision.
+
 Sources: [product concept](00-Product-concept.md), [BRD](01-BRD.md), [user stories](02-User-stories.md).
 
 ## 1. Starting point
@@ -78,7 +89,7 @@ The snapshot provides inspiration and scenarios. The BRD and stories define the 
 | D-03 | AWS as a future deployment direction. | Design should support this direction; services and deployment timing remain open. |
 | D-04 | Local .NET backend and local database. | The user accepted operation through localhost; D-08 selects the database engine. |
 | D-05 | Use Aspire. | The user proposed it to simplify starting everything; the AppHost model and end-user package still need design. |
-| D-06 | Manual export/import between computers — deferred. | Originally accepted for working on different computers. Round fifteen removed state transfer from the current minimum; it remains a future direction. |
+| D-06 | Manual export/import between computers — superseded. | Originally accepted for working on different computers and deferred in round fifteen. Removed from the product plan on 4 October 2026. |
 | D-07 | Initial users: the owner and a few GM friends. | The owner can assist installation. Technical configuration on first launch is acceptable. |
 | D-08 | PostgreSQL + EF Core. | The user accepted this proposal in round three. |
 | D-09 | Visual content editor. | The user chose rich-text writing. The library, storage format and linking details still need selection. |
@@ -105,13 +116,13 @@ The snapshot provides inspiration and scenarios. The BRD and stories define the 
 | D-30 | Simple shared material model: name, type and free-form content. | The user left the choice to the plan author. The accepted recommendation uses one editor for notes, NPCs, locations and factions; optional templates help writing. Stage one does not require an extra-field configurator or filtering by those fields. |
 | D-31 | Pilot uses existing Ythryn text, maps and assets. | The user requested transferring existing materials. Reconstruct relationships and review the result; act 7 scope remains accepted. Content outside the embedded HTML needs separate agreement. |
 | D-32 | Materials needed for play are inside the application; the pilot does not require external references. | The user rejected external links as the way to access content. Conversion links available materials internally; missing content cannot be reconstructed from a URL alone. Section 35 covers bibliographic references and gaps. |
-| D-33 | Future import of the same campaign allows a deliberate update. | The earlier workflow, including a pre-import backup, is retained for a later stage. All export/import was removed from the current minimum in round fifteen. |
+| D-33 | Import of the same campaign allows a deliberate update — superseded. | The earlier workflow included a pre-import backup and was deferred in round fifteen. Campaign export/import was removed from the product plan on 4 October 2026. |
 | D-34 | Note version history deferred. | The user excluded it from the first version to limit implementation scope. Current editor Undo/Redo and autosave remain planned; full campaign archives were deferred in round fifteen. Conflict-protection revisions do not imply storage of prior content. |
 | D-35 | Undo time and tool operations sequentially from the latest. | The user chose the simpler option. Undo the full operation and its effects; document editing is independent. Selecting an older operation and automatically undoing dependent operations is outside stage one. |
 | D-36 | Initial acceptance and instructions for Windows with a portable stack. | The user wants to focus on Windows. Avoid unnecessary OS dependencies; other platforms are not separately accepted at this stage. |
 | D-37 | Target: one week at about 3 hours daily with the agent. | Round fifteen replaced the earlier 1–2 hours. About 21 hours is a work/review budget, not a verified estimate; assess allocation after the technical trial. |
 | D-38 | Accounts, users and login only later. | Explicit user request. The local minimum implements no such screens, tables or flows; design access before hosting. |
-| D-39 | Export/import and state transfer outside the current version. | Explicit user scope reduction. No archives, import updates, transfer screens or flow tests now. Local saving and preservation after restart remain required. |
+| D-39 | Export/import and state transfer outside the current version — superseded by removal. | Round fifteen deferred this scope. On 4 October 2026, the user removed it from the product plan and backlog. Local saving and preservation after restart remain required. |
 | D-40 | Complete Ythryn from the POC; map and notes before richer editing. | Includes all 16 documents, 142 act 7 sections and the map's 29 markers, including the spire and supplemental materials. Scope is not limited to a trial location or 29 descriptions. D-41 requires editing and mechanics; D-42 limits editing to existing materials. |
 | D-41 | Arcane Blight and editing must be included in week one. | Explicit user answer, translated: "Arcane Blight and editing must be included." They are not optional reader additions. Retain the proposed simple whole-description editor consistent with the earlier direction. |
 | D-42 | Editing existing materials is sufficient. | The user selected the first option. Personal comments can be added to descriptions; new separate notes are outside the minimum. |
@@ -178,7 +189,7 @@ PostgreSQL persistence requires a data volume; leaving a container running betwe
 
 ### 9.2. Campaign transfer as an ordinary user action
 
-**Update after round fifteen:** this entire workflow belongs to a future stage. The user deferred export/import and state transfer beyond the current version.
+**Superseded on 4 October 2026:** this workflow was first deferred in round fifteen, then removed from the product plan and backlog. The proposal below is preserved only as history.
 
 The eventual export/import feature should be available in the interface. The proposal is one campaign archive containing a versioned manifest, content, files, relationships, sessions, chronicle, time, tools and their history. Campaigns should be portable without copying Docker volumes or the whole installation.
 
@@ -493,7 +504,7 @@ Conversion must explicitly account for every document, section, image and link: 
 
 ## 33. Transferring the same campaign — accepted workflow and open details
 
-**Update after round fifteen:** retain this for the future. Export/import is outside the current version and acceptance criteria.
+**Superseded on 4 October 2026:** this workflow was first deferred in round fifteen, then removed from the product plan and backlog. The proposal below is preserved only as history.
 
 Once implemented, export/import is an ordinary user action between computers A and B. Propose one ZIP archive with a version manifest, JSON materials, assets, maps, markers, party/tool state and implemented session/chronicle data. Export does not automatically add sessions/chronicle to earlier stages; the format allows later inclusion.
 

@@ -1,6 +1,6 @@
 # User stories — game master companion
 
-Version 0.2 · 2 October 2026
+Version 0.3 · 4 October 2026
 
 Related: [concept](00-Product-concept.md) · [BRD](01-BRD.md)
 
@@ -262,23 +262,25 @@ As a GM, I want to correct event order and content so that the chronicle reflect
 - An event shows related characters, locations and any source session.
 - Correcting chronicle descriptions or order does not advance the game clock or change tool state.
 
-### US-20. Persistence and campaign restore
+### US-20. Durable campaign persistence
 
-As a game master, I want saved work to survive a break and a complete campaign copy to support recovery. Persistence is delivered in phase one; user-facing export/import and restore are later scope. Full offline operation is not required.
+As a game master, I want saved materials and game state to remain available when I return to the campaign. Persistence is delivered in phase one. Campaign export/import and user-facing archive restore were removed from the product plan on 4 October 2026. Full offline operation is not required.
 
 **BRD:** BR-17, BR-18.
 
 **Acceptance criteria:**
 
 - Reopening the application restores saved materials and state; any save problem is visible.
-- I can create and restore a complete copy containing content, images, relationships, sessions, chronicle and tools.
-- Restore does not overwrite another campaign without a deliberate choice.
+- Failed or conflicting saves preserve my draft and offer an explicit recovery action.
+- In production, module and application updates protect my authored campaign content and game state. Current local development permits module updates to overwrite campaign notes and accepts local data loss.
+
+Operational backups and safe recovery belong to the AWS production stage. Local development requires no database backups or restore rehearsals. See [data policy](21-Development-data-and-AWS-protection.md); this work is separate from a campaign archive feature in the GM interface.
 
 ## Proposed product verification order
 
 1. **Materials and map:** US-01–08 — are preparation and information access more convenient than in the existing notes?
 2. **Session and time continuity:** US-09–14, US-17 — can the GM run two sessions without losing state or due matters?
 3. **Custom components and chronicle:** US-15–16, US-18–19 — are custom campaigns and manual history building useful beyond Ythryn?
-4. **Persistence and restore:** US-20 — confirmed persistence belongs to phase one; user-facing complete campaign restore is verified when that later feature is delivered. No internet-disconnected scenario is required.
+4. **Durable persistence:** US-20 — verify normal saves across restarts and recoverable drafts after failed or conflicting saves. Backup and operational recovery verification belongs to AWS production readiness, not current local development. No internet-disconnected scenario is required.
 
 This is an order for evaluating product assumptions, not an implementation schedule or estimate.

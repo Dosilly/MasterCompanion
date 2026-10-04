@@ -143,20 +143,20 @@ Reassess the estimate after day one. Address delays first by reducing extra menu
 - Persistence: note write/read, restart without overwrite, idempotent operation replay, revision conflicts and game undo without document undo. Rules need unit tests; transactions/persistence require real PostgreSQL.
 - View: real map, long descriptions, editor tables/blocks, retained reading position and visible autosave failures. Full HD and both-theme evidence is recorded in delivery history. Full offline operation is no longer required. No further application checks were run for this documentation closure.
 
-The first MVP excludes new separate notes, folder configurator, map editor, further trackers, saved-content version history, export/import, accounts and AWS. Retain them in backlog; the first-week target concerns the scope above.
+The first MVP excludes new separate notes, folder configurator, map editor, further trackers, saved-content version history, accounts and AWS. Retain them in backlog; the first-week target concerns the scope above. Campaign export/import remains removed from the plan and backlog. Normal persistence remains required; local backups and preservation probes do not. Production protection belongs to the AWS stage under [data policy](21-Development-data-and-AWS-protection.md).
 
 ## 7. Module sources and future editor
 
 30 September agreement: document sources are maintained in Markdown; a better editor is future work. Each material has its own file, YAML metadata and stable IDs. Manifest, navigation, map and assets are separate. Compilation creates JSON required by the current module contract; the result is neither manually edited source nor Git-versioned content. Original POC remains a reference, and importing never overwrites authored sources. Migration tests compare all documents, folders and map with reference data.
 
-The campaign editor still stores Tiptap documents in the database. Changing Markdown or rebuilding a module does not replace its existing campaign copy. Complete module-content updates need separate version and authored-change handling policies.
+The campaign editor stores Tiptap documents in the database. Changing Markdown or rebuilding a module alone does not replace its existing campaign copy. Applying module updates may overwrite local campaign notes during development. Production authored-change protection belongs to the AWS stage under [data policy](21-Development-data-and-AWS-protection.md).
 
 After MVP, plan:
 
 - Visual module-source editing: individual materials, reader-compatible preview, Markdown/metadata saving rather than combined JSON editing.
 - Better table, collapsible-block, anchor, image and material-link selection support. Existing HTML and IDs must survive losslessly; arbitrary HTML is not assumed to convert losslessly to plain Markdown.
-- Clear separation of module-source editing and personal campaign-copy editing, protected against accidental overwrite.
-- Package validation/preview before release and separate deliberate application to campaigns while preserving changes.
+- Clear separation of module-source editing and campaign-copy editing, with authored-change protection before production use.
+- Package validation/preview before release and deliberate application to campaigns. Local development permits overwriting notes; production must protect authored changes.
 
 Future editor acceptance: opening, changing and resaving representative materials preserves content, structure, anchors and map targets; failures preserve local drafts. This stage is outside the current minimum and does not replace required Arcane Blight.
 

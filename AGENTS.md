@@ -2,12 +2,27 @@
 
 These instructions apply to all implementation work in this repository. Read the relevant source, specifications, and existing behavior before editing. Direct user instructions take precedence. Keep changes focused on the requested outcome and verify the affected behavior before reporting completion. Verification is scoped to the change, not a requirement to run every check.
 
+## Current development data policy
+
+- User decision, 4 October 2026: the application is still in local development, with no production release. Local campaign data is disposable; database backups, restore rehearsals and before/after data-preservation fingerprints are not required for development updates.
+- Updating a module may overwrite the local campaign's materials, including personal notes. Do not require another confirmation or a backup for that overwrite within an authorized module-update task. This permission does not require automatic replacement on every startup or authorize unrelated deletion.
+- Backup automation, retention, restore procedures and protection of production user data belong to the AWS deployment stage. Design and verify them before production use; do not implement or schedule local backup infrastructure as current scope.
+- This development exception takes precedence over the campaign-data preservation requirements below for local development updates and migrations. Preserve authored module source files and reference content. Keep ordinary save behavior, validation, revision conflicts, transactions, idempotency and isolated tests intact. Do not edit applied shared migrations or erase a database to hide a test failure.
+- See [development data and AWS protection scope](docs/planning/21-Development-data-and-AWS-protection.md). Backward compatibility remains a separate policy requiring explicit user activation.
+
+## Development effort and production gates
+
+- Use the smallest checks that verify changed behavior. Do not add backups, restore drills, full-table preservation probes, production migration rehearsals, infrastructure hardening or a broad security audit to ordinary local tasks. Reuse successful checks until a relevant change affects them.
+- Keep low-cost protections for the developer machine and repository: loopback binding, secrets outside source/logs, safe document rendering and task-scoped file/process operations. Validate the feature being changed without expanding into unrelated security remediation.
+- Keep application correctness: scoped tests, ordinary saves, visible failures, revisions, transactions and idempotency. Do not remove working protections or weaken checks to hide failures.
+- Authentication, authorization, transport security, hosted origin/database protection, production backups and authored-data protection belong to the AWS/production stage. Complete them before exposing production data or public endpoints, not before each local change.
+
 ## Compatibility policy
 
 - Backward compatibility is not required until the user explicitly enables it after release. A release alone does not enable this requirement.
 - Prefer a clean current design. Do not retain obsolete APIs, contracts, schema variants, aliases, adapters, upgrade paths, or fallback branches solely to support earlier versions. Remove such compatibility code when changing the affected area.
 - Breaking changes are allowed within the requested scope. Update affected producers, consumers, tests, and documentation together; do not build parallel legacy and current implementations.
-- This policy does not authorize deleting or resetting user data. Preserve authored content and game state, use explicit data migrations where needed, and keep the existing concurrency, transaction, backup, and applied-migration safeguards. Data preservation does not require permanent runtime support for obsolete formats.
+- Compatibility policy alone does not authorize deleting or resetting user data. Apply the current development data policy to local campaign data; production data requires preservation and explicit migrations where needed. Keep concurrency, transactions and applied-migration safeguards. Data preservation does not require permanent runtime support for obsolete formats.
 
 ## Language and localization
 
@@ -44,7 +59,7 @@ These rules apply to production code, tests, and developer tools. Working behavi
 - Prefer explicit result types and discriminated alternatives when they prevent invalid combinations. Avoid unrelated boolean flags, ambiguous tuples, magic sentinel values, or broad nullable result objects that make callers infer which outcome occurred. Keep transport shapes separate from internal state when their responsibilities differ.
 - Name types and methods after their responsibility or domain operation. Avoid vague names such as `Manager`, `Processor`, `Data`, or `Handle` when a more precise name is available. Name constants for domain units and limits. Comments must explain constraints, ownership, or a non-obvious decision; do not narrate obvious statements or add decorative section banners.
 - Keep imports and dependencies explicit. Production code must not depend on tests. Do not enlarge a library's public API, weaken access modifiers, or add test-only production branches to make tests convenient. Tests may access their owning library's internal source through the configured test tooling; imports into another library still use its public entry point.
-- Remove obsolete code, unused exports, and superseded paths in the changed area. Isolate necessary data migration and historical receipt handling from current domain rules. Preserve existing content and game state before removing an old persisted schema; the compatibility policy does not permit discarding it.
+- Remove obsolete code, unused exports, and superseded paths in the changed area. Isolate necessary data migration and historical receipt handling from current domain rules. Preserve production content and game state before removing an old persisted schema; local persisted campaign data follows the current development data policy.
 
 ## Readability, templates, and style enforcement
 
@@ -72,9 +87,9 @@ These rules apply to production code, tests, and developer tools. Working behavi
 - Tests must run from a clean checkout with the documented preparation steps. Each test run must create or build what it needs explicitly; never depend on stale `.local` files or artifacts from another suite. Scope temporary files/resources to their owner, isolate parallel runs, and clean up only test-owned resources.
 - A skipped test is not passing evidence. A module import or compilation failure means the affected behavior was not verified. Do not weaken assertions, skip failing cases, or update visual baselines solely to obtain a successful command.
 
-## Production-ready implementation standard
+## Implementation quality
 
-Production-ready is an evidence-based acceptance standard for the changed behavior, not a declaration that the entire MVP is complete. Apply these rules to every change without expanding the agreed feature scope.
+These rules concern correctness and maintainability within the task's scope. They do not require production operations, broad security audits or production-readiness evidence during local development. Production gates are defined separately above.
 
 - Favor clear, small, cohesive functions and explicit types. Use meaningful names, consistent formatting, and comments that explain a constraint or decision rather than restate the code.
 - Keep nullable reference types and strict TypeScript/template checking enabled. Do not introduce `any`, `$any`, unchecked casts, non-null assertions, suppression directives, or disabled checks to bypass a design problem. Improve existing occurrences when directly relevant to a change.
@@ -88,7 +103,7 @@ Production-ready is an evidence-based acceptance standard for the changed behavi
 
 ## Persistence, concurrency, and data safety
 
-- User content is authoritative after campaign initialization. Never overwrite edited materials with module defaults on startup, rebuild, conversion, or upgrade.
+- In production, user content is authoritative after campaign initialization; module updates must protect edited materials. During current local development, module updates may overwrite campaign materials under the current development data policy.
 - Maintain module defaults as individual Markdown sources with metadata and separate navigation/maps/assets. Generated distribution JSON is a build artifact, not an editable source. Reference import must refuse existing destinations; do not regenerate over authored files. Preserve stable IDs and rich HTML structures that Markdown cannot represent losslessly. Module authoring is distinct from editing a campaign copy.
 - Use stable IDs for materials, folders, map links, and assets. Do not make relationships depend on display names. Validate hierarchy cycles and references.
 - Keep material saves independent from game operations and undo. Closing a tab or finishing editing must wait for confirmed persistence; failures and revision conflicts keep the draft recoverable.
@@ -96,15 +111,15 @@ Production-ready is an evidence-based acceptance standard for the changed behavi
 - Use transactions for related writes that must succeed together. Define idempotency and retry behavior for operations that may be repeated; do not retry non-idempotent writes blindly.
 - Keep EF Core queries explicit, scoped to the campaign, and bounded where needed. Use asynchronous APIs, projection/no-tracking for reads, parameterized access, and indexes justified by actual queries.
 - Schema changes require a reviewed EF migration and updated snapshot. Do not edit migrations already applied to shared data; add a new migration.
-- Data-changing migrations or backfills require evidence on representative existing data. Check document content and revisions before and after; document limitations and recovery requirements. Never remove the local database volume to make a test pass.
-- Keep integration tests isolated where possible. Any probe that temporarily changes a live material must restore only its own confirmed revision and must never replace intervening user edits.
+- Data-changing migrations or backfills intended for production require evidence on representative existing data, including content and revision preservation and documented recovery requirements. Local development does not require preservation probes or backups under the current development data policy. Never remove the local database volume to make a test pass.
+- Keep integration tests isolated. Production probes must restore only their own confirmed material revision and never replace intervening user edits. Current local updates do not require a preservation probe or recovery procedure; test correctness remains required.
 
 ## Security and deployment boundaries
 
 - Treat material documents, links, filenames, module packages, and assets as untrusted input. Render through the supported document schema; reject unsafe URL schemes and prevent path traversal. Do not introduce arbitrary HTML/script execution.
 - Keep secrets out of source, logs, screenshots, fixtures, and committed configuration. Use environment/configuration providers; do not hardcode credentials or a developer's runtime paths.
 - Keep local development endpoints bound to loopback. The agreed MVP has no accounts or login; do not add them incidentally. Before network/cloud exposure, explicitly design and implement authentication, authorization, transport security, origin protection, secret handling, and database access restrictions.
-- Full offline operation is not a current requirement or an MVP acceptance gate. Do not schedule internet-disconnected acceptance unless the user reinstates this requirement. Local operation, durable persistence, data safety, and recovery from failed requests remain required.
+- Full offline operation is not a current requirement or an MVP acceptance gate. Do not schedule internet-disconnected acceptance unless the user reinstates this requirement. Local operation, normal save persistence and recovery from failed requests remain required; development backup and data-preservation obligations follow the current development data policy.
 - Keep .NET, Angular, Docker, and storage choices portable. Windows is the current acceptance platform; AWS is a future deployment target, not a dependency of normal local operation.
 - Do not publish, push, merge, deploy, delete user data, or change external services unless authorized by the user. Use repository/project-scoped process control; do not terminate unrelated processes.
 
@@ -178,10 +193,10 @@ pnpm --dir src/mastercompanion-web exec node --test --test-name-pattern="Markdow
 - Use `test:api` against a running AppHost when changed persistence/API behavior needs integration evidence. This probe changes one material temporarily; prefer an isolated database and respect its revision-protected restore. For changes limited to rejected requests or error diagnostics, prefer `test:api-errors`, which checks ProblemDetails and confirms no persisted document or revision changes. Do not run either for unrelated frontend, documentation, or tooling changes. Folder backfill verification is a separate, explicit before/after probe in `tools/verify-folders.mjs`.
 - Use real PostgreSQL when verifying changed database-specific behavior. Existing integration evidence remains valid until a relevant change affects it.
 - For visible UI changes, prefer the affected Playwright spec or tag (`@reader`, `@editor`, `@gameplay`). The suite runs independent browser contexts with four workers across both themes and two viewport sizes, checks console errors, and compares visual baselines. Inspect new designs, intentional screenshot differences and behavior not covered by the suite manually. Do not repeat covered manual walkthroughs after a successful relevant automated check. Never update visual baselines just to clear a failure; review the actual image and intended change first. See [UI test instructions](docs/planning/13-UI-tests.md). A successful build is not browser verification.
-- Review the final diff for unrelated changes, source-language violations, missing localization keys, accidental secrets, broken ownership, and destructive migrations. Preserve module content and user data.
+- Review the final diff for unrelated changes, source-language violations, missing localization keys, accidental secrets, broken ownership, and unintended destructive changes. Preserve module sources; local campaign data follows the current development data policy. This is a focused review, not a full security audit.
 - Review changed code against the clean-code rules as well as test results: cohesive responsibilities, justified abstractions, discoverable files, conventional formatting, real implementation under test, and useful assertions. Explain material design exceptions in the relevant plan or change description; routine choices do not require a separate approval step. Passing builds, `check:code`, and `check:boundaries` do not substitute for this review.
-- Builds of Angular libraries happen before the host starts. Rebuild/restart the frontend as needed; do not validate stale library output. Do not interrupt pending user saves during a restart.
+- Builds of Angular libraries happen before the host starts. Rebuild/restart the frontend as needed; do not validate stale library output. Requested local development updates do not require a pending-save preservation probe. Coordinate production restarts with pending user saves.
 
 ## Definition of done
 
-A change is complete when it meets the requested behavior, preserves existing user data and module boundaries, handles relevant failure paths, follows the clean-code and test-design rules above, has suitable tests for new behavior, passes the selected checks for affected areas, and has current documentation. Unrelated suites and full builds are not required by default. Report the concrete outcome, checks actually run, and any material limitation. Distinguish completed work, deferred scope, and unverified assumptions. These instructions guide every future change; they do not replace code review or test evidence.
+A change is complete when it meets the requested behavior, respects the current development data policy and module boundaries, handles relevant failure paths, follows the clean-code and test-design rules above, has suitable tests for new behavior, passes the selected checks for affected areas, and has current documentation. Local changes do not require production-readiness evidence, backups or preservation probes. Unrelated suites and full builds are not required by default. Report the concrete outcome, checks actually run, and any material limitation. Distinguish completed work, deferred scope, and unverified assumptions. These instructions guide every future change; they do not replace code review or test evidence.

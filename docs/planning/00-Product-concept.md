@@ -1,6 +1,6 @@
 # Game master companion — product concept
 
-Version 0.2 · 2 October 2026
+Version 0.3 · 4 October 2026
 
 Product vision and terminology for MasterCompanion. Phase one was accepted by the user on 2 October 2026; its delivered scope and later work are recorded in [MVP acceptance](11-MVP-acceptance.md). The broader vision below includes features outside the accepted MVP. Full offline operation has been removed from the current requirements. These documents describe the product rather than choosing its implementation.
 
@@ -31,6 +31,7 @@ The only product user is the game master. MasterCompanion is not a full VTT. Pha
 | Session record | Quick notes kept separately for each session. |
 | Chronicle | Manually created events, including events based on note excerpts; their order can be changed. |
 | Pilot module | Act 7 materials from the existing Icewind Dale campaign. |
+| Persistence | Campaign data stays in the database. Campaign export/import is removed. Local development requires no backups and allows module updates to overwrite campaign notes; production backup and protection work belongs to the AWS stage. See [data policy](21-Development-data-and-AWS-protection.md). |
 
 The detailed behavior and proposed first-version scope in the following documents develop these decisions for review. Not every detail was separately approved in the discussion.
 

@@ -19,7 +19,10 @@ Compose reuses the external volume `mastercompanion-postgres`. Use the **existin
 database password** when switching from Aspire, and stop Aspire before starting
 Compose so that two database processes never mount the same volume. Creating an
 environment file does not change a password in an initialized PostgreSQL volume.
-Back up an existing database before starting a newer application with migrations.
+Backup and restore policy for production must be established before running
+updates against production data. Current local development does not require a
+database backup before updates or migrations; module updates may overwrite local
+campaign notes. See [data policy](docs/planning/21-Development-data-and-AWS-protection.md).
 
 Store `POSTGRES_PASSWORD` in a private, Git-ignored file such as `.local/docker.env`.
 Use single quotes around the value to preserve literal `$` characters. Do not
@@ -110,7 +113,7 @@ For the first module, see the [content authoring instructions](src/MasterCompani
 pnpm --dir src/mastercompanion-web prepare:ythryn
 ```
 
-Application edits belong to the campaign copy in PostgreSQL. Rebuilding module defaults does not overwrite campaign notes. The removed legacy POC is not required for normal builds or tests; the optional reference importer accepts an external HTML file explicitly.
+Application edits belong to the campaign copy in PostgreSQL. Rebuilding module defaults alone does not overwrite campaign notes; applying module updates may replace local campaign content under the development data policy. The removed legacy POC is not required for normal builds or tests; the optional reference importer accepts an external HTML file explicitly.
 
 ## Contributing
 
