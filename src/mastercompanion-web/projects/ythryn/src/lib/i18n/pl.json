@@ -101,7 +101,35 @@
     "rollDie": "Rzuć k100",
     "reroll": "Przelosuj",
     "previewTitle": "Wylosowane spotkanie",
-    "previewHint": "Możesz przelosować dowolną liczbę razy lub wpisać własny wynik. Dopiero zapis zamyka sprawdzenie i utrwala spotkanie w historii."
+    "previewHint": "Możesz przelosować dowolną liczbę razy lub wpisać własny wynik. Dopiero zapis zamyka sprawdzenie i utrwala spotkanie w historii.",
+    "conversionHint": "Potwierdzenie od razu przemieni wszystkich pozostałych fanatyków w Coldlight Walkerów Auril. Najpierw wpisz wcześniejsze straty; cofnięcie operacji przywróci stan sprzed przybycia i przemiany."
   },
-  "actionRequired": "Wymaga działania"
+  "actionRequired": "Wymaga działania",
+  "forces": {
+    "title": "Siły rywali",
+    "hint": "Wpisuj potwierdzone straty, także sprzed przybycia. Rzuty spotkań nie odejmują sił. Pomyłkę poprawisz przez cofnięcie ostatniej operacji. Istniejące kampanie zaczynają od liczebności z materiałów — uzupełnij wcześniejsze straty.",
+    "beforeArrival": "Przed potwierdzonym przybyciem",
+    "arrived": "Przybycie potwierdzone",
+    "remaining": "Pozostali",
+    "dead": "Polegli",
+    "converted": "Kultyści przemienieni w Coldlight Walkerów",
+    "recordLoss": "Zapisz straty",
+    "lossCount": "Liczba poległych",
+    "invalidLoss": "Wpisz dodatnią liczbę całkowitą nie większą niż pozostałe siły.",
+    "unavailable": "Nie udało się zweryfikować liczebności sił. Odśwież stan gry.",
+    "factions": {
+      "avarice": "Avarice",
+      "auril": "Auril"
+    },
+    "units": {
+      "cultFanatics": "Fanatycy kultu",
+      "gargoyles": "Gargulce",
+      "ravens": "Kruk — chowaniec",
+      "mountainGoats": "Kozy górskie",
+      "frostGiantSkeletons": "Szkielety mroźnych olbrzymów",
+      "snowGolems": "Śnieżne golemy",
+      "winterWolves": "Zimowe wilki",
+      "coldlightWalkers": "Coldlight Walkery"
+    }
+  }
 }

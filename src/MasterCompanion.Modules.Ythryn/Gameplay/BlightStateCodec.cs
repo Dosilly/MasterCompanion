@@ -41,7 +41,7 @@ internal static class BlightStateCodec
 
     internal static BlightState ReadState(GameSnapshot snapshot)
     {
-        if (snapshot.ModuleSchemaVersion is not (1 or 2 or 3))
+        if (snapshot.ModuleSchemaVersion is not (1 or 2 or 3 or 4))
         {
             throw Corrupt("Unsupported Arcane Blight state schema.");
         }
@@ -64,7 +64,13 @@ internal static class BlightStateCodec
             previous = minute;
         }
 
-        if (!(snapshot.ModuleSchemaVersion == 3 ? HasExactProperties(snapshot.ModuleState, "characters", "adventure") : HasExactProperties(snapshot.ModuleState, "characters")) ||
+        var validRootFields = snapshot.ModuleSchemaVersion switch
+        {
+            4 => HasExactProperties(snapshot.ModuleState, "characters", "adventure", "forces"),
+            3 => HasExactProperties(snapshot.ModuleState, "characters", "adventure"),
+            _ => HasExactProperties(snapshot.ModuleState, "characters")
+        };
+        if (!validRootFields ||
             !snapshot.ModuleState.TryGetProperty("characters", out var items) || items.ValueKind != JsonValueKind.Array ||
             items.GetArrayLength() != snapshot.Party.Count)
         {
@@ -114,6 +120,10 @@ internal static class BlightStateCodec
                 }
 
                 ExpeditionRules.Validate(state.Adventure, snapshot.TimeMinutes);
+                if (snapshot.ModuleSchemaVersion == 4)
+                {
+                    RivalForcesRules.Validate(state.Forces ?? throw Corrupt("Rival forces state is missing."), state.Adventure);
+                }
             }
         }
         catch (JsonException exception)

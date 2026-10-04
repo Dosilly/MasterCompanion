@@ -10,7 +10,7 @@ function fixture() {
     snapshot: {
       timeMinutes: 1500,
       restEnds: [480],
-      moduleSchemaVersion: 3,
+      moduleSchemaVersion: 4,
       party: [{ id: 'hero', name: 'Hero' }],
     },
     moduleView: {

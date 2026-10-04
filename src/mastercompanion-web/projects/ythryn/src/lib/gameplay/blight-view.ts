@@ -65,7 +65,10 @@ export function readBlightView(state: GameStateDto): BlightCharacterView[] | nul
   const view = state.moduleView;
   const { party, timeMinutes, moduleSchemaVersion } = state.snapshot;
   if (
-    (moduleSchemaVersion !== 1 && moduleSchemaVersion !== 2 && moduleSchemaVersion !== 3) ||
+    (moduleSchemaVersion !== 1 &&
+      moduleSchemaVersion !== 2 &&
+      moduleSchemaVersion !== 3 &&
+      moduleSchemaVersion !== 4) ||
     !record(view) ||
     !Array.isArray(view['characters']) ||
     party.length === 0 ||

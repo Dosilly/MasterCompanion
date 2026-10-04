@@ -61,6 +61,44 @@ public sealed class HttpTests(PostgreSqlFixture database) : IAsyncLifetime
         new GameOperationRequest(Guid.NewGuid(), 0, "configureParty", [new(characterId, "HTTP character")]));
 
     [Fact]
+    public async Task PostForceLoss_ThenAurilArrival_ConvertsSurvivorsAndUndoRestoresCultists()
+    {
+        var configured = await ConfigurePartyAsync();
+        var before = await PostSuccessAsync(client, Path, new GameOperationRequest(Guid.NewGuid(), configured.Revision, "module",
+            Command: JsonSerializer.SerializeToElement(new { kind = "recordForceLoss", unit = "cultFanatics", count = 5 })));
+        var request = new GameOperationRequest(Guid.NewGuid(), before.Revision, "module",
+            Command: JsonSerializer.SerializeToElement(new { kind = "confirmArrival", faction = "auril", minute = 0 }));
+
+        var after = await PostSuccessAsync(client, Path, request);
+        var replay = await PostSuccessAsync(client, Path, request);
+
+        Assert.Equal(0, after.ModuleView.GetProperty("forces").GetProperty("cultFanatics").GetInt32());
+        Assert.Equal(15, after.ModuleView.GetProperty("forces").GetProperty("coldlightWalkers").GetInt32());
+        Assert.True(JsonElement.DeepEquals(JsonSerializer.SerializeToElement(after), JsonSerializer.SerializeToElement(replay)));
+
+        var restored = await PostSuccessAsync(client, Path, new GameOperationRequest(Guid.NewGuid(), after.Revision, "undo"));
+
+        Assert.True(JsonElement.DeepEquals(JsonSerializer.SerializeToElement(before.Snapshot), JsonSerializer.SerializeToElement(restored.Snapshot)));
+    }
+
+    [Fact]
+    public async Task PostForceLoss_ExceedingRemainingCount_ReturnsProblemAndPreservesState()
+    {
+        var configured = await ConfigurePartyAsync();
+        var request = new GameOperationRequest(Guid.NewGuid(), configured.Revision, "module",
+            Command: JsonSerializer.SerializeToElement(new { kind = "recordForceLoss", unit = "gargoyles", count = 3 }));
+        using var content = new StringContent(JsonSerializer.Serialize(request, JsonOptions), Encoding.UTF8, "application/json");
+
+        using var response = await client.PostAsync(Path + "/operations", content);
+
+        await AssertProblemAsync(response, HttpStatusCode.BadRequest, "invalid_module_command");
+        using var readResponse = await client.GetAsync(Path);
+        var read = await ReadSuccessAsync(readResponse);
+        Assert.Equal(configured.Revision, read.Revision);
+        Assert.True(JsonElement.DeepEquals(JsonSerializer.SerializeToElement(configured.Snapshot), JsonSerializer.SerializeToElement(read.Snapshot)));
+    }
+
+    [Fact]
     public async Task PostOperation_MalformedInput_ReturnsProblemWithoutWrites()
     {
         // Arrange
