@@ -20,7 +20,7 @@
     "test:notes": "tsx --tsconfig tsconfig.tests.json --test tests/unit/material-creation.test.mjs tests/unit/workspace-notes.test.ts",
     "test:autosave": "tsx --tsconfig tsconfig.tests.json --test tests/unit/autosave.test.ts tests/integration/material-editor.test.mjs",
     "test:editor": "tsx --tsconfig tsconfig.tests.json --test tests/integration/editor-insertion.test.mjs",
-    "test:gameplay": "tsx --tsconfig tsconfig.tests.json --test tests/unit/gameplay-session.test.mjs tests/unit/blight-view.test.mjs tests/unit/expedition-view.test.mjs tests/integration/expedition-tool.test.mjs",
+    "test:gameplay": "tsx --tsconfig tsconfig.tests.json --test tests/unit/gameplay-session.test.mjs tests/unit/blight-view.test.mjs tests/unit/expedition-view.test.mjs tests/unit/rival-forces.test.ts tests/integration/expedition-tool.test.mjs",
     "test:api": "node tools/verify-api.mjs",
     "test:api-errors": "node tools/verify-api.mjs --errors-only",
     "test:unit": "tsx --tsconfig tsconfig.tests.json --test tests/unit/*.test.*",

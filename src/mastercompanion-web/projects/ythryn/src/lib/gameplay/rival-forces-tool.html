@@ -1,0 +1,58 @@
+<section class="rival-forces" aria-labelledby="rival-forces-title">
+  <h2 id="rival-forces-title">{{ text.title }}</h2>
+  <p>{{ text.hint }}</p>
+  @if (view(); as current) {
+    <div class="forces-grid">
+      @for (faction of factions; track faction) {
+        <section class="force-card" [attr.aria-labelledby]="faction + '-forces-title'">
+          <h3 [id]="faction + '-forces-title'">{{ text.factions[faction] }}</h3>
+          <p>
+            {{ expedition()?.[faction]?.arrivedAt === null ? text.beforeArrival : text.arrived }}
+          </p>
+          @if (faction === 'auril') {
+            <p>{{ text.converted }}: {{ current.convertedCultists }}</p>
+          }
+          <ul>
+            @for (unit of units[faction]; track unit) {
+              <li [attr.data-force-unit]="unit">
+                <h4>{{ text.units[unit] }}</h4>
+                <p aria-live="polite">
+                  {{ text.remaining }}: <strong>{{ current[unit] }}</strong> · {{ text.dead }}:
+                  {{ deaths(current, unit) }}
+                </p>
+                @if (unit === 'cultFanatics') {
+                  <p>{{ text.converted }}: {{ current.convertedCultists }}</p>
+                }
+                <form (submit)="recordLoss($event, unit)">
+                  <fieldset [disabled]="!game.canOperate() || current[unit] === 0">
+                    <legend>{{ text.recordLoss }}</legend>
+                    <label [for]="unit + '-loss'"
+                      >{{ text.lossCount }} — {{ text.units[unit] }}</label
+                    >
+                    <input
+                      #lossInput
+                      [id]="unit + '-loss'"
+                      type="number"
+                      min="1"
+                      [max]="current[unit]"
+                      step="1"
+                      required
+                      [value]="draft()[unit] ?? ''"
+                      (input)="setLoss(unit, lossInput.value)"
+                    />
+                    <button type="submit">{{ text.recordLoss }} — {{ text.units[unit] }}</button>
+                  </fieldset>
+                </form>
+                @if (invalid() === unit) {
+                  <p role="alert">{{ text.invalidLoss }}</p>
+                }
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    </div>
+  } @else {
+    <p role="alert">{{ text.unavailable }}</p>
+  }
+</section>

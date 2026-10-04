@@ -73,6 +73,9 @@
                 }
               </p>
             }
+            @if (faction === 'auril') {
+              <p>{{ text.conversionHint }}</p>
+            }
             <form (submit)="confirm($event, faction)">
               <fieldset [disabled]="!game.canOperate()">
                 <legend>{{ text.confirmArrival }}</legend>

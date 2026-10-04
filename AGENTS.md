@@ -2,6 +2,14 @@
 
 These instructions apply to all implementation work in this repository. Read the relevant source, specifications, and existing behavior before editing. Direct user instructions take precedence. Keep changes focused on the requested outcome and verify the affected behavior before reporting completion. Verification is scoped to the change, not a requirement to run every check.
 
+## Feature delivery workflow
+
+- Implement every new feature on its own `codex/` branch created from `trunk`.
+- Use an isolated worktree when the current checkout contains unrelated work; preserve uncommitted changes.
+- Complete scoped verification and review, commit the feature, then merge it into `trunk`.
+- Build the production image from the merged `trunk`, back up the existing database, and update only the application container. Preserve the PostgreSQL container, volume, authored materials and game state; verify readiness and affected behavior.
+- This workflow is standing user authorization for local feature merges and local application-container updates. It does not authorize remote pushes, publishing, external deployment or user-data replacement.
+
 ## Compatibility policy
 
 - Backward compatibility is not required until the user explicitly enables it after release. A release alone does not enable this requirement.

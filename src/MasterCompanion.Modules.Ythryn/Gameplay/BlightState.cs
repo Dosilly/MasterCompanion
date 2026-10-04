@@ -1,3 +1,3 @@
 namespace MasterCompanion.Modules.Ythryn.Gameplay;
 
-internal sealed record BlightState(BlightCharacter[] Characters, ExpeditionState? Adventure = null);
+internal sealed record BlightState(BlightCharacter[] Characters, ExpeditionState? Adventure = null, RivalForcesState? Forces = null);

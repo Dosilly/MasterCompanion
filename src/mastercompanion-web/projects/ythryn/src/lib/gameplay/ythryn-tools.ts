@@ -5,11 +5,12 @@ import { ActionRequired } from './action-required';
 import { BlightTool } from './blight-tool';
 import { readBlightView } from './blight-view';
 import { ExpeditionTool } from './expedition-tool';
+import { RivalForcesTool } from './rival-forces-tool';
 import { readExpeditionView } from './expedition-view';
 
 @Component({
   selector: 'mc-ythryn-tools',
-  imports: [ActionRequired, BlightTool, ExpeditionTool],
+  imports: [ActionRequired, BlightTool, ExpeditionTool, RivalForcesTool],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './ythryn-tools.html',
   styles: `

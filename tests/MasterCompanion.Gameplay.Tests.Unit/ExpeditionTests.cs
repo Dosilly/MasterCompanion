@@ -392,6 +392,7 @@ public sealed class ExpeditionTests
         current = Apply(current, new { kind = "resolveCheck", characterId = current.Party[0].Id, success = true, d6 = 4 });
         var node = JsonNode.Parse(current.ModuleState.GetRawText())?.AsObject() ?? throw new InvalidOperationException("Missing test state.");
         node.Remove("adventure");
+        node.Remove("forces");
 
         // Act
         var old = current with { ModuleSchemaVersion = 2, ModuleState = JsonSerializer.SerializeToElement(node) };
@@ -409,6 +410,7 @@ public sealed class ExpeditionTests
         current = Apply(current, new { kind = "resolveCheck", characterId = current.Party[0].Id, success = true, d6 = 4 });
         var node = JsonNode.Parse(current.ModuleState.GetRawText())?.AsObject() ?? throw new InvalidOperationException("Missing test state.");
         node.Remove("adventure");
+        node.Remove("forces");
         var old = current with { ModuleSchemaVersion = 2, ModuleState = JsonSerializer.SerializeToElement(node) };
         var before = old.ModuleState.GetRawText();
 

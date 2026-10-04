@@ -124,7 +124,7 @@ function readTable(value: unknown): EncounterBand[] | null {
 }
 export function readExpeditionView(state: GameStateDto): ExpeditionView | null {
   const minute = state.snapshot.timeMinutes;
-  if (state.snapshot.moduleSchemaVersion !== 3 || !record(state.moduleView)) {
+  if (state.snapshot.moduleSchemaVersion !== 4 || !record(state.moduleView)) {
     return null;
   }
   const view = state.moduleView['expedition'];

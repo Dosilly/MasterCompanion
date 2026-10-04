@@ -22,6 +22,7 @@ public sealed class UpgradePersistenceTests(PostgreSqlFixture database) : Gamepl
         var module = JsonNode.Parse(rules.Initialize(party).GetRawText())?.AsObject()
             ?? throw new InvalidOperationException("Missing upgrade fixture.");
         module.Remove("adventure");
+        module.Remove("forces");
         var snapshot = new GameSnapshot(480, party, [480L], 2, JsonSerializer.SerializeToElement(module));
         var request = Request(0, "longRest");
         var receipt = new GameStateResponse(1, snapshot, rules.Describe(snapshot), new(request.RequestId, "longRest", 1));
@@ -40,7 +41,7 @@ public sealed class UpgradePersistenceTests(PostgreSqlFixture database) : Gamepl
         var read = Success(await ReadAsync(connectionString, campaignId));
 
         // Assert
-        Assert.True(read.Revision == 1 && read.Snapshot.ModuleSchemaVersion == 3 && read.Snapshot.TimeMinutes == 480 &&
+        Assert.True(read.Revision == 1 && read.Snapshot.ModuleSchemaVersion == 4 && read.Snapshot.TimeMinutes == 480 &&
             SameJson(snapshot.ModuleState.GetProperty("characters"), read.Snapshot.ModuleState.GetProperty("characters")) &&
             read.ModuleView.GetProperty("expedition").GetProperty("avarice").GetProperty("pending").GetBoolean(),
             "Existing schema-two state must expose first-rest reminders without resetting campaign data.");
@@ -92,7 +93,7 @@ public sealed class UpgradePersistenceTests(PostgreSqlFixture database) : Gamepl
         var upgraded = Success(await ReadAsync(connectionString, campaignId));
 
         // Assert
-        Assert.True(upgraded.Revision == 1 && upgraded.Snapshot.ModuleSchemaVersion == 3 &&
+        Assert.True(upgraded.Revision == 1 && upgraded.Snapshot.ModuleSchemaVersion == 4 &&
             upgraded.Snapshot.Party.Single() == character && upgraded.Snapshot.TimeMinutes == 1080 &&
             Character(upgraded, character.Id).GetProperty("dc").GetInt32() == 9 &&
             Character(upgraded, character.Id).GetProperty("nextCheck").GetProperty("minute").GetInt64() == 1800,
