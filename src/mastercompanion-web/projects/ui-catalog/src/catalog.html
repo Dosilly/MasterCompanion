@@ -1,0 +1,42 @@
+<main>
+  <h1>Context menu</h1>
+  <p>
+    Shared neutral presentation used by workspace folders, materials and tabs. Right-click an
+    example, activate its button or press Shift+F10. Navigate with arrows, Home and End; select with
+    Enter or Space; dismiss with Escape or an outside click.
+  </p>
+  <button type="button" (click)="toggleTheme()">
+    {{ dark() ? 'Use light theme' : 'Use dark theme' }}
+  </button>
+  <section aria-label="Action states">
+    <h2>Enabled, disabled and long labels</h2>
+    <button
+      #normal
+      type="button"
+      (click)="openFromButton(normal, false)"
+      (contextmenu)="open($event, normal, false)"
+      (keydown)="keyboard($event, normal, false)"
+    >
+      Open example actions
+    </button>
+    <h2>All actions unavailable</h2>
+    <button
+      #unavailable
+      type="button"
+      (click)="openFromButton(unavailable, true)"
+      (contextmenu)="open($event, unavailable, true)"
+      (keydown)="keyboard($event, unavailable, true)"
+    >
+      Open disabled example
+    </button>
+    <p role="status">Selected action: {{ lastAction() }}</p>
+  </section>
+  <p>Focus starts on the first enabled action and returns to its own trigger when dismissed.</p>
+  @if (menu(); as presentation) {
+    <mc-context-menu
+      [presentation]="presentation"
+      (actionSelected)="select($event)"
+      (dismissed)="menu.set(null)"
+    />
+  }
+</main>

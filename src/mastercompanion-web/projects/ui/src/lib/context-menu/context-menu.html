@@ -1,0 +1,14 @@
+<div #menu class="context-menu" role="menu" [attr.aria-label]="presentation().label" tabindex="-1">
+  @for (action of presentation().actions; track action.id) {
+    <button
+      type="button"
+      role="menuitem"
+      tabindex="-1"
+      [attr.data-menu-action]="action.id"
+      [disabled]="action.disabled"
+      [attr.aria-disabled]="action.disabled ? 'true' : null"
+    >
+      {{ action.label }}
+    </button>
+  }
+</div>

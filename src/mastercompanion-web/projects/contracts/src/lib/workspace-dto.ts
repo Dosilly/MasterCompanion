@@ -10,5 +10,6 @@ export interface WorkspaceDto {
   startMaterialId: string;
   materials: MaterialSummary[];
   folders: CampaignFolder[];
+  foldersRevision: number;
   maps: CampaignMap[];
 }

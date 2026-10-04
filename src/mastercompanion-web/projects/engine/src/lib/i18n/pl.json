@@ -194,5 +194,46 @@
     "zoomIn": "Przybliż mapę",
     "fit": "Dopasuj",
     "hint": "Wybierz znacznik, aby otworzyć opis. Przeciągnij mapę, aby ją przesunąć."
+  },
+  "folders": {
+    "rename": "Zmień nazwę folderu",
+    "move": "Przenieś folder",
+    "title": "Nazwa folderu",
+    "parent": "Folder docelowy",
+    "root": "Poziom główny",
+    "position": "Pozycja",
+    "atEnd": "Na końcu",
+    "before": "Przed",
+    "saving": "Zapisywanie struktury folderów…",
+    "save": "Zapisz",
+    "retry": "Ponów tę samą operację",
+    "refresh": "Odśwież foldery",
+    "rootDrop": "Przenieś na poziom główny",
+    "discardUnreadable": "Usuń nieczytelny zapis odzyskiwania",
+    "discardWarning": "Zapisu nie można odczytać. Po jego usunięciu odśwież foldery, aby sprawdzić, czy operacja została zapisana.",
+    "errors": {
+      "invalid": "Wybierz poprawną nazwę folderu lub miejsce docelowe.",
+      "conflict": "Struktura folderów zmieniła się w innym miejscu. Odśwież foldery, sprawdź zmianę i zapisz ponownie.",
+      "rejected": "Operacja na folderze została odrzucona. Odśwież foldery i sprawdź zmianę.",
+      "uncertain": "Operacja mogła zostać zapisana. Ponów tę samą operację, aby potwierdzić wynik.",
+      "storageUnavailable": "Pamięć odzyskiwania przeglądarki jest niedostępna. Włącz pamięć sesji przed zapisaniem.",
+      "invalidRecovery": "Oczekującej operacji na folderze nie można odczytać.",
+      "loadFailed": "Nie udało się odświeżyć folderów. Spróbuj ponownie."
+    }
+  },
+  "contextMenu": {
+    "label": "Działania",
+    "newNote": "Nowa notatka tutaj",
+    "rename": "Zmień nazwę folderu",
+    "move": "Przenieś folder…",
+    "collapse": "Zwiń folder",
+    "expand": "Rozwiń folder",
+    "open": "Otwórz materiał",
+    "reveal": "Pokaż w nawigacji",
+    "copyLink": "Kopiuj odnośnik do materiału",
+    "close": "Zamknij kartę",
+    "closeOthers": "Zamknij pozostałe karty",
+    "copied": "Odnośnik do materiału skopiowany.",
+    "copyFailed": "Nie udało się skopiować odnośnika. Otwórz materiał i skopiuj jego adres."
   }
 }

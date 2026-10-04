@@ -4,7 +4,8 @@
 
 The user requested the improvements below, then authorized search, URL navigation
 and campaign material memory. Search and routing have been delivered; material
-memory is implemented and verified. Folder management remains planned. See
+memory is implemented and verified. Folder management and context menus are also
+implemented and verified; see [the scoped delivery plan](25-Folder-management-and-context-menus.md). See
 [search delivery](20-Material-search.md), [routing delivery](22-Workspace-routing.md)
 and [material memory](23-Campaign-material-memory.md) for current evidence.
 

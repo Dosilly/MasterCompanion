@@ -19,7 +19,12 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { CAMPAIGN_MODULES, MaterialDto, WorkspaceDto } from '@mastercompanion/contracts';
+import {
+  CAMPAIGN_MODULES,
+  CampaignFolder,
+  MaterialDto,
+  WorkspaceDto,
+} from '@mastercompanion/contracts';
 import { WorkspaceTab } from './workspace-tab';
 import { WorkspaceMaterials } from './workspace-materials';
 import { MaterialView } from '../materials/material-view';
@@ -38,6 +43,12 @@ import { GameSession } from '../gameplay/game-session';
 import { GameView } from '../gameplay/game-view';
 import { PartyView } from '../gameplay/party-view';
 import { UiMessages, uiMessages } from '../../i18n/messages';
+import { FolderManagement } from '../folders/folder-management';
+import { FolderManagementDialog } from '../folders/folder-management-dialog';
+import { FolderDrag } from '../folders/folder-drag';
+import { WorkspaceContextMenuComponent } from '../context-menu/workspace-context-menu';
+import type { WorkspaceContextMenuAction } from '../context-menu/workspace-context-menu-action';
+import { WorkspaceContextMenuState } from '../context-menu/workspace-context-menu-state';
 
 @Component({
   selector: 'mc-workspace',
@@ -50,6 +61,8 @@ import { UiMessages, uiMessages } from '../../i18n/messages';
     MapView,
     GameView,
     PartyView,
+    FolderManagementDialog,
+    WorkspaceContextMenuComponent,
   ],
   templateUrl: './workspace.html',
   styleUrl: './workspace.scss',
@@ -94,6 +107,14 @@ export class Workspace {
   readonly partyView = viewChild(PartyView);
   readonly game = signal<GameSession | null>(null);
   readonly creation = signal<MaterialCreation | null>(null);
+  readonly folderManagement = signal<FolderManagement | null>(null);
+  readonly folderDrag = new FolderDrag();
+  private readonly folderDialog = viewChild(FolderManagementDialog);
+  readonly menus = new WorkspaceContextMenuState(
+    () => this.folderManagement()?.locked() ?? true,
+    (id) => this.expanded().has(id),
+    (id) => this.closing().has(id),
+  );
   private readonly creationDialog = viewChild(MaterialCreationDialog);
   readonly campaignModule = computed(() =>
     this.modules.find((module) => module.id === this.workspace()?.moduleId),
@@ -115,16 +136,19 @@ export class Workspace {
     ),
   );
   private navigationRender?: AfterRenderRef;
+  private folderNavigationRender?: AfterRenderRef;
   private finishNavigationRender?: (found: boolean) => void;
 
   constructor() {
     this.destroyRef.onDestroy(() => {
       this.navigationRender?.destroy();
+      this.folderNavigationRender?.destroy();
       this.finishNavigationRender?.(false);
       this.routing.destroy();
       this.materials.destroy();
       this.game()?.destroy();
       this.creation()?.destroy();
+      this.folderManagement()?.destroy();
       this.materialSearch()?.destroy();
     });
     effect(() => {
@@ -187,6 +211,46 @@ export class Workspace {
         }
         this.creation.set(new MaterialCreation(workspace.campaignId, this.http, storage));
       }
+      if (this.folderManagement()?.campaignId !== workspace.campaignId) {
+        this.folderManagement()?.destroy();
+        let storage: Storage | null = null;
+        try {
+          storage = window.sessionStorage;
+        } catch {
+          /* Folder operations report inaccessible recovery storage before sending. */
+        }
+        this.folderManagement.set(
+          new FolderManagement(workspace.campaignId, this.http, storage, (snapshot) => {
+            const previous = this.workspace()?.folders ?? [];
+            const moved =
+              previous.length !== snapshot.folders.length ||
+              snapshot.folders.some(
+                (folder, index) =>
+                  folder.id !== previous[index]?.id ||
+                  folder.parentId !== previous[index]?.parentId,
+              );
+            this.materials.acceptFolders(snapshot);
+            const material = this.workspace()?.materials.find((item) => item.id === this.active());
+            if (material) {
+              this.expanded.update(
+                (current) =>
+                  new Set([...current, ...folderPath(snapshot.folders, material.folderId)]),
+              );
+              if (moved) {
+                this.folderNavigationRender?.destroy();
+                this.folderNavigationRender = afterNextRender(
+                  () => this.revealNavigationSelection(false),
+                  { injector: this.injector },
+                );
+              }
+            }
+          }),
+        );
+      }
+      this.folderManagement()?.accept({
+        revision: workspace.foldersRevision,
+        folders: workspace.folders,
+      });
       await this.routing.initialize(this.workspace() ?? workspace);
     } catch {
       if (!this.destroyRef.destroyed && this.materialLoadState() !== 'error') {
@@ -303,6 +367,74 @@ export class Workspace {
       this.workspace()?.materials.find((material) => material.id === this.active())?.folderId ??
       null;
     this.creationDialog()?.open(event, folderId);
+  }
+
+  async contextAction(action: WorkspaceContextMenuAction): Promise<void> {
+    const target = this.menus.takeTarget();
+    if (!target) {
+      return;
+    }
+    const folder = this.workspace()?.folders.find((item) => item.id === target.id);
+    switch (action) {
+      case 'new-note':
+        this.creationDialog()?.open(target.trigger, folder?.id ?? null, true);
+        break;
+      case 'rename':
+      case 'move':
+        if (folder) {
+          this.folderDialog()?.open(action, folder, target.trigger);
+        }
+        break;
+      case 'toggle-expansion':
+        this.expanded.update((current) => {
+          const next = new Set(current);
+          if (next.has(target.id)) {
+            next.delete(target.id);
+          } else {
+            next.add(target.id);
+          }
+          return next;
+        });
+        break;
+      case 'open':
+        await this.open(target.id);
+        break;
+      case 'reveal':
+        this.materialSearch()?.updateQuery('');
+        await this.open(target.id);
+        break;
+      case 'copy-link':
+        await this.menus.copyMaterialLink(target.id);
+        break;
+      case 'close':
+        await this.close(target.id);
+        break;
+      case 'close-others':
+        await this.closeOtherTabs(target.id);
+        break;
+    }
+  }
+
+  private async closeOtherTabs(keepId: string): Promise<void> {
+    const ids = [
+      ...(this.partyOpen() ? ['@party'] : []),
+      ...(this.gameOpen() ? ['@game'] : []),
+      ...this.maps().map((map) => `@map:${map.id}`),
+      ...this.sessions().map((session) => session.material.id),
+    ];
+    for (const id of ids) {
+      if (id !== keepId) {
+        await this.close(id);
+      }
+    }
+  }
+
+  dropFolder(event: DragEvent, folder: CampaignFolder | null): void {
+    this.folderDrag.over(event, this.workspace()?.folders ?? [], folder);
+    const operation = this.folderDrag.drop(event);
+    if (operation) {
+      void this.folderManagement()?.execute(operation);
+    }
   }
   acceptCreatedMaterial(material: MaterialDto): void {
     this.materials.acceptCreatedMaterial(material);

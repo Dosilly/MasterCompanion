@@ -116,6 +116,7 @@ export function campaignFixture(): {
       moduleId: 'ythryn',
       moduleVersion: '0.1.0',
       startMaterialId: readerId,
+      foldersRevision: 1,
       materials: materials.map(({ id, title, group, folderId }) => ({
         id,
         title,

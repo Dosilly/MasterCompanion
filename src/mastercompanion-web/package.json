@@ -6,6 +6,7 @@
   "scripts": {
     "check:quality": "node tools/check-quality.mjs",
     "start": "node tools/start.mjs",
+    "catalog": "node tools/catalog.mjs",
     "build": "node tools/build.mjs",
     "prepare:ythryn": "node tools/prepare-module.mjs ../MasterCompanion.Modules.Ythryn/Data/Source ../MasterCompanion.Modules.Ythryn/Data/Generated/pilot.json",
     "import:ythryn-poc": "node tools/import-ythryn-poc.mjs",

@@ -29,6 +29,10 @@ namespace MasterCompanion.Engine.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<long>("FoldersRevision")
+                        .IsConcurrencyToken()
+                        .HasColumnType("bigint");
+
                     b.Property<string>("ModuleId")
                         .IsRequired()
                         .HasMaxLength(80)
@@ -113,6 +117,36 @@ namespace MasterCompanion.Engine.Persistence.Migrations
                     b.HasIndex("CampaignId");
 
                     b.ToTable("Maps", "engine");
+                });
+
+            modelBuilder.Entity("MasterCompanion.Engine.Persistence.FolderOperationReceipt", b =>
+                {
+                    b.Property<Guid>("CampaignId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("RequestId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RequestJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("ResponseJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<long>("Revision")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("CampaignId", "RequestId");
+
+                    b.HasIndex("CampaignId", "Revision")
+                        .IsUnique();
+
+                    b.ToTable("FolderOperationReceipts", "engine");
                 });
 
             modelBuilder.Entity("MasterCompanion.Engine.Persistence.GameOperation", b =>
@@ -227,6 +261,15 @@ namespace MasterCompanion.Engine.Persistence.Migrations
                 });
 
             modelBuilder.Entity("MasterCompanion.Engine.Persistence.CampaignMap", b =>
+                {
+                    b.HasOne("MasterCompanion.Engine.Persistence.Campaign", null)
+                        .WithMany()
+                        .HasForeignKey("CampaignId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MasterCompanion.Engine.Persistence.FolderOperationReceipt", b =>
                 {
                     b.HasOne("MasterCompanion.Engine.Persistence.Campaign", null)
                         .WithMany()

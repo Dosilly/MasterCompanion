@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@mastercompanion/contracts": ["./projects/contracts/src/public-api.ts"]
+      "@mastercompanion/contracts": ["./projects/contracts/src/public-api.ts"],
+      "@mastercompanion/ui": ["./projects/ui/src/public-api.ts"]
     }
   }
 }

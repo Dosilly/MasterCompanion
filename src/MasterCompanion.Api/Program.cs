@@ -1,6 +1,7 @@
 using MasterCompanion.Contracts;
 using MasterCompanion.Engine.Features.Assets;
 using MasterCompanion.Engine.Features.Gameplay;
+using MasterCompanion.Engine.Features.Folders;
 using MasterCompanion.Engine.Features.Materials;
 using MasterCompanion.Engine.Features.Workspace;
 using MasterCompanion.Engine.Persistence;
@@ -33,6 +34,7 @@ if (Directory.Exists(app.Environment.WebRootPath))
 }
 app.MapDefaultEndpoints();
 GetWorkspace.Map(app);
+FolderEndpoints.Map(app);
 GetMaterial.Map(app);
 GetCampaignMaterials.Map(app);
 SaveMaterial.Map(app);

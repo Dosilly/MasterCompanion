@@ -68,7 +68,44 @@
           <button (click)="openCreation($event)">{{ ui.notes.recover }}</button>
         </div>
       }
+      @if (folderManagement(); as management) {
+        @if (management.pending()) {
+          <p class="folder-status" role="status">{{ ui.folders.saving }}</p>
+        }
+        @if (management.error(); as error) {
+          <div class="folder-recovery" role="alert">
+            <p>{{ ui.folders.errors[error] }}</p>
+            @if (management.request()) {
+              <button (click)="management.retry()" [disabled]="management.pending()">
+                {{ ui.folders.retry }}
+              </button>
+            } @else if (management.invalidRecovery()) {
+              <p>{{ ui.folders.discardWarning }}</p>
+              <button (click)="management.discardUnreadable()">
+                {{ ui.folders.discardUnreadable }}
+              </button>
+            } @else {
+              <button (click)="management.refresh()" [disabled]="management.pending()">
+                {{ ui.folders.refresh }}
+              </button>
+            }
+          </div>
+        }
+      }
+      @if (menus.feedback(); as feedback) {
+        <p role="status" class="folder-status">{{ ui.contextMenu[feedback] }}</p>
+      }
       @if (materialSearch()?.state().kind === 'idle') {
+        @if (folderDrag.dragging()) {
+          <div
+            class="folder-root-drop"
+            [class.drop-inside]="folderDrag.target()?.targetId === null"
+            (dragover)="folderDrag.over($event, data.folders, null)"
+            (drop)="dropFolder($event, null)"
+          >
+            {{ ui.folders.rootDrop }}
+          </div>
+        }
         <ng-container *ngTemplateOutlet="folderTree; context: { $implicit: folders() }" />
       }
       <ng-template #folderTree let-nodes>
@@ -79,7 +116,40 @@
             [open]="expanded().has(folder.id)"
             (toggle)="toggleFolder(folder.id, $event)"
           >
-            <summary>{{ folder.title }}</summary>
+            <summary
+              [draggable]="folder.id !== '@unfiled' && !folderManagement()?.locked()"
+              [class.drop-before]="
+                folderDrag.target()?.targetId === folder.id &&
+                folderDrag.target()?.placement === 'before'
+              "
+              [class.drop-inside]="
+                folderDrag.target()?.targetId === folder.id &&
+                folderDrag.target()?.placement === 'inside'
+              "
+              [class.drop-after]="
+                folderDrag.target()?.targetId === folder.id &&
+                folderDrag.target()?.placement === 'after'
+              "
+              (dragstart)="
+                folderDrag.start($event, folder.id, folderManagement()?.locked() ?? true)
+              "
+              (dragend)="folderDrag.end()"
+              (dragover)="folder.id !== '@unfiled' && folderDrag.over($event, data.folders, folder)"
+              (dragleave)="folderDrag.leave()"
+              (drop)="folder.id !== '@unfiled' && dropFolder($event, folder)"
+              (contextmenu)="menus.open($event, 'folder', folder.id)"
+              (keydown)="menus.open($event, 'folder', folder.id)"
+            >
+              <span class="folder-title">{{ folder.title }}</span>
+              <button
+                type="button"
+                class="folder-actions"
+                [attr.aria-label]="ui.contextMenu.label + ': ' + folder.title"
+                (click)="menus.open($event, 'folder', folder.id)"
+              >
+                ⋯
+              </button>
+            </summary>
             <div class="folder-contents">
               @for (material of folder.materials; track material.id) {
                 <button
@@ -87,6 +157,8 @@
                   [class.selected]="active() === material.id"
                   [attr.aria-current]="active() === material.id ? 'page' : null"
                   (click)="open(material.id)"
+                  (contextmenu)="menus.open($event, 'material', material.id)"
+                  (keydown)="menus.open($event, 'material', material.id)"
                 >
                   {{ material.title }}
                 </button>
@@ -133,6 +205,8 @@
             [dirty]="partyView()?.dirty() ?? false"
             (activate)="activate('@party')"
             (close)="close('@party')"
+            (contextmenu)="menus.open($event, 'tab', '@party')"
+            (keydown)="menus.open($event, 'tab', '@party')"
           />
         }
         @if (gameOpen()) {
@@ -143,6 +217,8 @@
             [selected]="active() === '@game'"
             (activate)="activate('@game')"
             (close)="close('@game')"
+            (contextmenu)="menus.open($event, 'tab', '@game')"
+            (keydown)="menus.open($event, 'tab', '@game')"
           />
         }
         @for (map of maps(); track map.id) {
@@ -154,6 +230,8 @@
             [selected]="active() === '@map:' + map.id"
             (activate)="activate('@map:' + map.id)"
             (close)="close('@map:' + map.id)"
+            (contextmenu)="menus.open($event, 'tab', '@map:' + map.id)"
+            (keydown)="menus.open($event, 'tab', '@map:' + map.id)"
           />
         }
         @for (tab of sessions(); track tab.material.id) {
@@ -167,6 +245,8 @@
             [closing]="closing().has(tab.material.id)"
             (activate)="activate(tab.material.id)"
             (close)="close(tab.material.id)"
+            (contextmenu)="menus.open($event, 'tab', tab.material.id)"
+            (keydown)="menus.open($event, 'tab', tab.material.id)"
           />
         }
       </div>
@@ -235,6 +315,14 @@
       (created)="acceptCreatedMaterial($event)"
     />
   }
+  @if (folderManagement(); as management) {
+    <mc-folder-management-dialog [management]="management" />
+  }
+  <mc-workspace-context-menu
+    [presentation]="menus.presentation()"
+    (actionSelected)="contextAction($event)"
+    (dismissed)="menus.presentation.set(null)"
+  />
 } @else {
   <ng-container *ngTemplateOutlet="loadStatus" />
   @if (!loadError() && materialLoadState() !== 'error') {

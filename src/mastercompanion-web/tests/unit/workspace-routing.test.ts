@@ -38,6 +38,7 @@ const workspace: WorkspaceDto = {
   moduleId: 'module',
   moduleVersion: '1',
   startMaterialId: 'reader',
+  foldersRevision: 1,
   folders: [],
   materials: [{ id: 'reader', title: 'Reader', group: '', folderId: null }],
   maps: [{ id: 'map.one', title: 'Map', assetId: 'asset', width: 800, height: 600, markers: [] }],

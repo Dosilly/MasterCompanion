@@ -1,0 +1,6 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": { "outDir": "../../out-tsc/ui", "declaration": true, "types": [] },
+  "angularCompilerOptions": { "compilationMode": "partial" },
+  "include": ["src/**/*.ts"]
+}

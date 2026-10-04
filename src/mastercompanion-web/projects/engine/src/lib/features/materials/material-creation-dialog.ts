@@ -45,9 +45,18 @@ export class MaterialCreationDialog {
   constructor() {
     this.destroyRef.onDestroy(() => this.render?.destroy());
   }
-  open(event: Event, defaultFolderId: string | null) {
-    this.creation().setDefaultFolder(defaultFolderId);
-    this.opener = event.currentTarget instanceof HTMLElement ? event.currentTarget : undefined;
+  open(event: Event | HTMLElement, defaultFolderId: string | null, explicitFolder = false) {
+    if (explicitFolder) {
+      this.creation().setFolder(defaultFolderId);
+    } else {
+      this.creation().setDefaultFolder(defaultFolderId);
+    }
+    this.opener =
+      event instanceof HTMLElement
+        ? event
+        : event.currentTarget instanceof HTMLElement
+          ? event.currentTarget
+          : undefined;
     this.render?.destroy();
     this.render = afterNextRender(
       () => {

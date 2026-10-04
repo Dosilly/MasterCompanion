@@ -1,8 +1,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { signal } from '@angular/core';
-import type { MaterialDto, WorkspaceDto } from '@mastercompanion/contracts';
+import type { FolderSnapshot, MaterialDto, WorkspaceDto } from '@mastercompanion/contracts';
 import { MaterialSession } from '../materials/material-session';
 import { CampaignMaterialCache } from './campaign-material-cache';
+import { isFolderSnapshot } from '../folders/folder-rules';
 
 /** Owns campaign document memory and editing sessions independently of mounted views. */
 export class WorkspaceMaterials {
@@ -23,6 +24,9 @@ export class WorkspaceMaterials {
     }
     if (this.cache && this.cache.campaignId !== workspace.campaignId) {
       throw new Error('An existing workspace cannot switch campaigns.');
+    }
+    if (!isFolderSnapshot({ revision: workspace.foldersRevision, folders: workspace.folders })) {
+      throw new Error('The workspace folder hierarchy is invalid.');
     }
     this.cache ??= new CampaignMaterialCache(workspace.campaignId, this.http);
     this.loadStateValue.set('loading');
@@ -67,6 +71,14 @@ export class WorkspaceMaterials {
     return this.sessionFor(material);
   }
 
+  acceptFolders(snapshot: FolderSnapshot): void {
+    this.workspaceState.update((workspace) =>
+      workspace && snapshot.revision >= workspace.foldersRevision
+        ? { ...workspace, folders: snapshot.folders, foldersRevision: snapshot.revision }
+        : workspace,
+    );
+  }
+
   private sessionFor(material: MaterialDto): MaterialSession {
     // Replayed confirmations and refreshes must not replace an editor or its newer draft.
     const existing = this.sessions().find((session) => session.material.id === material.id);
@@ -92,8 +104,12 @@ export class WorkspaceMaterials {
         materials.set(session.material.id, session.material);
       }
     }
+    const current = this.workspace();
     this.workspaceState.set({
       ...workspace,
+      ...(current && current.foldersRevision >= workspace.foldersRevision
+        ? { folders: current.folders, foldersRevision: current.foldersRevision }
+        : {}),
       materials: [...materials.values()].map(({ id, title, group, folderId }) => ({
         id,
         title,

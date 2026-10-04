@@ -44,7 +44,7 @@ export function buildNavigation(
   return roots;
 }
 
-export function folderPath(folders: CampaignFolder[], folderId: string | null): string[] {
+export function folderPath(folders: readonly CampaignFolder[], folderId: string | null): string[] {
   const byId = new Map(folders.map((folder) => [folder.id, folder]));
   const path: string[] = [];
   while (folderId) {

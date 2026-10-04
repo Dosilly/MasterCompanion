@@ -1,0 +1,5 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": { "outDir": "../../out-tsc/ui-catalog", "types": [] },
+  "files": ["src/main.ts"]
+}

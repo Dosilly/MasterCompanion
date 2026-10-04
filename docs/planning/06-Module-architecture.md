@@ -289,3 +289,23 @@ sessions and their base revision. Delayed snapshots cannot roll back confirmed
 saves or omit notes created during the read. Neutral UI and adventure modules do
 not fetch, store or refresh campaign documents. See
 [material memory contract and evidence](23-Campaign-material-memory.md).
+
+## Folder management and neutral context menus — 4 October 2026
+
+Campaign folders now have an independent hierarchy revision and operation receipt
+boundary. The engine owns rename/move requests, campaign locking, atomic sibling
+ordering and hierarchy validation. Folder edits are independent of material saves,
+module defaults and gameplay history. The workspace response supplies the matching
+`foldersRevision`; the separate folder snapshot endpoint lets recovery refresh the
+tree without reloading or destroying material sessions.
+
+The frontend contracts export folder operations, requests and snapshots. The
+engine owns hierarchy recovery, drag/drop intent and equivalent keyboard dialogs.
+The new separately compiled `@mastercompanion/ui` library supplies neutral context
+menu interaction and presentation. It imports neither campaign contracts nor engine,
+module or HTTP code. The Angular host composes these libraries; engine and module
+libraries may consume the UI public entry point. Build order and dependency checks
+enforce the boundary before consumer compilation. Localized workspace menu actions
+remain engine-owned and use existing navigation and confirmed tab-closing operations.
+
+See [scope, operation contract and delivery evidence](25-Folder-management-and-context-menus.md).

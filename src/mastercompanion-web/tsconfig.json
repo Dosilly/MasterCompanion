@@ -12,6 +12,7 @@
     "resolveJsonModule": true,
     "paths": {
       "@mastercompanion/contracts": ["./dist/contracts"],
+      "@mastercompanion/ui": ["./dist/ui"],
       "@mastercompanion/engine": ["./dist/engine"],
       "@mastercompanion/ythryn": ["./dist/ythryn"]
     }

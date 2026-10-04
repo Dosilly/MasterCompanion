@@ -11,7 +11,7 @@ export function ng(args) {
   if (result.status !== 0) process.exit(result.status ?? 1);
 }
 export function buildLibraries() {
-  for (const name of ['contracts', 'engine', 'ythryn']) ng(['build', name]);
+  for (const name of ['contracts', 'ui', 'engine', 'ythryn']) ng(['build', name]);
 }
 if (import.meta.main) {
   checkQuality();

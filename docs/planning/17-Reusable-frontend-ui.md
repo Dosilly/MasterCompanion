@@ -1,6 +1,6 @@
 # Reusable frontend UI
 
-3 October 2026 · architecture and delivery proposal; implementation pending
+3 October 2026 · architecture and delivery proposal; context menu foundation delivered on 4 October
 
 ## Intent
 
@@ -180,3 +180,12 @@ extracted the engine-owned `WorkspaceMaterials` session owner and a shared
 campaign controls remain internal to the engine and do not create the planned
 neutral UI library. UI library scaffolding, its catalog, and URL routing remain
 separate planned slices.
+
+On 4 October 2026, folder management introduced the separately compiled
+`@mastercompanion/ui` foundation and its first neutral context-menu interaction
+primitive. Folder, material and tab consumers retain their campaign decisions in
+the engine. Dependency guards, public aliases, build/start order and the UI test
+source cache enforce the new boundary. A separate loopback developer catalog
+documents light/dark, focus, disabled and long-label states. See the
+[context menu API and catalog](17-Context-menu-catalog.md). Dialog, feedback,
+theme and tab extractions remain planned; they are not part of this slice.

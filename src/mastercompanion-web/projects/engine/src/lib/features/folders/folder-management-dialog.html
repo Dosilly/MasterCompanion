@@ -1,0 +1,77 @@
+<dialog
+  #dialog
+  class="folder-management-dialog"
+  aria-labelledby="folder-management-title"
+  (cancel)="cancel($event)"
+>
+  <h2 id="folder-management-title">
+    {{ mode() === 'rename' ? ui.folders.rename : ui.folders.move }}
+  </h2>
+  <form (submit)="submit($event)">
+    @if (mode() === 'rename') {
+      <label for="folder-title">{{ ui.folders.title }}</label>
+      <input
+        id="folder-title"
+        type="text"
+        maxlength="300"
+        required
+        [value]="title()"
+        [disabled]="management().locked()"
+        (input)="updateTitle($event)"
+      />
+    } @else {
+      <label for="folder-parent">{{ ui.folders.parent }}</label>
+      <select
+        id="folder-parent"
+        [value]="parentId() ?? ''"
+        [disabled]="management().locked()"
+        (change)="updateParent($event)"
+      >
+        <option value="">{{ ui.folders.root }}</option>
+        @for (folder of parentOptions(); track folder.id) {
+          <option [value]="folder.id">{{ folder.label }}</option>
+        }
+      </select>
+      <label for="folder-position">{{ ui.folders.position }}</label>
+      <select
+        id="folder-position"
+        [value]="beforeId() ?? ''"
+        [disabled]="management().locked()"
+        (change)="updatePosition($event)"
+      >
+        <option value="">{{ ui.folders.atEnd }}</option>
+        @for (folder of siblingOptions(); track folder.id) {
+          <option [value]="folder.id">{{ ui.folders.before }} {{ folder.title }}</option>
+        }
+      </select>
+    }
+    @if (management().pending()) {
+      <p role="status">{{ ui.folders.saving }}</p>
+    }
+    @if (management().error(); as error) {
+      <p role="alert" class="folder-error">{{ ui.folders.errors[error] }}</p>
+      @if (error === 'conflict') {
+        <button type="button" (click)="management().refresh()" [disabled]="management().pending()">
+          {{ ui.folders.refresh }}
+        </button>
+      }
+    }
+    <div class="dialog-actions">
+      <button type="button" [disabled]="management().pending()" (click)="close()">
+        {{ ui.notes.cancel }}
+      </button>
+      @if (management().request()) {
+        <button type="button" [disabled]="management().pending()" (click)="retry()">
+          {{ ui.folders.retry }}
+        </button>
+      } @else {
+        <button
+          type="submit"
+          [disabled]="management().locked() || (mode() === 'rename' && !title().trim())"
+        >
+          {{ ui.folders.save }}
+        </button>
+      }
+    </div>
+  </form>
+</dialog>

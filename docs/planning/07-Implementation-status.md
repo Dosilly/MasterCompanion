@@ -1,5 +1,27 @@
 # Implementation status
 
+## Folder management and context menus — 4 October 2026
+
+Folders support rename, sibling order, subtree nesting and moves to ancestors or
+the campaign root, with drag/drop and equivalent keyboard dialogs. Folder menus
+create notes directly in the clicked folder while retaining unsent titles and
+uncertain creation recovery. Material and tab menus open/reveal/copy addresses
+and close tabs through existing save-before-close operations. A visible folder
+action button, ContextMenu and Shift+F10 make the actions reachable without PPM.
+
+Hierarchy revision checks, campaign locking, atomic order/parent writes and
+immutable receipts keep folder persistence independent of materials and gameplay.
+The new separately compiled neutral UI library owns only menu interaction and
+presentation, with a developer catalog and enforced dependency boundaries.
+
+Forty PostgreSQL/HTTP cases, forty frontend folder/workspace cases, twelve menu
+cases, nine server/cache cases and seventy-two affected browser cases pass.
+Nine unchanged note-creation unit cases remain valid. Both themes and viewport
+sizes were verified; four new visual baselines and Full HD dialog/catalog views
+were reviewed. Builds, model/migration consistency and quality checks pass.
+See [scope, contract and delivery evidence](25-Folder-management-and-context-menus.md).
+Local merge and runtime delivery are pending.
+
 ## Campaign material memory — 4 October 2026
 
 Campaign startup preloads persisted documents and retains confirmed content after

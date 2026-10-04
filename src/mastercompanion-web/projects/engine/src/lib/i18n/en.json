@@ -194,5 +194,46 @@
     "zoomIn": "Zoom in",
     "fit": "Fit",
     "hint": "Select a marker to open its description. Drag the map to move it."
+  },
+  "folders": {
+    "rename": "Rename folder",
+    "move": "Move folder",
+    "title": "Folder name",
+    "parent": "Destination folder",
+    "root": "Top level",
+    "position": "Position",
+    "atEnd": "At the end",
+    "before": "Before",
+    "saving": "Saving folder structure…",
+    "save": "Save",
+    "retry": "Retry the same operation",
+    "refresh": "Refresh folders",
+    "rootDrop": "Move to the top level",
+    "discardUnreadable": "Remove unreadable recovery record",
+    "discardWarning": "The record cannot be read. Refresh folders after removing it to check whether the operation was saved.",
+    "errors": {
+      "invalid": "Choose a valid folder name or destination.",
+      "conflict": "Folder structure changed elsewhere. Refresh folders, then review and save again.",
+      "rejected": "The folder operation was rejected. Refresh folders and review the change.",
+      "uncertain": "The operation may have been saved. Retry the same operation to confirm its result.",
+      "storageUnavailable": "Browser recovery storage is unavailable. Enable session storage before saving.",
+      "invalidRecovery": "The pending folder operation cannot be read.",
+      "loadFailed": "Folders could not be refreshed. Try again."
+    }
+  },
+  "contextMenu": {
+    "label": "Actions",
+    "newNote": "New note here",
+    "rename": "Rename folder",
+    "move": "Move folder…",
+    "collapse": "Collapse folder",
+    "expand": "Expand folder",
+    "open": "Open material",
+    "reveal": "Show in navigation",
+    "copyLink": "Copy material link",
+    "close": "Close tab",
+    "closeOthers": "Close other tabs",
+    "copied": "Material link copied.",
+    "copyFailed": "The link could not be copied. Open the material and copy its address."
   }
 }

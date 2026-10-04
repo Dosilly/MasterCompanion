@@ -10,6 +10,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     public DbSet<CampaignFolder> Folders => Set<CampaignFolder>();
     public DbSet<CampaignGameState> GameStates => Set<CampaignGameState>();
     public DbSet<GameOperation> GameOperations => Set<GameOperation>();
+    public DbSet<FolderOperationReceipt> FolderOperationReceipts => Set<FolderOperationReceipt>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -19,6 +20,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
         campaign.Property(x => x.Title).HasMaxLength(300);
         campaign.Property(x => x.ModuleId).HasMaxLength(80);
         campaign.Property(x => x.ModuleVersion).HasMaxLength(40);
+        campaign.Property(x => x.FoldersRevision).IsConcurrencyToken();
         var material = modelBuilder.Entity<Material>();
         material.HasKey(x => x.Id);
         material.Property(x => x.Id).HasMaxLength(80);
@@ -57,5 +59,11 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
         operation.HasIndex(x => new { x.CampaignId, x.Revision }).IsUnique();
         operation.HasIndex(x => new { x.CampaignId, x.Undone, x.Revision });
         operation.HasOne<Campaign>().WithMany().HasForeignKey(x => x.CampaignId);
+        var folderReceipt = modelBuilder.Entity<FolderOperationReceipt>();
+        folderReceipt.HasKey(x => new { x.CampaignId, x.RequestId });
+        folderReceipt.Property(x => x.RequestJson).HasColumnType("jsonb");
+        folderReceipt.Property(x => x.ResponseJson).HasColumnType("jsonb");
+        folderReceipt.HasIndex(x => new { x.CampaignId, x.Revision }).IsUnique();
+        folderReceipt.HasOne<Campaign>().WithMany().HasForeignKey(x => x.CampaignId);
     }
 }
