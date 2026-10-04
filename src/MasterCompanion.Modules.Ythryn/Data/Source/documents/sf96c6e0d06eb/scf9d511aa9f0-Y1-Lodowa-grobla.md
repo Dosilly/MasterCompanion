@@ -5,7 +5,7 @@ folderId: sf96c6e0d06eb
 sortOrder: 16
 ---
 
-**W skrócie — dla MG:** Wejście do Ythryn z Jaskiń Głodu, z widokiem na chronioną barierą Iglicę Iriolarthasa i skamieniałymi szczątkami tomb tappera przy końcu grobli.
+**W skrócie — dla MG:** Wejście do Ythryn z Jaskiń Głodu, z widokiem na chronioną barierą Iglicę Iriolarthasa, skamieniałymi szczątkami tomb tappera i pierwszą telepatyczną rozmową Harkana z duchem Moonbow.
 
 **Do odczytania**
 
@@ -18,6 +18,28 @@ Lodowa grobla prowadzi z Jaskiń Głodu do miasta. Na jej końcu leży skamienia
 ### Widok miasta {#sfeede71bbf93}
 
 -   **Fakt:** Dominującym elementem miasta jest otoczona magicznym polem siłowym **Iglica Iriolarthasa (Y19)**.
+
+### Wątek Harkana — pierwszy głos Moonbow {#harkan-arrival}
+
+**Dodatek MG. Wyzwalacz:** pierwszy widok nekropolii przez Harkana z Moonbow przy sobie, także jeśli nastąpił już podczas opisu wprowadzenia. Rozegraj tę scenę raz. Do tej chwili duch przekazywał wyłącznie senne wizje.
+
+**Tylko dla Harkana — rozmowa w myślach:**
+
+> Znajoma senność płynąca z łuku nagle ustępuje. Przez chwilę czujesz cudzy strach, ostry i zupełnie niepodobny do dawnych wizji. W twojej głowie odzywa się wyraźny głos:
+>
+> „Harkan. Zatrzymaj się.”
+>
+> „To jest Ythryn.”
+>
+> Po dłuższej ciszy dodaje: „Nie powinno tak wyglądać”.
+
+- **Kanał:** Harkan może odpowiedzieć w myślach. Pozostali niczego nie słyszą; o rozmowie i wskazówkach dowiadują się tylko od niego.
+- **Orientacja:** duch rozpoznaje dawny układ miasta, może wskazać iglicę, bibliotekę, ogrody i Salę Nieważkich Cudów. Jest zaskoczony ruinami; nie zna dzisiejszych zagrożeń ani bezpiecznych przejść przez zawalone ulice.
+- **Rytuał:** na pytanie o barierę wspomina osiem powinności związanych ze szkołami magii i inskrypcje w wieżach. Nie zna pełnych kroków ani ich kolejności. [Zakres wiedzy i prowadzenie przewodnika](#material/harkan-thread/harkan-city-guidance).
+- **Osobista prośba:** „Jeśli będziemy w pobliżu Sali Nieważkich Cudów, zajrzyjmy. Chciałbym zobaczyć, czy jeszcze stoi”. Cel ducha to odnalezienie dawnego miejsca odpoczynku i sprawdzenie, czy może tu pozostać; na razie nie prosi o oddanie łuku.
+- **Ojciec:** kiedy Harkan poruszy jego stan, duch sugeruje zapisy o ochronie umysłu w Wieży Uroków. [Znalezisko w Y24](#material/s2c656465077b/harkan-report-discovery) działa także bez jego wskazówki.
+
+[Cały wątek Harkana — dla MG](#material/harkan-thread).
 
 ### Martwy tomb tapper {#see904ca86b23}
 

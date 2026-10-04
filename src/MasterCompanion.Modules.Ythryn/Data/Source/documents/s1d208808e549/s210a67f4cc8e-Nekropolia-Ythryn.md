@@ -11,6 +11,8 @@ sortOrder: 9
 
 ### Sytuacja i zasady — dla MG {#scc1619d8dcaf}
 
+**Wątek Harkana — dodatek MG:** przy pierwszym widoku miasta rozegraj [pierwszą telepatyczną rozmowę z Moonbow](#material/scf9d511aa9f0/harkan-arrival). Duch do tej pory przekazywał tylko senne wizje. Scena jest wspólna z wejściem przez Y1; nie powtarzaj jej przy późniejszym otwarciu opisu grobli.
+
 -   **Widoczność:** magiczne światła nie grzeją, ale pozwalają zobaczyć z grobli niemal całe miasto.
 
 -   **Mapy:** **7.1** dla graczy (podręcznik zezwala na kopiowanie do domowej gry), **7.2** dla MG. Pliki obrazów nie są dostępne w załączniku.

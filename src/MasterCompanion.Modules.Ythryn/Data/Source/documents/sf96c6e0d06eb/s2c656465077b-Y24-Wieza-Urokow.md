@@ -5,7 +5,7 @@ folderId: sf96c6e0d06eb
 sortOrder: 59
 ---
 
-**W skrócie — dla MG:** Wieża szkoły magii uroków z czwartym krokiem Rytuału Tajemnego Oktetu i Ivirą, którą utrzymuje przy życiu przeklęta korona kradnąca wspomnienia.
+**W skrócie — dla MG:** Wieża szkoły magii uroków z czwartym krokiem Rytuału Tajemnego Oktetu, Ivirą utrzymywaną przy życiu przez koronę kradnącą wspomnienia i raportem wskazującym Harkanowi ochronę dla ojca.
 
 **Do odczytania**
 
@@ -58,6 +58,18 @@ Napis po drakońsku na ścianie za tronem:
 > „Po czwarte, wydobądź sekret od innej osoby.”
 
 -   **Trop:** To fragment Rytuału Tajemnego Oktetu.
+
+### Wątek Harkana — raport o osłonie umysłu {#harkan-report-discovery}
+
+**Dodatek MG. Miejsce:** na niższym piętrze, przed wejściem do komnaty Iviry, w płaskiej metalowej kasecie na półce pod oknem. Na wieczku widnieje znak otwartego kręgu otaczającego pionową kreskę. Kaseta zawiera [Raport o osłonie umysłu](#material/harkan-mind-report).
+
+- **Bez testu:** zwykłe przeszukanie piętra ujawnia niezamkniętą kasetę. Dokument nie wymaga dotykania korony, śmierci Iviry ani ukończenia rytuału.
+- **Odczytanie:** zapis w Loross; materiał dla graczy jest tłumaczeniem i można przekazać go w całości. Duch może odczytać pokazany tekst telepatycznie Harkanowi. Obowiązują też zwykłe [zasady Loross](#material/s210a67f4cc8e).
+- **Odkrycie:** trwały wpływ spaczonego chardalynu można osłaniać bez usunięcia jego przyczyny. Raport opisuje dawnego chorego, nie ojca Harkana. Wskazuje chardalynowy kostur i instrukcję w [magazynie Y19f](#material/sf00d04ac81e9/harkan-staff-discovery).
+- **Moonbow — tylko w myślach Harkana:** „Pamiętam ten znak. Robiono takie osłony. Poszukajmy egzemplarza, zanim uznamy, że przepadł razem z resztą”. Duch pomaga połączyć tropy, lecz nie zna metody przed odczytaniem raportu.
+- **Granica:** raport nie zmienia działania korony i nie rozwiązuje sytuacji Iviry. Kostur jest nagrodą dla ojca Harkana, a jego osłona nie jest uniwersalnym leczeniem wszystkich chorób nekropolii.
+
+[Prowadzenie wątku i zasady kostura — dla MG](#material/harkan-thread/harkan-staff-protection).
 
 ### Przeklęta korona {#s097e641d7758}
 
