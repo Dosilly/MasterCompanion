@@ -5,11 +5,17 @@ folderId: s1e3ee963d887
 sortOrder: 83
 ---
 
-**Do odczytania**
+**Do odczytania — wariant 1: Kontrola, która się nie kończy**
 
-> Kilka jednakowych twarzy obraca się ku wam jednocześnie. Uzbrojeni strażnicy robią miejsce postaci, która powoli unosi pustą dłoń. Jej usta pozostają zamknięte, lecz w głowie rozlega się polecenie: „Zatrzymajcie się”.
+> Kilka jednakowych twarzy obraca się ku wam jednocześnie. Strażnicy z bronią robią miejsce postaci, która unosi pustą dłoń i czeka, aż na nią spojrzycie. Jej usta pozostają zamknięte, lecz w głowie rozlega się wyraźne polecenie: „Zatrzymajcie się. Kontrola uprawnień”. Postać wskazuje miejsce, w którym macie stanąć, a potem pustą przestrzeń obok siebie, jakby zostawiała ją komuś wyższemu rangą. „Nadzorca przybędzie” — oznajmia po chwili z tą samą pewnością.
+
+**Do odczytania — wariant 2: Czy ktoś wyda nowy rozkaz?**
+
+> Zbliżający się strażnicy zatrzymują się w równym szeregu. Jeden wychodzi przed pozostałych i wyciąga ku wam pustą dłoń; bez ruchu ust pyta w waszych głowach: „Uprawnienia?”. Czeka na odpowiedź, a potem zwraca twarz ku drugiemu strażnikowi, który nie reaguje. Kiedy znów patrzy na was, pytanie ustępuje poleceniu: „Pozostać do przybycia nadzorcy”. Uzbrojone postacie zaczynają zajmować drogę odwrotu.
 
 ### Sytuacja i zasady — dla MG {#scef122b0fa77}
+
+-   **Prowadzenie wariantów — propozycja MG:** pierwszy patrol od początku egzekwuje kontrolę i bezterminowe oczekiwanie. W drugim hypnos najpierw szuka osoby z rzeczywistymi uprawnieniami, lecz wobec ich braku wraca do ostatniego rozkazu; pytanie daje czas na reakcję, a nie automatyczny sposób oszukania strażników. W obu wersjach cisza na miejscu nadzorcy powinna stopniowo ujawniać, że nikt nie przyjdzie; wypowiedzi telepatyczne odczytaj dopiero w zasięgu zdolności.
 
 -   **Skład:** **1k4 + 1 demos magen** i **1k4 hypnos magen**. Telepatyczne polecenie pojawia się dopiero w zasięgu odpowiedniej zdolności; samo w sobie nie zmusza do posłuszeństwa.
 

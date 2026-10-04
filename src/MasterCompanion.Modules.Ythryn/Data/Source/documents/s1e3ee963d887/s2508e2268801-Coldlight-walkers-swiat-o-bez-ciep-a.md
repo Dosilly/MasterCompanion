@@ -5,11 +5,17 @@ folderId: s1e3ee963d887
 sortOrder: 87
 ---
 
-**Do odczytania**
+**Do odczytania — wariant 1: Światło szuka twarzy**
 
-> Na granicy widzenia pojawia się ostre, białe światło. Kołysze się w rytm nierównych kroków, coraz bliżej. W jego blasku widać sztywną sylwetkę w przemarzniętym ubraniu; nie trzyma latarni, a mimo to światło obraca się razem z jej głową.
+> Ostre, białe światło powoli przesuwa się po kamieniu. Zatrzymuje się, cofa i przechodzi po tym samym miejscu jeszcze raz, jak latarnia kogoś, kto czegoś szuka. Nierówne kroki przybliżają sztywną sylwetkę w przemarzniętym ubraniu. Postać nie niesie niczego w dłoniach; blask wydobywa się z miejsca, w którym powinna być twarz. Gdy obraca głowę ku wam, światło odcina od ciemności każdy szczegół na swojej drodze.
+
+**Do odczytania — wariant 2: Niedokończony gest**
+
+> Z ciemności wyłania się biały blask, a wraz z nim powłóczące kroki. Zamarznięta postać zatrzymuje się na moment i unosi pustą rękę do piersi, jakby sprawdzała obecność czegoś pod ubraniem. Palce nie potrafią się zacisnąć, więc dłoń po chwili opada. Głowa obraca się dalej, omiatając otoczenie ostrym światłem. Postać rusza ponownie, zostawiając za sobą drobiny lodu osypujące się z rękawa.
 
 ### Sytuacja i zasady — dla MG {#s163b5aefc39c}
+
+-   **Prowadzenie wariantów — propozycja MG:** w pierwszym nieumarli przeszukują dostępne zakamarki, a ruch blasku pozwala ocenić kierunek ich uwagi i spróbować się ukryć. W drugim bezcelowy gest jest śladem dawnego życia, nie dowodem odzyskanej świadomości ani obietnicą rozmowy. Jeśli Auril rzeczywiście przemieniła znanego kultystę, widoczne wyposażenie może umożliwić rozpoznanie; w przeciwnym razie nie przypisuj postaci tożsamości członka ekspedycji.
 
 -   **Warunek i skład:** **Auril przybyła**; wynik **61–65** daje **1k3 coldlight walkers**. Zasłonięte źródło widać dopiero przez istniejący otwór lub po wyjściu zza przeszkody.
 

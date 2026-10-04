@@ -5,11 +5,17 @@ folderId: s1e3ee963d887
 sortOrder: 82
 ---
 
-**Do odczytania**
+**Do odczytania — wariant 1: Granica służby**
 
-> Równy tupot nagle ustaje. Przed wami stoją milczące postacie o niemal identycznych twarzach. Pierwszy szereg unosi broń; za nim po dłoniach kolejnego strażnika przeskakuje błękitna iskra.
+> Równego rytmu kroków nie zakłóca ani jedno potknięcie. Milczący strażnicy o niemal identycznych twarzach zagradzają wam drogę i zatrzymują się jednocześnie, jak części jednego mechanizmu. Pierwszy szereg unosi broń, a stojąca za nim postać wyciąga rękę z dłonią zwróconą ku ziemi. Między jej palcami przeskakuje błękitna iskra. Gest nakazujący cofnięcie powtarza się raz, po czym ręka powoli obraca się w waszą stronę.
+
+**Do odczytania — wariant 2: Wstrzymany pochód**
+
+> Zbliżający się tupot na chwilę zatrzymuje się, znów rusza i po kilku krokach ponownie milknie. Jednakowe postacie obchodzą przeszkodę pojedynczo, po czym cierpliwie odtwarzają poprzedni szyk. Ostatni strażnik dopiero zajmuje miejsce, gdy wszystkie twarze obracają się ku wam. Pomiędzy dłońmi postaci z tyłu pojawia się krótki błękitny łuk. Ci z przodu przesuwają broń tak, by zasłonić przejście, które właśnie sobie otworzyli.
 
 ### Sytuacja i zasady — dla MG {#s390302d07478}
+
+-   **Prowadzenie wariantów — propozycja MG:** w pierwszym drużyna trafia na patrol stojący na granicy dawnego obszaru zakazanego; jego gest jasno wyznacza możliwość odwrotu. W drugim strażnicy obchodzą rzeczywistą przeszkodę na trasie i dopiero zbierają szyk, więc bohaterowie mogą się wycofać albo poszukać innej drogi, zanim patrol ją zajmie. Jeśli teren nie zapewnia przeszkody ani miejsca na obejście, wybierz pierwszy wariant.
 
 -   **Skład:** **1k4 + 1 demos magen** z przodu i **1k4 galvan magen** za nimi.
 

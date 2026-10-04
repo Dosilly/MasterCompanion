@@ -5,11 +5,17 @@ folderId: s1e3ee963d887
 sortOrder: 88
 ---
 
-**Do odczytania**
+**Do odczytania — wariant 1: Miejsce dla uciekinierów**
 
-> Ciężki krok przeplata się z szybszym stukotem pazurów. Rozlega się głębokie warczenie, a po nim spokojny głos: „Czuję was”. Wielki biały wilk wysuwa łeb do przodu; dalej coś ogromnego porusza się z suchym klekotem kości.
+> Szybki stukot pazurów cichnie, ustępując ciężkim krokom i suchemu klekotowi kości. Wielki biały wilk wysuwa łeb, węszy i odwraca się na moment ku ogromnej sylwetce pozostającej dalej. „Nie spiesz się” — mówi spokojnie. „Oni sami podejdą”. Potem obniża łeb, odsłania zęby i robi wam miejsce po stronie, z której dobiega klekot.
+
+**Do odczytania — wariant 2: Głos przy schronieniu**
+
+> Tuż za wejściem słychać pazury drapiące podłoże. „Możecie tam zostać” — odzywa się głęboki, spokojny głos. Wielki biały wilk przechyla łeb, jakby nasłuchiwał odpowiedzi, po czym odsuwa się od przejścia. Dalej rozlega się ciężki krok i grzechot ogromnych kości. „My też mamy czas” — dodaje wilk i kładzie się tak, by widzieć wyjście.
 
 ### Sytuacja i zasady — dla MG {#s70f7d4aca56e}
+
+-   **Prowadzenie wariantów — propozycja MG:** w pierwszym wilki celowo zostawiają pozornie łatwą drogę ku szkieletowi; wybór innej trasy lub atak na wilki psuje nagonkę. Drugi pasuje do schronienia z wejściem zbyt małym dla olbrzyma: wilki najpierw próbują wymusić wyjście groźbą, a dopiero potem szukają rzeczywistej drogi do środka. Użyj dialogu wobec wykrytej drużyny; polujący nie poznają miejsca ukrycia bohaterów z samego opisu.
 
 -   **Warunek i skład:** **Auril przybyła**; wynik **66–70** daje jeden **frost giant skeleton** i **1k3 winter wolves**. Na otwartej przestrzeni widoczny jest cały kościany olbrzym; w ciasnym miejscu pozostaje przy najbliższym dostępnym wejściu.
 

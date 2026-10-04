@@ -5,11 +5,17 @@ folderId: s1e3ee963d887
 sortOrder: 79
 ---
 
-**Do odczytania**
+**Do odczytania — wariant 1: Proszę się cofnąć**
 
-> Słychać krótkie stuknięcia, podobne do niecierpliwego bębnienia palcami. W powietrzu przesuwa się ogromna, świetlista dłoń. Rozkłada palce, obraca wnętrze ku wam i powoli zaczyna je zaciskać.
+> W ciszy odzywa się niecierpliwe bębnienie, zbyt głośne, by mogły je wywołać ludzkie palce. Ogromna, świetlista dłoń przesuwa się w powietrzu i zatrzymuje przed wami z wyprostowanym palcem wskazującym. Wskazuje miejsce za waszymi plecami, czeka, po czym powtarza gest wolniej, jak wobec kogoś, kto nie zrozumiał polecenia. Kiedy opuszcza palec, obraca ku wam wnętrze dłoni. Pozostałe palce zaczynają się zginać jeden po drugim.
+
+**Do odczytania — wariant 2: Praca musi trwać**
+
+> Słychać powtarzające się szuranie, przerywane krótkimi stuknięciami. Świetlista dłoń wielkości człowieka zsuwa drobny gruz w jedno miejsce, po czym wraca do punktu, który przed chwilą oczyściła. Powtarza pusty ruch jeszcze raz, jakby wciąż leżało tam coś, co dawno zniknęło. Gdy was zauważa, zastyga z rozłożonymi palcami. Następnie odrywa się od swojej pracy i odwraca ku wam dokładnie tak, jak przed chwilą ku stercie odpadków.
 
 ### Sytuacja i zasady — dla MG {#sa083075f8a0b}
+
+-   **Prowadzenie wariantów — propozycja MG:** pierwszy wariant daje czytelne ostrzeżenie i chwilę na odwrót, zanim dłoń podejmie działanie. W drugim zaklęcie nadal porządkuje dawny obszar pracy i traktuje żywe istoty jako kolejną przeszkodę; cofnięcie pozwala obserwować jego powtarzalną trasę i wybrać moment obejścia. Żadna wersja nie wymaga obecności ani powrotu czarodzieja, który wydał polecenie.
 
 -   **Skład:** **1k3 living Bigby's hands**. Przy kilku dłoniach pozostałe nadciągają za pierwszą; nie otaczają automatycznie drużyny.
 

@@ -5,7 +5,9 @@ folderId: s1e3ee963d887
 sortOrder: 77
 ---
 
--   **Miejsce:** każdy wstęp zaczyna się od dźwięku, ruchu lub zachowania istot. Nie wymaga ulicy, konkretnego budynku, pogody ani kierunku marszu. Scenka działa także podczas postoju.
+-   **Warianty:** każde spotkanie ma dwa alternatywne wprowadzenia i wskazówkę dla MG. Wybierz jedno pasujące do aktualnego miejsca i zachowania drużyny; warianty nie są kolejnymi etapami sceny i nie wymagają dodatkowego rzutu. Drugi wariant może zmienić sytuację wyjściową, ale zachowuje skład i zasady spotkania.
+
+-   **Miejsce:** wstępy zaczynają się od dźwięku, ruchu lub zachowania istot. Nie wymagają konkretnej ulicy, budynku ani kierunku marszu. Jeśli wariant zakłada przeszkodę, rumowisko albo schronienie, użyj go tylko tam, gdzie rzeczywiście występują; w pozostałych miejscach wybierz drugi opis. Scenki mogą działać także podczas postoju.
 
 -   **Dostęp:** przeciwnicy zbliżają się najbliższą dostępną drogą. W małym pomieszczeniu duże istoty pozostają na zewnątrz lub przy wejściu; ich odgłosy zapowiadają spotkanie. Zamknięte drzwi, pole siłowe i ukrycie drużyny zachowują znaczenie. Odizolowana przestrzeń może pozwolić przeczekać zagrożenie.
 

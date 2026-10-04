@@ -5,11 +5,17 @@ folderId: s1e3ee963d887
 sortOrder: 85
 ---
 
-**Do odczytania**
+**Do odczytania — wariant 1: Oczekiwani goście**
 
-> Słychać szuranie stóp, po którym zapada cisza. Nad ziemią unosi się ludzka czaszka; blade znaki pojawiają się nad nią i gasną. Jednookie istoty trzymają się z tyłu, a czaszka obraca się powoli od jednej osoby do drugiej.
+> Szuranie stóp milknie, a z ciemności wynurza się ludzka czaszka unosząca się nad ziemią. Podążająca za nią jednooka istota cofa się i pochyla głowę, pozostawiając przed swoim panem wolne miejsce. Czaszka zatrzymuje się naprzeciw was, obraca ku jednej osobie, potem ku następnej. Czeka dłużej, niż trwa zwykłe spojrzenie. Gdy nikt nie występuje naprzód, podpływa odrobinę bliżej i znów zastyga, jak gospodarz oczekujący dawno obiecanej odpowiedzi.
+
+**Do odczytania — wariant 2: Milczący świadek**
+
+> Ciche kroki urywają się w pobliżu, ale ich właściciel nie wychodzi wam naprzeciw. Nieopodal unosi się ludzka czaszka, zwrócona ku waszym dłoniom; za nią czeka przygarbiona, jednooka istota. Czaszka powoli przenosi uwagę z niesionego wyposażenia na najbliższy ślad ruin. Potem znów obraca się ku wam. Nie wydaje żadnego dźwięku i nie rusza dalej, zostawiając wam pierwszy ruch.
 
 ### Sytuacja i zasady — dla MG {#sdda62fe2f42e}
+
+-   **Prowadzenie wariantów — propozycja MG:** w pierwszym Iriolarthas oczekuje, że przybysze rozpoczną ratowanie enklawy; nothiki odsuwają się z przyzwyczajenia, bez tłumaczenia jego zamiaru. W drugim pojawia się podczas oglądania lub przeszukiwania ruin i ocenia, czy drużyna bada uszkodzenia, czy zabiera własność miasta. Daj bohaterom czas na zauważenie obserwatora i świadomą odpowiedź zachowaniem; wcześniejsze rozpoznanie ich jako grabieżców wyklucza ponowne powitanie jak ratowników.
 
 -   **Skład:** **Iriolarthas, demilich**, oraz **1k3 nothics**. Nothiki mówią **Loross**, otwierają i zamykają drzwi oraz usuwają przeszkody za pana. Nie przechodzą dowolnie przez zabezpieczenia.
 

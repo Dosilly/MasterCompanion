@@ -157,6 +157,24 @@ dotnet test tests/MasterCompanion.Gameplay.Tests.Integration --filter FullyQuali
 pnpm --dir src/mastercompanion-web test:gameplay
 ```
 
+## Encounter narration refresh — 4 October 2026
+
+All eleven encounter materials now offer two alternative Polish read-aloud
+introductions, normally five sentences each, and a short GM note explaining the
+starting situation and player choices. The scenes emphasize warning signs,
+unfinished duties, hunger, surveillance and pursuit before combat. Variants are
+chosen to match the existing terrain and campaign state; they are alternatives,
+not sequential events or additional rolls.
+
+The encounter table, creature quantities, arrival conditions, rules, stable
+material IDs and existing section anchors remain unchanged. GM additions remain
+explicitly identified and do not grant automatic attacks, knowledge or powers.
+The local development campaign receives only these eleven materials and the
+variant-selection guidance through revision-checked material saves.
+
+Scoped verification covers module compilation, rich-document schema round trips,
+internal links and source export/recompilation. The table source has no diff.
+
 ## Deferred scope
 
 Auril's later hourly pursuit, automatic patrol casualty accounting, creature
