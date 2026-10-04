@@ -196,12 +196,12 @@ export class MaterialView implements AfterViewInit, OnDestroy {
       this.session().error.set('clipboardUnavailable');
     }
   }
-  scrollToAnchor(id: string) {
+  scrollToAnchor(id: string): boolean {
     const element = Array.from(
       this.editorElement().nativeElement.querySelectorAll<HTMLElement>('[id]'),
     ).find((item) => item.id === id);
     if (!element) {
-      return;
+      return false;
     }
     for (let parent = element.parentElement; parent; parent = parent.parentElement) {
       if (parent instanceof HTMLDetailsElement) {
@@ -209,6 +209,7 @@ export class MaterialView implements AfterViewInit, OnDestroy {
       }
     }
     element.scrollIntoView({ block: 'start' });
+    return true;
   }
   ngOnDestroy() {
     this.editor?.destroy();

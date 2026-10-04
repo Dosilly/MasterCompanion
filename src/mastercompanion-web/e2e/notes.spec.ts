@@ -97,11 +97,8 @@ test('Root note creation preserves keyboard focus and opens a persisted reader @
   await page.reload();
 
   // Assert
-  await expect(page.getByRole('heading', { name: readerTitle, exact: true })).toBeVisible();
-
-  // Act
-  await page.locator('[data-folder-id="@unfiled"] > summary').click();
-  await page.getByRole('button', { name: 'Campaign note', exact: true }).click();
+  await expect(page).toHaveURL(new RegExp(`/materials/${created.id}$`));
+  await expect(page.getByRole('heading', { name: 'Campaign note', exact: true })).toBeVisible();
 
   // Assert
   await expect(note.getByLabel(text('engine', 'material', 'contentLabel'))).toHaveAttribute(

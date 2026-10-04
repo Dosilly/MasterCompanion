@@ -48,13 +48,15 @@ export class TestApi {
   readonly completedSearches: string[] = [];
   readonly searchResponses = new Map<string, MaterialSearchResponse>();
   readonly materialReadFailures = new Map<string, number>();
+  readonly materialReads: string[] = [];
+  readonly completedMaterialReads: string[] = [];
   readonly materialReadGates = new Map<string, ReturnType<typeof Promise.withResolvers<void>>>();
   readonly searchGates = new Map<string, ReturnType<typeof Promise.withResolvers<void>>>();
   searchFailures = 0;
   savedDocument: unknown = this.data.materials[0].document;
   revision = this.data.materials[0].revision;
   workspaceFailures = 0;
-  saveMode: 'success' | 'hold' | 'conflict' = 'success';
+  saveMode: 'success' | 'hold' | 'conflict' | 'failure' = 'success';
   creationMode: 'success' | 'hold' | 'invalid' | 'lostResponse' = 'success';
   private readonly saveGate = Promise.withResolvers<void>();
   private readonly creationGate = Promise.withResolvers<void>();
@@ -207,6 +209,7 @@ export class TestApi {
           this.data.materials.find((item) => path === `/api/materials/${item.id}`) ??
           this.createdMaterials.find((item) => path === `/api/materials/${item.id}`);
         if (material && method === 'GET') {
+          this.materialReads.push(material.id);
           await this.materialReadGates.get(material.id)?.promise;
           const failures = this.materialReadFailures.get(material.id) ?? 0;
           if (failures > 0) {
@@ -224,6 +227,7 @@ export class TestApi {
                     document: this.noteDocuments.get(material.id) ?? material.document,
                   },
           });
+          this.completedMaterialReads.push(material.id);
           return;
         }
         if (
@@ -236,9 +240,10 @@ export class TestApi {
           if (this.saveMode === 'hold') {
             await this.saveGate.promise;
           }
-          if (this.saveMode === 'conflict') {
-            this.expectedHttpErrors.push({ url: request.url(), status: 409 });
-            await route.fulfill({ status: 409, json: { code: 'revisionConflict' } });
+          if (this.saveMode === 'conflict' || this.saveMode === 'failure') {
+            const status = this.saveMode === 'conflict' ? 409 : 503;
+            this.expectedHttpErrors.push({ url: request.url(), status });
+            await route.fulfill({ status, json: { code: 'fixtureSaveFailure' } });
           } else {
             const revision = material.id === readerId ? this.revision : material.revision;
             expect(

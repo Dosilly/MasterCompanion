@@ -241,3 +241,18 @@ literal case-insensitive phrase matching over extracted text without persisted
 indexes or schema changes. This avoids a campaign backfill at the present catalog
 size. Indexed text projection, fuzzy matching and language stemming remain
 separate future scope. See [search scope and evidence](20-Material-search.md).
+
+## Workspace URL navigation — 4 October 2026
+
+The Angular host declares routes under one persistent workspace parent. The engine
+owns URL decoding, latest navigation intent, campaign target resolution, history
+synchronization and recovery. Workspace material sessions and mounted editor/map
+views remain independent of route activation. The neutral UI and module contracts
+are unchanged; semantic module material requests enter the same navigation owner.
+
+Material/section, specific-map, game, party and explicitly empty workspace
+addresses operate on the current single campaign. Navigation is a UI operation:
+it neither saves documents nor performs or undoes gameplay writes. Direct links
+start new material sessions in read mode. The API host serves deep SPA addresses,
+including dotted IDs, while missing API routes and assets retain HTTP failures.
+See [the routing contract and verification](22-Workspace-routing.md).

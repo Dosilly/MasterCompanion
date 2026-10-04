@@ -27,6 +27,8 @@ if (Directory.Exists(app.Environment.WebRootPath))
     app.UseStaticFiles();
     // Missing API routes must not return the SPA document with a success status.
     app.MapFallback("/api/{**path}", () => Results.NotFound());
+    app.MapFallbackToFile("/materials/{**path}", "index.html");
+    app.MapFallbackToFile("/maps/{**path}", "index.html");
     app.MapFallbackToFile("index.html");
 }
 app.MapDefaultEndpoints();

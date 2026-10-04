@@ -83,6 +83,21 @@ export function createUiServer(directory) {
       response.end(request.method === 'HEAD' ? undefined : body);
     } catch (error) {
       if (error.code === 'ENOENT' || error.code === 'ENOTDIR') {
+        if (!extname(pathname) || /^\/(materials|maps)\//.test(pathname)) {
+          try {
+            const document = await readFile(resolve(directory, 'index.html'));
+            response.writeHead(200, {
+              'Content-Type': 'text/html; charset=utf-8',
+              'Cache-Control': 'no-store',
+            });
+            response.end(request.method === 'HEAD' ? undefined : document);
+            return;
+          } catch (fallbackError) {
+            if (fallbackError.code !== 'ENOENT') {
+              console.error('Could not serve the SPA document.', fallbackError);
+            }
+          }
+        }
         response.writeHead(404).end();
         return;
       }

@@ -10,7 +10,46 @@ function directory(t) {
   t.after(() => rmSync(path, { recursive: true, force: true }));
   return path;
 }
+
+async function serve(t, web) {
+  const server = createUiServer(web);
+  server.listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  t.after(
+    () =>
+      new Promise((resolveClose, reject) =>
+        server.close((error) => (error ? reject(error) : resolveClose())),
+      ),
+  );
+  const address = server.address();
+  assert.ok(address && typeof address !== 'string');
+  return `http://127.0.0.1:${address.port}`;
+}
 describe('Isolated UI test server', () => {
+  for (const path of [
+    '/materials/ui-reader',
+    '/materials/module:note.one',
+    '/maps/map.one',
+    '/game',
+    '/party',
+    '/workspace',
+    '/unknown-location',
+  ]) {
+    test(`Deep link ${path} returns the SPA document for GET and HEAD`, async (t) => {
+      const web = directory(t);
+      writeFileSync(resolve(web, 'index.html'), '<main>UI fixture</main>');
+      const origin = await serve(t, web);
+
+      const response = await fetch(origin + path);
+      const head = await fetch(origin + path, { method: 'HEAD' });
+
+      assert.equal(response.status, 200);
+      assert.equal(await response.text(), '<main>UI fixture</main>');
+      assert.match(response.headers.get('content-type'), /^text\/html/);
+      assert.equal(head.status, 200);
+      assert.equal(await head.text(), '');
+    });
+  }
   test('UI build cache changes with source, localization and dependencies, but not reports', (t) => {
     // Arrange
     const root = directory(t);
@@ -66,24 +105,7 @@ describe('Isolated UI test server', () => {
     writeFileSync(resolve(web, 'app.js'), 'export const fixture = true;');
     writeFileSync(resolve(root, 'outside.txt'), 'private fixture');
     // Arrange
-    const server = createUiServer(web);
-
-    // Act
-    server.listen(0, '127.0.0.1');
-    await once(server, 'listening');
-    // Arrange
-    t.after(
-      () =>
-        new Promise((resolveClose, reject) =>
-          server.close((error) => (error ? reject(error) : resolveClose())),
-        ),
-    );
-    const address = server.address();
-
-    // Assert
-    assert.ok(address && typeof address !== 'string');
-    // Arrange
-    const origin = `http://127.0.0.1:${address.port}`;
+    const origin = await serve(t, web);
 
     // Act
     const index = await fetch(origin);
