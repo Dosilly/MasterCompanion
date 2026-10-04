@@ -62,6 +62,28 @@ function confirmedWorkspace(workspace: WorkspaceMaterials): WorkspaceDto {
 }
 
 describe('Confirmed notes and workspace navigation', () => {
+  test('Opening a persisted search result absent from startup summaries adds its canonical summary without replacing existing drafts', async () => {
+    // Arrange
+    const { workspace, oldSession, requests } = fixture();
+    const originalDraft = oldSession.document;
+    const remote = material('remote-note', 'Note created in another window', 'child', 3);
+
+    // Act
+    const opened = workspace.open(remote.id);
+    requests[0].response.next(remote);
+    requests[0].response.complete();
+    const remoteSession = await opened;
+
+    // Assert
+    assert.equal(confirmedWorkspace(workspace).materials.length, 2);
+    assert.equal(confirmedWorkspace(workspace).materials[1].id, remote.id);
+    assert.equal(remoteSession.material, remote);
+    assert.equal(remoteSession.editing(), false);
+    assert.equal(workspace.sessions()[0], oldSession);
+    assert.equal(oldSession.document, originalDraft);
+    assert.equal(oldSession.dirty(), true);
+  });
+
   test('Concurrent opens share one read and retain the same session on later opens', async () => {
     // Arrange
     const transport = new ControlledHttp((value) => value);
@@ -136,7 +158,6 @@ describe('Confirmed notes and workspace navigation', () => {
     const tree = buildNavigation(
       confirmedWorkspace(workspace).folders,
       confirmedWorkspace(workspace).materials,
-      '',
       'Unfiled',
     );
 
@@ -177,12 +198,14 @@ describe('Confirmed notes and workspace navigation', () => {
     const tree = buildNavigation(
       confirmedWorkspace(workspace).folders,
       confirmedWorkspace(workspace).materials,
-      created.title,
       'Unfiled',
     );
 
     // Assert
-    assert.equal(tree[0].children[0].materials[0].id, created.id);
+    assert.deepEqual(
+      tree[0].children[0].materials.map((item) => item.id),
+      ['existing-note', created.id],
+    );
 
     // Act
     const actual1 = folderPath(confirmedWorkspace(workspace).folders, created.folderId);

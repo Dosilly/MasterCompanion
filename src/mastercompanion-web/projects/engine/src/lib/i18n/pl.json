@@ -5,8 +5,7 @@
     "lightMode": "Tryb jasny",
     "retry": "Ponów",
     "navigationLabel": "Materiały kampanii",
-    "materials": "Materiały",
-    "searchPlaceholder": "Szukaj po nazwie…",
+    "searchPlaceholder": "Szukaj w tytułach i treści…",
     "noSearchResults": "Brak materiałów pasujących do wyszukiwania.",
     "unfiledMaterials": "Pozostałe materiały",
     "tabsLabel": "Otwarte materiały",
@@ -20,6 +19,18 @@
       "campaignLoadFailed": "Nie udało się wczytać kampanii. Sprawdź, czy backend i baza działają.",
       "materialNotFound": "Ten materiał nie jest dostępny w kampanii.",
       "materialLoadFailed": "Nie udało się otworzyć materiału. Spróbuj ponownie."
+    }
+  },
+  "search": {
+    "label": "Szukaj materiałów",
+    "loading": "Wyszukiwanie materiałów…",
+    "resultsLabel": "Wyniki wyszukiwania",
+    "moreResults": "Wyświetlono pierwsze 50 wyników. Doprecyzuj wyszukiwanie, aby znaleźć pozostałe.",
+    "persistedHint": "Wyniki obejmują zapisaną treść. Wyczyść wyszukiwanie lub naciśnij Escape, aby wrócić do folderów.",
+    "errors": {
+      "invalidQuery": "Wpisz frazę do 160 znaków, bez znaków sterujących.",
+      "campaignMissing": "Ta kampania nie jest już dostępna. Odśwież kampanię i spróbuj ponownie.",
+      "failed": "Nie udało się przeszukać materiałów. Spróbuj ponownie."
     }
   },
   "notes": {

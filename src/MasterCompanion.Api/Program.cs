@@ -34,6 +34,7 @@ GetWorkspace.Map(app);
 GetMaterial.Map(app);
 SaveMaterial.Map(app);
 CreateMaterial.Map(app);
+SearchMaterials.Map(app);
 GetAsset.Map(app);
 GameplayEndpoints.Map(app);
 

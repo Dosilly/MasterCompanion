@@ -87,12 +87,7 @@ describe('Module content and document round trips', () => {
       );
 
     // Act
-    const tree = buildNavigation(
-      seed.folders,
-      seed.materials,
-      '',
-      messages.workspace.unfiledMaterials,
-    );
+    const tree = buildNavigation(seed.folders, seed.materials, messages.workspace.unfiledMaterials);
     // Arrange
     const players = tree.find((folder) => folder.title === sourceFixture.playerTitle);
 
@@ -130,12 +125,7 @@ describe('Module content and document round trips', () => {
   });
   test('All numbered locations share one folder in adventure order without navigation-only materials', () => {
     // Act
-    const tree = buildNavigation(
-      seed.folders,
-      seed.materials,
-      '',
-      messages.workspace.unfiledMaterials,
-    );
+    const tree = buildNavigation(seed.folders, seed.materials, messages.workspace.unfiledMaterials);
     // Arrange
     const locations = tree.find((folder) => folder.title === sourceFixture.locationTitle);
 
@@ -202,7 +192,7 @@ describe('Module content and document round trips', () => {
       }
     }
   });
-  test('Search preserves the full ancestor path and opening a nested material can expand every folder', () => {
+  test('Opening a nested material can expand every folder in its ancestor path', () => {
     // Arrange
     const target = seed.materials.find((material) => material.title === sourceFixture.deviceTitle);
 
@@ -221,28 +211,12 @@ describe('Module content and document round trips', () => {
     );
 
     // Act
-    const tree = buildNavigation(
-      seed.folders,
-      seed.materials,
-      target.title,
-      messages.workspace.unfiledMaterials,
-    );
+    const tree = buildNavigation(seed.folders, seed.materials, messages.workspace.unfiledMaterials);
     // Arrange
     let branch = tree.find((folder) => folder.id === path[0]);
     for (const id of path.slice(1)) branch = branch.children.find((folder) => folder.id === id);
 
     // Assert
     assert.ok(branch.materials.some((material) => material.id === target.id));
-
-    // Act
-    const actual1 = buildNavigation(
-      seed.folders,
-      seed.materials,
-      'no-such-material',
-      messages.workspace.unfiledMaterials,
-    );
-
-    // Assert
-    assert.deepEqual(actual1, []);
   });
 });

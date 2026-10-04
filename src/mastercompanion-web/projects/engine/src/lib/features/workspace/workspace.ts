@@ -7,8 +7,10 @@ import {
   Injector,
   afterNextRender,
   computed,
+  effect,
   inject,
   signal,
+  untracked,
   viewChild,
   viewChildren,
 } from '@angular/core';
@@ -21,13 +23,15 @@ import { WorkspaceMaterials } from './workspace-materials';
 import { MaterialView } from '../materials/material-view';
 import { MaterialCreation } from '../materials/material-creation';
 import { MaterialCreationDialog } from '../materials/material-creation-dialog';
+import { MaterialSearch } from '../materials/material-search';
+import { MaterialSearchView } from '../materials/material-search-view';
 import { MapView } from '../maps/map-view';
 import { buildNavigation, folderPath } from './navigation';
 import { ThemePreference } from './theme-preference';
 import { GameSession } from '../gameplay/game-session';
 import { GameView } from '../gameplay/game-view';
 import { PartyView } from '../gameplay/party-view';
-import { UiMessages, uiLocale, uiMessages } from '../../i18n/messages';
+import { UiMessages, uiMessages } from '../../i18n/messages';
 
 @Component({
   selector: 'mc-workspace',
@@ -36,6 +40,7 @@ import { UiMessages, uiLocale, uiMessages } from '../../i18n/messages';
     NgTemplateOutlet,
     MaterialView,
     MaterialCreationDialog,
+    MaterialSearchView,
     MapView,
     GameView,
     PartyView,
@@ -54,7 +59,7 @@ export class Workspace {
   readonly workspace = this.materials.workspace;
   readonly sessions = this.materials.sessions;
   readonly active = signal('@map');
-  readonly search = signal('');
+  readonly materialSearch = signal<MaterialSearch | null>(null);
   readonly loadError = signal<keyof UiMessages['workspace']['errors'] | null>(null);
   readonly opening = signal(false);
   readonly mapOpen = signal(true);
@@ -82,9 +87,7 @@ export class Workspace {
     buildNavigation(
       this.workspace()?.folders ?? [],
       this.workspace()?.materials ?? [],
-      this.search(),
       this.ui.workspace.unfiledMaterials,
-      uiLocale,
     ),
   );
   private navigationRender?: AfterRenderRef;
@@ -94,6 +97,13 @@ export class Workspace {
       this.navigationRender?.destroy();
       this.game()?.destroy();
       this.creation()?.destroy();
+      this.materialSearch()?.destroy();
+    });
+    effect(() => {
+      for (const session of this.sessions()) {
+        session.confirmedRevision();
+      }
+      untracked(() => this.materialSearch()?.refresh());
     });
     void this.load();
   }
@@ -105,6 +115,8 @@ export class Workspace {
         throw new Error('No frontend implementation is registered for the campaign module.');
       }
       this.materials.initialize(workspace);
+      this.materialSearch()?.destroy();
+      this.materialSearch.set(new MaterialSearch(workspace.campaignId, this.http));
       if (this.game()?.campaignId !== workspace.campaignId) {
         this.game()?.destroy();
         let storage: Storage | null = null;
@@ -140,12 +152,35 @@ export class Workspace {
       this.loadError.set('materialNotFound');
       return;
     }
+    await this.loadAndActivateMaterial(id, anchor);
+  }
+
+  async openSearchResult(id: string): Promise<void> {
+    const search = this.materialSearch();
+    const state = search?.state();
+    if (state?.kind !== 'ready' || !state.results.some((result) => result.id === id)) {
+      return;
+    }
+    const query = search?.query();
+    if (
+      (await this.loadAndActivateMaterial(id)) &&
+      this.materialSearch() === search &&
+      search?.query() === query
+    ) {
+      search?.updateQuery('');
+    }
+  }
+
+  private async loadAndActivateMaterial(id: string, anchor?: string): Promise<boolean> {
     this.opening.set(true);
+    this.loadError.set(null);
     try {
       await this.materials.open(id);
       this.activate(id, anchor);
+      return true;
     } catch {
       this.loadError.set('materialLoadFailed');
+      return false;
     } finally {
       this.opening.set(false);
     }
@@ -181,13 +216,6 @@ export class Workspace {
     this.active.set(id);
     const material = this.workspace()?.materials.find((material) => material.id === id);
     if (material) {
-      if (
-        !material.title
-          .toLocaleLowerCase(uiLocale)
-          .includes(this.search().trim().toLocaleLowerCase(uiLocale))
-      ) {
-        this.search.set('');
-      }
       this.expanded.update(
         (current) =>
           new Set([
@@ -243,7 +271,7 @@ export class Workspace {
   }
 
   toggleFolder(id: string, event: Event) {
-    if (this.search() || !(event.target instanceof HTMLDetailsElement)) {
+    if (!(event.target instanceof HTMLDetailsElement)) {
       return;
     }
     const open = event.target.open;
@@ -256,12 +284,6 @@ export class Workspace {
       }
       return next;
     });
-  }
-
-  updateSearch(event: Event) {
-    if (event.target instanceof HTMLInputElement) {
-      this.search.set(event.target.value);
-    }
   }
 
   tabKey(event: KeyboardEvent) {

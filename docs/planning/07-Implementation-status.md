@@ -1,4 +1,23 @@
 # Implementation status
+## Campaign material search — 4 October 2026
+
+Implemented on `codex/material-full-text-search` with parallel backend, frontend
+and independent browser/review ownership. Search covers persisted campaign
+titles and rich-document text, including user notes, with bounded plain-text
+snippets and title-first results. It replaces the local title filter and preserves
+mounted editors, drafts, reading positions and map orientation. Confirmed saves
+refresh active results; failed saves and unsaved drafts are not searchable content.
+
+Verification passed 33 isolated PostgreSQL/HTTP cases, 31 frontend cases, three
+selected navigation/content cases and all 72 selected browser cases across themes
+and viewports using scoped reruns. Sixteen existing and four new baselines were
+reviewed; normal comparisons passed. Full solution and frontend builds, final API
+compilation, formatting, lint, typed fixtures, locale and boundary checks passed.
+No persistence migration or module-content change was needed. Literal phrase
+matching and per-request campaign scans are deliberate current limits.
+
+See [search delivery and deployment evidence](20-Material-search.md).
+
 ## Campaign read-aloud update — 4 October 2026
 
 At the user's request, applied the revised read-aloud prose to all 47 affected

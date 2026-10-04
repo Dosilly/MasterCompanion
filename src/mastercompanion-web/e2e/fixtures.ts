@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { test as base, expect, type Locator, type Page } from '@playwright/test';
-import type { MaterialDto } from '@mastercompanion/contracts';
+import type { MaterialDto, MaterialSearchResponse } from '@mastercompanion/contracts';
 import { campaignFixture, campaignId, readerId, readerTitle } from './fixtures/campaign';
 
 // Read canonical localization data, without importing private library implementations.
@@ -44,6 +44,13 @@ export class TestApi {
   readonly unexpectedRequests: string[] = [];
   readonly expectedHttpErrors: { url: string; status: number }[] = [];
   readonly expectedNetworkFailures: string[] = [];
+  readonly searches: string[] = [];
+  readonly completedSearches: string[] = [];
+  readonly searchResponses = new Map<string, MaterialSearchResponse>();
+  readonly materialReadFailures = new Map<string, number>();
+  readonly materialReadGates = new Map<string, ReturnType<typeof Promise.withResolvers<void>>>();
+  readonly searchGates = new Map<string, ReturnType<typeof Promise.withResolvers<void>>>();
+  searchFailures = 0;
   savedDocument: unknown = this.data.materials[0].document;
   revision = this.data.materials[0].revision;
   workspaceFailures = 0;
@@ -58,6 +65,19 @@ export class TestApi {
   releaseCreation() {
     this.creationGate.resolve();
   }
+  holdSearch(query: string) {
+    this.searchGates.set(query, Promise.withResolvers<void>());
+  }
+  releaseSearches() {
+    for (const gate of this.searchGates.values()) {
+      gate.resolve();
+    }
+  }
+  releaseMaterialReads() {
+    for (const gate of this.materialReadGates.values()) {
+      gate.resolve();
+    }
+  }
 
   async install(page: Page, origin: string) {
     // Catch every request before navigation. API calls never leave this browser context.
@@ -71,6 +91,37 @@ export class TestApi {
         return;
       }
       if (url.origin === origin) {
+        if (method === 'GET' && path === `/api/campaigns/${campaignId}/materials/search`) {
+          const query = url.searchParams.get('query');
+          if (query === null) {
+            throw new Error('Search requests require the query parameter.');
+          }
+          this.searches.push(query);
+          const response = this.searchResponses.get(query) ?? { results: [], hasMore: false };
+          await this.searchGates.get(query)?.promise;
+          if (this.searchFailures > 0) {
+            this.searchFailures--;
+            this.expectedHttpErrors.push({ url: request.url(), status: 503 });
+            await route.fulfill({
+              status: 503,
+              json: { code: 'fixtureUnavailable', detail: 'Private search diagnostic.' },
+            });
+          } else {
+            await route.fulfill({ json: response });
+          }
+          this.completedSearches.push(query);
+          return;
+        }
+        if (
+          method === 'GET' &&
+          this.data.workspace.maps.some((map) => path === `/api/assets/${map.assetId}`)
+        ) {
+          await route.fulfill({
+            contentType: 'image/svg+xml',
+            body: '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><rect width="800" height="600" fill="#567b87"/><path d="M0 300H800M400 0V600" stroke="#c3d0cd" stroke-width="8"/></svg>',
+          });
+          return;
+        }
         if (method === 'GET' && path === '/api/workspace') {
           if (this.workspaceFailures > 0) {
             this.workspaceFailures--;
@@ -156,6 +207,14 @@ export class TestApi {
           this.data.materials.find((item) => path === `/api/materials/${item.id}`) ??
           this.createdMaterials.find((item) => path === `/api/materials/${item.id}`);
         if (material && method === 'GET') {
+          await this.materialReadGates.get(material.id)?.promise;
+          const failures = this.materialReadFailures.get(material.id) ?? 0;
+          if (failures > 0) {
+            this.materialReadFailures.set(material.id, failures - 1);
+            this.expectedHttpErrors.push({ url: request.url(), status: 503 });
+            await route.fulfill({ status: 503, json: { code: 'fixtureUnavailable' } });
+            return;
+          }
           await route.fulfill({
             json:
               material.id === readerId
@@ -236,6 +295,8 @@ export const test = base.extend<{ api: TestApi }>({
       } finally {
         api.releaseSave();
         api.releaseCreation();
+        api.releaseSearches();
+        api.releaseMaterialReads();
         page.off('console', consoleListener);
         page.off('pageerror', runtimeListener);
         const unexpectedErrors = errors.filter(

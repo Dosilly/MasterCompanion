@@ -5,8 +5,7 @@
     "lightMode": "Light mode",
     "retry": "Retry",
     "navigationLabel": "Campaign materials",
-    "materials": "Materials",
-    "searchPlaceholder": "Search by name…",
+    "searchPlaceholder": "Search titles and content…",
     "noSearchResults": "No materials match the search.",
     "unfiledMaterials": "Unfiled materials",
     "tabsLabel": "Open materials",
@@ -20,6 +19,18 @@
       "campaignLoadFailed": "Could not load the campaign. Check that the backend and database are running.",
       "materialNotFound": "This material is not available in the campaign.",
       "materialLoadFailed": "Could not open the material. Please try again."
+    }
+  },
+  "search": {
+    "label": "Search materials",
+    "loading": "Searching materials…",
+    "resultsLabel": "Search results",
+    "moreResults": "Showing the first 50 results. Refine your search to find more.",
+    "persistedHint": "Results include saved content. Clear the search or press Escape to return to folders.",
+    "errors": {
+      "invalidQuery": "Enter a search phrase of up to 160 characters without control characters.",
+      "campaignMissing": "This campaign is no longer available. Reload the campaign and try again.",
+      "failed": "Could not search materials. Try again."
     }
   },
   "notes": {

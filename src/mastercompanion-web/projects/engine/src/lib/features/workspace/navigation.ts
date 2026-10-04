@@ -8,9 +8,7 @@ export interface FolderNode extends CampaignFolder {
 export function buildNavigation(
   folders: CampaignFolder[],
   materials: MaterialSummary[],
-  query: string,
   unfiledTitle: string,
-  locale = 'en',
 ): FolderNode[] {
   const nodes = new Map<string, FolderNode>(
     folders.map((folder) => [folder.id, { ...folder, children: [], materials: [] }]),
@@ -43,19 +41,7 @@ export function buildNavigation(
       unfiled.materials.push(material);
     }
   }
-  const search = query.trim().toLocaleLowerCase(locale);
-  const filter = (node: FolderNode): FolderNode => ({
-    ...node,
-    materials: node.materials.filter(
-      (material) => !search || material.title.toLocaleLowerCase(locale).includes(search),
-    ),
-    children: node.children
-      .map(filter)
-      .filter((node) => !search || node.materials.length || node.children.length),
-  });
-  return roots
-    .map(filter)
-    .filter((node) => !search || node.materials.length || node.children.length);
+  return roots;
 }
 
 export function folderPath(folders: CampaignFolder[], folderId: string | null): string[] {

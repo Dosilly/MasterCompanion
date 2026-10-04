@@ -3,6 +3,8 @@ export * from './lib/material-summary';
 export * from './lib/create-material-request';
 export * from './lib/campaign-folder';
 export * from './lib/material-dto';
+export * from './lib/material-search-result';
+export * from './lib/material-search-response';
 export * from './lib/map-marker';
 export * from './lib/campaign-map';
 export * from './lib/workspace-dto';

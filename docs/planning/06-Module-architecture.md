@@ -219,3 +219,25 @@ sessions and drafts stay mounted. Creation and later autosave are independent of
 game time, module state and game undo. Unfiled presentation is localized in the
 frontend rather than persisted as UI text. Details and verification are in
 [the campaign-note delivery plan](14-Campaign-notes.md).
+
+## Campaign material search — 4 October 2026
+
+Search is a read-only engine use case over persisted campaign-owned titles and
+supported document text. The API composition root registers `SearchMaterials`;
+adventure modules and the neutral UI boundary do not interpret search requests.
+`GET /api/campaigns/{campaignId}/materials/search?query=...` returns bounded
+plain-text snippets and stable material identities. The public frontend contract
+exports `MaterialSearchResult` and `MaterialSearchResponse`.
+
+The frontend engine owns request cancellation, latest-query state and localized
+search presentation in the existing navigation panel. Result activation reuses
+workspace navigation and material sessions. Confirmed save revisions and note
+creation can refresh an active query; pending drafts remain editor-owned and do
+not become searchable persisted data. Search neither advances game time nor
+changes material revisions or game-operation history.
+
+The initial server implementation streams campaign-scoped reads and performs
+literal case-insensitive phrase matching over extracted text without persisted
+indexes or schema changes. This avoids a campaign backfill at the present catalog
+size. Indexed text projection, fuzzy matching and language stemming remain
+separate future scope. See [search scope and evidence](20-Material-search.md).

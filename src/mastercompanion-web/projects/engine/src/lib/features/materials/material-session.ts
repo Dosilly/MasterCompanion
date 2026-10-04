@@ -11,7 +11,8 @@ export class MaterialSession {
   readonly error = signal<MaterialErrorCode | null>(null);
   readonly dirty = signal(false);
   document: RichDocument;
-  private revision: number;
+  private readonly confirmedRevisionState = signal(0);
+  readonly confirmedRevision = this.confirmedRevisionState.asReadonly();
   private generation = 0;
   private savedGeneration = 0;
   private timer?: ReturnType<typeof setTimeout>;
@@ -22,7 +23,7 @@ export class MaterialSession {
     private readonly http: HttpClient,
   ) {
     this.document = material.document;
-    this.revision = material.revision;
+    this.confirmedRevisionState.set(material.revision);
   }
   change(document: RichDocument) {
     this.document = document;
@@ -60,10 +61,10 @@ export class MaterialSession {
         const response = await firstValueFrom(
           this.http.put<{ revision: number }>(`/api/materials/${this.material.id}`, {
             document,
-            expectedRevision: this.revision,
+            expectedRevision: this.confirmedRevision(),
           }),
         );
-        this.revision = response.revision;
+        this.confirmedRevisionState.set(response.revision);
         this.savedGeneration = generation;
       } catch (error) {
         const conflict = error instanceof HttpErrorResponse && error.status === 409;

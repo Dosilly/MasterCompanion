@@ -35,14 +35,13 @@
 @if (workspace(); as data) {
   <div class="workspace-shell">
     <nav #navigation class="material-nav" [attr.aria-label]="ui.workspace.navigationLabel">
-      <label for="material-search">{{ ui.workspace.materials }}</label>
-      <input
-        id="material-search"
-        type="search"
-        [placeholder]="ui.workspace.searchPlaceholder"
-        [value]="search()"
-        (input)="updateSearch($event)"
-      />
+      @if (materialSearch(); as search) {
+        <mc-material-search
+          [search]="search"
+          [activeId]="active()"
+          (materialRequested)="openSearchResult($event)"
+        />
+      }
       <button class="new-note-button" (click)="openCreation($event)">{{ ui.notes.newNote }}</button>
       @if (creation()?.hasRecovery()) {
         <div class="note-recovery" role="status">
@@ -50,13 +49,15 @@
           <button (click)="openCreation($event)">{{ ui.notes.recover }}</button>
         </div>
       }
-      <ng-container *ngTemplateOutlet="folderTree; context: { $implicit: folders() }" />
+      @if (materialSearch()?.state().kind === 'idle') {
+        <ng-container *ngTemplateOutlet="folderTree; context: { $implicit: folders() }" />
+      }
       <ng-template #folderTree let-nodes>
         @for (folder of nodes; track folder.id) {
           <details
             class="nav-folder"
             [attr.data-folder-id]="folder.id"
-            [open]="!!search() || expanded().has(folder.id)"
+            [open]="expanded().has(folder.id)"
             (toggle)="toggleFolder(folder.id, $event)"
           >
             <summary>{{ folder.title }}</summary>
@@ -78,7 +79,7 @@
           </details>
         }
       </ng-template>
-      @if (!folders().length) {
+      @if (materialSearch()?.state().kind === 'idle' && !folders().length) {
         <p class="nav-empty">{{ ui.workspace.noSearchResults }}</p>
       }
     </nav>
