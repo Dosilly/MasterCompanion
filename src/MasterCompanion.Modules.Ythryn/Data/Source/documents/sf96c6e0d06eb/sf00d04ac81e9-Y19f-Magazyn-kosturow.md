@@ -5,7 +5,7 @@ folderId: sf96c6e0d06eb
 sortOrder: 42
 ---
 
-**W skrócie — dla MG:** Magazyn sześciu kosturów służących jako skupienia magiczne, w tym chardalynowego egzemplarza chroniącego trzymającą go istotę przed przerażeniem i zatruciem.
+**W skrócie — dla MG:** Magazyn sześciu kosturów, w tym chardalynowego egzemplarza chroniącego przed przerażeniem i zatruciem, który z instrukcją zestrojenia daje Harkanowi ochronę umysłu ojca.
 
 **Do odczytania**
 
@@ -32,5 +32,17 @@ W nieregularnej komnacie stojaki biegną wzdłuż ścian. Pozostało sześć kos
 5.  Kostur z **weirwood**, odpornego materiału podobnego do dębu. Trzon jest sękaty i poskręcany, a szczyt ma kształt ludzkiej dłoni ściskającej węża.
 
 6.  Kostur z **chardalynu**, nasycony netherilską magią. Trzymająca go istota jest odporna na stany przerażenia i zatrucia.
+
+### Wątek Harkana — kostur i instrukcja {#harkan-staff-discovery}
+
+**Dodatek MG. Przedmiot:** szósty kostur z listy, wykonany z chardalynu, z wyrytym znakiem otwartego kręgu otaczającego pionową kreskę. Obok jego uchwytu wisi płaskie metalowe etui z tym samym znakiem. Wewnątrz znajduje się [Chardalynowy kostur — instrukcja opiekuna](#material/harkan-staff-instructions). To ten sam kostur, nie drugi, nowo dodany przedmiot.
+
+- **Bez testu:** oglądanie stojaków ujawnia znak i niezamknięte etui. Kostur można zabrać razem z instrukcją. Nie wymaga to wcześniejszego znalezienia raportu, zestrojenia ani pokonania demilicha lub Auril; obowiązują zwykłe zagrożenia podczas dotarcia do iglicy.
+- **Odczytanie:** dokument spisano w Loross. Można przekazać tłumaczenie graczom w całości. Duch odczytuje pokazany tekst w myślach Harkana; dostępne są również zwykłe sposoby tłumaczenia.
+- **Nagroda:** po godzinnym zestrojeniu kostur osłania umysł ojca, dopóki znajduje się do **5 stóp** od niego. Nie trzeba go ściskać podczas snu. Ojciec odzyskuje jasność myślenia i normalne życie, ale spaczenie pozostaje. Bez ochrony dawne objawy stopniowo wracają w ciągu **1 godziny**; przywrócenie osłony uspokaja umysł w ciągu **1 minuty**.
+- **Samodzielna instrukcja:** opisuje ograniczenie, sposób zestrojenia z pomocą opiekuna, działanie poza Ythryn i przerwy w ochronie. Nie trzeba przynosić chorego do nekropolii. Odporność na przerażenie i zatrucie pozostaje osobną właściwością działającą podczas trzymania kostura.
+- **Moonbow — tylko w myślach Harkana:** po porównaniu znaku i instrukcji: „To ten. Nie usunie tego, co mu się stało, ale pozwoli mu znów być sobą. Możemy go zabrać do domu”.
+
+[Pełne zasady osłony — dla MG](#material/harkan-thread/harkan-staff-protection). [Powrót do ojca i wybór Moonbow w epilogu](#material/harkan-thread/harkan-epilogue).
 
 * * *

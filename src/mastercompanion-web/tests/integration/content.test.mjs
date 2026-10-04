@@ -17,10 +17,10 @@ import {
   folderPath,
 } from '../../projects/engine/src/lib/features/workspace/navigation';
 describe('Module content and document round trips', () => {
-  test('Organized source chapter has 106 readable materials, 10 folders, and 29 working markers', () => {
+  test('Organized source chapter has 109 readable materials, 11 folders, and 29 working markers', () => {
     // Assert
-    assert.equal(seed.materials.length, 106);
-    assert.equal(seed.folders.length, 10);
+    assert.equal(seed.materials.length, 109);
+    assert.equal(seed.folders.length, 11);
     assert.equal(seed.maps[0].markers.length, 29);
     for (const marker of seed.maps[0].markers)
       assert.ok(seed.materials.some((item) => item.id === marker.materialId));

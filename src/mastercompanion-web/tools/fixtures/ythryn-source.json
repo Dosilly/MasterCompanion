@@ -1,11 +1,14 @@
 {
   "metadataTitle": "Materiały redakcyjne",
-  "playerTitle": "Wątki graczy w Ythryn",
+  "playerTitle": "Wątki graczy",
   "characterTitle": "Fenes",
   "characterGuideTitle": "Fenes — droga przez wir — dla MG",
   "deviceTitle": "Przyrząd Dwóch Brzegów",
   "unicodeText": "ąęść",
   "materialFolders": {
+    "harkan-thread": "directory:harkan",
+    "harkan-mind-report": "directory:harkan",
+    "harkan-staff-instructions": "directory:harkan",
     "s208590bc944a": "sd892956766e6",
     "s072e06cef3fe": "sd892956766e6",
     "sc53ffefdf8b4": "sd892956766e6",

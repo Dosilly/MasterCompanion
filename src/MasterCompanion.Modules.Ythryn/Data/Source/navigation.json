@@ -49,7 +49,7 @@
   },
   {
     "id": "s978ab6dea828",
-    "title": "Wątki graczy w Ythryn",
+    "title": "Wątki graczy",
     "parentId": null,
     "sortOrder": 10
   },
@@ -58,5 +58,11 @@
     "title": "Fenes",
     "parentId": "s978ab6dea828",
     "sortOrder": 11
+  },
+  {
+    "id": "directory:harkan",
+    "title": "Harkan",
+    "parentId": "s978ab6dea828",
+    "sortOrder": 12
   }
 ]

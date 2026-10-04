@@ -23,6 +23,10 @@ U podstawy iglicy znajduje się brama z symbolami ośmiu szkół magii. Drogę d
 | --- | --- | --- |
 | Znaki na bramie: **Inteligencja (Wiedza tajemna), ST 10**. | Rozpoznanie starożytnych symboli ośmiu szkół magii. | Postać nie rozpoznaje symboli. |
 
+### Wątek Harkana — pamięć o rytuale {#harkan-ritual-guidance}
+
+**Wątek Harkana — dodatek MG:** duch Moonbow może przypomnieć Harkanowi w myślach, że rytuał daje osobiste prawo przejścia przez barierę i że zapisy wiążą się z ośmioma szkołami magii. Nie pamięta pełnych kroków ani kolejności; nie otwiera pola i nie odprawia rytuału za bohaterów. Może przetłumaczyć pokazane inskrypcje. [Wiedza ducha o mieście i rytuale](#material/harkan-thread/harkan-city-guidance).
+
 ### Magiczna winda {#s1cebf8e75740}
 
 -   **Fakt:** Bohaterowie zdolni przejść przez pole mogą otworzyć bramę i wejść do pustej w środku przypory, wewnątrz której biegnie strome przejście. Każda istota, która wchodzi do windy, zostaje magicznie uniesiona do wejścia do iglicy w **Y19a**.
