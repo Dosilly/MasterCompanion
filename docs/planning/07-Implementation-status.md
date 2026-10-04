@@ -18,6 +18,13 @@ matching and per-request campaign scans are deliberate current limits.
 
 See [search delivery and deployment evidence](20-Material-search.md).
 
+Commit `ee196ce` was fast-forward merged into local `trunk` and the app container
+was rebuilt and replaced at the user's request. A verified custom-format backup
+is retained at `.local/mastercompanion-before-search-20261004-ee196ce.dump`.
+All seven table counts and complete-row fingerprints matched before/after startup;
+PostgreSQL and its existing volume were retained. Six read-only deployed-container
+checks passed, including the new search endpoint; the application is healthy.
+
 ## Campaign read-aloud update — 4 October 2026
 
 At the user's request, applied the revised read-aloud prose to all 47 affected

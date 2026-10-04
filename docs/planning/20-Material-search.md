@@ -152,5 +152,50 @@ only after successful PUT confirmation. Existing save ordering, conflicts and
 draft ownership remain intact. No migration, live campaign write or module
 source edit was required for implementation and verification.
 
-Local merge and deployment preservation evidence is recorded below after the
-authorized application update.
+## Local merge and deployment — 4 October 2026
+
+Commit `ee196ce` was created on `codex/material-full-text-search` and fast-forward
+merged into local `trunk` after the selected checks and independent review passed.
+The branch remains available. Remote branches were not pushed.
+
+The final merged source was built with
+`docker compose --env-file .local/docker.env build app`. The build passed the
+production frontend quality checks, separate library/host compilation and API
+publication. The deployed image is
+`sha256:11c0940474c181ff6f03b39429a991efd5dc8f67f0df03b0b27163e84faaa5bd`.
+The previous image is retained as
+`mastercompanion:before-search-20261004-ee196ce`.
+
+The application was stopped gracefully with a 30-second shutdown allowance.
+A custom-format PostgreSQL backup is retained at
+`.local/mastercompanion-before-search-20261004-ee196ce.dump` (154,484 bytes).
+`pg_restore --file /dev/null` successfully read the complete archive without
+connecting to or restoring a database. The first backup invocation lacked
+authentication and failed without modifying the database; the verified retry
+used the container's existing credentials without exposing them.
+
+After capturing repeatable-read complete-table fingerprints, only the app was
+replaced with:
+
+```powershell
+docker compose --env-file .local/docker.env up -d --no-deps --no-build --wait --wait-timeout 60 app
+node --test tests/e2e/container.test.mjs tests/e2e/material-search-container.test.mjs
+```
+
+All six read-only deployed-container cases passed. They cover health, static
+assets, SPA/API failures, materials/maps/gameplay, an actual persisted-title
+search and empty-query validation. The searched material's complete response and
+revision were unchanged after the request.
+
+Before/after row counts and complete-row hashes matched for all seven tables:
+one campaign, ten folders, 106 materials, one map, one game state, 88 game
+operations and three applied migrations. Documents, revisions and gameplay were
+preserved. The PostgreSQL container identity and external
+`mastercompanion-postgres` volume were unchanged. Both containers are healthy and
+the application remains bound to `127.0.0.1:4200`.
+
+Fingerprint evidence is retained under `.local/search-before-fingerprints-20261004-ee196ce.txt`
+and `.local/search-after-fingerprints-20261004-ee196ce.txt`. These records and the
+backup establish preservation at deployment; restoring the backup must account
+for any subsequent campaign edits. No live note or gameplay write was used for
+verification, and no database restore was performed.
