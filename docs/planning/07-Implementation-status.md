@@ -9,6 +9,12 @@ remote changes for closed documents while preserving mounted drafts, editor stat
 and ordinary revision conflicts. Delayed reads cannot roll back confirmed saves.
 See [delivery, measurements and verification](23-Campaign-material-memory.md).
 
+Commit `07d5129` was merged into local `trunk` and the app container rebuilt and
+updated. Five HTTP/PostgreSQL cases, 70 frontend cases, 184 affected browser cases
+and 11 read-only container cases pass. The deployed campaign loads all 106
+documents in one request; a local sample measured 128 ms for the bulk response
+and about 1.27 MiB additional whole-application used heap. Both services are healthy.
+
 ## Workspace URL navigation — 4 October 2026
 
 Angular Router now addresses materials, stable sections, specific maps, gameplay

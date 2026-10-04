@@ -1,6 +1,6 @@
 # Campaign material memory
 
-4 October 2026 · implemented and verified; local delivery pending
+4 October 2026 · implemented, verified and deployed locally
 
 The third improvement loads the current campaign's persisted documents once and
 retains confirmed content independently of open material tabs. It belongs to the
@@ -60,10 +60,17 @@ startup fetched only the initial material, so its startup time is not a measurem
 of loading the entire catalog. PowerShell request timings were excluded because
 transport overhead dominated them.
 
-These are single local samples, not performance guarantees. Compare the updated
-container using the same method; heap values include the whole rendered application,
-not only cached documents. The measured payload is small enough to preload without
-creating all editors or requiring pagination for the current campaign.
+The same method against the updated container measured a 711,634-byte bulk
+response in 128 ms, 247 ms until the initial reader appeared, and 6,444,908 bytes
+of used JavaScript heap. Startup issued one bulk read and zero individual material
+reads. Loading the complete catalog now takes one request instead of 106; this
+sample increased initial-reader time by 55 ms and whole-application used heap by
+1,329,556 bytes (about 1.27 MiB).
+
+These are single local samples, not performance guarantees. Heap values include
+the whole rendered application, not only cached documents. The measured payload
+is small enough to preload without creating all editors or requiring pagination
+for the current campaign.
 
 ## Verification and delivery
 
@@ -86,5 +93,16 @@ Implementation uses `codex/material-memory-store`. Scoped verification passed:
 - A read-only check confirms all 106 current persisted campaign documents pass
   the new supported-schema decoder.
 
-Local merge and application-container update follow these checks. Remote push and
-production deployment are outside the request.
+Feature commit `07d5129` was fast-forward merged into local `trunk`. The runtime
+image was built from that merged checkout, including final frontend quality/build
+checks and Release API publication. The verified image was pinned as
+`mastercompanion:material-memory-07d5129` before updating only the app service.
+The running app image is
+`sha256:cc11fd783ec151b369647f0a540b424a6ce11e0a876494e34fbd446899161d40`;
+the application and PostgreSQL report healthy.
+
+Eleven read-only deployed-container cases pass: application/assets/SPA behavior,
+campaign/map/gameplay reads, five deep routes and two preload endpoint checks.
+The measured real browser startup confirms one bulk read and zero individual
+material reads. This feature adds no migration or campaign replacement.
+Remote push and production deployment remain outside the request.
