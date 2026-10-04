@@ -1,0 +1,8 @@
+node_modules
+dist
+.angular
+.local
+out-tsc
+pnpm-lock.yaml
+tools/fixtures
+e2e/snapshots

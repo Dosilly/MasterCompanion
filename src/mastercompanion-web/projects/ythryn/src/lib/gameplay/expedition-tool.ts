@@ -1,11 +1,24 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CAMPAIGN_GAME, GameAction } from '@mastercompanion/contracts';
 import { uiMessages } from '../i18n/messages';
-import { buildingAction, encounterAction, encounterMaterials, encounterPreview, EncounterRollSelection, expeditionMaterials, explorationAction, Faction, readExpeditionView, selectedEncounterRoll } from './expedition-view';
+import {
+  buildingAction,
+  encounterAction,
+  encounterMaterials,
+  encounterPreview,
+  EncounterRollSelection,
+  expeditionMaterials,
+  explorationAction,
+  Faction,
+  readExpeditionView,
+  selectedEncounterRoll,
+} from './expedition-view';
 import { ActionRequired } from './action-required';
 
 @Component({
-  selector: 'mc-ythryn-expedition', imports: [ActionRequired], changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'mc-ythryn-expedition',
+  imports: [ActionRequired],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="expedition-tool" aria-labelledby="expedition-title">
       <h2 id="expedition-title">{{ text.title }}</h2>
@@ -17,89 +30,188 @@ import { ActionRequired } from './action-required';
             <p>{{ text.explorationHint }}</p>
             <p>{{ text.trackedExploration }}: {{ format(current.explorationMinutes) }}</p>
             <p>{{ text.nextHourly }}: {{ format(current.nextHourlyIn) }}</p>
-            <form (submit)="explore($event)"><fieldset [disabled]="!game.canOperate()">
-              <legend>{{ text.addExploration }}</legend>
-              <label for="exploration-minutes">{{ text.minutes }}</label>
-              <input id="exploration-minutes" type="number" min="1" max="1440" step="1" required [value]="minutes()" (input)="setMinutes($event)">
-              <button type="submit">{{ text.explore }}</button>
-            </fieldset></form>
+            <form (submit)="explore($event)">
+              <fieldset [disabled]="!game.canOperate()">
+                <legend>{{ text.addExploration }}</legend>
+                <label for="exploration-minutes">{{ text.minutes }}</label>
+                <input
+                  id="exploration-minutes"
+                  type="number"
+                  min="1"
+                  max="1440"
+                  step="1"
+                  required
+                  [value]="minutes()"
+                  (input)="setMinutes($event)"
+                />
+                <button type="submit">{{ text.explore }}</button>
+              </fieldset>
+            </form>
             <button type="button" (click)="open('rules')">{{ text.rules }}</button>
           </section>
           <section class="tool-card" aria-labelledby="building-title">
-            <h3 id="building-title">{{ text.buildingTitle }}</h3><p>{{ text.buildingHint }}</p>
-            <fieldset [disabled]="!game.canOperate()"><legend>{{ text.searchOptions }}</legend>
-              <label class="choice"><input type="checkbox" [checked]="unnumbered()" (change)="setUnnumbered($event)">{{ text.unnumbered }}</label>
-              <label class="choice"><input type="checkbox" [checked]="newBuilding()" (change)="setNewBuilding($event)">{{ text.newBuilding }}</label>
+            <h3 id="building-title">{{ text.buildingTitle }}</h3>
+            <p>{{ text.buildingHint }}</p>
+            <fieldset [disabled]="!game.canOperate()">
+              <legend>{{ text.searchOptions }}</legend>
+              <label class="choice"
+                ><input
+                  type="checkbox"
+                  [checked]="unnumbered()"
+                  (change)="setUnnumbered($event)"
+                />{{ text.unnumbered }}</label
+              >
+              <label class="choice"
+                ><input
+                  type="checkbox"
+                  [checked]="newBuilding()"
+                  (change)="setNewBuilding($event)"
+                />{{ text.newBuilding }}</label
+              >
               <button type="button" (click)="search()">{{ text.search }}</button>
-            </fieldset><p>{{ text.patrolHint }}</p>
+            </fieldset>
+            <p>{{ text.patrolHint }}</p>
           </section>
           @for (faction of factions; track faction) {
-            <section class="tool-card" [class.needs-action]="current[faction].pending" [id]="faction + '-arrival'" [attr.aria-labelledby]="faction + '-title'">
+            <section
+              class="tool-card"
+              [class.needs-action]="current[faction].pending"
+              [id]="faction + '-arrival'"
+              [attr.aria-labelledby]="faction + '-title'"
+            >
               <h3 [id]="faction + '-title'">{{ text.factions[faction] }}</h3>
               <p>{{ faction === 'avarice' ? text.avariceHint : text.aurilHint }}</p>
-              @if (current[faction].arrivedAt; as at) { <p>{{ text.arrived }}: {{ format(at) }}</p> }
-              @else if (current[faction].arrivedAt === 0) { <p>{{ text.arrived }}: {{ format(0) }}</p> }
-              @else if (!current[faction].enabled) { <p>{{ text.disabled }}</p> }
-              @else {
-                @if (current[faction].deadline === null) { <p>{{ text.waitingRest }}</p> }
-                @else { <p role="status">
-                  @if (current[faction].pending) { <mc-action-required>{{ text.arrivalDue }}</mc-action-required> }
-                  @else { {{ text.untilArrival }}: {{ format(current[faction].remainingMinutes ?? 0) }} }
-                </p> }
-                <form (submit)="confirm($event, faction)"><fieldset [disabled]="!game.canOperate()">
-                  <legend>{{ text.confirmArrival }}</legend>
-                  <label [for]="faction + '-minute'">{{ text.arrivalMinute }}</label>
-                  <input [id]="faction + '-minute'" type="number" min="0" [max]="game.state()?.snapshot?.timeMinutes ?? 0" step="1" required
-                    [value]="arrivalDraft()[faction] ?? game.state()?.snapshot?.timeMinutes ?? 0" (input)="setArrival(faction, $event)">
-                  <button type="submit">{{ text.confirmArrival }}</button>
-                </fieldset></form>
+              @if (current[faction].arrivedAt; as at) {
+                <p>{{ text.arrived }}: {{ format(at) }}</p>
+              } @else if (current[faction].arrivedAt === 0) {
+                <p>{{ text.arrived }}: {{ format(0) }}</p>
+              } @else if (!current[faction].enabled) {
+                <p>{{ text.disabled }}</p>
+              } @else {
+                @if (current[faction].deadline === null) {
+                  <p>{{ text.waitingRest }}</p>
+                } @else {
+                  <p role="status">
+                    @if (current[faction].pending) {
+                      <mc-action-required>{{ text.arrivalDue }}</mc-action-required>
+                    } @else {
+                      {{ text.untilArrival }}: {{ format(current[faction].remainingMinutes ?? 0) }}
+                    }
+                  </p>
+                }
+                <form (submit)="confirm($event, faction)">
+                  <fieldset [disabled]="!game.canOperate()">
+                    <legend>{{ text.confirmArrival }}</legend>
+                    <label [for]="faction + '-minute'">{{ text.arrivalMinute }}</label>
+                    <input
+                      [id]="faction + '-minute'"
+                      type="number"
+                      min="0"
+                      [max]="game.state()?.snapshot?.timeMinutes ?? 0"
+                      step="1"
+                      required
+                      [value]="arrivalDraft()[faction] ?? game.state()?.snapshot?.timeMinutes ?? 0"
+                      (input)="setArrival(faction, $event)"
+                    />
+                    <button type="submit">{{ text.confirmArrival }}</button>
+                  </fieldset>
+                </form>
               }
               @if (faction === 'auril' && current.auril.arrivedAt === null) {
-                <button type="button" [disabled]="!game.canOperate()" (click)="toggleAuril()">{{ current.aurilEnabled ? text.disableAuril : text.enableAuril }}</button>
+                <button type="button" [disabled]="!game.canOperate()" (click)="toggleAuril()">
+                  {{ current.aurilEnabled ? text.disableAuril : text.enableAuril }}
+                </button>
               }
               <button type="button" (click)="open(faction)">{{ text.rules }}</button>
             </section>
           }
         </div>
-        <section id="encounter-queue" class="tool-card encounter-queue" [class.needs-action]="current.pending.length > 0" aria-labelledby="encounter-queue-title">
+        <section
+          id="encounter-queue"
+          class="tool-card encounter-queue"
+          [class.needs-action]="current.pending.length > 0"
+          aria-labelledby="encounter-queue-title"
+        >
           <h3 id="encounter-queue-title">{{ text.queueTitle }}: {{ current.pending.length }}</h3>
-          @if (current.pending.length > 0) { <p><mc-action-required>{{ ui.actionRequired }}</mc-action-required></p> }
+          @if (current.pending.length > 0) {
+            <p>
+              <mc-action-required>{{ ui.actionRequired }}</mc-action-required>
+            </p>
+          }
           <p>{{ text.queueHint }}</p>
-          @if (current.pending.length >= 216) { <p role="status">{{ text.queueLimitHint }}</p> }
+          @if (current.pending.length >= 216) {
+            <p role="status">{{ text.queueLimitHint }}</p>
+          }
           @if (current.pending[0]; as check) {
-            <p><strong>{{ text.kinds[check.kind] }}</strong> · {{ text.gameTime }}: {{ format(check.minute) }}</p>
-            <form (submit)="resolve($event, check.id)"><fieldset [disabled]="!game.canOperate()">
-              <legend>{{ text.resolve }}</legend><label for="encounter-roll">{{ text.roll }}</label>
-              <input id="encounter-roll" type="number" min="1" max="100" step="1" required [value]="selectedRoll(check.id)" (input)="setRoll(check.id, $event)">
-              <button type="button" (click)="roll(check.id)">
-                <svg class="die-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <rect x="3" y="3" width="18" height="18" rx="3" />
-                  <circle cx="8" cy="8" r="1" /><circle cx="16" cy="8" r="1" /><circle cx="12" cy="12" r="1" />
-                  <circle cx="8" cy="16" r="1" /><circle cx="16" cy="16" r="1" />
-                </svg>{{ preview() === null ? text.rollDie : text.reroll }}
-              </button>
-              <button type="submit" [disabled]="preview() === null">{{ text.resolve }}</button>
-            </fieldset></form>
+            <p>
+              <strong>{{ text.kinds[check.kind] }}</strong> · {{ text.gameTime }}:
+              {{ format(check.minute) }}
+            </p>
+            <form (submit)="resolve($event, check.id)">
+              <fieldset [disabled]="!game.canOperate()">
+                <legend>{{ text.resolve }}</legend>
+                <label for="encounter-roll">{{ text.roll }}</label>
+                <input
+                  id="encounter-roll"
+                  type="number"
+                  min="1"
+                  max="100"
+                  step="1"
+                  required
+                  [value]="selectedRoll(check.id)"
+                  (input)="setRoll(check.id, $event)"
+                />
+                <button type="button" (click)="roll(check.id)">
+                  <svg class="die-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <rect x="3" y="3" width="18" height="18" rx="3" />
+                    <circle cx="8" cy="8" r="1" />
+                    <circle cx="16" cy="8" r="1" />
+                    <circle cx="12" cy="12" r="1" />
+                    <circle cx="8" cy="16" r="1" />
+                    <circle cx="16" cy="16" r="1" /></svg
+                  >{{ preview() === null ? text.rollDie : text.reroll }}
+                </button>
+                <button type="submit" [disabled]="preview() === null">{{ text.resolve }}</button>
+              </fieldset>
+            </form>
             <div class="roll-preview" role="status" aria-live="polite" aria-atomic="true">
               @if (preview(); as outcome) {
                 <h4>{{ text.previewTitle }} · {{ text.dieName }}: {{ selectedRoll(check.id) }}</h4>
                 <p>{{ text.outcomes[outcome] }}</p>
-                @if (materials[outcome]) { <button type="button" (click)="openResult(outcome)">{{ text.openEncounter }}</button> }
+                @if (materials[outcome]) {
+                  <button type="button" (click)="openResult(outcome)">
+                    {{ text.openEncounter }}
+                  </button>
+                }
               }
             </div>
             <p>{{ text.previewHint }}</p>
-          } @else { <p>{{ text.noPending }}</p> }
+          } @else {
+            <p>{{ text.noPending }}</p>
+          }
           <button type="button" (click)="open('table')">{{ text.table }}</button>
           @if (current.lastResult; as result) {
-            <div class="last-result" role="status"><h4>{{ text.lastResult }}</h4>
-              <p>{{ text.kinds[result.check.kind] }} · {{ format(result.check.minute) }} · {{ text.dieName }}: {{ result.roll }}</p>
+            <div class="last-result" role="status">
+              <h4>{{ text.lastResult }}</h4>
+              <p>
+                {{ text.kinds[result.check.kind] }} · {{ format(result.check.minute) }} ·
+                {{ text.dieName }}: {{ result.roll }}
+              </p>
               <p>{{ text.outcomes[result.outcome] }}</p>
-              @if (materials[result.outcome]) { <button type="button" (click)="openResult(result.outcome)">{{ text.openEncounter }}</button> }
+              @if (materials[result.outcome]) {
+                <button type="button" (click)="openResult(result.outcome)">
+                  {{ text.openEncounter }}
+                </button>
+              }
             </div>
           }
         </section>
-      } @else { <p role="alert">{{ text.invalidState }}</p> }
-      @if (error()) { <p role="alert">{{ text.invalidInput }}</p> }
+      } @else {
+        <p role="alert">{{ text.invalidState }}</p>
+      }
+      @if (error()) {
+        <p role="alert">{{ text.invalidInput }}</p>
+      }
     </section>
   `,
   styleUrl: './expedition-tool.css',
@@ -110,51 +222,108 @@ export class ExpeditionTool {
   readonly ui = uiMessages;
   readonly factions: readonly Faction[] = ['avarice', 'auril'];
   readonly materials = encounterMaterials;
-  readonly view = computed(() => { const state = this.game.state(); return state ? readExpeditionView(state) : null; });
+  readonly view = computed(() => {
+    const state = this.game.state();
+    return state ? readExpeditionView(state) : null;
+  });
   readonly minutes = signal('60');
   readonly unnumbered = signal(true);
   readonly newBuilding = signal(true);
   readonly arrivalDraft = signal<Partial<Record<Faction, string>>>({});
   readonly error = signal(false);
   private readonly rollDraft = signal<EncounterRollSelection | null>(null);
-  readonly preview = computed(() => { const view = this.view(); return view ? encounterPreview(view, this.rollDraft()) : null; });
+  readonly preview = computed(() => {
+    const view = this.view();
+    return view ? encounterPreview(view, this.rollDraft()) : null;
+  });
 
-  format(minute: number) { return `${Math.floor(minute / 60)} ${uiMessages.hour} ${minute % 60} ${uiMessages.minute}`; }
-  open(target: keyof typeof expeditionMaterials) { this.game.openMaterial(expeditionMaterials[target]); }
-  openResult(outcome: keyof typeof encounterMaterials) { const id = encounterMaterials[outcome]; if (id) this.game.openMaterial({ id }); }
-  setMinutes(event: Event) { if (event.target instanceof HTMLInputElement) this.minutes.set(event.target.value); }
-  setUnnumbered(event: Event) { if (event.target instanceof HTMLInputElement) this.unnumbered.set(event.target.checked); }
-  setNewBuilding(event: Event) { if (event.target instanceof HTMLInputElement) this.newBuilding.set(event.target.checked); }
-  setArrival(faction: Faction, event: Event) { const input = event.target; if (input instanceof HTMLInputElement) this.arrivalDraft.update(value => ({ ...value, [faction]: input.value })); }
+  format(minute: number) {
+    return `${Math.floor(minute / 60)} ${uiMessages.hour} ${minute % 60} ${uiMessages.minute}`;
+  }
+  open(target: keyof typeof expeditionMaterials) {
+    this.game.openMaterial(expeditionMaterials[target]);
+  }
+  openResult(outcome: keyof typeof encounterMaterials) {
+    const id = encounterMaterials[outcome];
+    if (id) {
+      this.game.openMaterial({ id });
+    }
+  }
+  setMinutes(event: Event) {
+    if (event.target instanceof HTMLInputElement) {
+      this.minutes.set(event.target.value);
+    }
+  }
+  setUnnumbered(event: Event) {
+    if (event.target instanceof HTMLInputElement) {
+      this.unnumbered.set(event.target.checked);
+    }
+  }
+  setNewBuilding(event: Event) {
+    if (event.target instanceof HTMLInputElement) {
+      this.newBuilding.set(event.target.checked);
+    }
+  }
+  setArrival(faction: Faction, event: Event) {
+    const input = event.target;
+    if (input instanceof HTMLInputElement) {
+      this.arrivalDraft.update((value) => ({ ...value, [faction]: input.value }));
+    }
+  }
   setRoll(id: number, event: Event) {
     const check = this.view()?.pending[0];
-    if (this.game.canOperate() && check?.id === id && event.target instanceof HTMLInputElement)
+    if (this.game.canOperate() && check?.id === id && event.target instanceof HTMLInputElement) {
       this.rollDraft.set({ check, value: event.target.value });
+    }
   }
   roll(id: number) {
     const check = this.view()?.pending[0];
-    if (this.game.canOperate() && check?.id === id) this.rollDraft.set({ check, value: String(Math.floor(Math.random() * 100) + 1) });
+    if (this.game.canOperate() && check?.id === id) {
+      this.rollDraft.set({ check, value: String(Math.floor(Math.random() * 100) + 1) });
+    }
   }
-  selectedRoll(id: number) { const view = this.view(); return view?.pending[0]?.id === id ? selectedEncounterRoll(view, this.rollDraft()) : ''; }
+  selectedRoll(id: number) {
+    const view = this.view();
+    return view?.pending[0]?.id === id ? selectedEncounterRoll(view, this.rollDraft()) : '';
+  }
   async run(action: GameAction | null): Promise<boolean> {
     this.error.set(action === null);
     return action !== null && this.game.canOperate() ? this.game.execute(action) : false;
   }
-  explore(event: Event) { event.preventDefault(); void this.run(explorationAction(Number(this.minutes()))); }
-  search() { void this.run(buildingAction(this.unnumbered(), this.newBuilding())); }
+  explore(event: Event) {
+    event.preventDefault();
+    void this.run(explorationAction(Number(this.minutes())));
+  }
+  search() {
+    void this.run(buildingAction(this.unnumbered(), this.newBuilding()));
+  }
   async confirm(event: Event, faction: Faction) {
     event.preventDefault();
     const now = this.game.state()?.snapshot.timeMinutes ?? 0;
     const raw = this.arrivalDraft()[faction];
     const minute = raw === undefined ? now : raw.trim() === '' ? NaN : Number(raw);
-    const action: GameAction | null = Number.isSafeInteger(minute) && minute >= 0 && minute <= now
-      ? { kind: 'module', command: { kind: 'confirmArrival', faction, minute } } : null;
-    if (await this.run(action)) this.arrivalDraft.update(value => ({ ...value, [faction]: undefined }));
+    const action: GameAction | null =
+      Number.isSafeInteger(minute) && minute >= 0 && minute <= now
+        ? { kind: 'module', command: { kind: 'confirmArrival', faction, minute } }
+        : null;
+    if (await this.run(action)) {
+      this.arrivalDraft.update((value) => ({ ...value, [faction]: undefined }));
+    }
   }
-  toggleAuril() { const current = this.view(); if (current) void this.run({ kind: 'module', command: { kind: 'configureExpedition', aurilEnabled: !current.aurilEnabled } }); }
+  toggleAuril() {
+    const current = this.view();
+    if (current) {
+      void this.run({
+        kind: 'module',
+        command: { kind: 'configureExpedition', aurilEnabled: !current.aurilEnabled },
+      });
+    }
+  }
   async resolve(event: Event, id: number) {
     event.preventDefault();
     const current = this.view();
-    if (current && await this.run(encounterAction(current, id, Number(this.selectedRoll(id))))) this.rollDraft.set(null);
+    if (current && (await this.run(encounterAction(current, id, Number(this.selectedRoll(id)))))) {
+      this.rollDraft.set(null);
+    }
   }
 }

@@ -15,7 +15,11 @@ export default defineConfig({
   updateSnapshots: 'none',
   snapshotPathTemplate: '{testDir}/snapshots/{platform}/{projectName}/{testFilePath}/{arg}{ext}',
   outputDir: '.local/ui-results',
-  reporter: [['list'], ['html', { outputFolder: '.local/ui-report', open: 'never' }], ['json', { outputFile: '.local/ui-run.json' }]],
+  reporter: [
+    ['list'],
+    ['html', { outputFolder: '.local/ui-report', open: 'never' }],
+    ['json', { outputFile: '.local/ui-run.json' }],
+  ],
   use: {
     browserName: 'chromium',
     baseURL: 'http://127.0.0.1:4310',
@@ -26,7 +30,10 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   projects: [
-    { name: 'fullhd-light', use: { viewport: { width: 1920, height: 1080 }, colorScheme: 'light' } },
+    {
+      name: 'fullhd-light',
+      use: { viewport: { width: 1920, height: 1080 }, colorScheme: 'light' },
+    },
     { name: 'fullhd-dark', use: { viewport: { width: 1920, height: 1080 }, colorScheme: 'dark' } },
     { name: 'scaled-light', use: { viewport: { width: 1536, height: 864 }, colorScheme: 'light' } },
     { name: 'scaled-dark', use: { viewport: { width: 1536, height: 864 }, colorScheme: 'dark' } },

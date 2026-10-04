@@ -30,53 +30,90 @@ public static class CreateMaterial
     private static async Task<IResult> CreateAsync(Guid campaignId, HttpRequest httpRequest,
         AppDbContext db, CancellationToken token)
     {
-        if (!httpRequest.HasJsonContentType()) return Problem(415, "material_json_required");
-        if (httpRequest.ContentLength > MaxRequestBytes) return Problem(413, "material_request_too_large");
+        if (!httpRequest.HasJsonContentType())
+        {
+            return Problem(415, "material_json_required");
+        }
+
+        if (httpRequest.ContentLength > MaxRequestBytes)
+        {
+            return Problem(413, "material_request_too_large");
+        }
+
         var buffer = new byte[MaxRequestBytes + 1];
         var length = 0;
         while (length < buffer.Length)
         {
             var read = await httpRequest.Body.ReadAsync(buffer.AsMemory(length), token);
-            if (read == 0) break;
+            if (read == 0)
+            {
+                break;
+            }
+
             length += read;
         }
-        if (length > MaxRequestBytes) return Problem(413, "material_request_too_large");
+        if (length > MaxRequestBytes)
+        {
+            return Problem(413, "material_request_too_large");
+        }
 
         CreateMaterialRequest? request;
         try { request = JsonSerializer.Deserialize<CreateMaterialRequest>(buffer.AsSpan(0, length), JsonOptions); }
         catch (JsonException) { return Problem(400, "invalid_material_creation"); }
-        if (request is null || request.Id == Guid.Empty) return Problem(400, "invalid_material_creation");
+        if (request is null || request.Id == Guid.Empty)
+        {
+            return Problem(400, "invalid_material_creation");
+        }
+
         var title = request.Title.Trim();
         if (title.Length is < 1 or > 300 || title.Any(char.IsControl) ||
             request.FolderId is { Length: < 1 or > 80 })
+        {
             return Problem(400, "invalid_material_creation");
+        }
 
         if (!await db.Campaigns.AsNoTracking().AnyAsync(x => x.Id == campaignId, token))
+        {
             return Problem(404, "campaign_not_found");
+        }
+
         var id = $"note-{request.Id:D}";
         var existing = await FindAsync(db, campaignId, id, token);
-        if (existing is not null) return Replay(existing, title, request.FolderId);
+        if (existing is not null)
+        {
+            return Replay(existing, title, request.FolderId);
+        }
 
         var group = string.Empty;
         if (request.FolderId is { } folderId)
         {
             var folder = await db.Folders.AsNoTracking().SingleOrDefaultAsync(
                 x => x.CampaignId == campaignId && x.Id == folderId, token);
-            if (folder is null) return Problem(400, "material_folder_not_found");
+            if (folder is null)
+            {
+                return Problem(400, "material_folder_not_found");
+            }
+
             group = folder.Title;
         }
         var maximumOrder = await db.Materials.Where(x => x.CampaignId == campaignId)
             .MaxAsync(x => (int?)x.SortOrder, token);
         var material = new Material
         {
-            Id = id, CampaignId = campaignId, Title = title, FolderId = request.FolderId,
-            Group = group, DocumentJson = EmptyDocument,
-            DocumentSchemaVersion = 1, Revision = 1, SortOrder = checked((maximumOrder ?? -1) + 1)
+            Id = id,
+            CampaignId = campaignId,
+            Title = title,
+            FolderId = request.FolderId,
+            Group = group,
+            DocumentJson = EmptyDocument,
+            DocumentSchemaVersion = 1,
+            Revision = 1,
+            SortOrder = checked((maximumOrder ?? -1) + 1)
         };
         db.Materials.Add(material);
         try { await db.SaveChangesAsync(token); }
         catch (DbUpdateException error) when (error.InnerException is PostgresException
-            { SqlState: PostgresErrorCodes.UniqueViolation, ConstraintName: "PK_Materials" })
+        { SqlState: PostgresErrorCodes.UniqueViolation, ConstraintName: "PK_Materials" })
         {
             // A concurrent retry may have committed first. Never replace its document or revision.
             db.Entry(material).State = EntityState.Detached;

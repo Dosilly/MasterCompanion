@@ -17,7 +17,9 @@ internal sealed class NeutralGameRules(string moduleId) : ICampaignGameRules
         // Never interpret missing adventure rules as permission to discard their saved state.
         if (snapshot.ModuleSchemaVersion != StateSchemaVersion || snapshot.ModuleState.ValueKind != JsonValueKind.Object ||
             snapshot.ModuleState.EnumerateObject().Any())
+        {
             throw new InvalidOperationException("The registered module has no rules for its saved game state.");
+        }
     }
 
     public ModuleTransition ReconcileParty(GameSnapshot before, GameSnapshot proposed)

@@ -4,28 +4,66 @@
   "cli": { "analytics": false },
   "projects": {
     "contracts": {
-      "projectType": "library", "root": "projects/contracts", "sourceRoot": "projects/contracts/src",
-      "architect": { "build": { "builder": "@angular/build:ng-packagr", "options": { "project": "projects/contracts/ng-package.json", "tsConfig": "projects/contracts/tsconfig.lib.json" } } }
+      "projectType": "library",
+      "root": "projects/contracts",
+      "sourceRoot": "projects/contracts/src",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "project": "projects/contracts/ng-package.json",
+            "tsConfig": "projects/contracts/tsconfig.lib.json"
+          }
+        }
+      }
     },
     "engine": {
-      "projectType": "library", "root": "projects/engine", "sourceRoot": "projects/engine/src",
-      "architect": { "build": { "builder": "@angular/build:ng-packagr", "options": { "project": "projects/engine/ng-package.json", "tsConfig": "projects/engine/tsconfig.lib.json" } } }
+      "projectType": "library",
+      "root": "projects/engine",
+      "sourceRoot": "projects/engine/src",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "project": "projects/engine/ng-package.json",
+            "tsConfig": "projects/engine/tsconfig.lib.json"
+          }
+        }
+      }
     },
     "ythryn": {
-      "projectType": "library", "root": "projects/ythryn", "sourceRoot": "projects/ythryn/src",
-      "architect": { "build": { "builder": "@angular/build:ng-packagr", "options": { "project": "projects/ythryn/ng-package.json", "tsConfig": "projects/ythryn/tsconfig.lib.json" } } }
+      "projectType": "library",
+      "root": "projects/ythryn",
+      "sourceRoot": "projects/ythryn/src",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "project": "projects/ythryn/ng-package.json",
+            "tsConfig": "projects/ythryn/tsconfig.lib.json"
+          }
+        }
+      }
     },
     "web": {
-      "projectType": "application", "root": "", "sourceRoot": "src",
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "browser": "src/main.ts", "index": "src/index.html", "tsConfig": "tsconfig.app.json",
-            "styles": ["dist/engine/styles/engine.scss", "src/styles.scss"], "outputPath": "dist/web"
+            "browser": "src/main.ts",
+            "index": "src/index.html",
+            "tsConfig": "tsconfig.app.json",
+            "styles": ["dist/engine/styles/engine.scss", "src/styles.scss"],
+            "outputPath": "dist/web"
           },
           "configurations": {
-            "production": { "outputHashing": "all", "budgets": [{ "type": "initial", "maximumWarning": "2MB", "maximumError": "3MB" }] },
+            "production": {
+              "outputHashing": "all",
+              "budgets": [{ "type": "initial", "maximumWarning": "2MB", "maximumError": "3MB" }]
+            },
             "development": { "optimization": false, "sourceMap": true }
           },
           "defaultConfiguration": "production"

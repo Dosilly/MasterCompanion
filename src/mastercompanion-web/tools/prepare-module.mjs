@@ -3,7 +3,8 @@ import { resolve, dirname } from 'node:path';
 import { compileModule } from './module-sources.mjs';
 
 const [source, destination] = process.argv.slice(2);
-if (!source || !destination || process.argv.length !== 4) throw new Error('Usage: node tools/prepare-module.mjs <source-directory> <output-json>');
+if (!source || !destination || process.argv.length !== 4)
+  throw new Error('Usage: node tools/prepare-module.mjs <source-directory> <output-json>');
 const seed = compileModule(resolve(source));
 const output = resolve(destination);
 mkdirSync(dirname(output), { recursive: true });
@@ -14,4 +15,6 @@ try {
 } finally {
   rmSync(temporary, { force: true });
 }
-console.log(`Module package prepared: ${seed.materials.length} materials, ${seed.folders.length} folders, ${seed.maps.length} maps.`);
+console.log(
+  `Module package prepared: ${seed.materials.length} materials, ${seed.folders.length} folders, ${seed.maps.length} maps.`,
+);

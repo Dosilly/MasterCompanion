@@ -1,1 +1,6 @@
-{ "extends": "../../tsconfig.json", "compilerOptions": { "outDir": "../../out-tsc/ythryn", "declaration": true, "types": [] }, "angularCompilerOptions": { "compilationMode": "partial" }, "include": ["src/**/*.ts"] }
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": { "outDir": "../../out-tsc/ythryn", "declaration": true, "types": [] },
+  "angularCompilerOptions": { "compilationMode": "partial" },
+  "include": ["src/**/*.ts"]
+}

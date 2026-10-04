@@ -7,27 +7,63 @@ import Image from '@tiptap/extension-image';
 const SourceAnchors = Extension.create({
   name: 'sourceAnchors',
   addGlobalAttributes() {
-    return [{ types: ['paragraph', 'heading', 'blockquote', 'table', 'bulletList', 'orderedList', 'listItem', 'details'],
-      attributes: { sourceId: { default: null, parseHTML: element => element.getAttribute('id'),
-        renderHTML: attributes => attributes.sourceId ? { id: attributes.sourceId } : {} } } }];
+    return [
+      {
+        types: [
+          'paragraph',
+          'heading',
+          'blockquote',
+          'table',
+          'bulletList',
+          'orderedList',
+          'listItem',
+          'details',
+        ],
+        attributes: {
+          sourceId: {
+            default: null,
+            parseHTML: (element) => element.getAttribute('id'),
+            renderHTML: (attributes) => (attributes.sourceId ? { id: attributes.sourceId } : {}),
+          },
+        },
+      },
+    ];
   },
 });
 const Details = Node.create({
-  name: 'details', group: 'block', content: 'detailsSummary detailsContent', defining: true,
+  name: 'details',
+  group: 'block',
+  content: 'detailsSummary detailsContent',
+  defining: true,
   parseHTML: () => [{ tag: 'details' }],
   renderHTML: ({ HTMLAttributes }) => ['details', { ...HTMLAttributes, class: 'context' }, 0],
 });
 const DetailsSummary = Node.create({
-  name: 'detailsSummary', content: 'inline*', defining: true,
-  parseHTML: () => [{ tag: 'summary' }], renderHTML: () => ['summary', 0],
+  name: 'detailsSummary',
+  content: 'inline*',
+  defining: true,
+  parseHTML: () => [{ tag: 'summary' }],
+  renderHTML: () => ['summary', 0],
 });
 const DetailsContent = Node.create({
-  name: 'detailsContent', content: 'block+', defining: true,
-  parseHTML: () => [{ tag: 'details > div' }], renderHTML: () => ['div', { 'data-details-content': '' }, 0],
+  name: 'detailsContent',
+  content: 'block+',
+  defining: true,
+  parseHTML: () => [{ tag: 'details > div' }],
+  renderHTML: () => ['div', { 'data-details-content': '' }, 0],
 });
 export function documentExtensions() {
   // TrailingNode appends a paragraph even on reader selection/focus transactions.
-  return [StarterKit.configure({ trailingNode: false, link: { openOnClick: false, autolink: false, linkOnPaste: false } }),
-    TableKit.configure({ table: { resizable: false } }), Image.configure({ allowBase64: false }),
-    SourceAnchors, Details, DetailsSummary, DetailsContent];
+  return [
+    StarterKit.configure({
+      trailingNode: false,
+      link: { openOnClick: false, autolink: false, linkOnPaste: false },
+    }),
+    TableKit.configure({ table: { resizable: false } }),
+    Image.configure({ allowBase64: false }),
+    SourceAnchors,
+    Details,
+    DetailsSummary,
+    DetailsContent,
+  ];
 }

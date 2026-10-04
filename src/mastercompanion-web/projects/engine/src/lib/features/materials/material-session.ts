@@ -17,7 +17,10 @@ export class MaterialSession {
   private timer?: ReturnType<typeof setTimeout>;
   private inFlight?: Promise<boolean>;
 
-  constructor(readonly material: MaterialDto, private readonly http: HttpClient) {
+  constructor(
+    readonly material: MaterialDto,
+    private readonly http: HttpClient,
+  ) {
     this.document = material.document;
     this.revision = material.revision;
   }
@@ -25,20 +28,26 @@ export class MaterialSession {
     this.document = document;
     this.generation++;
     this.dirty.set(true);
-    if (this.status() === 'conflict') return;
+    if (this.status() === 'conflict') {
+      return;
+    }
     this.status.set('waiting');
     clearTimeout(this.timer);
     this.timer = setTimeout(() => void this.flush(), 650);
   }
   flush(): Promise<boolean> {
     clearTimeout(this.timer);
-    if (this.inFlight) return this.inFlight;
-    if (this.status() === 'conflict') return Promise.resolve(false);
-    this.inFlight = this.savePending().finally(() => this.inFlight = undefined);
+    if (this.inFlight) {
+      return this.inFlight;
+    }
+    if (this.status() === 'conflict') {
+      return Promise.resolve(false);
+    }
+    this.inFlight = this.savePending().finally(() => (this.inFlight = undefined));
     return this.inFlight;
   }
   async prepareToClose(): Promise<boolean> {
-    return await this.flush() && !this.dirty();
+    return (await this.flush()) && !this.dirty();
   }
   private async savePending(): Promise<boolean> {
     while (this.savedGeneration !== this.generation) {
@@ -48,9 +57,12 @@ export class MaterialSession {
       this.status.set('saving');
       this.error.set(null);
       try {
-        const response = await firstValueFrom(this.http.put<{ revision: number }>(`/api/materials/${this.material.id}`, {
-          document, expectedRevision: this.revision,
-        }));
+        const response = await firstValueFrom(
+          this.http.put<{ revision: number }>(`/api/materials/${this.material.id}`, {
+            document,
+            expectedRevision: this.revision,
+          }),
+        );
         this.revision = response.revision;
         this.savedGeneration = generation;
       } catch (error) {

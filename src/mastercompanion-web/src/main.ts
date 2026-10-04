@@ -8,5 +8,6 @@ import { ythrynModule } from '@mastercompanion/ythryn';
 @Component({ selector: 'mc-app', imports: [Workspace], template: '<mc-workspace />' })
 class App {}
 
-bootstrapApplication(App, { providers: [provideHttpClient(), { provide: CAMPAIGN_MODULES, useValue: [ythrynModule] }] })
-  .catch(error => console.error(error));
+bootstrapApplication(App, {
+  providers: [provideHttpClient(), { provide: CAMPAIGN_MODULES, useValue: [ythrynModule] }],
+}).catch((error) => console.error(error));
