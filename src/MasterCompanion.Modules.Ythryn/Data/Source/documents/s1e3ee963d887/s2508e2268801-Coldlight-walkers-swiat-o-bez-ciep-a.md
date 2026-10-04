@@ -7,11 +7,11 @@ sortOrder: 87
 
 **Do odczytania — wariant 1: Światło szuka twarzy**
 
-> Ostre, białe światło powoli przesuwa się po kamieniu. Zatrzymuje się, cofa i przechodzi po tym samym miejscu jeszcze raz, jak latarnia kogoś, kto czegoś szuka. Nierówne kroki przybliżają sztywną sylwetkę w przemarzniętym ubraniu. Postać nie niesie niczego w dłoniach; blask wydobywa się z miejsca, w którym powinna być twarz. Gdy obraca głowę ku wam, światło odcina od ciemności każdy szczegół na swojej drodze.
+> W głębi ruin ktoś przeszukuje zakamarki, omiatając kamień ostrym, białym światłem. Blask zatrzymuje się, cofa i przechodzi po tym samym miejscu jeszcze raz, jak latarnia kogoś, kto zgubił drogę. Nierówne kroki przybliżają sztywną sylwetkę w przemarzniętym ubraniu. Postać nie niesie niczego w dłoniach; światło wydobywa się z miejsca, w którym powinna być twarz. Gdy obraca głowę ku wam, blask odcina od ciemności każdy szczegół na swojej drodze.
 
 **Do odczytania — wariant 2: Niedokończony gest**
 
-> Z ciemności wyłania się biały blask, a wraz z nim powłóczące kroki. Zamarznięta postać zatrzymuje się na moment i unosi pustą rękę do piersi, jakby sprawdzała obecność czegoś pod ubraniem. Palce nie potrafią się zacisnąć, więc dłoń po chwili opada. Głowa obraca się dalej, omiatając otoczenie ostrym światłem. Postać rusza ponownie, zostawiając za sobą drobiny lodu osypujące się z rękawa.
+> Nieopodal postać w przemarzniętym ubraniu przemierza ruiny, powłócząc nogami i rozświetlając sobie drogę białym blaskiem. Zatrzymuje się na moment i unosi pustą rękę do piersi, jakby sprawdzała obecność czegoś pod ubraniem. Palce nie potrafią się zacisnąć, więc dłoń po chwili opada. Głowa podejmuje przerwany ruch, omiatając otoczenie ostrym światłem. Postać rusza ponownie, zostawiając za sobą drobiny lodu osypujące się z rękawa.
 
 ### Sytuacja i zasady — dla MG {#s163b5aefc39c}
 

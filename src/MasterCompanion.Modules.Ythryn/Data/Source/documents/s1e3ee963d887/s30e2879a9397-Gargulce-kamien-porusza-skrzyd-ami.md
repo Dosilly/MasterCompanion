@@ -7,11 +7,11 @@ sortOrder: 81
 
 **Do odczytania — wariant 1: Rzeźba zmienia pozycję**
 
-> Suchy zgrzyt kamienia urywa się, zanim zdążycie rozpoznać jego źródło. Rogata postać tkwi nieruchomo ze złożonymi skrzydłami, lecz z jednego barku nadal osypuje się pył. Jej głowa jest zwrócona ku wam, a szpony opierają się o podłoże, jakby właśnie przeniosła na nie ciężar. Po chwili odwraca głowę bez poruszenia reszty ciała. Z innego miejsca odpowiada jej drugi zgrzyt.
+> Wśród pozostałości kamiennych ozdób dostrzegacie rogatą figurę ze złożonymi skrzydłami i świeżo osypany pył przy jej stopach. Gdy patrzycie na nią, bark przesuwa się odrobinę z suchym zgrzytem i strząsa kolejną warstwę kurzu. Głowa jest zwrócona ku wam, a szpony opierają się o podłoże, jakby figura właśnie przeniosła na nie ciężar. Po chwili głowa obraca się, śledząc was bez ruchu reszty ciała. Z pobliskich ruin odpowiada jej drugi zgrzyt.
 
 **Do odczytania — wariant 2: Zajęte przejście**
 
-> Słychać ciężkie skrobanie i chrzęst gruzu przesuwanego szponami. Kamienna, rogata istota wychodzi na waszą drogę i zatrzymuje się bokiem, zostawiając obok siebie wąskie miejsce. Powoli rozprostowuje jedno skrzydło, po czym znów je składa. Nie patrzy na najbliższą osobę; jej oczy śledzą tych, którzy zostali z tyłu. Gdzieś za nią kamień znów zaczyna trzeć o kamień.
+> Przy przejściu stoi rogata figura ze złożonymi skrzydłami, otoczona gruzem usypanym wokół szponiastych stóp. Na wasz widok schodzi z miejsca z ciężkim skrobaniem i ustawia się bokiem na drodze, zostawiając obok siebie wąską lukę. Powoli rozprostowuje jedno skrzydło, po czym znów je składa. Nie patrzy na najbliższą osobę; jej oczy śledzą tych, którzy zostali z tyłu. Gdzieś za nią kamień znów zaczyna trzeć o kamień.
 
 ### Sytuacja i zasady — dla MG {#s88abf0c1f66f}
 

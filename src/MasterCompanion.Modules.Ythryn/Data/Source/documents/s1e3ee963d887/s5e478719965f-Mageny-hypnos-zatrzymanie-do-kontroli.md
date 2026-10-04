@@ -7,11 +7,11 @@ sortOrder: 83
 
 **Do odczytania — wariant 1: Kontrola, która się nie kończy**
 
-> Kilka jednakowych twarzy obraca się ku wam jednocześnie. Strażnicy z bronią robią miejsce postaci, która unosi pustą dłoń i czeka, aż na nią spojrzycie. Jej usta pozostają zamknięte, lecz w głowie rozlega się wyraźne polecenie: „Zatrzymajcie się. Kontrola uprawnień”. Postać wskazuje miejsce, w którym macie stanąć, a potem pustą przestrzeń obok siebie, jakby zostawiała ją komuś wyższemu rangą. „Nadzorca przybędzie” — oznajmia po chwili z tą samą pewnością.
+> W przejściu przed wami stoi grupa strażników o jednakowych twarzach, pilnujących pustego miejsca pośrodku szyku. Kiedy was dostrzegają, rozstępują się przed postacią, która unosi pustą dłoń i czeka na waszą uwagę. Jej usta pozostają zamknięte, lecz w głowie rozlega się wyraźne polecenie: „Zatrzymajcie się. Kontrola uprawnień”. Postać wskazuje miejsce, w którym macie stanąć, a potem pustą przestrzeń obok siebie, jakby zostawiała ją komuś wyższemu rangą. „Nadzorca przybędzie” — oznajmia po chwili z tą samą pewnością.
 
 **Do odczytania — wariant 2: Czy ktoś wyda nowy rozkaz?**
 
-> Zbliżający się strażnicy zatrzymują się w równym szeregu. Jeden wychodzi przed pozostałych i wyciąga ku wam pustą dłoń; bez ruchu ust pyta w waszych głowach: „Uprawnienia?”. Czeka na odpowiedź, a potem zwraca twarz ku drugiemu strażnikowi, który nie reaguje. Kiedy znów patrzy na was, pytanie ustępuje poleceniu: „Pozostać do przybycia nadzorcy”. Uzbrojone postacie zaczynają zajmować drogę odwrotu.
+> Przeszukujący ruiny strażnicy dostrzegają was i zatrzymują się w równym szeregu. Jeden wychodzi przed pozostałych i wyciąga ku wam pustą dłoń; bez ruchu ust pyta w waszych głowach: „Uprawnienia?”. Czeka na odpowiedź, a potem zwraca twarz ku drugiemu strażnikowi, który nie reaguje. Kiedy znów patrzy na was, pytanie ustępuje poleceniu: „Pozostać do przybycia nadzorcy”. Uzbrojone postacie zaczynają zajmować drogę odwrotu.
 
 ### Sytuacja i zasady — dla MG {#scef122b0fa77}
 

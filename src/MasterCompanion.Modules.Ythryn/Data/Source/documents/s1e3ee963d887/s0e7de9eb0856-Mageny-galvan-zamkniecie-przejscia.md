@@ -7,11 +7,11 @@ sortOrder: 82
 
 **Do odczytania — wariant 1: Granica służby**
 
-> Równego rytmu kroków nie zakłóca ani jedno potknięcie. Milczący strażnicy o niemal identycznych twarzach zagradzają wam drogę i zatrzymują się jednocześnie, jak części jednego mechanizmu. Pierwszy szereg unosi broń, a stojąca za nim postać wyciąga rękę z dłonią zwróconą ku ziemi. Między jej palcami przeskakuje błękitna iskra. Gest nakazujący cofnięcie powtarza się raz, po czym ręka powoli obraca się w waszą stronę.
+> Drogą przed wami maszerują milczący strażnicy o niemal identycznych twarzach, utrzymując równy rytm kroków. Gdy was dostrzegają, zajmują całą szerokość przejścia i zatrzymują się jednocześnie, jak części jednego mechanizmu. Pierwszy szereg unosi broń, a stojąca za nim postać wyciąga rękę z dłonią zwróconą ku ziemi. Między jej palcami przeskakuje błękitna iskra. Gest nakazujący cofnięcie powtarza się raz, po czym ręka powoli obraca się w waszą stronę.
 
 **Do odczytania — wariant 2: Wstrzymany pochód**
 
-> Zbliżający się tupot na chwilę zatrzymuje się, znów rusza i po kilku krokach ponownie milknie. Jednakowe postacie obchodzą przeszkodę pojedynczo, po czym cierpliwie odtwarzają poprzedni szyk. Ostatni strażnik dopiero zajmuje miejsce, gdy wszystkie twarze obracają się ku wam. Pomiędzy dłońmi postaci z tyłu pojawia się krótki błękitny łuk. Ci z przodu przesuwają broń tak, by zasłonić przejście, które właśnie sobie otworzyli.
+> Dalej drogę zagradza zwał gruzu, przed którym zgromadzili się strażnicy o jednakowych twarzach. Obchodzą przeszkodę pojedynczo, po czym cierpliwie odtwarzają szyk po drugiej stronie. Ostatni dopiero zajmuje miejsce, gdy prowadzący dostrzega was i pozostali podążają za jego spojrzeniem. Pomiędzy dłońmi postaci z tyłu pojawia się krótki błękitny łuk. Ci z przodu przesuwają broń tak, by zasłonić przejście, które właśnie sobie otworzyli.
 
 ### Sytuacja i zasady — dla MG {#s390302d07478}
 

@@ -7,11 +7,11 @@ sortOrder: 80
 
 **Do odczytania — wariant 1: Ślad na kamieniu**
 
-> Krótkie, mokre mlaśnięcie brzmi jak odrywanie języka od zamarzniętego metalu. Na oblepionym szronem bloku pojawia się ciemna smuga, choć nic nie kapie z góry. Smuga powoli rozszerza się w szczelinę, a sam blok przesuwa się o kilka cali w waszą stronę. Spod szronu wysuwa się gruby język i zbiera lepką wydzielinę z krawędzi. Dopiero teraz widać, że szczelina jest pełna zębów.
+> Wśród luźnych bloków budowlanych jeden wyróżnia się ciemną, wilgotną smugą przecinającą warstwę szronu. Kiedy na niego patrzycie, smuga rozchyla się z mokrym mlaśnięciem, choć kamień wokół niej pozostaje cały. Powoli rozszerza się w szczelinę, a sam blok przesuwa się o kilka cali w waszą stronę. Spod szronu wysuwa się gruby język i zbiera lepką wydzielinę z krawędzi. Dopiero teraz widać, że szczelina jest pełna zębów.
 
 **Do odczytania — wariant 2: Głód zdradza kryjówkę**
 
-> Przy luźnym bloku kamienia leży obgryziona kość, przytrzymana czymś ciemnym i ciągliwym. Kość drga, powoli przesuwa się po podłożu i znika w szczelinie, której przed chwilą nie było. Ze środka dobiega chrupnięcie. Potem cała bryła obraca się odrobinę w waszą stronę, zostawiając na ziemi wilgotny ślad. Szron na jej krawędzi pęka, odsłaniając dziąsła.
+> Między odłamkami muru leży obgryziona kość, połączona z oblepionym szronem blokiem ciemnym, ciągliwym pasmem. Kość drga, powoli przesuwa się po podłożu i znika w szczelinie, której przed chwilą nie było. Ze środka dobiega chrupnięcie. Potem cała bryła obraca się odrobinę w waszą stronę, zostawiając na ziemi wilgotny ślad. Szron na jej krawędzi pęka, odsłaniając dziąsła.
 
 ### Sytuacja i zasady — dla MG {#s5e36bad7f0b7}
 

@@ -175,6 +175,12 @@ variant-selection guidance through revision-checked material saves.
 Scoped verification covers module compilation, rich-document schema round trips,
 internal links and source export/recompilation. The table source has no diff.
 
+The follow-up narration revision grounds each introduction in an observable
+scene before contact: creatures already working, patrolling, waiting or feeding,
+or traces leading to their position. Dialogue and reactions follow that context.
+Both variants retain their existing sentence counts; only the eleven encounter
+documents change in the campaign, with no table or mechanics changes.
+
 ## Deferred scope
 
 Auril's later hourly pursuit, automatic patrol casualty accounting, creature

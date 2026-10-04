@@ -7,11 +7,11 @@ sortOrder: 88
 
 **Do odczytania — wariant 1: Miejsce dla uciekinierów**
 
-> Szybki stukot pazurów cichnie, ustępując ciężkim krokom i suchemu klekotowi kości. Wielki biały wilk wysuwa łeb, węszy i odwraca się na moment ku ogromnej sylwetce pozostającej dalej. „Nie spiesz się” — mówi spokojnie. „Oni sami podejdą”. Potem obniża łeb, odsłania zęby i robi wam miejsce po stronie, z której dobiega klekot.
+> Ślady wielkich łap prowadzą ku białemu wilkowi, który czeka przy drodze i węszy z uniesionym łbem. Dostrzegłszy was, ogląda się ku idącej za nim ogromnej, kościanej sylwetce, stawiającej ciężkie kroki z suchym klekotem. „Nie spiesz się” — mówi spokojnie. „Oni sami podejdą”. Potem obniża łeb, odsłania zęby i robi wam miejsce po stronie, z której nadchodzi szkielet.
 
 **Do odczytania — wariant 2: Głos przy schronieniu**
 
-> Tuż za wejściem słychać pazury drapiące podłoże. „Możecie tam zostać” — odzywa się głęboki, spokojny głos. Wielki biały wilk przechyla łeb, jakby nasłuchiwał odpowiedzi, po czym odsuwa się od przejścia. Dalej rozlega się ciężki krok i grzechot ogromnych kości. „My też mamy czas” — dodaje wilk i kładzie się tak, by widzieć wyjście.
+> Za wejściem do waszego schronienia krąży wielki biały wilk, co chwilę przystając i zerkając do środka. „Możecie tam zostać” — mówi głębokim, spokojnym głosem, kiedy napotyka wasze spojrzenia. Przechyla łeb, jakby nasłuchiwał odpowiedzi, po czym odsuwa się od przejścia. Dalej rozlega się ciężki krok i grzechot ogromnych kości. „My też mamy czas” — dodaje wilk i kładzie się tak, by widzieć wyjście.
 
 ### Sytuacja i zasady — dla MG {#s70f7d4aca56e}
 

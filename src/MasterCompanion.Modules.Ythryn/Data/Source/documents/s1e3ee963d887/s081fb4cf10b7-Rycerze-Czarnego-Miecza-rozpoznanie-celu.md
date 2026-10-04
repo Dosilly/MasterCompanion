@@ -7,11 +7,11 @@ sortOrder: 86
 
 **Do odczytania — wariant 1: Nazwiska na rozkazie**
 
-> Zbliża się brzęk uzbrojenia i urywana rozmowa prowadzona półgłosem. „Jeśli to oni, nie wracamy z pustymi rękami” — mówi ktoś, zanim drugi głos ucisza go krótkim syknięciem. Na wasz widok prowadzący patrol zatrzymuje pozostałych uniesioną dłonią i przygląda się kolejno twarzom oraz wyposażeniu. Za jego plecami ktoś poprawia chwyt na broni. Dowódca opuszcza dłoń, nie odrywając od was wzroku.
+> W głębi ruin dostrzegacie uzbrojony patrol, którego członkowie rozglądają się i rozmawiają półgłosem. „Jeśli to oni, nie wracamy z pustymi rękami” — mówi jeden z idących z tyłu, zanim towarzysz ucisza go syknięciem. Na wasz widok prowadzący patrol zatrzymuje pozostałych uniesioną dłonią i przygląda się kolejno twarzom oraz wyposażeniu. Za jego plecami ktoś poprawia chwyt na broni. Dowódca opuszcza dłoń, nie odrywając od was wzroku.
 
 **Do odczytania — wariant 2: Kto poniesie wiadomość?**
 
-> Słychać szybkie kroki, potem krótki rozkaz: „Zostań z tyłu”. Uzbrojona grupa zatrzymuje się, gdy prowadzący dostrzega was na swojej drodze. Dowódca wymienia spojrzenie z towarzyszem, który dotąd szedł ostatni; ten cofa się o krok i ogląda trasę powrotną. „Pamiętasz, co masz jej powiedzieć?” — pada ciche pytanie. Reszta patrolu rozsuwa się na tyle, na ile pozwala miejsce, i unosi broń.
+> Z pobliskiego przejścia wychodzi uzbrojona grupa, a jej dowódca przytrzymuje ostatniego z maszerujących poleceniem: „Zostań z tyłu”. Kiedy dostrzega was na swojej drodze, zatrzymuje pozostałych gestem. Wymienia spojrzenie z wyznaczonym towarzyszem; ten cofa się o krok i ogląda trasę powrotną. „Pamiętasz, co masz jej powiedzieć?” — pyta go dowódca półgłosem. Reszta patrolu rozsuwa się na tyle, na ile pozwala miejsce, i unosi broń.
 
 ### Sytuacja i zasady — dla MG {#s7c67cc4da302}
 

@@ -7,11 +7,11 @@ sortOrder: 78
 
 **Do odczytania — wariant 1: Cierpliwy zbieracz**
 
-> Przez podłoże przechodzi głuche uderzenie, potem drugie, bliższe. Drobiny lodu podskakują, a gdzieś obok ciężki przedmiot przesuwa się po kamieniu z długim zgrzytem. Rytm nagle ustaje, choć ostatnie drżenie jeszcze nie zdążyło ucichnąć. Z miejsca, w którym zatrzymało się coś ogromnego, dobiega pojedynczy stuk — jak odłożenie narzędzia przed rozpoczęciem rozmowy. Potem nastaje cisza i nic już się nie oddala.
+> Z głębi ruin dochodzą powolne, ciężkie kroki, którym towarzyszy drżenie podłoża. Drobiny lodu podskakują, a pomiędzy uderzeniami słychać zgrzyt czegoś wleczonego po kamieniu. Odgłosy zbliżają się, po czym ustają przy drodze przed wami. W półmroku widać zarys ogromnej sylwetki opierającej młot o ziemię, jak ktoś gotowy cierpliwie czekać. Choć ma dość miejsca, by ruszyć dalej, pozostaje nieruchoma.
 
 **Do odczytania — wariant 2: Niedokończona praca**
 
-> Najpierw słyszycie trzy miarowe uderzenia, a po nich długi odgłos kruszącego się kamienia. Coś ciężkiego przesypuje gruz, zatrzymuje się i z niezwykłą ostrożnością podnosi drobny przedmiot; metal cicho dzwoni o metal. Przez chwilę nie dzieje się nic. Potem znalezisko zostaje odłożone, a ciężkie kroki kierują się ku przejściu w pobliżu. Cokolwiek pracowało w pobliżu, uznało właśnie, że warto zrobić przerwę.
+> Przy pobliskim rumowisku ogromna, pozbawiona twarzy istota rozbija młotem kamień, co kilka uderzeń przerywając pracę. Przesypuje gruz i z niezwykłą ostrożnością podnosi drobny przedmiot; metal cicho dzwoni o metal. Na wasz widok zastyga ze znaleziskiem w dłoni. Potem ostrożnie odkłada je na bok i rusza ciężkim krokiem ku przejściu w pobliżu. Młot trzyma nisko, lecz drugą dłoń wyciąga otwartą ku waszym pakunkom.
 
 ### Sytuacja i zasady — dla MG {#sa6cdfb27a33c}
 

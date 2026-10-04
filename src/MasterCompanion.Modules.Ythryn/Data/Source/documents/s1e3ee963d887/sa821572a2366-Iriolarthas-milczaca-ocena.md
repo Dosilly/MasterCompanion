@@ -7,11 +7,11 @@ sortOrder: 85
 
 **Do odczytania — wariant 1: Oczekiwani goście**
 
-> Szuranie stóp milknie, a z ciemności wynurza się ludzka czaszka unosząca się nad ziemią. Podążająca za nią jednooka istota cofa się i pochyla głowę, pozostawiając przed swoim panem wolne miejsce. Czaszka zatrzymuje się naprzeciw was, obraca ku jednej osobie, potem ku następnej. Czeka dłużej, niż trwa zwykłe spojrzenie. Gdy nikt nie występuje naprzód, podpływa odrobinę bliżej i znów zastyga, jak gospodarz oczekujący dawno obiecanej odpowiedzi.
+> Nad gruzem unosi się ludzka czaszka, a towarzysząca jej jednooka istota odsuwa kamienie z dalszej drogi. Gdy czaszka kieruje się ku wam, sługa przerywa pracę, cofa się i pochyla głowę, pozostawiając przed swoim panem wolne miejsce. Czaszka zatrzymuje się naprzeciw was, obraca ku jednej osobie, potem ku następnej. Czeka dłużej, niż trwa zwykłe spojrzenie. Gdy nikt nie występuje naprzód, podpływa odrobinę bliżej i znów zastyga, jak gospodarz oczekujący dawno obiecanej odpowiedzi.
 
 **Do odczytania — wariant 2: Milczący świadek**
 
-> Ciche kroki urywają się w pobliżu, ale ich właściciel nie wychodzi wam naprzeciw. Nieopodal unosi się ludzka czaszka, zwrócona ku waszym dłoniom; za nią czeka przygarbiona, jednooka istota. Czaszka powoli przenosi uwagę z niesionego wyposażenia na najbliższy ślad ruin. Potem znów obraca się ku wam. Nie wydaje żadnego dźwięku i nie rusza dalej, zostawiając wam pierwszy ruch.
+> Nieopodal przygarbiona, jednooka istota obchodzi rumowisko, torując drogę unoszącej się za nią ludzkiej czaszce. Czaszka zatrzymuje się przy miejscu, które oglądacie, i zwraca ku waszym dłoniom; sługa czeka kilka kroków z tyłu. Obserwator powoli przenosi uwagę z niesionego wyposażenia na najbliższy ślad ruin. Potem znów obraca się ku wam. Nie wydaje żadnego dźwięku i nie rusza dalej, zostawiając wam pierwszy ruch.
 
 ### Sytuacja i zasady — dla MG {#sdda62fe2f42e}
 

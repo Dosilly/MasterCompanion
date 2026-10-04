@@ -7,11 +7,11 @@ sortOrder: 79
 
 **Do odczytania — wariant 1: Proszę się cofnąć**
 
-> W ciszy odzywa się niecierpliwe bębnienie, zbyt głośne, by mogły je wywołać ludzkie palce. Ogromna, świetlista dłoń przesuwa się w powietrzu i zatrzymuje przed wami z wyprostowanym palcem wskazującym. Wskazuje miejsce za waszymi plecami, czeka, po czym powtarza gest wolniej, jak wobec kogoś, kto nie zrozumiał polecenia. Kiedy opuszcza palec, obraca ku wam wnętrze dłoni. Pozostałe palce zaczynają się zginać jeden po drugim.
+> Nad skrajem rumowiska wisi ogromna, świetlista dłoń, bębniąc palcami o kamień jak ktoś zniecierpliwiony czekaniem. Gdy wyczuwa waszą obecność, odrywa palce od kamienia i przesuwa się przed was z wyprostowanym palcem wskazującym. Wskazuje miejsce za waszymi plecami, czeka, po czym powtarza gest wolniej, jak wobec kogoś, kto nie zrozumiał polecenia. Kiedy opuszcza palec, obraca ku wam wnętrze dłoni. Pozostałe palce zaczynają się zginać jeden po drugim.
 
 **Do odczytania — wariant 2: Praca musi trwać**
 
-> Słychać powtarzające się szuranie, przerywane krótkimi stuknięciami. Świetlista dłoń wielkości człowieka zsuwa drobny gruz w jedno miejsce, po czym wraca do punktu, który przed chwilą oczyściła. Powtarza pusty ruch jeszcze raz, jakby wciąż leżało tam coś, co dawno zniknęło. Gdy was zauważa, zastyga z rozłożonymi palcami. Następnie odrywa się od swojej pracy i odwraca ku wam dokładnie tak, jak przed chwilą ku stercie odpadków.
+> Przy stercie kamiennych odłamków pracuje świetlista dłoń wielkości człowieka, zgarniając je powolnymi, regularnymi ruchami. Zsuwa drobny gruz w jedno miejsce, po czym wraca do punktu, który przed chwilą oczyściła. Powtarza pusty ruch jeszcze raz, jakby wciąż leżało tam coś, co dawno zniknęło. Gdy was zauważa, zastyga z rozłożonymi palcami. Następnie odrywa się od swojej pracy i odwraca ku wam dokładnie tak, jak przed chwilą ku stercie odpadków.
 
 ### Sytuacja i zasady — dla MG {#sa083075f8a0b}
 
