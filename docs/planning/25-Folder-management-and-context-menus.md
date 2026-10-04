@@ -134,3 +134,10 @@ both themes and viewport sizes. Four intentionally changed menu baselines were
 reviewed after a normal comparison, updated only for that exact visual test, and
 checked again without baseline updates. Full frontend quality and compilation
 pass. The before/after ordering indicators were reviewed at Full HD in both themes.
+
+Fix commit `b76fea9` was fast-forward merged into local `trunk`. Image
+`mastercompanion:folder-fix-b76fea9` was built from the merged source and replaced
+only the application container. Readiness and five read-only container cases pass.
+A live browser check confirms the three-action menu, contextual document
+destination, keyboard focus, actual nested parent and root selection, with API
+writes blocked and no page errors. No remote push or external deployment occurred.

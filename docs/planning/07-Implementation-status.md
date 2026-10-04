@@ -8,6 +8,11 @@ and a root target outside the scrolling navigation address difficult drag/drop.
 Folder menus now offer Add document, Rename and Move without redundant expansion
 actions. See [the correction and scoped evidence](25-Folder-management-and-context-menus.md#folder-interaction-corrections--4-october-2026).
 
+Fix `b76fea9` was merged into local `trunk` and the application container updated
+to `mastercompanion:folder-fix-b76fea9`. Twenty-four folder unit tests, sixty-four
+scoped browser cases, frontend quality/build, five container checks and a live
+browser check pass. The live check blocked API writes and confirmed root selection.
+
 ## Folder management and context menus — 4 October 2026
 
 Folders support rename, sibling order, subtree nesting and moves to ancestors or
