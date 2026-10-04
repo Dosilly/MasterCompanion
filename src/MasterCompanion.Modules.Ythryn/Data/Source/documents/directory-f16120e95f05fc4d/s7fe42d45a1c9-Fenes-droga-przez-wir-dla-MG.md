@@ -69,13 +69,15 @@ sortOrder: 111
 
 ## Przyrząd Dwóch Brzegów — przy stole {#s9d65f827d9a1}
 
--   **Wygląd:** trzy ruchome obręcze na składanej podstawie, w wyściełanej skrzynce szerokiej na **1 stopę**. Wewnątrz obręczy wisi srebrna igła; obok są cztery wyjmowane płytki do zapisu śladów. Cały zestaw waży **5 funtów**.
+-   **Wygląd:** drewniana szkatułka z mosiężnymi okuciami, zatrzaskiem i uchwytem do noszenia, szeroka na **1 stopę**. Po otwarciu wieko pozostaje uniesione, a wszystkie elementy są osadzone w dnie: z tyłu po lewej mała miedziana tuba, z tyłu po prawej okrągła tarcza pomiarowa ze srebrną igłą pod szkłem, z przodu po prawej płytka z obrysem dłoni, a z przodu po lewej cztery szczeliny na wyjmowane płytki do zapisu śladów. Tuba jest mniejszym odpowiednikiem odbiornika z Y15; jej kielich zwraca się ku użytkownikowi, a w głębi znajduje się srebrna tarczka. Przegub u podstawy pozwala unieść tubę do rozmowy i złożyć ją na bok w wyściełanym zagłębieniu przed zamknięciem skrzynki. Cały zestaw waży **5 funtów**.
+
+-   **Czytelne elementy:** użytkownik kładzie dłoń na płytce i mówi w stronę tuby; odpowiedź jest słyszalna z jej kielicha dla osób przy skrzynce. Srebrna igła porusza się nad podziałką tarczy podczas pomiarów. Tarcza przypomina kompas, ale nie wskazuje kierunku podróży ani położenia rozmówcy. Płytki zachowują ślady, nie nagrania.
 
 -   **Dostęp:** skrzynka w Y19q jest niezamknięta. Przyrząd nie wymaga zestrojenia, śmierci właściciela ani obsługi przez czarodzieja.
 
--   **Bez testu — przygotowanie:** **1 godzina** czytania instrukcji i dostrajania do Fenes. To przygotowanie można połączyć z godziną studiowania schematów gabinetu, jeśli zajmują się nimi różne osoby. Fenes musi uczestniczyć w dostrajaniu.
+-   **Bez testu — przygotowanie:** otwarcie skrzynki, uniesienie tuby i **1 godzina** czytania instrukcji oraz dostrajania do Fenes z jej dłonią na płytce. Pod koniec igła na tarczy uspokaja się; nie trzeba ustawiać jej ręcznie. To przygotowanie można połączyć z godziną studiowania schematów gabinetu, jeśli zajmują się nimi różne osoby. Fenes musi uczestniczyć w dostrajaniu.
 
--   **Bez testu — wywołanie:** po przygotowaniu Fenes wybiera uczestnika przejścia, dotyka obręczy i mówi. Odbiorca może odpowiedzieć bez własnego urządzenia. Kontakt trwa do **10 minut**, jednocześnie z **jedną osobą**.
+-   **Bez testu — wywołanie:** po przygotowaniu Fenes wybiera uczestnika przejścia, kładzie dłoń na płytce z jej obrysem i mówi w stronę kielicha tuby. Odbiorca może odpowiedzieć bez własnego urządzenia; jego głos dobiega z tuby. Kontakt trwa do **10 minut**, jednocześnie z **jedną osobą**.
 
 -   **Odnowienie:** jedna rozmowa na **24 godziny dla całego przyrządu**; nieudane wywołanie nie zużywa rozmowy. Czas odmierza urządzenie po stronie Fenes. Pierwsza próba wybranej osoby daje realną możliwość odpowiedzi.
 

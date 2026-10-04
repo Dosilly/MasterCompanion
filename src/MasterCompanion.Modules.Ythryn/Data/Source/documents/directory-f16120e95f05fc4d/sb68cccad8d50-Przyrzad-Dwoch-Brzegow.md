@@ -13,25 +13,27 @@ Spisałem kolejność czynności stosowaną przy poszukiwaniu mierniczej. Rachmi
 
 ## Zawartość skrzynki {#se1e11a56e86f}
 
-Trzy ruchome obręcze, składana podstawa, srebrna igła, cztery płytki do zachowania śladów i karty pomiarów. Każda płytka odpowiada jednej poszukiwanej osobie. Imię należy dopisać samemu, żeby później nie pomylić odczytów.
+Przyrząd mieści się w drewnianej szkatułce z mosiężnymi okuciami, zatrzaskiem i uchwytem do noszenia. Ma stopę szerokości; cały zestaw waży pięć funtów. Po otwarciu wieko pozostaje uniesione, a części przyrządu są osadzone w dnie skrzynki.
 
-Za pomocą obręczy prowadziliśmy rozmowy i porównywaliśmy odczyty po obu stronach zamkniętej drogi. Do otwarcia samego przejścia potrzebowaliśmy osobnych prac przy bramie, opisanych w raporcie Lethry.
+Z tyłu po lewej znajduje się mała miedziana tuba z szerokim kielichem i srebrną tarczką w głębi. Przypomina pomniejszony odbiornik z obserwatorium. Z tyłu po prawej umieszczono okrągłą tarczę pomiarową, na której srebrna igła porusza się nad podziałką pod szkłem. Z przodu po prawej jest płytka z obrysem dłoni. Cztery szczeliny z przodu po lewej mieszczą wyjmowane płytki do zachowania śladów. Każda płytka odpowiada jednej poszukiwanej osobie. Imię należy dopisać samemu, żeby później nie pomylić odczytów. Karty pomiarów i tę instrukcję przechowywać pod wiekiem.
+
+Tuba służy do rozmowy, tarcza — do obserwowania odczytów. Choć przypomina kompas, nie wskazuje kierunku podróży ani miejsca pobytu rozmówcy. Za pomocą przyrządu prowadziliśmy rozmowy i porównywaliśmy odczyty po obu stronach zamkniętej drogi. Do otwarcia samego przejścia potrzebowaliśmy osobnych prac przy bramie, opisanych w raporcie Lethry.
 
 ## Przygotowanie {#s6ea30af0964f}
 
-Rozłożyć podstawę na stabilnym podłożu. Przez całe przygotowanie musi być obecny uczestnik tego samego wiru, który rozdzielił poszukiwanych. Rachmistrz nie znał sztuki czarodziejskiej i nie przeszkodziło mu to w obsłudze. Próbowaliśmy również bez pozostawionych rzeczy mierniczej; wynik był taki sam.
+Otworzyć skrzynkę na stabilnym podłożu. Unieść tubę na przegubie u jej podstawy, tak aby kielich był zwrócony ku użytkownikowi. Przez całe przygotowanie musi być obecny uczestnik tego samego wiru, który rozdzielił poszukiwanych. Rachmistrz nie znał sztuki czarodziejskiej i nie przeszkodziło mu to w obsłudze. Próbowaliśmy również bez pozostawionych rzeczy mierniczej; wynik był taki sam.
 
-Przez godzinę należy zapoznawać się z instrukcją i dopasowywać obręcze do ruchu igły. Podróżnik dotyka kolejno ich krawędzi i przypomina sobie przejście. Obręcz, której dotyka, sama ustawia się w potrzebnym położeniu. Nie prostować jej na siłę.
+Przez godzinę należy zapoznawać się z instrukcją i dostrajać przyrząd do podróżnika. Utrzymuje on dłoń na płytce z jej obrysem i przypomina sobie przejście. Igła na tarczy początkowo wychyla się gwałtownie, potem jej ruch stopniowo się uspokaja. Nie otwierać osłony tarczy i nie przestawiać igły ręcznie.
 
-Gdy igła przestanie uderzać o wewnętrzny pierścień, przyrząd jest gotowy.
+Gdy igła się uspokoi, przyrząd jest gotowy.
 
 ## Rozmowa {#s476946bb3359}
 
-Podróżnik skupia się na jednym uczestniku tego samego przejścia, dotyka obręczy i odzywa się do niego. Miernicza słyszała rachmistrza bez własnego odbiornika, również wtedy, gdy nie umiała podać nam swego położenia. Odpowiadała zwykłym głosem. Obręcze nie pozwalały wydobyć odpowiedzi wbrew jej woli.
+Podróżnik skupia się na jednym uczestniku tego samego przejścia, kładzie dłoń na płytce z jej obrysem i mówi w stronę kielicha tuby. Miernicza słyszała rachmistrza bez własnego odbiornika, również wtedy, gdy nie umiała podać nam swego położenia. Odpowiadała zwykłym głosem; jej odpowiedź dobiegała z tuby i słyszały ją osoby przy skrzynce. Przyrząd nie pozwalał wydobyć odpowiedzi wbrew jej woli.
 
-Po uzyskaniu odpowiedzi wsunąć wolną płytkę w szczelinę podstawy. Igła zapisze na niej ślad rozmówcy. Przy następnym wywołaniu użyć tej samej płytki, także jeśli skrzynkę przeniesiono. Zachowuje ona ustawienie dla danej osoby; nie zdołaliśmy odtworzyć z niej żadnej wcześniejszej wypowiedzi.
+Po uzyskaniu odpowiedzi wsunąć wolną płytkę w jedną z czterech szczelin z przodu po lewej. Przyrząd zapisze na niej ślad rozmówcy. Przy następnym wywołaniu użyć tej samej płytki, także jeśli skrzynkę przeniesiono. Zachowuje ona ustawienie dla danej osoby; nie zdołaliśmy odtworzyć z niej żadnej wcześniejszej wypowiedzi.
 
-Po uzyskaniu odpowiedzi obręcze utrzymują głos najwyżej przez **dziesięć minut**. Następnie potrzebują **dwudziestu czterech godzin** przed kolejną rozmową. Czas liczyć zegarem stojącym przy przyrządzie. Wymiana płytki nie skraca oczekiwania — sprawdziliśmy to. Jeżeli wywoływana osoba nie odpowie, można ponowić próbę bez czekania do następnego dnia.
+Po uzyskaniu odpowiedzi przyrząd utrzymuje głos najwyżej przez **dziesięć minut**. Następnie potrzebuje **dwudziestu czterech godzin** przed kolejną rozmową. Czas liczyć zegarem stojącym przy przyrządzie. Wymiana płytki nie skraca oczekiwania — sprawdziliśmy to. Jeżeli wywoływana osoba nie odpowie, można ponowić próbę bez czekania do następnego dnia.
 
 Zdjęcie dłoni zamyka połączenie. Rozmówca również może je zakończyć, świadomie odrzucając kontakt. Jeśli odpowiedział choć raz, przed następnym wywołaniem trzeba odczekać pełną dobę, nawet gdy rozmowa urwała się po kilku słowach.
 
@@ -61,6 +63,6 @@ Pierwotne miejsce zaginięcia nie jest konieczne do dalszych pomiarów. Wspólny
 
 W zbadanych przypadkach rozmowy zawsze następowały kolejno dla obu osób. Różniły się daty i długość przerw. Nie udało się przekazać wiadomości przed poprzednią rozmowę ani zmienić tego, co już podczas niej powiedziano.
 
-Po dłuższej przerwie płytki zachowały odczyty bez osłabienia; nie stwierdziliśmy zanikania zapisu z upływem czasu. Obręcze można złożyć i przewieźć. Mają własne zasilanie, niezależne od urządzeń miasta. Podczas próby tłumienia magii przyrząd zamilkł, lecz po ustaniu zakłócenia zapisane ślady nadal nadawały się do użycia.
+Po dłuższej przerwie płytki zachowały odczyty bez osłabienia; nie stwierdziliśmy zanikania zapisu z upływem czasu. Przed zamknięciem skrzynki złożyć tubę na przegubie na bok, w wyściełane zagłębienie pod nią. Pozostałe części pozostają osadzone w dnie; nie trzeba ich wyjmować do transportu. Przyrząd ma własne zasilanie, niezależne od urządzeń miasta. Podczas próby tłumienia magii zamilkł, lecz po ustaniu zakłócenia zapisane ślady nadal nadawały się do użycia.
 
 *Dopisek Lethry: o przerwie w pracy uprzedzić drugą stronę. Kiedy rada zatrzymała nam przyrząd na trzy dni, miernicza czekała przy swoim kamieniu, przekonana, że znów straciliśmy drogę. Nie miała jak dowiedzieć się o zmianie terminu.*
