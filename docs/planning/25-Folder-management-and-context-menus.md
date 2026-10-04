@@ -1,6 +1,6 @@
 # Folder management and context menus
 
-4 October 2026 · implemented and verified; local container delivery pending
+4 October 2026 · implemented, verified and delivered locally
 
 ## Authorized scope
 
@@ -87,7 +87,24 @@ were corrected during review. One initial browser request exhausted local Chromi
 buffers; the affected rerun used two workers and passed. New screenshot creation
 was followed by normal comparison; no missing/skipped checks count as passes.
 
-Local delivery follows the repository workflow: review and scoped verification,
-commit, merge to local `trunk`, build the merged runtime image and replace the app
-container. No remote push or AWS deployment is included. The current development
-data policy requires no backup or preservation probes for this update.
+## Local delivery
+
+Feature commit `3dd7e91` was fast-forward merged into local `trunk` through its
+existing clean worktree. The primary checkout's clean source matched that merged
+revision. Runtime image `mastercompanion:folders-3dd7e91` was built from it; the
+Linux build passed frontend quality/compilation and API publish. Its image digest
+is `sha256:727f079d8caa96eb6d7133b655b82730974bd33a5ca8fc8c95c6217a50f6f54c`.
+
+Compose replaced only the application container and waited for healthy readiness.
+PostgreSQL remains running with its existing volume; the reviewed additive folder
+migration applies through ordinary startup. Both services are healthy, with the
+application served on loopback port 4200.
+
+Five read-only deployed-container cases pass, including the new folder snapshot
+and workspace revision contract. A fresh Full HD production browser check confirms
+the folder menu, creating a note dialog with the clicked folder preselected, and
+keyboard focus return. The check blocked any non-read API request and observed none;
+it created no material or folder operation and logged no browser page errors.
+
+No remote push or AWS deployment occurred. The current development data policy
+requires no backup or preservation probes for this update.

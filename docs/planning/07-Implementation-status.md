@@ -20,7 +20,10 @@ Nine unchanged note-creation unit cases remain valid. Both themes and viewport
 sizes were verified; four new visual baselines and Full HD dialog/catalog views
 were reviewed. Builds, model/migration consistency and quality checks pass.
 See [scope, contract and delivery evidence](25-Folder-management-and-context-menus.md).
-Local merge and runtime delivery are pending.
+Commit `3dd7e91` was merged into local `trunk`; image
+`mastercompanion:folders-3dd7e91` was built and the app container updated. Both
+services are healthy. Five read-only container cases and a live browser menu,
+note-destination and keyboard-focus check passed without API writes.
 
 ## Campaign material memory — 4 October 2026
 
