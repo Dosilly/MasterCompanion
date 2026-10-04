@@ -1,59 +1,23 @@
 import '@angular/compiler';
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
-import { pathToFileURL } from 'node:url';
-import { resolve } from 'node:path';
-import ts from 'typescript';
-import { signal } from '@angular/core';
-const directory = resolve('.local/tests/workspace-notes');
-mkdirSync(directory, { recursive: true });
-function compile(name, source) {
-  const path = resolve(directory, `${name}.mjs`);
-  writeFileSync(
-    path,
-    ts.transpileModule(source, {
-      compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
-    }).outputText,
-  );
-  return path;
-}
-const sessionPath = compile(
-  'material-session',
-  readFileSync('projects/engine/src/lib/features/materials/material-session.ts', 'utf8'),
-);
-const navigationPath = compile(
-  'navigation',
-  readFileSync('projects/engine/src/lib/features/workspace/navigation.ts', 'utf8'),
-);
-// Compile the actual integration method without loading the Angular component template or its unrelated panels.
-const workspaceSource = ts.createSourceFile(
-  'workspace.ts',
-  readFileSync('projects/engine/src/lib/features/workspace/workspace.ts', 'utf8'),
-  ts.ScriptTarget.Latest,
-  true,
-);
-const workspaceClass = workspaceSource.statements.find(
-  (node) => ts.isClassDeclaration(node) && node.name?.text === 'Workspace',
-);
-assert.ok(workspaceClass);
-const acceptance = workspaceClass.members.find(
-  (node) =>
-    ts.isMethodDeclaration(node) && node.name.getText(workspaceSource) === 'acceptCreatedMaterial',
-);
-assert.ok(acceptance);
-const workspacePath = compile(
-  'workspace-notes',
-  `import { MaterialSession } from '${pathToFileURL(sessionPath).href}';\nexport class WorkspaceNotes { ${acceptance.getText(workspaceSource)} }`,
-);
-const { WorkspaceNotes } = await import(pathToFileURL(workspacePath));
-const { MaterialSession } = await import(pathToFileURL(sessionPath));
-const { buildNavigation, folderPath } = await import(pathToFileURL(navigationPath));
-const document = (text) => ({
+import type { MaterialDto, RichDocument, WorkspaceDto } from '@mastercompanion/contracts';
+import { ControlledHttp } from '../support/controlled-http';
+import { WorkspaceMaterials } from '../../projects/engine/src/lib/features/workspace/workspace-materials';
+import {
+  buildNavigation,
+  folderPath,
+} from '../../projects/engine/src/lib/features/workspace/navigation';
+const document = (text: string): RichDocument => ({
   type: 'doc',
   content: [{ type: 'paragraph', content: text ? [{ type: 'text', text }] : [] }],
 });
-function material(id, title, folderId = null, revision = 1) {
+function material(
+  id: string,
+  title: string,
+  folderId: string | null = null,
+  revision = 1,
+): MaterialDto {
   return {
     id,
     title,
@@ -65,22 +29,16 @@ function material(id, title, folderId = null, revision = 1) {
   };
 }
 function fixture() {
-  const requests = [];
-  const http = {
-    put(...args) {
-      requests.push(args);
-      throw new Error('Acceptance must not write existing drafts.');
-    },
-  };
+  const transport = new ControlledHttp((value) => value);
+  const requests = transport.requests;
   const oldMaterial = material('existing-note', 'Existing note', 'child', 9);
-  const oldSession = new MaterialSession(oldMaterial, http);
+  const workspace = new WorkspaceMaterials(transport.client);
+  const oldSession = workspace.acceptCreatedMaterial(oldMaterial);
   oldSession.document = document('Unsaved campaign draft');
   oldSession.editing.set(true);
   oldSession.dirty.set(true);
   oldSession.status.set('conflict');
-  const workspace = new WorkspaceNotes();
-  workspace.http = http;
-  workspace.workspace = signal({
+  workspace.initialize({
     campaignId: 'campaign',
     title: 'Campaign',
     moduleId: 'test-module',
@@ -95,12 +53,65 @@ function fixture() {
       { id: oldMaterial.id, title: oldMaterial.title, group: '', folderId: oldMaterial.folderId },
     ],
   });
-  workspace.sessions = signal([oldSession]);
-  workspace.activations = [];
-  workspace.activate = (id) => workspace.activations.push(id);
   return { workspace, oldSession, requests };
 }
+function confirmedWorkspace(workspace: WorkspaceMaterials): WorkspaceDto {
+  const value = workspace.workspace();
+  assert.ok(value);
+  return value;
+}
+
 describe('Confirmed notes and workspace navigation', () => {
+  test('Concurrent opens share one read and retain the same session on later opens', async () => {
+    // Arrange
+    const transport = new ControlledHttp((value) => value);
+    const workspace = new WorkspaceMaterials(transport.client);
+
+    // Act
+    const first = workspace.open('note');
+    const second = workspace.open('note');
+
+    // Assert
+    assert.equal(transport.requests.length, 1);
+    assert.equal(transport.requests[0].url, '/api/materials/note');
+
+    // Act
+    transport.requests[0].response.next(material('note', 'Note'));
+    transport.requests[0].response.complete();
+    const [firstSession, secondSession] = await Promise.all([first, second]);
+
+    // Assert
+    assert.equal(firstSession, secondSession);
+    assert.equal(await workspace.open('note'), firstSession);
+    assert.equal(transport.requests.length, 1);
+    assert.equal(workspace.sessions().length, 1);
+  });
+
+  test('A failed read leaves no session and a subsequent open can retry', async () => {
+    // Arrange
+    const transport = new ControlledHttp((value) => value);
+    const workspace = new WorkspaceMaterials(transport.client);
+
+    // Act
+    const opening = workspace.open('note');
+    const rejected = assert.rejects(opening, /Read failed/);
+    transport.requests[0].response.error(new Error('Read failed'));
+    await rejected;
+
+    // Assert
+    assert.equal(workspace.sessions().length, 0);
+
+    // Act
+    const retry = workspace.open('note');
+    transport.requests[1].response.next(material('note', 'Note'));
+    transport.requests[1].response.complete();
+    await retry;
+
+    // Assert
+    assert.equal(transport.requests.length, 2);
+    assert.equal(workspace.sessions().length, 1);
+  });
+
   test('Confirmed creation adds one summary and a read-mode session without replacing or saving current drafts', () => {
     // Arrange
     const { workspace, oldSession, requests } = fixture();
@@ -120,18 +131,19 @@ describe('Confirmed notes and workspace navigation', () => {
     assert.equal(workspace.sessions()[1].editing(), false);
     assert.equal(workspace.sessions()[1].dirty(), false);
     assert.equal(requests.length, 0);
-    assert.deepEqual(workspace.activations, [created.id]);
 
     // Act
     const tree = buildNavigation(
-      workspace.workspace().folders,
-      workspace.workspace().materials,
+      confirmedWorkspace(workspace).folders,
+      confirmedWorkspace(workspace).materials,
       '',
       'Unfiled',
     );
 
     // Assert
-    assert.equal(tree.find((folder) => folder.id === '@unfiled').materials[0].id, created.id);
+    const unfiled = tree.find((folder) => folder.id === '@unfiled');
+    assert.ok(unfiled);
+    assert.equal(unfiled.materials[0].id, created.id);
   });
   test('Duplicate confirmations preserve an existing new-note editor and append neither duplicate tab nor summary', () => {
     // Arrange
@@ -155,7 +167,7 @@ describe('Confirmed notes and workspace navigation', () => {
 
     // Assert
     assert.equal(workspace.sessions().length, 2);
-    assert.equal(workspace.workspace().materials.length, 2);
+    assert.equal(confirmedWorkspace(workspace).materials.length, 2);
     assert.equal(workspace.sessions()[1], session);
     assert.deepEqual(session.document, document('New note draft'));
     assert.equal(session.editing(), true);
@@ -163,8 +175,8 @@ describe('Confirmed notes and workspace navigation', () => {
 
     // Act
     const tree = buildNavigation(
-      workspace.workspace().folders,
-      workspace.workspace().materials,
+      confirmedWorkspace(workspace).folders,
+      confirmedWorkspace(workspace).materials,
       created.title,
       'Unfiled',
     );
@@ -173,7 +185,7 @@ describe('Confirmed notes and workspace navigation', () => {
     assert.equal(tree[0].children[0].materials[0].id, created.id);
 
     // Act
-    const actual1 = folderPath(workspace.workspace().folders, created.folderId);
+    const actual1 = folderPath(confirmedWorkspace(workspace).folders, created.folderId);
 
     // Assert
     assert.deepEqual(actual1, ['root', 'child']);

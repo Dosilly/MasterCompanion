@@ -1,4 +1,5 @@
 import { spawnSync } from 'node:child_process';
+import { checkQuality } from './check-quality.mjs';
 import './check-boundaries.mjs';
 import './check-code-policy.mjs';
 
@@ -13,6 +14,7 @@ export function buildLibraries() {
   for (const name of ['contracts', 'engine', 'ythryn']) ng(['build', name]);
 }
 if (import.meta.main) {
+  checkQuality();
   buildLibraries();
   ng(['build', 'web']);
 }

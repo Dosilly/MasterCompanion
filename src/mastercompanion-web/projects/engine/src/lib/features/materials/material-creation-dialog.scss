@@ -1,0 +1,41 @@
+.material-creation-dialog {
+  width: min(560px, calc(100vw - 40px));
+  max-height: calc(100dvh - 48px);
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+  background: var(--paper);
+}
+.material-creation-dialog h2 {
+  margin-top: 0;
+}
+.material-creation-dialog label {
+  display: block;
+  margin: 12px 0 6px;
+}
+.material-creation-dialog input,
+.material-creation-dialog select {
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: var(--ink);
+  background: var(--paper);
+}
+.material-creation-dialog button {
+  overflow-wrap: anywhere;
+}
+.creation-hint {
+  color: var(--muted);
+}
+.creation-error {
+  padding: 12px;
+  border: 1px solid var(--error-line);
+  background: var(--error-bg);
+}
+.material-creation-dialog .dialog-actions {
+  flex-wrap: wrap;
+}

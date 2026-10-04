@@ -16,21 +16,41 @@ public static class GameplayEndpoints
         endpoints.MapPost("/api/campaigns/{campaignId:guid}/game/operations", async (Guid campaignId,
             HttpRequest httpRequest, GameplayService service, CancellationToken token) =>
         {
-            if (!httpRequest.HasJsonContentType()) return ToResult(new(415, "game_json_required"));
-            if (httpRequest.ContentLength > MaxRequestBytes) return ToResult(new(413, "game_request_too_large"));
+            if (!httpRequest.HasJsonContentType())
+            {
+                return ToResult(new(415, "game_json_required"));
+            }
+
+            if (httpRequest.ContentLength > MaxRequestBytes)
+            {
+                return ToResult(new(413, "game_request_too_large"));
+            }
+
             var buffer = new byte[MaxRequestBytes + 1];
             var length = 0;
             while (length < buffer.Length)
             {
                 var read = await httpRequest.Body.ReadAsync(buffer.AsMemory(length), token);
-                if (read == 0) break;
+                if (read == 0)
+                {
+                    break;
+                }
+
                 length += read;
             }
-            if (length > MaxRequestBytes) return ToResult(new(413, "game_request_too_large"));
+            if (length > MaxRequestBytes)
+            {
+                return ToResult(new(413, "game_request_too_large"));
+            }
+
             GameOperationRequest? request;
-            try { request = JsonSerializer.Deserialize<GameOperationRequest>(buffer.AsSpan(0, length), GameplayService.JsonOptions); }
+            try { request = JsonSerializer.Deserialize<GameOperationRequest>(buffer.AsSpan(0, length), GameSnapshotCodec.JsonOptions); }
             catch (JsonException) { return ToResult(new(400, "invalid_game_operation")); }
-            if (request is null) return ToResult(new(400, "invalid_game_operation"));
+            if (request is null)
+            {
+                return ToResult(new(400, "invalid_game_operation"));
+            }
+
             return ToResult(await service.ExecuteAsync(campaignId, request, token));
         });
     }

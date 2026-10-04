@@ -170,6 +170,13 @@ speculative variants.
   pan/zoom; frontend reuse does not require database changes.
 - Document component APIs, actual consumers, checks run, and remaining scope.
 
-This planning task changes instructions and architecture documentation only.
+The original planning task changed instructions and architecture documentation only.
 No UI library, new dependency, application behavior, or visual baseline has
 been implemented or verified by this document.
+
+On 4 October 2026, [the quality implementation](19-Code-quality-implementation.md)
+extracted the engine-owned `WorkspaceMaterials` session owner and a shared
+`WorkspaceTab` view used by the party, gameplay, map and material tabs. These
+campaign controls remain internal to the engine and do not create the planned
+neutral UI library. UI library scaffolding, its catalog, and URL routing remain
+separate planned slices.

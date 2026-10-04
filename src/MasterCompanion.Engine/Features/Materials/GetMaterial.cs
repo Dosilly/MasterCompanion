@@ -20,6 +20,3 @@ public static class GetMaterial
                     material.DocumentSchemaVersion, material.Revision, material.FolderId));
         });
 }
-
-public sealed record MaterialResponse(string Id, string Title, string Group, JsonElement Document,
-    int DocumentSchemaVersion, long Revision, string? FolderId);

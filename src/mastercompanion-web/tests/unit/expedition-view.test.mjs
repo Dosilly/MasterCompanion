@@ -1,18 +1,6 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
-import ts from 'typescript';
-mkdirSync('.local/tests', { recursive: true });
-const target = resolve('.local/tests/expedition-view.mjs');
-writeFileSync(
-  target,
-  ts.transpileModule(readFileSync('projects/ythryn/src/lib/gameplay/expedition-view.ts', 'utf8'), {
-    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
-  }).outputText,
-);
-const {
+import {
   readExpeditionView,
   explorationAction,
   buildingAction,
@@ -20,7 +8,7 @@ const {
   encounterMaterials,
   encounterPreview,
   selectedEncounterRoll,
-} = await import(pathToFileURL(target));
+} from '../../projects/ythryn/src/lib/gameplay/expedition-view';
 function fixture() {
   return {
     snapshot: { timeMinutes: 1500, restEnds: [480], moduleSchemaVersion: 3 },

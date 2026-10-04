@@ -1,28 +1,14 @@
 import '@angular/compiler';
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
-import { pathToFileURL } from 'node:url';
-import { resolve } from 'node:path';
-import ts from 'typescript';
 import { Subject } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-// Exercise the real session and boundary decoder without exporting private engine implementation.
-mkdirSync('.local/tests', { recursive: true });
-const sourceDirectory = 'projects/engine/src/lib/features/gameplay';
-for (const name of ['game-wire', 'game-session', 'party-draft']) {
-  const compiled = ts
-    .transpileModule(readFileSync(`${sourceDirectory}/${name}.ts`, 'utf8'), {
-      compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
-    })
-    .outputText.replaceAll("'./game-wire'", "'./game-wire.mjs'");
-  writeFileSync(resolve(`.local/tests/${name}.mjs`), compiled);
-}
-const { GameSession } = await import(pathToFileURL(resolve('.local/tests/game-session.mjs')));
-const { isGameRequest, isGameState } = await import(
-  pathToFileURL(resolve('.local/tests/game-wire.mjs'))
-);
-const { PartyDraft } = await import(pathToFileURL(resolve('.local/tests/party-draft.mjs')));
+import { GameSession } from '../../projects/engine/src/lib/features/gameplay/game-session';
+import {
+  isGameRequest,
+  isGameState,
+} from '../../projects/engine/src/lib/features/gameplay/game-wire';
+import { PartyDraft } from '../../projects/engine/src/lib/features/gameplay/party-draft';
 const campaignId = 'ec8bf847-08b7-4314-9e54-ffcd39b0ab8e';
 const characterId = 'da929f55-a678-482a-a8c8-13b89f2b71ad';
 const previousRequestId = '8c6e29fd-5266-42a1-9684-46ea79e99d1b';

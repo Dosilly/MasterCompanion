@@ -12,8 +12,8 @@ export function buildNavigation(
   unfiledTitle: string,
   locale = 'en',
 ): FolderNode[] {
-  const nodes = new Map(
-    folders.map((folder) => [folder.id, { ...folder, children: [], materials: [] } as FolderNode]),
+  const nodes = new Map<string, FolderNode>(
+    folders.map((folder) => [folder.id, { ...folder, children: [], materials: [] }]),
   );
   const roots: FolderNode[] = [];
   for (const folder of nodes.values()) {

@@ -2,49 +2,9 @@ import '@angular/compiler';
 import { Injector, runInInjectionContext, signal } from '@angular/core';
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
-import ts from 'typescript';
-const directory = resolve('.local/tests/expedition-tool');
-mkdirSync(directory, { recursive: true });
-const contracts = pathToFileURL(`${directory}/contracts.mjs`).href;
-writeFileSync(
-  `${directory}/contracts.mjs`,
-  ts.transpileModule(readFileSync('projects/contracts/src/public-api.ts', 'utf8'), {
-    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
-  }).outputText,
-);
-const messages = JSON.parse(readFileSync('projects/ythryn/src/lib/i18n/en.json', 'utf8'));
-writeFileSync(
-  `${directory}/messages.mjs`,
-  `export const uiMessages = ${JSON.stringify(messages)};`,
-);
-for (const name of [
-  'action-required',
-  'blight-view',
-  'blight-tool',
-  'expedition-view',
-  'expedition-tool',
-  'ythryn-tools',
-]) {
-  const source = readFileSync(`projects/ythryn/src/lib/gameplay/${name}.ts`, 'utf8');
-  const compiled = ts
-    .transpileModule(source, {
-      compilerOptions: {
-        module: ts.ModuleKind.ESNext,
-        target: ts.ScriptTarget.ES2022,
-        experimentalDecorators: true,
-      },
-    })
-    .outputText.replaceAll("'@mastercompanion/contracts'", JSON.stringify(contracts))
-    .replace(/from '\.\/([^']+)'/g, "from './$1.mjs'")
-    .replaceAll("'../i18n/messages'", "'./messages.mjs'");
-  writeFileSync(`${directory}/${name}.mjs`, compiled);
-}
-const { CAMPAIGN_GAME } = await import(contracts);
-const { ExpeditionTool } = await import(pathToFileURL(`${directory}/expedition-tool.mjs`));
-const { YthrynTools } = await import(pathToFileURL(`${directory}/ythryn-tools.mjs`));
+import { CAMPAIGN_GAME } from '@mastercompanion/contracts';
+import { ExpeditionTool } from '../../projects/ythryn/src/lib/gameplay/expedition-tool';
+import { YthrynTools } from '../../projects/ythryn/src/lib/gameplay/ythryn-tools';
 function fixture() {
   const state = signal({
     snapshot: {

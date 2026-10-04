@@ -11,25 +11,7 @@ import { readExpeditionView } from './expedition-view';
   selector: 'mc-ythryn-tools',
   imports: [ActionRequired, BlightTool, ExpeditionTool],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    @if (pendingActions().length > 0) {
-      <nav class="pending-actions" [attr.aria-label]="text.actionRequired">
-        <p role="status">
-          <mc-action-required
-            >{{ text.actionRequired }}: {{ pendingActions().length }}</mc-action-required
-          >
-        </p>
-        <ul>
-          @for (action of pendingActions(); track action.target) {
-            <li>
-              <a [href]="'#' + action.target">{{ action.label }}</a>
-            </li>
-          }
-        </ul>
-      </nav>
-    }
-    <mc-ythryn-expedition /><mc-ythryn-blight />
-  `,
+  templateUrl: './ythryn-tools.html',
   styles: `
     .pending-actions {
       margin-bottom: 1.5rem;

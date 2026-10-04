@@ -185,7 +185,7 @@ public sealed class HttpTests(PostgreSqlFixture database) : IAsyncLifetime
             request with { FolderId = null }, 409, "material_creation_conflict");
         await AssertCountAsync(App.Services, otherCampaignId, 0);
         using (var staleSave = await client.PutAsync($"/api/materials/{created.Id}", JsonContent(new SaveMaterialRequest(
-            JsonSerializer.Deserialize<JsonElement>("{\"type\":\"doc\",\"content\":[]}"), 1))))
+            JsonSerializer.Deserialize<JsonElement>(AuthoredDocument), 1))))
             await AssertProblemAsync(staleSave, 409, "material_revision_conflict");
 
 

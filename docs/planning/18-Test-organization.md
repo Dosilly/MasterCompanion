@@ -86,6 +86,10 @@ and the host uses
 
 ## Verification evidence
 
+The figures below are the evidence for this historical test-organization change.
+The later runtime replacement and additional save/session cases are described in
+[Code quality implementation](19-Code-quality-implementation.md).
+
 - All 120 backend unit cases passed after removing unrelated setup and replacing
   equality checks with assertions that report expected and actual values.
 - All 23 gameplay and 11 material integration cases passed using the shared

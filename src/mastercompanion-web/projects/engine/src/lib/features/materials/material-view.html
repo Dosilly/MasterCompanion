@@ -1,0 +1,128 @@
+<div class="material-scroll" (click)="followLink($event)">
+  <div class="reading-bar">
+    <span class="breadcrumb">{{ session().material.group || ui.workspace.unfiledMaterials }}</span>
+    <div class="actions">
+      <span class="save-state" role="status" aria-live="polite">{{ statusLabel() }}</span>
+      <button (click)="toggleEdit()">
+        {{ session().editing() ? ui.material.finishEditing : ui.material.edit }}
+      </button>
+    </div>
+  </div>
+  @if (session().error(); as error) {
+    <div class="save-error" role="alert">
+      <p>{{ ui.material.errors[error] }}</p>
+      <button (click)="copyDraft()">{{ ui.material.copyDraft }}</button>
+      @if (session().status() !== 'conflict') {
+        <button (click)="session().flush()">{{ ui.material.retrySave }}</button>
+      }
+    </div>
+  }
+  @if (session().editing()) {
+    <div class="editor-toolbar" [attr.aria-label]="ui.material.formattingLabel">
+      <button
+        [attr.aria-label]="ui.material.bold"
+        (mousedown)="$event.preventDefault()"
+        (click)="editor?.chain().focus().toggleBold().run()"
+      >
+        <b>B</b>
+      </button>
+      <button
+        [attr.aria-label]="ui.material.italic"
+        (mousedown)="$event.preventDefault()"
+        (click)="editor?.chain().focus().toggleItalic().run()"
+      >
+        <i>I</i>
+      </button>
+      <button
+        (mousedown)="$event.preventDefault()"
+        (click)="editor?.chain().focus().toggleHeading({ level: 2 }).run()"
+      >
+        {{ ui.material.heading }}
+      </button>
+      <button
+        (mousedown)="$event.preventDefault()"
+        (click)="editor?.chain().focus().toggleBulletList().run()"
+      >
+        {{ ui.material.list }}
+      </button>
+      <button
+        (mousedown)="$event.preventDefault()"
+        (click)="editor?.chain().focus().toggleBlockquote().run()"
+      >
+        {{ ui.material.quote }}
+      </button>
+      <button (mousedown)="$event.preventDefault()" (click)="editor?.chain().focus().undo().run()">
+        {{ ui.material.undo }}
+      </button>
+      <button (mousedown)="$event.preventDefault()" (click)="editor?.chain().focus().redo().run()">
+        {{ ui.material.redo }}
+      </button>
+      <button (mousedown)="$event.preventDefault()" (click)="openInsertion('markdown', $event)">
+        {{ ui.material.insertMarkdown }}
+      </button>
+      <button (mousedown)="$event.preventDefault()" (click)="openInsertion('link', $event)">
+        {{ ui.material.insertMaterialLink }}
+      </button>
+    </div>
+  }
+  <article class="reading-paper" [class.is-editing]="session().editing()">
+    <h1>{{ session().material.title }}</h1>
+    <div #editorElement class="document-body"></div>
+  </article>
+</div>
+<dialog
+  #insertionDialog
+  class="editor-insertion-dialog"
+  [attr.aria-labelledby]="insertionId('title')"
+  (cancel)="cancelInsertion($event)"
+>
+  <h2 [id]="insertionId('title')">
+    {{
+      insertionMode() === 'markdown' ? ui.material.insertMarkdown : ui.material.insertMaterialLink
+    }}
+  </h2>
+  <div [hidden]="insertionMode() !== 'markdown'">
+    <label [attr.for]="insertionId('source')">{{ ui.material.markdownSource }}</label>
+    <p [id]="insertionId('help')">{{ ui.material.markdownHelp }}</p>
+    <textarea
+      #markdownSource
+      [id]="insertionId('source')"
+      [attr.aria-describedby]="insertionId('help')"
+      [value]="markdownDraft()"
+      (input)="updateMarkdown($event)"
+      rows="12"
+    ></textarea>
+  </div>
+  <div [hidden]="insertionMode() !== 'link'">
+    <label [attr.for]="insertionId('filter')">{{ ui.material.linkFilter }}</label>
+    <input
+      #materialFilter
+      [id]="insertionId('filter')"
+      type="search"
+      [value]="linkFilter()"
+      (input)="updateLinkFilter($event)"
+    />
+    <label [attr.for]="insertionId('target')">{{ ui.material.linkTarget }}</label>
+    <select [id]="insertionId('target')" [value]="linkTarget()" (change)="updateLinkTarget($event)">
+      <option value="">{{ ui.material.chooseMaterial }}</option>
+      @for (material of filteredMaterials(); track material.id) {
+        <option [value]="material.id">
+          {{ material.title }} — {{ material.group || ui.workspace.unfiledMaterials }}
+        </option>
+      }
+    </select>
+    @if (filteredMaterials().length === 0) {
+      <p role="status">{{ ui.material.noLinkResults }}</p>
+    }
+    <p>{{ ui.material.linkHelp }}</p>
+  </div>
+  @if (insertionError(); as error) {
+    <p role="alert">{{ ui.material.insertionErrors[error] }}</p>
+  }
+  <div class="dialog-actions">
+    <button (click)="closeInsertion()">{{ ui.material.cancelInsertion }}</button>
+    <button (click)="confirmInsertion()" [disabled]="insertionMode() === 'link' && !linkTarget()">
+      {{ ui.material.confirmInsertion }}
+    </button>
+  </div>
+</dialog>

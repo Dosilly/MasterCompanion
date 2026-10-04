@@ -1,0 +1,20 @@
+<button
+  role="tab"
+  [id]="'tab-' + domKey()"
+  [attr.aria-controls]="'panel-' + domKey()"
+  [attr.data-tab-id]="key()"
+  [attr.tabindex]="selected() ? 0 : -1"
+  [attr.aria-selected]="selected()"
+  (click)="activate.emit()"
+>
+  {{ label() }}{{ dirty() ? ' •' : '' }}
+</button>
+<button
+  class="tab-close"
+  [attr.aria-label]="closeLabel() + ' ' + label()"
+  [title]="closeHint()"
+  [disabled]="closing()"
+  (click)="close.emit()"
+>
+  {{ closing() ? '…' : '×' }}
+</button>

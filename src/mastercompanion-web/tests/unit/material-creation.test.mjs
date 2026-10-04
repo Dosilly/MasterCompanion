@@ -1,29 +1,12 @@
 import '@angular/compiler';
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
-import { pathToFileURL } from 'node:url';
-import { resolve } from 'node:path';
-import ts from 'typescript';
 import { Subject } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-mkdirSync('.local/tests', { recursive: true });
-const compiled = resolve('.local/tests/material-creation.mjs');
-writeFileSync(
-  compiled,
-  ts
-    .transpileModule(
-      readFileSync('projects/engine/src/lib/features/materials/material-creation.ts', 'utf8'),
-      {
-        compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
-      },
-    )
-    .outputText.replace(
-      '../../editor-schema.mjs',
-      pathToFileURL(resolve('projects/engine/src/lib/editor-schema.mjs')).href,
-    ),
-);
-const { MaterialCreation, isCreationRequest } = await import(pathToFileURL(compiled));
+import {
+  MaterialCreation,
+  isCreationRequest,
+} from '../../projects/engine/src/lib/features/materials/material-creation';
 const campaignId = '00000000-0000-0000-0000-000000000001';
 const key = `mastercompanion.material.pending.${campaignId}`;
 const id = '01234567-89ab-cdef-0123-456789abcdef';

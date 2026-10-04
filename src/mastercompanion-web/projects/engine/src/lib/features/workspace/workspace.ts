@@ -16,7 +16,8 @@ import { NgTemplateOutlet } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { CAMPAIGN_MODULES, MaterialDto, WorkspaceDto } from '@mastercompanion/contracts';
-import { MaterialSession } from '../materials/material-session';
+import { WorkspaceTab } from './workspace-tab';
+import { WorkspaceMaterials } from './workspace-materials';
 import { MaterialView } from '../materials/material-view';
 import { MaterialCreation } from '../materials/material-creation';
 import { MaterialCreationDialog } from '../materials/material-creation-dialog';
@@ -30,284 +31,17 @@ import { UiMessages, uiLocale, uiMessages } from '../../i18n/messages';
 
 @Component({
   selector: 'mc-workspace',
-  imports: [NgTemplateOutlet, MaterialView, MaterialCreationDialog, MapView, GameView, PartyView],
-  template: `
-    <header class="app-header">
-      <div>
-        <strong>MasterCompanion</strong
-        ><span class="campaign-name"> / {{ workspace()?.title }}</span>
-      </div>
-      <div class="header-actions">
-        @if (game()) {
-          <button (click)="openParty()" [attr.aria-pressed]="active() === '@party'">
-            {{ ui.game.partyTitle }}
-          </button>
-        }
-        @if (game(); as session) {
-          <button (click)="openGame()" [attr.aria-pressed]="active() === '@game'">
-            {{ ui.game.title }}{{ session.state() ? ' · ' + gameTime() : '' }}
-          </button>
-        }
-        @if (workspace()?.maps?.length) {
-          <button (click)="openMap()" [attr.aria-pressed]="active() === '@map'">
-            {{ ui.workspace.map }}
-          </button>
-        }
-        <button
-          (click)="theme.toggle()"
-          [attr.aria-pressed]="theme.dark()"
-          [attr.aria-label]="ui.workspace.darkMode"
-        >
-          {{ theme.dark() ? '☀ ' + ui.workspace.lightMode : '☾ ' + ui.workspace.darkMode }}
-        </button>
-      </div>
-    </header>
-    @if (loadError(); as error) {
-      <div class="load-error" role="alert">
-        {{ ui.workspace.errors[error] }} <button (click)="load()">{{ ui.workspace.retry }}</button>
-      </div>
-    }
-    @if (workspace(); as data) {
-      <div class="workspace-shell">
-        <nav #navigation class="material-nav" [attr.aria-label]="ui.workspace.navigationLabel">
-          <label for="material-search">{{ ui.workspace.materials }}</label>
-          <input
-            id="material-search"
-            type="search"
-            [placeholder]="ui.workspace.searchPlaceholder"
-            [value]="search()"
-            (input)="updateSearch($event)"
-          />
-          <button class="new-note-button" (click)="openCreation($event)">
-            {{ ui.notes.newNote }}
-          </button>
-          @if (creation()?.hasRecovery()) {
-            <div class="note-recovery" role="status">
-              <p>{{ ui.notes.recoveryHint }}</p>
-              <button (click)="openCreation($event)">{{ ui.notes.recover }}</button>
-            </div>
-          }
-          <ng-container *ngTemplateOutlet="folderTree; context: { $implicit: folders() }" />
-          <ng-template #folderTree let-nodes>
-            @for (folder of nodes; track folder.id) {
-              <details
-                class="nav-folder"
-                [attr.data-folder-id]="folder.id"
-                [open]="!!search() || expanded().has(folder.id)"
-                (toggle)="toggleFolder(folder.id, $event)"
-              >
-                <summary>{{ folder.title }}</summary>
-                <div class="folder-contents">
-                  @for (material of folder.materials; track material.id) {
-                    <button
-                      [attr.data-material-id]="material.id"
-                      [class.selected]="active() === material.id"
-                      [attr.aria-current]="active() === material.id ? 'page' : null"
-                      (click)="open(material.id)"
-                    >
-                      {{ material.title }}
-                    </button>
-                  }
-                  <ng-container
-                    *ngTemplateOutlet="folderTree; context: { $implicit: folder.children }"
-                  />
-                </div>
-              </details>
-            }
-          </ng-template>
-          @if (!folders().length) {
-            <p class="nav-empty">{{ ui.workspace.noSearchResults }}</p>
-          }
-        </nav>
-        <main class="workspace-main">
-          <div
-            #tabStrip
-            class="material-tabs"
-            role="tablist"
-            [attr.aria-label]="ui.workspace.tabsLabel"
-            (keydown)="tabKey($event)"
-          >
-            @if (partyOpen()) {
-              <div
-                class="material-tab"
-                [class.is-active]="active() === '@party'"
-                (mousedown)="preventMiddleScroll($event)"
-                (auxclick)="middleClose('@party', $event)"
-              >
-                <button
-                  role="tab"
-                  id="tab-party"
-                  aria-controls="panel-party"
-                  data-tab-id="@party"
-                  [attr.tabindex]="active() === '@party' ? 0 : -1"
-                  [attr.aria-selected]="active() === '@party'"
-                  (click)="openParty()"
-                >
-                  {{ ui.game.partyTitle }}{{ partyView()?.dirty() ? ' •' : '' }}
-                </button>
-                <button
-                  class="tab-close"
-                  [attr.aria-label]="ui.workspace.closeTab + ' ' + ui.game.partyTitle"
-                  (click)="close('@party')"
-                >
-                  ×
-                </button>
-              </div>
-            }
-            @if (gameOpen()) {
-              <div
-                class="material-tab"
-                [class.is-active]="active() === '@game'"
-                (mousedown)="preventMiddleScroll($event)"
-                (auxclick)="middleClose('@game', $event)"
-              >
-                <button
-                  role="tab"
-                  id="tab-game"
-                  aria-controls="panel-game"
-                  data-tab-id="@game"
-                  [attr.tabindex]="active() === '@game' ? 0 : -1"
-                  [attr.aria-selected]="active() === '@game'"
-                  (click)="openGame()"
-                >
-                  {{ ui.game.title }}
-                </button>
-                <button
-                  class="tab-close"
-                  [attr.aria-label]="ui.workspace.closeTab + ' ' + ui.game.title"
-                  (click)="close('@game')"
-                >
-                  ×
-                </button>
-              </div>
-            }
-            @if (data.maps.length && mapOpen()) {
-              <div
-                class="material-tab"
-                [class.is-active]="active() === '@map'"
-                (mousedown)="preventMiddleScroll($event)"
-                (auxclick)="middleClose('@map', $event)"
-              >
-                <button
-                  role="tab"
-                  id="tab-map"
-                  aria-controls="panel-map"
-                  data-tab-id="@map"
-                  [attr.tabindex]="active() === '@map' ? 0 : -1"
-                  [attr.aria-selected]="active() === '@map'"
-                  (click)="openMap()"
-                >
-                  {{ ui.workspace.map }}
-                </button>
-                <button
-                  class="tab-close"
-                  [attr.aria-label]="ui.workspace.closeTab + ' ' + ui.workspace.map"
-                  [title]="ui.workspace.closeTabHint"
-                  (click)="close('@map')"
-                >
-                  ×
-                </button>
-              </div>
-            }
-            @for (tab of sessions(); track tab.material.id) {
-              <div
-                class="material-tab"
-                [class.is-active]="active() === tab.material.id"
-                (mousedown)="preventMiddleScroll($event)"
-                (auxclick)="middleClose(tab.material.id, $event)"
-              >
-                <button
-                  role="tab"
-                  [id]="'tab-' + tab.material.id"
-                  [attr.aria-controls]="'panel-' + tab.material.id"
-                  [attr.data-tab-id]="tab.material.id"
-                  [attr.tabindex]="active() === tab.material.id ? 0 : -1"
-                  [attr.aria-selected]="active() === tab.material.id"
-                  (click)="activate(tab.material.id)"
-                >
-                  {{ tab.material.title }}{{ tab.dirty() ? ' •' : '' }}
-                </button>
-                <button
-                  class="tab-close"
-                  [attr.aria-label]="ui.workspace.closeTab + ' ' + tab.material.title"
-                  [title]="ui.workspace.closeTabHint"
-                  [disabled]="closing().has(tab.material.id)"
-                  (click)="close(tab.material.id)"
-                >
-                  {{ closing().has(tab.material.id) ? '…' : '×' }}
-                </button>
-              </div>
-            }
-          </div>
-          @if (opening()) {
-            <div class="opening-state" role="status">{{ ui.workspace.loadingMaterial }}</div>
-          }
-          @if (!active()) {
-            <p class="empty-workspace">
-              {{ data.maps.length ? ui.workspace.emptyWithMap : ui.workspace.emptyMaterials }}
-            </p>
-          }
-          @if (data.maps[0]; as map) {
-            <mc-map-view
-              id="panel-map"
-              role="tabpanel"
-              aria-labelledby="tab-map"
-              [hidden]="active() !== '@map'"
-              [map]="map"
-              (openMaterial)="open($event)"
-            />
-          }
-          @if (partyMounted()) {
-            @if (game(); as session) {
-              <mc-party-view
-                id="panel-party"
-                role="tabpanel"
-                aria-labelledby="tab-party"
-                [hidden]="active() !== '@party'"
-                [session]="session"
-              />
-            }
-          }
-          @if (gameMounted()) {
-            @if (game(); as session) {
-              @if (campaignModule(); as module) {
-                <mc-game-view
-                  id="panel-game"
-                  role="tabpanel"
-                  aria-labelledby="tab-game"
-                  [hidden]="active() !== '@game'"
-                  [session]="session"
-                  [module]="module"
-                  (openParty)="openParty()"
-                  (materialRequested)="open($event.id, $event.anchor)"
-                />
-              }
-            }
-          }
-          @for (tab of sessions(); track tab.material.id) {
-            <mc-material-view
-              [id]="'panel-' + tab.material.id"
-              role="tabpanel"
-              [attr.aria-labelledby]="'tab-' + tab.material.id"
-              [hidden]="active() !== tab.material.id"
-              [session]="tab"
-              [materials]="data.materials"
-              (openMaterial)="open($event.id, $event.anchor)"
-            />
-          }
-        </main>
-      </div>
-      @if (creation(); as draft) {
-        <mc-material-creation-dialog
-          [creation]="draft"
-          [folders]="data.folders"
-          (created)="acceptCreatedMaterial($event)"
-        />
-      }
-    } @else if (!loadError()) {
-      <p class="opening-state">{{ ui.workspace.loadingCampaign }}</p>
-    }
-  `,
+  imports: [
+    WorkspaceTab,
+    NgTemplateOutlet,
+    MaterialView,
+    MaterialCreationDialog,
+    MapView,
+    GameView,
+    PartyView,
+  ],
+  templateUrl: './workspace.html',
+  styleUrl: './workspace.scss',
 })
 export class Workspace {
   private readonly http = inject(HttpClient);
@@ -316,8 +50,9 @@ export class Workspace {
   private readonly destroyRef = inject(DestroyRef);
   readonly theme = inject(ThemePreference);
   readonly ui = uiMessages;
-  readonly workspace = signal<WorkspaceDto | null>(null);
-  readonly sessions = signal<MaterialSession[]>([]);
+  private readonly materials = new WorkspaceMaterials(this.http);
+  readonly workspace = this.materials.workspace;
+  readonly sessions = this.materials.sessions;
   readonly active = signal('@map');
   readonly search = signal('');
   readonly loadError = signal<keyof UiMessages['workspace']['errors'] | null>(null);
@@ -352,7 +87,6 @@ export class Workspace {
       uiLocale,
     ),
   );
-  private readonly loadingMaterials = new Map<string, Promise<MaterialSession>>();
   private navigationRender?: AfterRenderRef;
 
   constructor() {
@@ -370,7 +104,7 @@ export class Workspace {
       if (!this.modules.some((module) => module.id === workspace.moduleId)) {
         throw new Error('No frontend implementation is registered for the campaign module.');
       }
-      this.workspace.set(workspace);
+      this.materials.initialize(workspace);
       if (this.game()?.campaignId !== workspace.campaignId) {
         this.game()?.destroy();
         let storage: Storage | null = null;
@@ -408,20 +142,7 @@ export class Workspace {
     }
     this.opening.set(true);
     try {
-      if (!this.sessions().some((tab) => tab.material.id === id)) {
-        let pending = this.loadingMaterials.get(id);
-        if (!pending) {
-          pending = firstValueFrom(this.http.get<MaterialDto>(`/api/materials/${id}`))
-            .then((material) => {
-              const session = new MaterialSession(material, this.http);
-              this.sessions.update((tabs) => [...tabs, session]);
-              return session;
-            })
-            .finally(() => this.loadingMaterials.delete(id));
-          this.loadingMaterials.set(id, pending);
-        }
-        await pending;
-      }
+      await this.materials.open(id);
       this.activate(id, anchor);
     } catch {
       this.loadError.set('materialLoadFailed');
@@ -436,27 +157,8 @@ export class Workspace {
       null;
     this.creationDialog()?.open(event, folderId);
   }
-  acceptCreatedMaterial(material: MaterialDto) {
-    this.workspace.update((workspace) =>
-      workspace === null || workspace.materials.some((item) => item.id === material.id)
-        ? workspace
-        : {
-            ...workspace,
-            materials: [
-              ...workspace.materials,
-              {
-                id: material.id,
-                title: material.title,
-                group: material.group,
-                folderId: material.folderId,
-              },
-            ],
-          },
-    );
-    // Replayed confirmations never replace an existing session or its unsaved draft.
-    if (!this.sessions().some((session) => session.material.id === material.id)) {
-      this.sessions.update((sessions) => [...sessions, new MaterialSession(material, this.http)]);
-    }
+  acceptCreatedMaterial(material: MaterialDto): void {
+    this.materials.acceptCreatedMaterial(material);
     this.activate(material.id);
   }
 
@@ -597,18 +299,6 @@ export class Workspace {
     }
   }
 
-  preventMiddleScroll(event: MouseEvent) {
-    if (event.button === 1) {
-      event.preventDefault();
-    }
-  }
-  middleClose(id: string, event: MouseEvent) {
-    if (event.button === 1) {
-      event.preventDefault();
-      void this.close(id);
-    }
-  }
-
   async close(id: string) {
     if (this.closing().has(id)) {
       return;
@@ -644,7 +334,7 @@ export class Workspace {
     } else if (id === '@party') {
       this.partyOpen.set(false);
     } else {
-      this.sessions.update((tabs) => tabs.filter((tab) => tab.material.id !== id));
+      this.materials.removeConfirmedSession(id);
     }
     if (this.active() === id) {
       this.activate(tabIds[index + 1] ?? tabIds[index - 1] ?? '');

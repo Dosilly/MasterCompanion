@@ -1,0 +1,55 @@
+.map-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 32px 16px;
+}
+.map-heading h1 {
+  margin: 0;
+  font-size: 25px;
+}
+.map-viewport {
+  display: grid;
+  place-items: center;
+  flex: 1;
+  min-height: 0;
+  margin: 0 32px;
+  overflow: hidden;
+  background: #223841;
+  border-radius: 6px;
+  touch-action: none;
+  cursor: grab;
+}
+.map-image {
+  position: relative;
+  width: 100%;
+  transform-origin: center;
+  user-select: none;
+}
+.map-image img {
+  display: block;
+  width: 100%;
+  pointer-events: none;
+}
+.map-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  padding: 2px 5px;
+  font-size: 12px;
+  font-weight: 600;
+  border-color: #193e4d;
+  color: #173540;
+  background: #f1e9ce;
+  box-shadow: 0 1px 4px #0006;
+  border-radius: 4px;
+}
+.map-marker:hover {
+  background: #fff;
+  z-index: 1;
+}
+.map-hint {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 12px;
+}

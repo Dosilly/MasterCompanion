@@ -142,6 +142,16 @@ The following commands are available checks, not a checklist to run for every ta
 pnpm --dir src/mastercompanion-web check:code
 pnpm --dir src/mastercompanion-web check:boundaries
 
+# Frontend formatting, lint, typed fixtures, E2E types, localization and boundaries
+pnpm --dir src/mastercompanion-web check:quality
+# Individual checks can be selected for narrower changes
+pnpm --dir src/mastercompanion-web check:format
+pnpm --dir src/mastercompanion-web check:lint
+pnpm --dir src/mastercompanion-web check:tests
+
+# C# formatting in affected files; omit applied migrations and generated artifacts
+dotnet format whitespace MasterCompanion.slnx --no-restore --include src/MasterCompanion.Engine/Features/Materials/SaveMaterial.cs --verify-no-changes
+
 # Scoped browser checks; choose the tag or spec affected by a UI change
 pnpm --dir src/mastercompanion-web test:ui --grep '@reader'
 pnpm --dir src/mastercompanion-web test:ui --grep '@editor'
@@ -164,6 +174,7 @@ pnpm --dir src/mastercompanion-web exec node --test --test-name-pattern="Markdow
 ```
 
 - `check:code` is a guard against Polish source text and inconsistent translation catalogs; it cannot prove that every ASCII sentence is English or that the product is production-ready. Human review remains necessary.
+- Frontend builds run `check:quality` before compilation. Node tests use the centrally configured `tsx` runtime and public contract entry point; TypeScript tests and fixtures are checked by `tests/tsconfig.json`. Keep test scenarios free of custom transpilers and generated application modules. Remaining JavaScript suites run the same actual source implementation but are not semantic fixture type-checking evidence.
 - Use `test:api` against a running AppHost when changed persistence/API behavior needs integration evidence. This probe changes one material temporarily; prefer an isolated database and respect its revision-protected restore. For changes limited to rejected requests or error diagnostics, prefer `test:api-errors`, which checks ProblemDetails and confirms no persisted document or revision changes. Do not run either for unrelated frontend, documentation, or tooling changes. Folder backfill verification is a separate, explicit before/after probe in `tools/verify-folders.mjs`.
 - Use real PostgreSQL when verifying changed database-specific behavior. Existing integration evidence remains valid until a relevant change affects it.
 - For visible UI changes, prefer the affected Playwright spec or tag (`@reader`, `@editor`, `@gameplay`). The suite runs independent browser contexts with four workers across both themes and two viewport sizes, checks console errors, and compares visual baselines. Inspect new designs, intentional screenshot differences and behavior not covered by the suite manually. Do not repeat covered manual walkthroughs after a successful relevant automated check. Never update visual baselines just to clear a failure; review the actual image and intended change first. See [UI test instructions](docs/planning/13-UI-tests.md). A successful build is not browser verification.

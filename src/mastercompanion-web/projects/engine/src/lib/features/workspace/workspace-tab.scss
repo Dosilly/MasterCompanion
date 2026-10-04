@@ -1,0 +1,35 @@
+:host {
+  display: flex;
+  flex: none;
+  align-items: center;
+  border-bottom: 3px solid transparent;
+}
+
+:host(.is-active) {
+  border-bottom-color: var(--accent);
+  background: var(--soft);
+}
+
+button {
+  border: 0;
+  white-space: nowrap;
+  background: transparent;
+}
+
+[role='tab'] {
+  border-radius: 0;
+  padding: 12px 8px 12px 12px;
+}
+
+.tab-close {
+  font-size: 20px;
+  line-height: 1;
+  width: 30px;
+  height: 30px;
+  padding: 4px;
+  margin-right: 5px;
+}
+
+.tab-close:hover {
+  background: var(--line);
+}

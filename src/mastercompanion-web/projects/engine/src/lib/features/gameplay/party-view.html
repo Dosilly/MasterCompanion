@@ -1,0 +1,124 @@
+<section class="party-view" [attr.aria-label]="text.partyTitle">
+  <div class="game-heading">
+    <h1>{{ text.partyTitle }}</h1>
+    <button type="button" [disabled]="session().pending()" (click)="session().load()">
+      {{ text.refresh }}
+    </button>
+  </div>
+  <p class="game-hint">{{ text.partyResourceHint }}</p>
+  @if (session().pending()) {
+    <p role="status">{{ text.working }}</p>
+  }
+  @if (session().error(); as error) {
+    <div class="game-error" role="alert">
+      <p>{{ text.errors[error] }}</p>
+      @if (session().hasRecovery()) {
+        <button type="button" [disabled]="session().pending()" (click)="retry()">
+          {{ text.retryOperation }}
+        </button>
+      }
+      @if (session().invalidPending() && state()) {
+        <button
+          type="button"
+          [disabled]="session().pending()"
+          (click)="session().discardUnreadable()"
+        >
+          {{ text.discardUnreadable }}
+        </button>
+      }
+    </div>
+  }
+  @if (state(); as current) {
+    @if (draft.editing()) {
+      @if (stale()) {
+        <div class="game-error" role="alert">
+          <p>{{ text.partyDraftConflict }}</p>
+          <p>{{ text.currentParty }}: {{ currentNames() || text.noCharacters }}</p>
+          <button
+            type="button"
+            [disabled]="!session().canOperate()"
+            (click)="openConfirmation('rebase', $event)"
+          >
+            {{ text.rebaseParty }}
+          </button>
+        </div>
+      }
+      <form class="party-editor" (submit)="save($event)">
+        <fieldset
+          [disabled]="session().pending() || session().hasRecovery() || session().invalidPending()"
+        >
+          <legend>{{ current.revision === 0 ? text.partySetup : text.editParty }}</legend>
+          <p class="game-hint">{{ text.partyEditHint }}</p>
+          @for (member of draft.members(); track member.id; let index = $index) {
+            <div class="party-row">
+              <label [for]="'party-name-' + member.id"
+                >{{ text.characterName }} {{ index + 1 }}</label
+              >
+              <input
+                [id]="'party-name-' + member.id"
+                [value]="member.name"
+                maxlength="100"
+                required
+                (input)="rename(member.id, $event)"
+              />
+              <button
+                type="button"
+                [disabled]="current.revision === 0 && draft.members().length === 1"
+                [attr.aria-label]="text.removeCharacter + ' ' + (member.name || index + 1)"
+                (click)="draft.remove(member.id)"
+              >
+                {{ text.removeCharacter }}
+              </button>
+            </div>
+          }
+          @if (!draft.members().length) {
+            <p>{{ text.noCharacters }}</p>
+          }
+          <div class="game-actions">
+            <button type="button" [disabled]="draft.members().length >= 20" (click)="draft.add()">
+              {{ text.addCharacter }}
+            </button>
+            <button type="submit" [disabled]="!session().canOperate() || stale()">
+              {{ current.revision === 0 ? text.start : text.saveParty }}
+            </button>
+            <button type="button" (click)="cancel($event)">{{ text.cancel }}</button>
+          </div>
+        </fieldset>
+      </form>
+      @if (validationError()) {
+        <p class="game-error" role="alert">{{ text.invalidParty }}</p>
+      }
+      @if (dirty()) {
+        <p role="status">{{ text.partyDraftPreserved }}</p>
+      }
+    } @else {
+      @if (current.snapshot.party.length) {
+        <ol class="party-summary">
+          @for (member of current.snapshot.party; track member.id) {
+            <li>{{ member.name }}</li>
+          }
+        </ol>
+      } @else {
+        <p>{{ text.noCharacters }}</p>
+      }
+      <button type="button" [disabled]="!session().canOperate()" (click)="edit()">
+        {{ text.editParty }}
+      </button>
+    }
+  }
+</section>
+<dialog
+  #confirmationDialog
+  class="game-undo-dialog"
+  [attr.aria-label]="confirmation() === 'rebase' ? text.rebasePartyTitle : text.discardPartyTitle"
+  (cancel)="closeConfirmation()"
+>
+  <h2>{{ confirmation() === 'rebase' ? text.rebasePartyTitle : text.discardPartyTitle }}</h2>
+  <p>{{ confirmation() === 'rebase' ? text.rebasePartyHint : text.discardPartyHint }}</p>
+  <div class="game-actions">
+    <button type="button" (click)="closeConfirmation()">{{ text.cancel }}</button>
+    <button type="button" (click)="confirm()">
+      {{ confirmation() === 'rebase' ? text.confirmRebaseParty : text.confirmDiscardParty }}
+    </button>
+  </div>
+</dialog>

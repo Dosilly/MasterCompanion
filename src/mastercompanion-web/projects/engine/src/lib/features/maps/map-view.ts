@@ -13,47 +13,8 @@ import { uiMessages } from '../../i18n/messages';
 
 @Component({
   selector: 'mc-map-view',
-  template: `
-    <div class="map-heading">
-      <h1>{{ map().title }}</h1>
-      <div class="actions">
-        <button (click)="zoom(1 / 1.25)" [attr.aria-label]="ui.map.zoomOut">−</button>
-        <span>{{ (scale() * 100).toFixed(0) }}%</span>
-        <button (click)="zoom(1.25)" [attr.aria-label]="ui.map.zoomIn">+</button>
-        <button (click)="reset()">{{ ui.map.fit }}</button>
-      </div>
-    </div>
-    <div
-      #viewport
-      class="map-viewport"
-      (pointerdown)="startPan($event)"
-      (pointermove)="pan($event)"
-      (pointerup)="endPan($event)"
-      (pointercancel)="endPan($event)"
-    >
-      <div
-        class="map-image"
-        [style.width.px]="fittedWidth()"
-        [style.transform]="transform()"
-        [style.aspect-ratio]="map().width + '/' + map().height"
-      >
-        <img [src]="'/api/assets/' + map().assetId" [alt]="map().title" draggable="false" />
-        @for (marker of map().markers; track marker.code) {
-          <button
-            class="map-marker"
-            [style.left.%]="marker.x"
-            [style.top.%]="marker.y"
-            [title]="marker.title"
-            [attr.aria-label]="marker.code + ': ' + marker.title"
-            (click)="openMaterial.emit(marker.materialId)"
-          >
-            {{ marker.code }}
-          </button>
-        }
-      </div>
-    </div>
-    <p class="map-hint">{{ ui.map.hint }}</p>
-  `,
+  templateUrl: './map-view.html',
+  styleUrl: './map-view.scss',
 })
 export class MapView implements AfterViewInit, OnDestroy {
   readonly ui = uiMessages;
@@ -92,7 +53,7 @@ export class MapView implements AfterViewInit, OnDestroy {
     this.scale.set(Math.max(0.5, Math.min(4, this.scale() * factor)));
   }
   startPan(event: PointerEvent) {
-    if (event.button !== 0 || (event.target as HTMLElement).closest('button')) {
+    if (event.button !== 0 || (event.target instanceof Element && event.target.closest('button'))) {
       return;
     }
     this.drag = {

@@ -1,19 +1,11 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
-import ts from 'typescript';
-mkdirSync('.local/tests', { recursive: true });
-const compiled = resolve('.local/tests/blight-view.mjs');
-writeFileSync(
-  compiled,
-  ts.transpileModule(readFileSync('projects/ythryn/src/lib/gameplay/blight-view.ts', 'utf8'), {
-    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
-  }).outputText,
-);
-const { readBlightView, remainingCheckMinutes, resolveCheckCommand, selectedCheckDie } =
-  await import(pathToFileURL(compiled));
+import {
+  readBlightView,
+  remainingCheckMinutes,
+  resolveCheckCommand,
+  selectedCheckDie,
+} from '../../projects/ythryn/src/lib/gameplay/blight-view';
 const firstId = 'd4b79cd8-44ad-4ef7-a2a3-985cff36c6aa';
 const secondId = '61466089-3f99-4d97-a497-450e87581165';
 function fixture(time = 1080) {

@@ -1,0 +1,206 @@
+<header class="app-header">
+  <div>
+    <strong>MasterCompanion</strong><span class="campaign-name"> / {{ workspace()?.title }}</span>
+  </div>
+  <div class="header-actions">
+    @if (game()) {
+      <button (click)="openParty()" [attr.aria-pressed]="active() === '@party'">
+        {{ ui.game.partyTitle }}
+      </button>
+    }
+    @if (game(); as session) {
+      <button (click)="openGame()" [attr.aria-pressed]="active() === '@game'">
+        {{ ui.game.title }}{{ session.state() ? ' · ' + gameTime() : '' }}
+      </button>
+    }
+    @if (workspace()?.maps?.length) {
+      <button (click)="openMap()" [attr.aria-pressed]="active() === '@map'">
+        {{ ui.workspace.map }}
+      </button>
+    }
+    <button
+      (click)="theme.toggle()"
+      [attr.aria-pressed]="theme.dark()"
+      [attr.aria-label]="ui.workspace.darkMode"
+    >
+      {{ theme.dark() ? '☀ ' + ui.workspace.lightMode : '☾ ' + ui.workspace.darkMode }}
+    </button>
+  </div>
+</header>
+@if (loadError(); as error) {
+  <div class="load-error" role="alert">
+    {{ ui.workspace.errors[error] }} <button (click)="load()">{{ ui.workspace.retry }}</button>
+  </div>
+}
+@if (workspace(); as data) {
+  <div class="workspace-shell">
+    <nav #navigation class="material-nav" [attr.aria-label]="ui.workspace.navigationLabel">
+      <label for="material-search">{{ ui.workspace.materials }}</label>
+      <input
+        id="material-search"
+        type="search"
+        [placeholder]="ui.workspace.searchPlaceholder"
+        [value]="search()"
+        (input)="updateSearch($event)"
+      />
+      <button class="new-note-button" (click)="openCreation($event)">{{ ui.notes.newNote }}</button>
+      @if (creation()?.hasRecovery()) {
+        <div class="note-recovery" role="status">
+          <p>{{ ui.notes.recoveryHint }}</p>
+          <button (click)="openCreation($event)">{{ ui.notes.recover }}</button>
+        </div>
+      }
+      <ng-container *ngTemplateOutlet="folderTree; context: { $implicit: folders() }" />
+      <ng-template #folderTree let-nodes>
+        @for (folder of nodes; track folder.id) {
+          <details
+            class="nav-folder"
+            [attr.data-folder-id]="folder.id"
+            [open]="!!search() || expanded().has(folder.id)"
+            (toggle)="toggleFolder(folder.id, $event)"
+          >
+            <summary>{{ folder.title }}</summary>
+            <div class="folder-contents">
+              @for (material of folder.materials; track material.id) {
+                <button
+                  [attr.data-material-id]="material.id"
+                  [class.selected]="active() === material.id"
+                  [attr.aria-current]="active() === material.id ? 'page' : null"
+                  (click)="open(material.id)"
+                >
+                  {{ material.title }}
+                </button>
+              }
+              <ng-container
+                *ngTemplateOutlet="folderTree; context: { $implicit: folder.children }"
+              />
+            </div>
+          </details>
+        }
+      </ng-template>
+      @if (!folders().length) {
+        <p class="nav-empty">{{ ui.workspace.noSearchResults }}</p>
+      }
+    </nav>
+    <main class="workspace-main">
+      <div
+        #tabStrip
+        class="material-tabs"
+        role="tablist"
+        [attr.aria-label]="ui.workspace.tabsLabel"
+        (keydown)="tabKey($event)"
+      >
+        @if (partyOpen()) {
+          <mc-workspace-tab
+            key="@party"
+            [label]="ui.game.partyTitle"
+            [closeLabel]="ui.workspace.closeTab"
+            [selected]="active() === '@party'"
+            [dirty]="partyView()?.dirty() ?? false"
+            (activate)="activate('@party')"
+            (close)="close('@party')"
+          />
+        }
+        @if (gameOpen()) {
+          <mc-workspace-tab
+            key="@game"
+            [label]="ui.game.title"
+            [closeLabel]="ui.workspace.closeTab"
+            [selected]="active() === '@game'"
+            (activate)="activate('@game')"
+            (close)="close('@game')"
+          />
+        }
+        @if (data.maps.length && mapOpen()) {
+          <mc-workspace-tab
+            key="@map"
+            [label]="ui.workspace.map"
+            [closeLabel]="ui.workspace.closeTab"
+            [closeHint]="ui.workspace.closeTabHint"
+            [selected]="active() === '@map'"
+            (activate)="activate('@map')"
+            (close)="close('@map')"
+          />
+        }
+        @for (tab of sessions(); track tab.material.id) {
+          <mc-workspace-tab
+            [key]="tab.material.id"
+            [label]="tab.material.title"
+            [closeLabel]="ui.workspace.closeTab"
+            [closeHint]="ui.workspace.closeTabHint"
+            [selected]="active() === tab.material.id"
+            [dirty]="tab.dirty()"
+            [closing]="closing().has(tab.material.id)"
+            (activate)="activate(tab.material.id)"
+            (close)="close(tab.material.id)"
+          />
+        }
+      </div>
+      @if (opening()) {
+        <div class="opening-state" role="status">{{ ui.workspace.loadingMaterial }}</div>
+      }
+      @if (!active()) {
+        <p class="empty-workspace">
+          {{ data.maps.length ? ui.workspace.emptyWithMap : ui.workspace.emptyMaterials }}
+        </p>
+      }
+      @if (data.maps[0]; as map) {
+        <mc-map-view
+          id="panel-map"
+          role="tabpanel"
+          aria-labelledby="tab-map"
+          [hidden]="active() !== '@map'"
+          [map]="map"
+          (openMaterial)="open($event)"
+        />
+      }
+      @if (partyMounted()) {
+        @if (game(); as session) {
+          <mc-party-view
+            id="panel-party"
+            role="tabpanel"
+            aria-labelledby="tab-party"
+            [hidden]="active() !== '@party'"
+            [session]="session"
+          />
+        }
+      }
+      @if (gameMounted()) {
+        @if (game(); as session) {
+          @if (campaignModule(); as module) {
+            <mc-game-view
+              id="panel-game"
+              role="tabpanel"
+              aria-labelledby="tab-game"
+              [hidden]="active() !== '@game'"
+              [session]="session"
+              [module]="module"
+              (openParty)="openParty()"
+              (materialRequested)="open($event.id, $event.anchor)"
+            />
+          }
+        }
+      }
+      @for (tab of sessions(); track tab.material.id) {
+        <mc-material-view
+          [id]="'panel-' + tab.material.id"
+          role="tabpanel"
+          [attr.aria-labelledby]="'tab-' + tab.material.id"
+          [hidden]="active() !== tab.material.id"
+          [session]="tab"
+          [materials]="data.materials"
+          (openMaterial)="open($event.id, $event.anchor)"
+        />
+      }
+    </main>
+  </div>
+  @if (creation(); as draft) {
+    <mc-material-creation-dialog
+      [creation]="draft"
+      [folders]="data.folders"
+      (created)="acceptCreatedMaterial($event)"
+    />
+  }
+} @else if (!loadError()) {
+  <p class="opening-state">{{ ui.workspace.loadingCampaign }}</p>
+}

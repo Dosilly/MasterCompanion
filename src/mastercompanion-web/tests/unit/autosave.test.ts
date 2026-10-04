@@ -1,58 +1,56 @@
 import '@angular/compiler';
-import { describe, test } from 'node:test';
+import { describe, test, type TestContext } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
-import { pathToFileURL } from 'node:url';
-import { resolve } from 'node:path';
-import ts from 'typescript';
-import { Subject } from 'rxjs';
+import type { RichDocument } from '@mastercompanion/contracts';
+import { ControlledHttp } from '../support/controlled-http';
 import { HttpErrorResponse } from '@angular/common/http';
-// Compile the actual class, without exposing this implementation through the library's public API.
-mkdirSync('.local/tests', { recursive: true });
-const compiled = resolve('.local/tests/material-session.mjs');
-writeFileSync(
-  compiled,
-  ts.transpileModule(
-    readFileSync('projects/engine/src/lib/features/materials/material-session.ts', 'utf8'),
-    {
-      compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
-    },
-  ).outputText,
-);
-const { MaterialSession } = await import(pathToFileURL(compiled));
-const document = (text) => ({
+import { MaterialSession } from '../../projects/engine/src/lib/features/materials/material-session';
+const document = (text: string): RichDocument => ({
   type: 'doc',
   content: [{ type: 'paragraph', content: [{ type: 'text', text }] }],
 });
-function fixture() {
-  const requests = [];
-  const http = {
-    put(url, body) {
-      const response = new Subject();
-      requests.push({ body, response });
-      return response;
-    },
-  };
+interface SaveRequest {
+  document: unknown;
+  expectedRevision: number;
+}
+function saveRequest(value: unknown): SaveRequest {
+  assert.ok(
+    value !== null &&
+      typeof value === 'object' &&
+      'document' in value &&
+      'expectedRevision' in value,
+  );
+  assert.ok(typeof value.expectedRevision === 'number');
+  assert.ok(
+    value.document !== null && typeof value.document === 'object' && 'type' in value.document,
+  );
+  assert.equal(value.document.type, 'doc');
+  return { document: value.document, expectedRevision: value.expectedRevision };
+}
+function fixture(t: TestContext) {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const transport = new ControlledHttp(saveRequest);
   return {
-    requests,
+    requests: transport.requests,
     session: new MaterialSession(
       {
         id: 'note',
         title: 'Note',
         group: 'Group',
+        folderId: null,
         document: document('original'),
         documentSchemaVersion: 1,
         revision: 10,
       },
-      http,
+      transport.client,
     ),
   };
 }
 const nextTurn = () => new Promise((resolve) => setImmediate(resolve));
 describe('Material autosave', () => {
-  test('Changes during an in-flight save are queued with the confirmed next revision', async () => {
+  test('Changes during an in-flight save are queued with the confirmed next revision', async (t) => {
     // Arrange
-    const { requests, session } = fixture();
+    const { requests, session } = fixture(t);
     session.change(document('first'));
 
     // Act
@@ -89,9 +87,9 @@ describe('Material autosave', () => {
     // Assert
     assert.equal(requests.length, 2);
   });
-  test('A connection failure keeps the draft and can retry without claiming it is saved', async () => {
+  test('A connection failure keeps the draft and can retry without claiming it is saved', async (t) => {
     // Arrange
-    const { requests, session } = fixture();
+    const { requests, session } = fixture(t);
     session.change(document('draft'));
 
     // Act
@@ -120,9 +118,9 @@ describe('Material autosave', () => {
     // Assert
     assert.equal(actual2, true);
   });
-  test('A revision conflict retains the draft and blocks automatic overwriting', async () => {
+  test('A revision conflict retains the draft and blocks automatic overwriting', async (t) => {
     // Arrange
-    const { requests, session } = fixture();
+    const { requests, session } = fixture(t);
     session.change(document('my draft'));
 
     // Act
@@ -145,9 +143,9 @@ describe('Material autosave', () => {
     assert.equal(session.dirty(), true);
     assert.deepEqual(session.document, document('still my draft'));
   });
-  test('Closing during autosave waits for every pending edit and its confirmed revision', async () => {
+  test('Closing during autosave waits for every pending edit and its confirmed revision', async (t) => {
     // Arrange
-    const { requests, session } = fixture();
+    const { requests, session } = fixture(t);
     session.change(document('first'));
 
     // Act
@@ -189,11 +187,10 @@ describe('Material autosave', () => {
     assert.equal(actual2, true);
     assert.equal(session.dirty(), false);
   });
-  test('Closing after a save failure or conflict keeps the unsaved material open', async () => {
-    // Arrange
-    for (const status of [0, 409]) {
+  for (const status of [0, 409]) {
+    test(`Closing after HTTP status ${status} keeps the unsaved material open`, async (t) => {
       // Arrange
-      const { requests, session } = fixture();
+      const { requests, session } = fixture(t);
       session.change(document('unsaved draft'));
 
       // Act
@@ -205,6 +202,6 @@ describe('Material autosave', () => {
       assert.equal(actual1, false);
       assert.equal(session.dirty(), true);
       assert.deepEqual(session.document, document('unsaved draft'));
-    }
-  });
+    });
+  }
 });

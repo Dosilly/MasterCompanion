@@ -2,22 +2,6 @@ using System.Text.Json;
 
 namespace MasterCompanion.Contracts;
 
-public static class GameLimits
-{
-    public const long MaxTimeMinutes = 52_560_000;
-    public const long MaxAdvanceMinutes = 525_600;
-    public const int MaxPartySize = 20;
-    public const int MaxCharacterNameLength = 100;
-    public const int MaxRestCount = 10_000;
-}
-
-public sealed record GameCharacter(Guid Id, string Name);
-
-public sealed record GameSnapshot(long TimeMinutes, IReadOnlyList<GameCharacter> Party,
-    IReadOnlyList<long> RestEnds, int ModuleSchemaVersion, JsonElement ModuleState);
-
-public sealed record ModuleTransition(JsonElement State, string? ErrorCode = null);
-
 /// <summary>Pure module rules. The engine owns time, party, persistence and operation history.</summary>
 public interface ICampaignGameRules
 {

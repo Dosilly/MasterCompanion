@@ -1,10 +1,6 @@
 import '@angular/compiler';
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
-import { pathToFileURL } from 'node:url';
-import { resolve } from 'node:path';
-import ts from 'typescript';
 import { of } from 'rxjs';
 import { Window } from 'happy-dom';
 const window = new Window();
@@ -28,29 +24,13 @@ for (const name of [
     value: typeof value === 'function' && /^[a-z]/.test(name) ? value.bind(window) : value,
   });
 }
-const compiledDirectory = '.local/tests/editor-insertion';
-mkdirSync(compiledDirectory, { recursive: true });
-for (const name of ['material-session', 'material-editor', 'editor-insertion']) {
-  const source = readFileSync(`projects/engine/src/lib/features/materials/${name}.ts`, 'utf8');
-  const compiled = ts
-    .transpileModule(source, {
-      compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
-    })
-    .outputText.replace(
-      '../../editor-schema.mjs',
-      pathToFileURL(resolve('projects/engine/src/lib/editor-schema.mjs')).href,
-    );
-  writeFileSync(`${compiledDirectory}/${name}.mjs`, compiled);
-}
-const { MaterialSession } = await import(
-  pathToFileURL(resolve(compiledDirectory, 'material-session.mjs'))
-);
-const { createMaterialEditor } = await import(
-  pathToFileURL(resolve(compiledDirectory, 'material-editor.mjs'))
-);
-const { insertMarkdown, insertMaterialLink, maximumMarkdownLength } = await import(
-  pathToFileURL(resolve(compiledDirectory, 'editor-insertion.mjs'))
-);
+import { MaterialSession } from '../../projects/engine/src/lib/features/materials/material-session';
+import { createMaterialEditor } from '../../projects/engine/src/lib/features/materials/material-editor';
+import {
+  insertMarkdown,
+  insertMaterialLink,
+  maximumMarkdownLength,
+} from '../../projects/engine/src/lib/features/materials/editor-insertion';
 const paragraph = (text) => ({ type: 'paragraph', content: [{ type: 'text', text }] });
 const materials = [
   { id: 'target:stable-id', title: 'Target material', group: 'Group', folderId: null },

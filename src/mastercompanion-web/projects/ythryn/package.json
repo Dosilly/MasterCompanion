@@ -1,1 +1,10 @@
-{ "name": "@mastercompanion/ythryn", "version": "0.1.0", "sideEffects": false, "peerDependencies": { "@mastercompanion/contracts": "0.1.0", "@angular/core": "22.2.0" } }
+{
+  "name": "@mastercompanion/ythryn",
+  "version": "0.1.0",
+  "sideEffects": false,
+  "peerDependencies": {
+    "@mastercompanion/contracts": "0.1.0",
+    "@angular/core": "22.2.0"
+  },
+  "type": "module"
+}

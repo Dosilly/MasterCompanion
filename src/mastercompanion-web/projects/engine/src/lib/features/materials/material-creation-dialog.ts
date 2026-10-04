@@ -18,72 +18,8 @@ import { uiMessages } from '../../i18n/messages';
 
 @Component({
   selector: 'mc-material-creation-dialog',
-  template: `
-    <dialog
-      #dialog
-      class="material-creation-dialog"
-      aria-labelledby="material-creation-title"
-      (cancel)="cancel($event)"
-    >
-      <h2 id="material-creation-title">{{ ui.notes.newNote }}</h2>
-      <form (submit)="submit($event)">
-        <label for="note-title">{{ ui.notes.title }}</label>
-        <input
-          #titleInput
-          id="note-title"
-          type="text"
-          maxlength="300"
-          required
-          [value]="creation().title()"
-          [disabled]="creation().locked()"
-          (input)="updateTitle($event)"
-        />
-        <label for="note-folder">{{ ui.notes.folder }}</label>
-        <select
-          id="note-folder"
-          [value]="creation().folderId() ?? ''"
-          [disabled]="creation().locked()"
-          (change)="updateFolder($event)"
-        >
-          <option value="">{{ ui.workspace.unfiledMaterials }}</option>
-          @for (folder of folderOptions(); track folder.id) {
-            <option [value]="folder.id">{{ folder.label }}</option>
-          }
-        </select>
-        <p class="creation-hint">{{ ui.notes.readModeHint }}</p>
-        @if (creation().pending()) {
-          <p role="status">{{ ui.notes.creating }}</p>
-        }
-        @if (creation().error(); as error) {
-          <p class="creation-error" role="alert">{{ ui.notes.errors[error] }}</p>
-        }
-        @if (creation().invalidPending()) {
-          <p>{{ ui.notes.discardWarning }}</p>
-          <button
-            type="button"
-            [disabled]="creation().pending()"
-            (click)="creation().discardUnreadable()"
-          >
-            {{ ui.notes.discardUnreadable }}
-          </button>
-        }
-        <div class="dialog-actions">
-          <button type="button" [disabled]="creation().pending()" (click)="close()">
-            {{ ui.notes.cancel }}
-          </button>
-          @if (creation().request()) {
-            <button type="button" [disabled]="creation().pending()" (click)="retry()">
-              {{ ui.notes.retry }}
-            </button>
-          } @else {
-            <button type="submit" [disabled]="creation().locked() || !creation().title().trim()">
-              {{ ui.notes.create }}
-            </button>
-          }
-        </div>
-      </form>
-    </dialog>
-  `,
+  templateUrl: './material-creation-dialog.html',
+  styleUrl: './material-creation-dialog.scss',
 })
 export class MaterialCreationDialog {
   readonly ui = uiMessages;

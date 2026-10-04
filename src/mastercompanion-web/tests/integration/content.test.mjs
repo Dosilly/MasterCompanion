@@ -1,10 +1,8 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
-import ts from 'typescript';
 import { generateHTML, generateJSON } from '@tiptap/html';
 import { documentExtensions } from '../../projects/engine/src/lib/editor-schema.mjs';
 import { compileModule } from '../../tools/module-sources.mjs';
@@ -14,18 +12,10 @@ const sourceFixture = JSON.parse(
 );
 const messages = JSON.parse(readFileSync('projects/engine/src/lib/i18n/en.json', 'utf8'));
 const extensions = documentExtensions();
-mkdirSync('.local/tests', { recursive: true });
-const navigationModule = resolve('.local/tests/navigation.mjs');
-writeFileSync(
-  navigationModule,
-  ts.transpileModule(
-    readFileSync('projects/engine/src/lib/features/workspace/navigation.ts', 'utf8'),
-    {
-      compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
-    },
-  ).outputText,
-);
-const { buildNavigation, folderPath } = await import(pathToFileURL(navigationModule));
+import {
+  buildNavigation,
+  folderPath,
+} from '../../projects/engine/src/lib/features/workspace/navigation';
 describe('Module content and document round trips', () => {
   test('Organized source chapter has 106 readable materials, 10 folders, and 29 working markers', () => {
     // Assert

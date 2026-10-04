@@ -1,6 +1,9 @@
 # Code quality review
 
-3 October 2026 · review completed; recommendations not implemented
+3 October 2026 · historical review; implementation follow-up on 4 October 2026
+
+The findings below describe the reviewed state. Delivery and current verification
+are recorded in [Code quality implementation](19-Code-quality-implementation.md).
 
 ## Scope and conclusion
 

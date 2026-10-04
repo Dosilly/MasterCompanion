@@ -1,0 +1,107 @@
+<section class="blight-tool" aria-labelledby="blight-title">
+  <h2 id="blight-title">{{ text.toolTitle }}</h2>
+  <p class="description">{{ text.toolDescription }}</p>
+  <p>
+    <a href="#material/sac11d9beb0d8/sa401a28def19" (click)="openRules($event)">{{
+      text.rulesLink
+    }}</a>
+  </p>
+  <p class="description">{{ text.checkScheduleHint }}</p>
+  @if (!game.state()) {
+    <p role="status">{{ text.loading }}</p>
+  } @else if (game.state()?.snapshot?.party?.length === 0) {
+    <p>{{ text.configureParty }}</p>
+  } @else if (characters(); as party) {
+    <div class="characters">
+      @for (character of party; track character.id) {
+        <section
+          class="character"
+          [class.needs-action]="character.nextCheck?.pending"
+          [id]="'blight-character-' + character.id"
+          [attr.aria-labelledby]="'blight-name-' + character.id"
+        >
+          <h3 [id]="'blight-name-' + character.id">{{ character.name }}</h3>
+          <dl>
+            <div>
+              <dt>{{ text.status }}</dt>
+              <dd>{{ text.statuses[character.status] }}</dd>
+            </div>
+            <div>
+              <dt>{{ text.dc }}</dt>
+              <dd>{{ character.dc }}</dd>
+            </div>
+            <div>
+              <dt>{{ text.failures }}</dt>
+              <dd>{{ character.failures }}</dd>
+            </div>
+          </dl>
+          @if (character.nextCheck; as check) {
+            <p class="check" [class.is-pending]="check.pending">
+              <strong>{{ text.checks[check.kind] }}</strong>
+              @if (check.pending) {
+                <mc-action-required>{{ text.pending }}</mc-action-required>
+              } @else {
+                <span
+                  >{{ text.timeUntilCheck }}: {{ formatMinute(check.remainingMinutes) }} ·
+                  {{ text.upcoming }}</span
+                >
+              }
+            </p>
+            @if (check.pending) {
+              <fieldset [disabled]="!game.canOperate() || game.pending()">
+                <legend>{{ text.checks[check.kind] }} — {{ character.name }}</legend>
+                @if (check.kind === 'rest' || check.kind === 'recovery') {
+                  <label [for]="'blight-die-' + character.id">{{ text.dieResult }}</label>
+                  <select
+                    [id]="'blight-die-' + character.id"
+                    [value]="selectedDie(character) ?? ''"
+                    (change)="selectDie(character.id, $event)"
+                  >
+                    <option value="">{{ text.chooseDie }}</option>
+                    @for (die of dice; track die) {
+                      <option [value]="die">{{ die }}</option>
+                    }
+                  </select>
+                }
+                <div class="outcomes">
+                  <button
+                    type="button"
+                    [disabled]="!canResolve(character, true)"
+                    [attr.aria-label]="text.success + ' — ' + character.name"
+                    (click)="resolve(character.id, true)"
+                  >
+                    {{ text.success }}
+                  </button>
+                  <button
+                    type="button"
+                    [attr.aria-label]="text.failure + ' — ' + character.name"
+                    (click)="resolve(character.id, false)"
+                  >
+                    {{ text.failure }}
+                  </button>
+                </div>
+              </fieldset>
+            }
+          } @else {
+            <p class="no-check">{{ text.noCheck }}</p>
+          }
+          @if (character.status === 'infected') {
+            <div class="healing">
+              <button
+                type="button"
+                [disabled]="!game.canOperate() || game.pending()"
+                [attr.aria-label]="text.heal + ' — ' + character.name"
+                (click)="heal(character.id)"
+              >
+                {{ text.heal }}
+              </button>
+              <p>{{ text.healingHint }}</p>
+            </div>
+          }
+        </section>
+      }
+    </div>
+  } @else {
+    <p class="projection-error" role="alert">{{ text.invalidState }}</p>
+  }
+</section>

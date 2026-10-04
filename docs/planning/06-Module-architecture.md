@@ -1,5 +1,35 @@
 # Engine and module boundary
 
+## Quality implementation ownership, 4 October 2026
+
+Public .NET and frontend contracts have individual files and retain their existing
+public entry points and wire shapes. The engine still owns gameplay locking,
+transactions, optimistic revisions, receipts and undo writes in `GameplayService`.
+`GameOperationRules` applies pure neutral transitions; `GameRequestValidator`,
+`GameSnapshotCodec` and `GameReceiptCodec` own their respective boundary and
+persisted-state invariants. Ythryn isolates Blight rules, command decoding and
+state decoding/validation in module-owned files. Historical schema conversion
+and receipt projections remain isolated and preserve existing game state.
+
+`WorkspaceMaterials` owns material loading, deduplication and session acceptance;
+`WorkspaceTab` provides the engine's campaign-tab presentation. Workspace
+navigation and save-before-close decisions stay in the engine. Component templates
+and feature styles are siblings of their TypeScript owners. Global engine styles
+retain theme/base rules, shared layout and document-reader rules that must reach
+editor-generated markup. Ythryn tool styling is owned by the module rather than
+depending on engine selectors crossing component boundaries.
+
+Material saves validate the editor schema through `MaterialDocumentSchema` and
+`MaterialDocumentAttributes` before EF writes. The limit is 2 MiB per request,
+32 node nesting levels and 20,000 nodes. Unsupported node/mark/attribute shapes,
+unsafe URL schemes and invalid revisions are rejected with stable ProblemDetails
+codes. Valid rich documents retain their raw structure; this change does not
+rewrite stored campaign documents or change persistence schema.
+
+See [the implementation record](19-Code-quality-implementation.md) for scope and
+verification, and [the UI plan](17-Reusable-frontend-ui.md) for the separate neutral
+library foundation and catalog.
+
 ## Gameplay contract — 1 October 2026
 
 The first gameplay slice uses `ICampaignGameRules` in `MasterCompanion.Contracts`. The engine owns elapsed minutes, party IDs, shared rest ends, revisions and transactionally stored snapshots and operation receipts. A module owns the schema, validation and transformation of its JSON state and its tool projection. Pure rules receive neutral snapshots; they never import engine persistence or EF Core. The API registers concrete implementations.
