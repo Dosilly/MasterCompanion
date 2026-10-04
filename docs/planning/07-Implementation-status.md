@@ -1,4 +1,23 @@
 # Implementation status
+## Campaign read-aloud update — 4 October 2026
+
+At the user's request, applied the revised read-aloud prose to all 47 affected
+documents in the running campaign: the city introduction and 46 numbered locations.
+The update replaced 68 inspected fragment ranges rather than replacing complete
+documents. Y14 retains the campaign's clarification that the flames are illusory.
+Other campaign additions and unchanged document nodes were preserved.
+
+A verified custom-format backup is retained at
+`.local/mastercompanion-before-read-aloud-20261004-113737.dump`.
+The transaction was rehearsed with rollback, then committed after checking every
+original document and revision. Each affected revision advanced exactly once.
+In-transaction comparisons confirmed preservation of all other material fields,
+unaffected documents, campaigns, folders, maps, game state, operation history and
+migration history. Read-only HTTP verification confirmed all 47 resulting documents
+and revisions; all four deployed-container checks passed. PostgreSQL, its volume,
+module sources and application code were unchanged. Future campaign edits must be
+considered before restoring this backup.
+
 ## Location read-aloud prose — 3 October 2026
 
 Revised the Polish player-facing descriptions across all 46 numbered Ythryn
