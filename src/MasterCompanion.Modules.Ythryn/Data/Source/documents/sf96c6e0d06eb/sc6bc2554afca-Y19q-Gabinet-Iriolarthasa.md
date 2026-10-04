@@ -77,19 +77,21 @@ Wśród rupieci na górnym poziomie znajdują się:
 
 -   **Etykieta:** „DWA BRZEGI — POWRÓT ROZDZIELONYCH PODRÓŻNIKÓW”. Tabliczka i dokumenty są w **Loross, alfabetem drakońskim**; stosuj [zasady odczytywania Loross](#material/s210a67f4cc8e).
 
--   **Bez testu — zawartość:** otwarcie skrzynki ujawnia trzy składane obręcze, srebrną igłę, cztery płytki oraz [instrukcję](#material/sb68cccad8d50) i [kartę pomiarów](#material/s691e9446ee5a). Skrzynka ma **1 stopę szerokości**, komplet waży **5 funtów**.
+-   **Bez testu — zawartość:** po otwarciu skrzynki odczytaj opis poniżej. Są w niej także [instrukcja](#material/sb68cccad8d50) i [karta pomiarów](#material/s691e9446ee5a), wsunięte pod wieko. Drewniana szkatułka ma mosiężne okucia, uchwyt do noszenia i **1 stopę szerokości**; komplet waży **5 funtów**.
+
+> Pod wiekiem kryje się przyrząd osadzony w dnie skrzynki. Z tyłu po lewej leży mała miedziana tuba, złożona na bok w wyściełanym zagłębieniu; przegub u podstawy pozwala unieść jej kielich w stronę siedzącej przed skrzynką osoby. Obok, po prawej, pod szkłem połyskuje srebrna igła nad okrągłą tarczą z drobną podziałką. Bliżej was znajduje się miedziana płytka z obrysem dłoni, a na lewo od niej cztery cienkie srebrne płytki tkwią w równoległych szczelinach. Na wewnętrznej stronie wieka wyryto dwa połączone koła.
 
 -   **Reakcja Iriolarthasa:** zabranie lub uruchomienie przyrządu na jego oczach przez osoby uznane za grabieżców prowokuje atak. Próba udawania ratowników podlega [istniejącym zasadom demilicha](#material/see1129fbc486). Śmierć Iriolarthasa nie jest warunkiem działania urządzenia; skuteczne obejście strażnika również daje dostęp do nagrody.
 
--   **Bez testu — przygotowanie:** **1 godzina** czytania instrukcji i dostrajania z udziałem Fenes. Inna osoba może równolegle studiować schematy miasta. Nie wymaga zestrojenia, czarodzieja ani wcześniejszego użycia odbiornika w Y15.
+-   **Bez testu — przygotowanie:** uniesienie tuby, **1 godzina** czytania instrukcji i dostrajania z udziałem Fenes, która utrzymuje dłoń na płytce z jej obrysem. Pod koniec igła na tarczy uspokaja się. Inna osoba może równolegle studiować schematy miasta. Nie wymaga zestrojenia, czarodzieja ani wcześniejszego użycia odbiornika w Y15.
 
--   **Bez testu — kontakt:** Fenes dotyka obręczy i wybiera jednego uczestnika dawnego przejścia. Przyrząd pozwala rozmawiać przez **10 minut**, raz na **24 godziny dla całego urządzenia**. Rozmówca swobodnie odpowiada bez własnego przyrządu. Pierwszy wybrany dawny towarzysz żyje i może odpowiedzieć.
+-   **Bez testu — kontakt:** Fenes kładzie dłoń na płytce z jej obrysem, wybiera jednego uczestnika dawnego przejścia i mówi w stronę kielicha tuby. Odpowiedź dobiega z tuby i jest słyszalna dla osób przy skrzynce. Przyrząd pozwala rozmawiać przez **10 minut**, raz na **24 godziny dla całego urządzenia**. Rozmówca swobodnie odpowiada bez własnego przyrządu. Pierwszy wybrany dawny towarzysz żyje i może odpowiedzieć.
 
 -   **Zakończenie:** zdjęcie dłoni lub świadome przerwanie przez odbiorcę kończy rozmowę. Uzyskanie odpowiedzi zużywa dzienną próbę, nawet przy krótkiej rozmowie; samo wywołanie bez odpowiedzi jej nie zużywa.
 
 -   **Zapis:** cztery płytki zachowują ślady czterech osób. Przyrząd działa również poza Ythryn, bez mythallaru. Nie otwiera portalu. Fala wrzeciona z **Y19n** tłumi go w promieniu **3 mil** na **24 godziny**, ale nie ściera śladów.
 
--   **Wspólna praca:** każda strona wybiera trwały, bezpieczny punkt i dotyka go podczas pełnej rozmowy. Fenes zapisuje ruch igły, przyjaciel opisuje objawy po swojej stronie. Powtórzenie pomiaru przy następnej rozmowie potwierdza przydatność miejsc; pierwsza bezpieczna para nadaje się do dalszych badań. Oboje szukają następnie miejscowej wiedzy o bramach i przejściach.
+-   **Wspólna praca:** każda strona wybiera trwały, bezpieczny punkt i dotyka go podczas pełnej rozmowy. Fenes zapisuje ruch igły na tarczy, przyjaciel opisuje objawy po swojej stronie. Tarcza przypomina kompas, ale nie wskazuje kierunku podróży ani położenia rozmówcy. Powtórzenie pomiaru przy następnej rozmowie potwierdza przydatność miejsc; pierwsza bezpieczna para nadaje się do dalszych badań. Oboje szukają następnie miejscowej wiedzy o bramach i przejściach.
 
 -   **Epilog:** rozmowy i zapisane ślady nie wygasają od przerwy w badaniach. Fenes może prowadzić poszukiwania z Kuldahar albo wyruszyć w drogę. [Pełny plan dla MG i granice magii](#material/s7fe42d45a1c9).
 
