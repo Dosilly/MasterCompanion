@@ -21,27 +21,25 @@
       />
     } @else {
       <label for="folder-parent">{{ ui.folders.parent }}</label>
-      <select
-        id="folder-parent"
-        [value]="parentId() ?? ''"
-        [disabled]="management().locked()"
-        (change)="updateParent($event)"
-      >
-        <option value="">{{ ui.folders.root }}</option>
+      <select id="folder-parent" [disabled]="management().locked()" (change)="updateParent($event)">
+        <option value="" [selected]="parentId() === null">{{ ui.folders.root }}</option>
         @for (folder of parentOptions(); track folder.id) {
-          <option [value]="folder.id">{{ folder.label }}</option>
+          <option [value]="folder.id" [selected]="parentId() === folder.id">
+            {{ folder.label }}
+          </option>
         }
       </select>
       <label for="folder-position">{{ ui.folders.position }}</label>
       <select
         id="folder-position"
-        [value]="beforeId() ?? ''"
         [disabled]="management().locked()"
         (change)="updatePosition($event)"
       >
-        <option value="">{{ ui.folders.atEnd }}</option>
+        <option value="" [selected]="beforeId() === null">{{ ui.folders.atEnd }}</option>
         @for (folder of siblingOptions(); track folder.id) {
-          <option [value]="folder.id">{{ ui.folders.before }} {{ folder.title }}</option>
+          <option [value]="folder.id" [selected]="beforeId() === folder.id">
+            {{ ui.folders.before }} {{ folder.title }}
+          </option>
         }
       </select>
     }

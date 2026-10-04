@@ -45,7 +45,12 @@
 </ng-template>
 @if (workspace(); as data) {
   <div class="workspace-shell">
-    <nav #navigation class="material-nav" [attr.aria-label]="ui.workspace.navigationLabel">
+    <nav
+      #navigation
+      class="material-nav"
+      [class.dragging-folders]="folderDrag.dragging() !== null"
+      [attr.aria-label]="ui.workspace.navigationLabel"
+    >
       @if (materialSearch(); as search) {
         <mc-material-search
           [search]="search"
@@ -96,16 +101,6 @@
         <p role="status" class="folder-status">{{ ui.contextMenu[feedback] }}</p>
       }
       @if (materialSearch()?.state().kind === 'idle') {
-        @if (folderDrag.dragging()) {
-          <div
-            class="folder-root-drop"
-            [class.drop-inside]="folderDrag.target()?.targetId === null"
-            (dragover)="folderDrag.over($event, data.folders, null)"
-            (drop)="dropFolder($event, null)"
-          >
-            {{ ui.folders.rootDrop }}
-          </div>
-        }
         <ng-container *ngTemplateOutlet="folderTree; context: { $implicit: folders() }" />
       }
       <ng-template #folderTree let-nodes>
@@ -174,6 +169,17 @@
         <p class="nav-empty">{{ ui.workspace.noSearchResults }}</p>
       }
     </nav>
+    @if (folderDrag.dragging()) {
+      <div
+        class="folder-root-drop"
+        [class.drop-inside]="folderDrag.target()?.targetId === null"
+        (dragover)="folderDrag.over($event, data.folders, null)"
+        (dragleave)="folderDrag.leave()"
+        (drop)="dropFolder($event, null)"
+      >
+        {{ ui.folders.rootDrop }}
+      </div>
+    }
     <main class="workspace-main">
       <ng-container *ngTemplateOutlet="loadStatus" />
       @if (routeError(); as error) {

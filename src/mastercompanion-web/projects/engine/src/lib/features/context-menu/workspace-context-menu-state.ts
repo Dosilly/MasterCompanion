@@ -18,7 +18,6 @@ export class WorkspaceContextMenuState {
 
   constructor(
     private readonly folderLocked: () => boolean,
-    private readonly expanded: (id: string) => boolean,
     private readonly closing: (id: string) => boolean,
   ) {}
 
@@ -53,10 +52,6 @@ export class WorkspaceContextMenuState {
           { id: 'move', label: labels.move, disabled: this.folderLocked() },
         );
       }
-      actions.push({
-        id: 'toggle-expansion',
-        label: this.expanded(id) ? labels.collapse : labels.expand,
-      });
     } else {
       actions =
         kind === 'material'

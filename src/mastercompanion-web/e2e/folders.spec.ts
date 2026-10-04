@@ -14,6 +14,29 @@ async function openFolderMenu(page: Page, id: string) {
   await expect(page.getByRole('menu')).toBeVisible();
 }
 
+test('Move dialog selects the actual parent and moves a nested folder to the root @folders', async ({
+  page,
+  api,
+}) => {
+  await openReader(page);
+  await openFolderMenu(page, 'ui-child');
+  await action(page, 'move').click();
+  const parent = folderDialog(page).locator('#folder-parent');
+  await expect(parent).toHaveValue('ui-root');
+  await parent.selectOption('');
+  await folderSave(page).click();
+  await expect(folderDialog(page)).not.toBeVisible();
+  expect(api.folderRequests[0]?.operation).toEqual({
+    kind: 'move',
+    folderId: 'ui-child',
+    parentId: null,
+    beforeId: null,
+  });
+  await expect(page.locator('.material-nav > details[data-folder-id="ui-child"]')).toBeVisible();
+  await page.reload();
+  await expect(page.locator('.material-nav > details[data-folder-id="ui-child"]')).toBeVisible();
+});
+
 test('Tab keyboard context menu returns focus to the original tab after Escape @folders @contextmenu', async ({
   page,
 }) => {
@@ -27,6 +50,37 @@ test('Tab keyboard context menu returns focus to the original tab after Escape @
   await expect(tab).toBeFocused();
 });
 
+test('Move dialog reflects sibling position and clears it when changing parent @folders', async ({
+  page,
+  api,
+}) => {
+  api.data.workspace.folders.push({ id: 'ui-next', title: 'Next section', parentId: 'ui-root' });
+  await openReader(page);
+  await openFolderMenu(page, 'ui-child');
+  await action(page, 'move').click();
+  const parent = folderDialog(page).locator('#folder-parent');
+  const position = folderDialog(page).locator('#folder-position');
+  await expect(parent).toHaveValue('ui-root');
+  await expect(position).toHaveValue('ui-next');
+  await parent.selectOption('');
+  await expect(position).toHaveValue('');
+  await position.selectOption('ui-root');
+  await folderSave(page).click();
+  await expect(folderDialog(page)).not.toBeVisible();
+  expect(api.folderRequests[0]?.operation).toEqual({
+    kind: 'move',
+    folderId: 'ui-child',
+    parentId: null,
+    beforeId: 'ui-root',
+  });
+  await openFolderMenu(page, 'ui-child');
+  await action(page, 'move').click();
+  await expect(parent).toHaveValue('');
+  await expect(position).toHaveValue('ui-root');
+  await page.keyboard.press('Escape');
+  expect(api.folderRequests).toHaveLength(1);
+});
+
 test('Folder drag distinguishes ordering from nesting and persists sibling order @folders', async ({
   page,
   api,
@@ -34,7 +88,7 @@ test('Folder drag distinguishes ordering from nesting and persists sibling order
   api.data.workspace.folders.push({ id: 'ui-other', title: 'Other chapter', parentId: null });
   await openReader(page);
   await folder(page, 'ui-other').dragTo(folder(page, 'ui-root'), {
-    targetPosition: { x: 50, y: 2 },
+    targetPosition: { x: 50, y: 16 },
   });
   await expect.poll(() => api.folderRequests.length).toBe(1);
   expect(api.folderRequests[0]?.operation).toEqual({
@@ -64,6 +118,87 @@ test('Folder drag distinguishes ordering from nesting and persists sibling order
     page.locator('[data-folder-id="ui-root"] [data-folder-id="ui-other"]'),
   ).toBeVisible();
   expect(api.saves).toHaveLength(0);
+});
+
+test('Scrolled navigation keeps the root drop target visible and moves a nested folder @folders', async ({
+  page,
+  api,
+}) => {
+  api.data.workspace.folders.unshift(
+    ...Array.from({ length: 40 }, (_, index) => ({
+      id: `filler-${index}`,
+      title: `Chapter ${index}`,
+      parentId: null,
+    })),
+  );
+  await openReader(page);
+  const nav = page.locator('.material-nav');
+  const child = folder(page, 'ui-child');
+  await child.scrollIntoViewIfNeeded();
+  expect(await nav.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
+  const source = await child.boundingBox();
+  if (!source) {
+    throw new Error('Expected a visible nested folder.');
+  }
+  await page.mouse.move(source.x + 50, source.y + source.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(source.x + 65, source.y + source.height / 2 + 10);
+  const destination = page.locator('.folder-root-drop');
+  await expect(destination).toBeInViewport({ ratio: 1 });
+  const target = await destination.boundingBox();
+  if (!target) {
+    throw new Error('Expected a visible root drop target after scrolling.');
+  }
+  await page.mouse.move(target.x + target.width / 2, target.y + target.height / 2);
+  await page.mouse.move(target.x + target.width / 2, target.y + target.height / 2);
+  await page.mouse.up();
+  await expect.poll(() => api.folderRequests.length).toBe(1);
+  expect(api.folderRequests[0]?.operation).toEqual({
+    kind: 'move',
+    folderId: 'ui-child',
+    parentId: null,
+    beforeId: null,
+  });
+  await expect(page.locator('.material-nav > details[data-folder-id="ui-child"]')).toBeVisible();
+});
+
+test('Folder ordering offers wide zones and a contrasting themed marker @folders @visual', async ({
+  page,
+  api,
+}, testInfo) => {
+  api.data.workspace.folders.push({ id: 'ui-other', title: 'Other chapter', parentId: null });
+  await openReader(page);
+  const source = await folder(page, 'ui-other').boundingBox();
+  const target = await folder(page, 'ui-root').boundingBox();
+  if (!source || !target) {
+    throw new Error('Expected visible folder drag targets.');
+  }
+  expect(target.height).toBeGreaterThanOrEqual(56);
+  await page.mouse.move(source.x + 50, source.y + source.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(source.x + 65, source.y + source.height / 2 + 10);
+  await page.mouse.move(target.x + 50, target.y + 16);
+  await page.mouse.move(target.x + 50, target.y + 16);
+  await expect(folder(page, 'ui-root')).toHaveClass(/drop-before/);
+  const marker = await folder(page, 'ui-root').evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { shadow: style.boxShadow, background: style.backgroundColor };
+  });
+  expect(marker.shadow).not.toBe('none');
+  const image = testInfo.outputPath('folder-order-drop.png');
+  await page.screenshot({ path: image, animations: 'disabled' });
+  await testInfo.attach('folder-order-drop', { path: image, contentType: 'image/png' });
+  await page.mouse.move(target.x + 50, target.y + target.height - 16);
+  await page.mouse.move(target.x + 50, target.y + target.height - 16);
+  await expect(folder(page, 'ui-root')).toHaveClass(/drop-after/);
+  await page.mouse.up();
+  await expect.poll(() => api.folderRequests.length).toBe(1);
+  expect(api.folderRequests[0]?.operation).toEqual({
+    kind: 'move',
+    folderId: 'ui-other',
+    parentId: null,
+    beforeId: null,
+  });
 });
 
 test('Context menus dismiss outside, stay inside the viewport and preserve native reader actions @folders @contextmenu', async ({
@@ -379,7 +514,9 @@ test('Context menu keyboard, focus return and themed presentation @folders @cont
   await page.keyboard.press('Shift+F10');
   await expect(action(page, 'new-note')).toBeFocused();
   await page.keyboard.press('End');
-  await expect(action(page, 'toggle-expansion')).toBeFocused();
+  await expect(action(page, 'move')).toBeFocused();
+  await expect(page.getByRole('menuitem')).toHaveCount(3);
+  await expect(action(page, 'new-note')).toHaveText(text('engine', 'contextMenu', 'newNote'));
   await page.keyboard.press('Home');
   await expect(action(page, 'new-note')).toBeFocused();
   await expectNoHorizontalOverflow(page, page.getByRole('menu'));

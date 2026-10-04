@@ -112,7 +112,6 @@ export class Workspace {
   private readonly folderDialog = viewChild(FolderManagementDialog);
   readonly menus = new WorkspaceContextMenuState(
     () => this.folderManagement()?.locked() ?? true,
-    (id) => this.expanded().has(id),
     (id) => this.closing().has(id),
   );
   private readonly creationDialog = viewChild(MaterialCreationDialog);
@@ -384,17 +383,6 @@ export class Workspace {
         if (folder) {
           this.folderDialog()?.open(action, folder, target.trigger);
         }
-        break;
-      case 'toggle-expansion':
-        this.expanded.update((current) => {
-          const next = new Set(current);
-          if (next.has(target.id)) {
-            next.delete(target.id);
-          } else {
-            next.add(target.id);
-          }
-          return next;
-        });
         break;
       case 'open':
         await this.open(target.id);

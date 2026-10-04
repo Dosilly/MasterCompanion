@@ -1,5 +1,13 @@
 # Implementation status
 
+## Folder interaction corrections — 4 October 2026
+
+The move dialog reflects the actual parent and sibling position, including moves
+back to the root. Wider folder rows and ordering zones, contrasting drag markers,
+and a root target outside the scrolling navigation address difficult drag/drop.
+Folder menus now offer Add document, Rename and Move without redundant expansion
+actions. See [the correction and scoped evidence](25-Folder-management-and-context-menus.md#folder-interaction-corrections--4-october-2026).
+
 ## Folder management and context menus — 4 October 2026
 
 Folders support rename, sibling order, subtree nesting and moves to ancestors or

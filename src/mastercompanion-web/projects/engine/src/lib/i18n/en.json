@@ -223,11 +223,9 @@
   },
   "contextMenu": {
     "label": "Actions",
-    "newNote": "New note here",
+    "newNote": "Add document",
     "rename": "Rename folder",
     "move": "Move folder…",
-    "collapse": "Collapse folder",
-    "expand": "Expand folder",
     "open": "Open material",
     "reveal": "Show in navigation",
     "copyLink": "Copy material link",

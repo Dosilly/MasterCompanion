@@ -36,9 +36,9 @@ export class FolderDrag {
     const bounds = event.currentTarget.getBoundingClientRect();
     const ratio = (event.clientY - bounds.top) / bounds.height;
     const placement = folder
-      ? ratio < 0.25
+      ? ratio < 0.35
         ? 'before'
-        : ratio > 0.75
+        : ratio > 0.65
           ? 'after'
           : 'inside'
       : 'inside';

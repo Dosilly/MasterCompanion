@@ -108,3 +108,29 @@ it created no material or folder operation and logged no browser page errors.
 
 No remote push or AWS deployment occurred. The current development data policy
 requires no backup or preservation probes for this update.
+
+## Folder interaction corrections — 4 October 2026
+
+The move dialog previously assigned the select value before Angular rendered its
+dynamic options. A nested folder consequently appeared to be at the root while
+the draft still retained its existing parent; choosing that displayed option did
+not trigger a change. Parent and sibling position now bind selection on the
+rendered options. Browser regression tests cover the initial parent, moving back
+to the root, reload persistence, current sibling position, changing parents and
+reopening the dialog.
+
+Folder rows have a stable minimum height of 56 pixels. Their upper/lower 35 percent
+are ordering targets, leaving the middle for nesting. A five-pixel accent marker
+on the soft background is visible in both themes. The root drop target is anchored
+to the workspace outside the scrolling navigation, with temporary bottom padding
+to keep the last rows reachable. Scrolled-navigation tests verify a complete root
+drop. The menu contains Add document, Rename and Move; redundant expand/collapse
+actions and their translations have been removed. Polish Add document is
+“Dodaj dokument”.
+
+The original nested-parent regression failed against the old implementation.
+Twenty-four folder unit cases pass, as do sixty functional browser cases across
+both themes and viewport sizes. Four intentionally changed menu baselines were
+reviewed after a normal comparison, updated only for that exact visual test, and
+checked again without baseline updates. Full frontend quality and compilation
+pass. The before/after ordering indicators were reviewed at Full HD in both themes.

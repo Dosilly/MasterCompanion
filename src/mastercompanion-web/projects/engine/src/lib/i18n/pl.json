@@ -223,11 +223,9 @@
   },
   "contextMenu": {
     "label": "Działania",
-    "newNote": "Nowa notatka tutaj",
+    "newNote": "Dodaj dokument",
     "rename": "Zmień nazwę folderu",
     "move": "Przenieś folder…",
-    "collapse": "Zwiń folder",
-    "expand": "Rozwiń folder",
     "open": "Otwórz materiał",
     "reveal": "Pokaż w nawigacji",
     "copyLink": "Kopiuj odnośnik do materiału",
