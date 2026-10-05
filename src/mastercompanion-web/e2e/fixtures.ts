@@ -53,7 +53,7 @@ function folderRequest(value: unknown): FolderOperationRequest {
   expect(Object.keys(value).sort()).toEqual(['expectedRevision', 'operation', 'requestId']);
   const operation = value['operation'];
   if (
-    operation['kind'] === 'reorderMaterial' &&
+    (operation['kind'] === 'reorderMaterial' || operation['kind'] === 'moveMaterial') &&
     typeof operation['materialId'] === 'string' &&
     (operation['folderId'] === null || typeof operation['folderId'] === 'string') &&
     (operation['beforeId'] === null || typeof operation['beforeId'] === 'string')
@@ -62,7 +62,7 @@ function folderRequest(value: unknown): FolderOperationRequest {
       requestId: value['requestId'],
       expectedRevision: value['expectedRevision'],
       operation: {
-        kind: 'reorderMaterial',
+        kind: operation['kind'],
         materialId: operation['materialId'],
         folderId: operation['folderId'],
         beforeId: operation['beforeId'],
@@ -237,12 +237,22 @@ export class TestApi {
             return;
           }
           const operation = body.operation;
-          if (operation.kind === 'reorderMaterial') {
+          if (operation.kind === 'reorderMaterial' || operation.kind === 'moveMaterial') {
             const material = this.data.workspace.materials.find(
               (item) => item.id === operation.materialId,
             );
-            if (!material || material.folderId !== operation.folderId) {
+            if (
+              !material ||
+              (operation.kind === 'reorderMaterial' && material.folderId !== operation.folderId)
+            ) {
               throw new Error('Invalid material fixture organization.');
+            }
+            material.folderId = operation.folderId;
+            const document = [...this.data.materials, ...this.createdMaterials].find(
+              (item) => item.id === material.id,
+            );
+            if (document) {
+              document.folderId = operation.folderId;
             }
             const others = this.data.workspace.materials.filter((item) => item.id !== material.id);
             const beforeIndex = others.findIndex((item) => item.id === operation.beforeId);

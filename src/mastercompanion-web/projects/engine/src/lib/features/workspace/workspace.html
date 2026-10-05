@@ -137,9 +137,6 @@
             </div>
           }
         }
-        @if (materialDrag.rejected()) {
-          <p class="folder-status" role="status">{{ ui.materialOrder.crossFolder }}</p>
-        }
         @if (menus.feedback(); as feedback) {
           <p role="status" class="folder-status">{{ ui.contextMenu[feedback] }}</p>
         }
@@ -161,8 +158,11 @@
                   folderDrag.target()?.placement === 'before'
                 "
                 [class.drop-inside]="
-                  folderDrag.target()?.targetId === folder.id &&
-                  folderDrag.target()?.placement === 'inside'
+                  (folderDrag.target()?.targetId === folder.id &&
+                    folderDrag.target()?.placement === 'inside') ||
+                  (materialDrag.folderTarget() !== null &&
+                    materialDrag.folderTarget()?.id ===
+                      (folder.id === '@unfiled' ? null : folder.id))
                 "
                 [class.drop-after]="
                   folderDrag.target()?.targetId === folder.id &&
@@ -172,11 +172,9 @@
                   folderDrag.start($event, folder.id, folderManagement()?.locked() ?? true)
                 "
                 (dragend)="folderDrag.end()"
-                (dragover)="
-                  folder.id !== '@unfiled' && folderDrag.over($event, data.folders, folder)
-                "
-                (dragleave)="folderDrag.leave()"
-                (drop)="folder.id !== '@unfiled' && dropFolder($event, folder)"
+                (dragover)="overFolder($event, folder)"
+                (dragleave)="folderDrag.leave(); materialDrag.leave()"
+                (drop)="dropFolder($event, folder)"
                 (contextmenu)="menus.open($event, 'folder', folder.id)"
                 (keydown)="menus.open($event, 'folder', folder.id)"
               >
@@ -231,15 +229,17 @@
         }
       </nav>
     </aside>
-    @if (folderDrag.dragging()) {
+    @if (folderDrag.dragging() || materialDrag.dragging()) {
       <div
         class="folder-root-drop"
-        [class.drop-inside]="folderDrag.target()?.targetId === null"
-        (dragover)="folderDrag.over($event, data.folders, null)"
-        (dragleave)="folderDrag.leave()"
+        [class.drop-inside]="
+          folderDrag.target()?.targetId === null || materialDrag.folderTarget()?.id === null
+        "
+        (dragover)="overFolder($event, null)"
+        (dragleave)="folderDrag.leave(); materialDrag.leave()"
         (drop)="dropFolder($event, null)"
       >
-        {{ ui.folders.rootDrop }}
+        {{ materialDrag.dragging() ? ui.materialMove.unfiledDrop : ui.folders.rootDrop }}
       </div>
     }
     <main class="workspace-main">
@@ -421,6 +421,7 @@
   }
   @if (folderManagement(); as management) {
     <mc-material-order-dialog [management]="management" [materials]="data.materials" />
+    <mc-material-move-dialog [management]="management" (moved)="revealMovedMaterial($event)" />
     <mc-folder-management-dialog [management]="management" />
   }
   <mc-workspace-context-menu

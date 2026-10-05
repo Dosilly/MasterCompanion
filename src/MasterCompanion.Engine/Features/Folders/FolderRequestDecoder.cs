@@ -76,6 +76,9 @@ internal static class FolderRequestDecoder
             ReorderMaterialOperation reorder => ValidId(reorder.MaterialId) &&
                 (reorder.FolderId is null || ValidId(reorder.FolderId)) &&
                 (reorder.BeforeId is null || ValidId(reorder.BeforeId)),
+            MoveMaterialOperation move => ValidId(move.MaterialId) &&
+                (move.FolderId is null || ValidId(move.FolderId)) &&
+                (move.BeforeId is null || ValidId(move.BeforeId)),
             MoveFolderOperation move => ValidId(move.FolderId) && (move.ParentId is null || ValidId(move.ParentId)) &&
                 (move.BeforeId is null || ValidId(move.BeforeId)),
             _ => false

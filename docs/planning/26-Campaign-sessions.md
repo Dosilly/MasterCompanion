@@ -128,3 +128,9 @@ materials and recoverable drafts. [Searchable choices](31-Searchable-choices.md)
 replace the pin dropdown with title/path filtering. Session creation now advances
 the shared organization revision when adding its two ordinary documents. Record-level
 URLs and broader session workflow restructuring remain cycle E scope.
+
+The [follow-up corrections](34-UX-follow-up-corrections.md) add an editable,
+localized new-session name with today's local calendar date. An untouched
+suggestion can be closed without creating a record; changed names and pending
+operations retain their close protection. Confirmed creation refreshes the
+suggestion for the next meeting.

@@ -56,7 +56,7 @@ export class WorkspaceContextMenuState {
       actions =
         kind === 'material'
           ? [
-              { id: 'open', label: labels.open },
+              { id: 'move-material', label: labels.moveMaterial, disabled: this.folderLocked() },
               { id: 'reorder', label: labels.reorder, disabled: this.folderLocked() },
             ]
           : [
@@ -64,10 +64,10 @@ export class WorkspaceContextMenuState {
               { id: 'close-others', label: labels.closeOthers },
             ];
       if (!id.startsWith('@')) {
-        actions.push(
-          { id: 'reveal', label: labels.reveal },
-          { id: 'copy-link', label: labels.copyLink },
-        );
+        if (kind === 'tab') {
+          actions.push({ id: 'reveal', label: labels.reveal });
+        }
+        actions.push({ id: 'copy-link', label: labels.copyLink });
       }
     }
     const pointer = event instanceof MouseEvent && event.type === 'contextmenu';

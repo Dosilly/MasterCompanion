@@ -6,4 +6,10 @@ export type FolderOperation =
       materialId: string;
       folderId: string | null;
       beforeId: string | null;
+    }
+  | {
+      kind: 'moveMaterial';
+      materialId: string;
+      folderId: string | null;
+      beforeId: string | null;
     };

@@ -68,7 +68,8 @@
       "storageUnavailable": "Pamięć odzyskiwania jest niedostępna. Włącz pamięć sesji przeglądarki i spróbuj ponownie.",
       "invalidRecovery": "Nie można odczytać zapisanego żądania odzyskiwania. Odśwież i sprawdź sesje przed odrzuceniem odzyskiwania.",
       "loadFailed": "Nie udało się wczytać sesji. Dotychczasowe rekordy i szkice pozostają dostępne."
-    }
+    },
+    "defaultTitle": "Sesja {date}"
   },
   "workspace": {
     "map": "Mapa",
@@ -296,14 +297,14 @@
     "newNote": "Dodaj dokument",
     "rename": "Zmień nazwę folderu",
     "move": "Przenieś folder…",
-    "open": "Otwórz materiał",
     "reveal": "Pokaż w nawigacji",
     "copyLink": "Kopiuj odnośnik do materiału",
     "close": "Zamknij kartę",
     "closeOthers": "Zamknij pozostałe karty",
     "copied": "Odnośnik do materiału skopiowany.",
     "copyFailed": "Nie udało się skopiować odnośnika. Otwórz materiał i skopiuj jego adres.",
-    "reorder": "Zmień kolejność dokumentu"
+    "reorder": "Zmień kolejność dokumentu",
+    "moveMaterial": "Przenieś dokument do folderu"
   },
   "materialOrder": {
     "title": "Zmień kolejność dokumentu",
@@ -313,7 +314,12 @@
     "last": "Na końcu",
     "before": "Przed dokumentem",
     "after": "Za dokumentem",
-    "sibling": "Dokument",
-    "crossFolder": "Kolejność dokumentów można zmieniać tylko w ich bieżącym folderze."
+    "sibling": "Dokument"
+  },
+  "materialMove": {
+    "title": "Przenieś dokument",
+    "hint": "Przenieś „{title}” na koniec wybranego folderu.",
+    "destination": "Folder docelowy",
+    "unfiledDrop": "Przenieś dokument do materiałów bez folderu"
   }
 }

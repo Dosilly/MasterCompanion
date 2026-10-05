@@ -352,7 +352,12 @@ folder mutations, ordering, note creation and session-document creation advance 
 under the campaign lock. Sibling updates and exact receipts retain one transactional
 owner. Refresh/recovery carry the complete confirmed organization snapshot.
 Stable material IDs, links, map destinations and mounted editor state stay intact.
-This request does not include moving notes between folders.
+The [follow-up correction](34-UX-follow-up-corrections.md) adds explicit
+`moveMaterial` operations for cross-folder/unfiled placement. Destination membership,
+source/destination sibling order, organization revision and receipt share this
+transactional owner. Content revisions and gameplay/undo remain independent.
+Confirmed organization membership takes precedence over stale document-cache
+metadata without replacing a mounted editor or its draft.
 
 Searchable material/folder choices use neutral typed presentation options in UI;
 the engine resolves paths, campaign IDs, invalid move destinations and writes.

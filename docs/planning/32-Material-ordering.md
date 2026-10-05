@@ -6,7 +6,8 @@ Notes and module materials can be ordered before/after a sibling by drag/drop or
 through the keyboard context menu and position dialog. First/last positions are
 explicit. The sibling picker searches titles and folder paths using the neutral
 shared control. Unfiled materials have the same ordering behavior. Cross-folder
-material moves remain outside this feature.
+material moves were outside this initial feature and are now delivered through
+the explicit [follow-up move operation](34-UX-follow-up-corrections.md).
 
 The existing folder operation boundary now owns a coherent organization snapshot:
 folders, ordered material identities and folder membership. `FoldersRevision` is

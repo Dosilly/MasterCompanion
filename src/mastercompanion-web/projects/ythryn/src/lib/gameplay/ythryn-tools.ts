@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, computed, inject } from '@angular/core';
 import { CAMPAIGN_GAME } from '@mastercompanion/contracts';
 import { uiMessages } from '../i18n/messages';
 import { ActionRequired } from './action-required';
@@ -13,38 +13,22 @@ import { readExpeditionView } from './expedition-view';
   imports: [ActionRequired, BlightTool, ExpeditionTool, RivalForcesTool],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './ythryn-tools.html',
-  styles: `
-    .pending-actions {
-      margin-bottom: 1.5rem;
-      padding: 1rem;
-      border: 1px solid var(--error-line);
-      border-left-width: 4px;
-      border-radius: 0.6rem;
-      background: var(--error-bg);
-    }
-    p {
-      margin: 0;
-    }
-    ul {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem 1.5rem;
-      margin-bottom: 0;
-      padding-left: 1.5rem;
-    }
-    a {
-      color: var(--ink);
-      text-underline-offset: 3px;
-    }
-    a:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 3px;
-    }
-  `,
+  styleUrl: './ythryn-tools.scss',
 })
 export class YthrynTools {
   readonly text = uiMessages;
   private readonly game = inject(CAMPAIGN_GAME);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  revealAction(target: string): void {
+    const element = Array.from(this.host.nativeElement.querySelectorAll<HTMLElement>('[id]')).find(
+      (candidate) => candidate.id === target,
+    );
+    if (element) {
+      element.scrollIntoView({ block: 'start' });
+      element.focus({ preventScroll: true });
+    }
+  }
   readonly pendingActions = computed(() => {
     const state = this.game.state();
     const expedition = state ? readExpeditionView(state) : null;

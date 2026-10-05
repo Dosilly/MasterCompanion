@@ -6,6 +6,7 @@ import { uiMessages } from '../../i18n/messages';
 import { MeetingRecords } from './meeting-records';
 import { SessionDrafts } from './session-drafts';
 import { SessionDeletionDialog } from './session-deletion-dialog';
+import { defaultSessionTitle } from './default-session-title';
 
 @Component({
   selector: 'mc-session-view',
@@ -35,7 +36,8 @@ export class SessionView {
         .snapshot()
         .sessions.some((record) => record.id === this.selectedId()),
   );
-  readonly newTitle = signal('');
+  private suggestedTitle = defaultSessionTitle(new Date(), this.text.defaultTitle);
+  readonly newTitle = signal(this.suggestedTitle);
   readonly closeBlocked = signal(false);
   readonly deletionTarget = signal<SessionRecord | null>(null);
   readonly deletionConflict = signal(false);
@@ -113,10 +115,10 @@ export class SessionView {
   }
 
   async prepareToClose(): Promise<boolean> {
-    if (this.deletionTarget()) {
+    if (this.deletionTarget() || this.meetings().locked()) {
       return false;
     }
-    if (this.newTitle().trim()) {
+    if (this.newTitle().trim() && this.newTitle().trim() !== this.suggestedTitle) {
       this.closeBlocked.set(true);
       return false;
     }
@@ -149,7 +151,7 @@ export class SessionView {
       notesTitle: this.text.notesDocument.replace('{title}', title),
     });
     if (created) {
-      this.newTitle.set('');
+      this.resetSuggestedTitle();
       this.selectedId.set(sessionId);
       this.materialsCreated.emit();
     }
@@ -173,7 +175,7 @@ export class SessionView {
     }
     if (confirmed && operation?.kind === 'create') {
       if (this.newTitle().trim() === operation.title.trim()) {
-        this.newTitle.set('');
+        this.resetSuggestedTitle();
       }
       this.selectedId.set(operation.sessionId);
       this.materialsCreated.emit();
@@ -198,6 +200,11 @@ export class SessionView {
     this.deletionRevision = this.meetings().snapshot().revision;
     this.deletionConflict.set(false);
     this.deletionDialog().open(event);
+  }
+
+  private resetSuggestedTitle(): void {
+    this.suggestedTitle = defaultSessionTitle(new Date(), this.text.defaultTitle);
+    this.newTitle.set(this.suggestedTitle);
   }
 
   cancelDeletion(): void {

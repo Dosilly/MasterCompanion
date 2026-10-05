@@ -1,9 +1,9 @@
 export type WorkspaceContextMenuAction =
   | 'reorder'
+  | 'move-material'
   | 'new-note'
   | 'rename'
   | 'move'
-  | 'open'
   | 'reveal'
   | 'copy-link'
   | 'close'

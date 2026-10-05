@@ -28,7 +28,7 @@ export function isFolderOperation(value: unknown): value is FolderOperation {
   if (!record(value)) {
     return false;
   }
-  if (value['kind'] === 'reorderMaterial') {
+  if (value['kind'] === 'reorderMaterial' || value['kind'] === 'moveMaterial') {
     return (
       Object.keys(value).length === 4 &&
       validFolderId(value['materialId']) &&
@@ -119,7 +119,7 @@ export function confirmsFolderOperation(
   snapshot: FolderSnapshot,
   operation: FolderOperation,
 ): boolean {
-  if (operation.kind === 'reorderMaterial') {
+  if (operation.kind === 'reorderMaterial' || operation.kind === 'moveMaterial') {
     const siblings = snapshot.materialOrder.filter((item) => item.folderId === operation.folderId);
     const index = siblings.findIndex((item) => item.id === operation.materialId);
     return index >= 0 && (siblings[index + 1]?.id ?? null) === operation.beforeId;
@@ -149,6 +149,19 @@ export function canReorderMaterial(
   return (
     material !== undefined &&
     material.folderId === folderId &&
+    canMoveMaterial(snapshot, materialId, folderId, beforeId)
+  );
+}
+
+export function canMoveMaterial(
+  snapshot: FolderSnapshot,
+  materialId: string,
+  folderId: string | null,
+  beforeId: string | null,
+): boolean {
+  return (
+    snapshot.materialOrder.some((item) => item.id === materialId) &&
+    (folderId === null || snapshot.folders.some((item) => item.id === folderId)) &&
     (beforeId === null ||
       (beforeId !== materialId &&
         snapshot.materialOrder.some((item) => item.id === beforeId && item.folderId === folderId)))

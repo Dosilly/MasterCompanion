@@ -55,7 +55,7 @@ test('Keyboard position action sends the same last insertion and returns focus @
   await expect(row(page, readerId)).toBeFocused();
 });
 
-test('Cross-folder material drop is rejected and sends no organization write @ordering', async ({
+test('Cross-folder material drop moves before the target document @ordering', async ({
   page,
   api,
 }) => {
@@ -68,7 +68,16 @@ test('Cross-folder material drop is rejected and sends no organization write @or
   await page.locator('[data-folder-id="@unfiled"] summary').click();
   await row(page, linkedId).dragTo(row(page, readerId), { targetPosition: { x: 40, y: 3 } });
   await expect(row(page, linkedId)).toBeVisible();
-  expect(api.folderRequests).toHaveLength(0);
+  await expect.poll(() => api.folderRequests.length).toBe(1);
+  expect(api.folderRequests[0]?.operation).toEqual({
+    kind: 'moveMaterial',
+    materialId: linkedId,
+    folderId: 'ui-child',
+    beforeId: readerId,
+  });
+  await expect(
+    page.locator('[data-folder-id="ui-child"] [data-material-id]').first(),
+  ).toHaveAttribute('data-material-id', linkedId);
 });
 
 test('Unfiled material ordering uses null folder ownership @ordering', async ({ page, api }) => {

@@ -15,13 +15,28 @@ internal static class MaterialOrdering
         {
             return "material_folder_conflict";
         }
-        var siblings = materials.Where(item => item.FolderId == material.FolderId && item.Id != material.Id)
+        return Place(materials, material, operation.FolderId, operation.BeforeId);
+    }
+
+    internal static string? Place(IReadOnlyList<Material> materials, Material material, string? folderId, string? beforeId)
+    {
+        var siblings = materials.Where(item => item.FolderId == folderId && item.Id != material.Id)
             .OrderBy(item => item.SortOrder).ThenBy(item => item.Id, StringComparer.Ordinal).ToList();
-        var position = operation.BeforeId is null ? siblings.Count : siblings.FindIndex(item => item.Id == operation.BeforeId);
-        if (position < 0 || operation.BeforeId == material.Id)
+        var position = beforeId is null ? siblings.Count : siblings.FindIndex(item => item.Id == beforeId);
+        if (position < 0 || beforeId == material.Id)
         {
             return "material_order_target_invalid";
         }
+        if (material.FolderId != folderId)
+        {
+            var previousSiblings = materials.Where(item => item.FolderId == material.FolderId && item.Id != material.Id)
+                .OrderBy(item => item.SortOrder).ThenBy(item => item.Id, StringComparer.Ordinal).ToList();
+            for (var index = 0; index < previousSiblings.Count; index++)
+            {
+                previousSiblings[index].SortOrder = index;
+            }
+        }
+        material.FolderId = folderId;
         siblings.Insert(position, material);
         for (var index = 0; index < siblings.Count; index++)
         {

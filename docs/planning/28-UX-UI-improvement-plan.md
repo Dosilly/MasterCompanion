@@ -8,6 +8,9 @@ The first A/H/I/J/B cycle is implemented; C–G remain planned. Delivery records
 [controls](29-Control-foundation.md), [choices](31-Searchable-choices.md),
 [deletion](30-Session-deletion.md), [ordering](32-Material-ordering.md), and
 [navigation/reader commands](33-Workspace-navigation.md).
+The [subsequent user-reported corrections](34-UX-follow-up-corrections.md) cover
+pending-action navigation, simpler document menus, date-based session names and
+cross-folder document movement.
 It records delivery order and concrete acceptance criteria; estimates are relative
 engineering effort, not dates or observed user-performance results.
 

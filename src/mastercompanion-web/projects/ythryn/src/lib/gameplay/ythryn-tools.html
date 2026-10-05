@@ -8,7 +8,9 @@
     <ul>
       @for (action of pendingActions(); track action.target) {
         <li>
-          <a [href]="'#' + action.target">{{ action.label }}</a>
+          <button type="button" class="pending-action-link" (click)="revealAction(action.target)">
+            {{ action.label }}
+          </button>
         </li>
       }
     </ul>

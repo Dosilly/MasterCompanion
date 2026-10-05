@@ -1,19 +1,20 @@
-import { signal } from '@angular/core';
+import { computed, signal } from '@angular/core';
 import type { FolderSnapshot, FolderOperation } from '@mastercompanion/contracts';
-import { canReorderMaterial } from './folder-rules';
+import { canMoveMaterial } from './folder-rules';
 
-/** Owns only within-folder pointer intent; confirmed ordering belongs to organization. */
+/** Owns pointer placement intent; confirmed folders/order belong to organization. */
 export class MaterialDrag {
   private readonly source = signal<string | null>(null);
   private readonly destination = signal<{
-    id: string;
-    placement: 'before' | 'after';
+    id: string | null;
+    placement: 'before' | 'after' | 'inside';
     operation: FolderOperation;
   } | null>(null);
-  private readonly rejectedState = signal<string | null>(null);
-  readonly rejected = this.rejectedState.asReadonly();
   readonly dragging = this.source.asReadonly();
   readonly target = this.destination.asReadonly();
+  readonly folderTarget = computed(() =>
+    this.destination()?.placement === 'inside' ? this.destination() : null,
+  );
 
   start(event: DragEvent, id: string, locked: boolean): void {
     event.stopPropagation();
@@ -29,7 +30,6 @@ export class MaterialDrag {
   over(event: DragEvent, snapshot: FolderSnapshot, targetId: string): void {
     event.stopPropagation();
     this.destination.set(null);
-    this.rejectedState.set(null);
     const source = snapshot.materialOrder.find((item) => item.id === this.source());
     const target = snapshot.materialOrder.find((item) => item.id === targetId);
     if (
@@ -38,13 +38,6 @@ export class MaterialDrag {
       source.id === target.id ||
       !(event.currentTarget instanceof HTMLElement)
     ) {
-      return;
-    }
-    if (source.folderId !== target.folderId) {
-      this.rejectedState.set(target.id);
-      if (event.dataTransfer) {
-        event.dataTransfer.dropEffect = 'none';
-      }
       return;
     }
     const bounds = event.currentTarget.getBoundingClientRect();
@@ -56,7 +49,7 @@ export class MaterialDrag {
       placement === 'before'
         ? target.id
         : (siblings[siblings.findIndex((item) => item.id === target.id) + 1]?.id ?? null);
-    if (!canReorderMaterial(snapshot, source.id, target.folderId, beforeId)) {
+    if (!canMoveMaterial(snapshot, source.id, target.folderId, beforeId)) {
       return;
     }
     event.preventDefault();
@@ -67,11 +60,33 @@ export class MaterialDrag {
       id: target.id,
       placement,
       operation: {
-        kind: 'reorderMaterial',
+        kind: source.folderId === target.folderId ? 'reorderMaterial' : 'moveMaterial',
         materialId: source.id,
         folderId: target.folderId,
         beforeId,
       },
+    });
+  }
+
+  overFolder(event: DragEvent, snapshot: FolderSnapshot, folderId: string | null): void {
+    event.stopPropagation();
+    this.destination.set(null);
+    const sourceId = this.source();
+    if (!sourceId || !canMoveMaterial(snapshot, sourceId, folderId, null)) {
+      return;
+    }
+    const source = snapshot.materialOrder.find((item) => item.id === sourceId);
+    if (source?.folderId === folderId) {
+      return;
+    }
+    event.preventDefault();
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'move';
+    }
+    this.destination.set({
+      id: folderId,
+      placement: 'inside',
+      operation: { kind: 'moveMaterial', materialId: sourceId, folderId, beforeId: null },
     });
   }
 
@@ -84,13 +99,11 @@ export class MaterialDrag {
   }
 
   end(): void {
-    this.rejectedState.set(null);
     this.source.set(null);
     this.destination.set(null);
   }
 
   leave(): void {
-    this.rejectedState.set(null);
     this.destination.set(null);
   }
 }

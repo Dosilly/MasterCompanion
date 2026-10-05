@@ -462,14 +462,15 @@ test('Material context actions copy a stable address and reveal its navigation p
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await openReader(page);
   await page.locator(`[data-material-id="${linkedId}"]`).click({ button: 'right' });
+  await expect(action(page, 'open')).toHaveCount(0);
+  await expect(action(page, 'reveal')).toHaveCount(0);
   await action(page, 'copy-link').click();
   await expect
     .poll(() => page.evaluate(() => navigator.clipboard.readText()))
     .toBe(new URL(`/materials/${linkedId}`, page.url()).href);
   await expect(page.getByRole('heading', { name: readerTitle, exact: true })).toBeVisible();
 
-  await page.locator(`[data-material-id="${linkedId}"]`).click({ button: 'right' });
-  await action(page, 'open').click();
+  await page.locator(`[data-material-id="${linkedId}"]`).click();
   await expect(page.getByRole('heading', { name: linkedTitle, exact: true })).toBeVisible();
   await folder(page, 'ui-root').click();
   await page.getByRole('tab', { name: linkedTitle, exact: true }).click({ button: 'right' });

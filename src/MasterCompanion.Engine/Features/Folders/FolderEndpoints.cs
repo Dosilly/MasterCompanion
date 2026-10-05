@@ -81,9 +81,12 @@ public static class FolderEndpoints
 
         var folders = await db.Folders.Where(item => item.CampaignId == campaignId).ToListAsync(token);
         var materials = await db.Materials.Where(item => item.CampaignId == campaignId).ToListAsync(token);
-        var error = request.Operation is ReorderMaterialOperation reorder
-            ? MaterialOrdering.Apply(materials, reorder)
-            : FolderChanges.Apply(folders, request.Operation);
+        var error = request.Operation switch
+        {
+            ReorderMaterialOperation reorder => MaterialOrdering.Apply(materials, reorder),
+            MoveMaterialOperation move => MaterialMoving.Apply(materials, folders, move),
+            _ => FolderChanges.Apply(folders, request.Operation)
+        };
         if (error is not null)
         {
             return Problem(error is "folder_not_found" or "material_not_found" ? 404 : 400, error);

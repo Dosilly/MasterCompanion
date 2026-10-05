@@ -49,6 +49,7 @@ import { FolderManagementDialog } from '../folders/folder-management-dialog';
 import { FolderDrag } from '../folders/folder-drag';
 import { MaterialDrag } from '../folders/material-drag';
 import { MaterialOrderDialog } from '../folders/material-order-dialog';
+import { MaterialMoveDialog } from '../folders/material-move-dialog';
 import { WorkspaceContextMenuComponent } from '../context-menu/workspace-context-menu';
 import type { WorkspaceContextMenuAction } from '../context-menu/workspace-context-menu-action';
 import { WorkspaceContextMenuState } from '../context-menu/workspace-context-menu-state';
@@ -70,6 +71,7 @@ import { SessionView } from '../sessions/session-view';
     PartyView,
     FolderManagementDialog,
     MaterialOrderDialog,
+    MaterialMoveDialog,
     WorkspaceContextMenuComponent,
     SessionView,
   ],
@@ -136,6 +138,7 @@ export class Workspace {
   readonly folderDrag = new FolderDrag();
   readonly materialDrag = new MaterialDrag();
   private readonly materialOrderDialog = viewChild(MaterialOrderDialog);
+  private readonly materialMoveDialog = viewChild(MaterialMoveDialog);
   private readonly folderDialog = viewChild(FolderManagementDialog);
   readonly menus = new WorkspaceContextMenuState(
     () => this.folderManagement()?.locked() ?? true,
@@ -445,9 +448,13 @@ export class Workspace {
         }
         break;
       }
-      case 'open':
-        await this.open(target.id);
+      case 'move-material': {
+        const material = this.workspace()?.materials.find((item) => item.id === target.id);
+        if (material) {
+          this.materialMoveDialog()?.open(material, target.trigger);
+        }
         break;
+      }
       case 'reveal':
         this.materialSearch()?.updateQuery('');
         await this.open(target.id);
@@ -480,24 +487,81 @@ export class Workspace {
   }
 
   dropFolder(event: DragEvent, folder: CampaignFolder | null): void {
-    this.folderDrag.over(event, this.workspace()?.folders ?? [], folder);
+    this.overFolder(event, folder);
+    if (this.materialDrag.dragging()) {
+      this.commitMaterialDrop(event);
+      return;
+    }
     const operation = this.folderDrag.drop(event);
     if (operation) {
       void this.folderManagement()?.execute(operation);
     }
   }
+  overFolder(event: DragEvent, folder: CampaignFolder | null): void {
+    const management = this.folderManagement();
+    if (!management || management.locked()) {
+      return;
+    }
+    if (this.materialDrag.dragging()) {
+      this.materialDrag.overFolder(
+        event,
+        management.snapshot(),
+        folder?.id === '@unfiled' ? null : (folder?.id ?? null),
+      );
+    } else if (folder?.id !== '@unfiled') {
+      this.folderDrag.over(event, management.snapshot().folders, folder);
+    }
+  }
+
   overMaterial(event: DragEvent, id: string): void {
-    const snapshot = this.folderManagement()?.snapshot();
-    if (snapshot) {
-      this.materialDrag.over(event, snapshot, id);
+    const management = this.folderManagement();
+    if (management && !management.locked()) {
+      this.materialDrag.over(event, management.snapshot(), id);
     }
   }
   dropMaterial(event: DragEvent, id: string): void {
     this.overMaterial(event, id);
+    this.commitMaterialDrop(event);
+  }
+
+  private commitMaterialDrop(event: DragEvent): void {
     const operation = this.materialDrag.drop(event);
     if (operation) {
-      void this.folderManagement()?.execute(operation);
+      void this.folderManagement()
+        ?.execute(operation)
+        .then((confirmed) => {
+          if (confirmed && operation.kind === 'moveMaterial') {
+            this.revealMovedMaterial(operation.materialId);
+          }
+        });
     }
+  }
+
+  revealMovedMaterial(id: string): void {
+    const material = this.workspace()?.materials.find((item) => item.id === id);
+    if (!material) {
+      return;
+    }
+    this.expanded.update(
+      (current) =>
+        new Set([
+          ...current,
+          ...folderPath(this.workspace()?.folders ?? [], material.folderId),
+          ...(material.folderId ? [] : ['@unfiled']),
+        ]),
+    );
+    this.folderNavigationRender?.destroy();
+    this.folderNavigationRender = afterNextRender(
+      () => {
+        const selected = Array.from(
+          this.navigation()?.nativeElement.querySelectorAll<HTMLElement>('[data-material-id]') ??
+            [],
+        ).find((item) => item.dataset['materialId'] === id);
+        selected?.scrollIntoView({ block: 'nearest' });
+        selected?.focus({ preventScroll: true });
+      },
+      { injector: this.injector },
+    );
   }
   acceptCreatedMaterial(material: MaterialDto): void {
     this.materials.acceptCreatedMaterial(material);

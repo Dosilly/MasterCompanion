@@ -18,6 +18,7 @@
           class="character"
           [class.needs-action]="character.nextCheck?.pending"
           [id]="'blight-character-' + character.id"
+          tabindex="-1"
           [attr.aria-labelledby]="'blight-name-' + character.id"
         >
           <h3 [id]="'blight-name-' + character.id">{{ character.name }}</h3>

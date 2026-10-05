@@ -8,6 +8,7 @@ import type {
 } from '@mastercompanion/contracts';
 import {
   canMoveFolder,
+  canMoveMaterial,
   canReorderMaterial,
   confirmsFolderOperation,
   isFolderOperation,
@@ -138,9 +139,17 @@ export class FolderManagement {
     if (
       !isFolderOperation(operation) ||
       (operation.kind !== 'reorderMaterial' &&
+        operation.kind !== 'moveMaterial' &&
         !folders.some((folder) => folder.id === operation.folderId)) ||
       (operation.kind === 'reorderMaterial' &&
         !canReorderMaterial(
+          this.snapshot(),
+          operation.materialId,
+          operation.folderId,
+          operation.beforeId,
+        )) ||
+      (operation.kind === 'moveMaterial' &&
+        !canMoveMaterial(
           this.snapshot(),
           operation.materialId,
           operation.folderId,

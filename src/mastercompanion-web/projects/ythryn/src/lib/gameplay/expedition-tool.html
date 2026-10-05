@@ -51,6 +51,7 @@
           class="tool-card"
           [class.needs-action]="current[faction].pending"
           [id]="faction + '-arrival'"
+          tabindex="-1"
           [attr.aria-labelledby]="faction + '-title'"
         >
           <h3 [id]="faction + '-title'">{{ text.factions[faction] }}</h3>
@@ -105,6 +106,7 @@
     </div>
     <section
       id="encounter-queue"
+      tabindex="-1"
       class="tool-card encounter-queue"
       [class.needs-action]="current.pending.length > 0"
       aria-labelledby="encounter-queue-title"

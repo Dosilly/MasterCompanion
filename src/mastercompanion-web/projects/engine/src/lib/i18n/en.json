@@ -68,7 +68,8 @@
       "storageUnavailable": "Recovery storage is unavailable. Enable browser session storage and retry.",
       "invalidRecovery": "A saved recovery request cannot be read. Refresh and inspect the records before discarding recovery.",
       "loadFailed": "Sessions could not be loaded. Existing records and drafts remain available."
-    }
+    },
+    "defaultTitle": "Session {date}"
   },
   "workspace": {
     "map": "Map",
@@ -296,14 +297,14 @@
     "newNote": "Add document",
     "rename": "Rename folder",
     "move": "Move folder…",
-    "open": "Open material",
     "reveal": "Show in navigation",
     "copyLink": "Copy material link",
     "close": "Close tab",
     "closeOthers": "Close other tabs",
     "copied": "Material link copied.",
     "copyFailed": "The link could not be copied. Open the material and copy its address.",
-    "reorder": "Change document order"
+    "reorder": "Change document order",
+    "moveMaterial": "Move document to folder"
   },
   "materialOrder": {
     "title": "Change document order",
@@ -313,7 +314,12 @@
     "last": "Last",
     "before": "Before document",
     "after": "After document",
-    "sibling": "Document",
-    "crossFolder": "Documents can only be reordered within their current folder."
+    "sibling": "Document"
+  },
+  "materialMove": {
+    "title": "Move document",
+    "hint": "Move “{title}” to the end of the selected folder.",
+    "destination": "Destination folder",
+    "unfiledDrop": "Move document to unfiled materials"
   }
 }

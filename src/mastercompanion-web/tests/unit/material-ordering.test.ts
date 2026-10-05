@@ -159,7 +159,12 @@ describe('Campaign material ordering', () => {
       content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Unconfirmed draft' }] }],
     });
     const refresh = owner.initialize(workspace);
-    owner.acceptFolders(reordered);
+    owner.acceptFolders({
+      ...reordered,
+      materialOrder: reordered.materialOrder.map((item) =>
+        item.id === 'first' ? { ...item, folderId: null } : item,
+      ),
+    });
     transport.requests[1].response.next(documents);
     await refresh;
     assert.deepEqual(
@@ -167,6 +172,7 @@ describe('Campaign material ordering', () => {
       ['second', 'first', 'unfiled'],
     );
     assert.equal(owner.sessions()[0], session);
+    assert.equal(owner.workspace()?.materials.find((item) => item.id === 'first')?.folderId, null);
     assert.equal(session.dirty(), true);
     assert.equal(session.confirmedRevision(), 5);
   });

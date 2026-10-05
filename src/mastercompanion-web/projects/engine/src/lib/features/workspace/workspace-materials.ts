@@ -148,10 +148,10 @@ export class WorkspaceMaterials {
     order: FolderSnapshot['materialOrder'],
   ): WorkspaceDto['materials'] {
     const byId = new Map(materials.map((material) => [material.id, material]));
-    const ordered = order.flatMap(({ id }) => {
+    const ordered = order.flatMap(({ id, folderId }) => {
       const material = byId.get(id);
       byId.delete(id);
-      return material ? [material] : [];
+      return material ? [{ ...material, folderId }] : [];
     });
     return [...ordered, ...byId.values()];
   }
