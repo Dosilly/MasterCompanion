@@ -31,6 +31,23 @@ function fixture(t: TestContext) {
 }
 
 describe('Per-session text drafts', () => {
+  test('Remote deletion leaves the original draft available for explicit recovery and disposal', async (t) => {
+    const { drafts, meetings, http } = fixture(t);
+    drafts.edit(record, 'summary', 'Keep deleted summary');
+    drafts.edit(record, 'followUp', 'Keep deleted follow-up');
+    meetings.accept({ revision: 2, sessions: [] });
+
+    assert.equal(await drafts.saveAll(meetings), false);
+    assert.deepEqual(drafts.missingRecords(meetings.snapshot().sessions), [record]);
+    assert.equal(drafts.value(record).summary, 'Keep deleted summary');
+    assert.equal(drafts.value(record).followUp, 'Keep deleted follow-up');
+    assert.equal(http.requests.length, 0);
+    assert.equal(drafts.dirty(), true);
+
+    drafts.discard(record);
+    assert.equal(drafts.dirty(), false);
+    assert.deepEqual(drafts.missingRecords([]), []);
+  });
   test('Confirmed retry clears a matching draft without replacing another draft', (t) => {
     const { drafts } = fixture(t);
     const other = { ...record, id: 'another-record' };

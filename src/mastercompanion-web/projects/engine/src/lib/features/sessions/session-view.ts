@@ -1,11 +1,13 @@
-import { Component, computed, input, output, signal } from '@angular/core';
+import { Component, ElementRef, computed, input, output, signal, viewChild } from '@angular/core';
 import type { MaterialSummary, SessionRecord } from '@mastercompanion/contracts';
 import { uiMessages } from '../../i18n/messages';
 import { MeetingRecords } from './meeting-records';
 import { SessionDrafts } from './session-drafts';
+import { SessionDeletionDialog } from './session-deletion-dialog';
 
 @Component({
   selector: 'mc-session-view',
+  imports: [SessionDeletionDialog],
   templateUrl: './session-view.html',
   styleUrl: './session-view.scss',
 })
@@ -16,8 +18,36 @@ export class SessionView {
   readonly materialRequested = output<string>();
   readonly text = uiMessages.meetings;
   readonly selectedId = signal('');
+  readonly selectedRecordMissing = computed(
+    () =>
+      !!this.selectedId() &&
+      this.meetings().loaded() &&
+      !this.meetings()
+        .snapshot()
+        .sessions.some((record) => record.id === this.selectedId()),
+  );
   readonly newTitle = signal('');
   readonly closeBlocked = signal(false);
+  readonly deletionTarget = signal<SessionRecord | null>(null);
+  readonly deletionConflict = signal(false);
+  readonly deletionDirty = computed(() => {
+    const record = this.deletionTarget();
+    return record ? this.drafts().hasChanges(record) : false;
+  });
+  readonly missingDraftRecords = computed(() =>
+    this.drafts().missingRecords(this.meetings().snapshot().sessions),
+  );
+  readonly deletionError = computed(() => {
+    const error = this.meetings().error();
+    return this.deletionConflict()
+      ? this.text.deleteChanged
+      : error
+        ? this.text.errors[error]
+        : null;
+  });
+  private deletionRevision = 0;
+  private readonly deletionDialog = viewChild.required(SessionDeletionDialog);
+  private readonly pageTitle = viewChild.required<ElementRef<HTMLHeadingElement>>('pageTitle');
   private readonly editingIds = signal<ReadonlySet<string>>(new Set());
   readonly editing = computed(() => this.editingIds().has(this.selected()?.id ?? ''));
   readonly pinId = signal('');
@@ -74,6 +104,9 @@ export class SessionView {
   }
 
   async prepareToClose(): Promise<boolean> {
+    if (this.deletionTarget()) {
+      return false;
+    }
     if (this.newTitle().trim()) {
       this.closeBlocked.set(true);
       return false;
@@ -124,7 +157,11 @@ export class SessionView {
 
   async retry(): Promise<void> {
     const operation = this.meetings().request()?.operation;
-    if ((await this.meetings().retry()) && operation?.kind === 'create') {
+    const confirmed = await this.meetings().retry();
+    if (confirmed && operation?.kind === 'delete') {
+      this.finishDeletion(operation.sessionId);
+    }
+    if (confirmed && operation?.kind === 'create') {
       if (this.newTitle().trim() === operation.title.trim()) {
         this.newTitle.set('');
       }
@@ -139,6 +176,56 @@ export class SessionView {
         this.finishEditing(record.id);
       }
     }
+  }
+
+  requestDeletion(event: Event): void {
+    const record = this.selected();
+    if (!record || this.meetings().locked()) {
+      return;
+    }
+    this.deletionTarget.set(record);
+    this.deletionRevision = this.meetings().snapshot().revision;
+    this.deletionConflict.set(false);
+    this.deletionDialog().open(event);
+  }
+
+  cancelDeletion(): void {
+    this.deletionTarget.set(null);
+    this.deletionConflict.set(false);
+  }
+
+  async confirmDeletion(): Promise<void> {
+    const record = this.deletionTarget();
+    if (!record || this.meetings().locked()) {
+      return;
+    }
+    if (this.deletionRevision !== this.meetings().snapshot().revision) {
+      this.deletionConflict.set(true);
+      return;
+    }
+    if (await this.meetings().execute({ kind: 'delete', sessionId: record.id })) {
+      this.finishDeletion(record.id);
+    }
+  }
+
+  private finishDeletion(id: string): void {
+    const record = this.deletionTarget();
+    if (record?.id === id) {
+      this.drafts().discard(record);
+    } else {
+      const missing = this.missingDraftRecords().find((item) => item.id === id);
+      if (missing) {
+        this.drafts().discard(missing);
+      }
+    }
+    this.finishEditing(id);
+    this.pinId.set('');
+    this.selectedId.set(
+      this.meetings().activeSession()?.id ?? this.meetings().snapshot().sessions.at(-1)?.id ?? '',
+    );
+    this.deletionDialog().close(false);
+    this.cancelDeletion();
+    this.pageTitle().nativeElement.focus();
   }
 
   async transition(kind: 'start' | 'complete'): Promise<void> {

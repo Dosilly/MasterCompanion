@@ -1,0 +1,50 @@
+<dialog
+  #dialog
+  aria-labelledby="session-delete-title"
+  aria-describedby="session-delete-consequences"
+  (cancel)="cancel($event)"
+>
+  <form (submit)="submit($event)">
+    <h2 id="session-delete-title">{{ text.deleteTitle }}</h2>
+    <p class="target">{{ record()?.title }}</p>
+    <p id="session-delete-consequences">{{ text.deleteConsequences }}</p>
+    @if (record()?.status === 'active') {
+      <p>{{ text.deleteActiveConsequences }}</p>
+    }
+    @if (dirty()) {
+      <label class="draft-warning">
+        <input
+          type="checkbox"
+          [checked]="discardAcknowledged()"
+          (change)="acknowledge($event)"
+          [disabled]="locked()"
+        />
+        <span>{{ text.deleteDiscardDraft }}</span>
+      </label>
+    }
+    @if (error(); as message) {
+      <p class="feedback" role="alert">{{ message }}</p>
+    }
+    @if (pending()) {
+      <p role="status">{{ text.pending }}</p>
+    }
+    <div class="actions">
+      <button #cancelButton type="button" (click)="cancel()" [disabled]="pending()">
+        {{ text.cancelDelete }}
+      </button>
+      @if (retryAvailable()) {
+        <button type="button" (click)="retried.emit()" [disabled]="pending()">
+          {{ text.retry }}
+        </button>
+      } @else {
+        <button
+          class="mc-action--danger"
+          type="submit"
+          [disabled]="locked() || (dirty() && !discardAcknowledged())"
+        >
+          {{ text.confirmDelete }}
+        </button>
+      }
+    </div>
+  </form>
+</dialog>

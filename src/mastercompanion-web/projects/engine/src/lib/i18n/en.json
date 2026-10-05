@@ -1,5 +1,18 @@
 {
   "meetings": {
+    "delete": "Delete session",
+    "deletedRecordRecovery": "The selected session is no longer available. Choose another session or create one. Any unsaved text remains available below.",
+    "deleteNamed": "Delete session: {title}",
+    "deleteTitle": "Delete this session?",
+    "deleteConsequences": "The session summary, follow-up and pin associations will be removed. Preparation and play-note documents and all pinned source materials will remain available.",
+    "deleteActiveConsequences": "This ends the active meeting context. Game time, party and game state will remain unchanged.",
+    "deleteDiscardDraft": "Discard this session’s unsaved detail changes only after deletion is confirmed.",
+    "cancelDelete": "Keep session",
+    "confirmDelete": "Delete session permanently",
+    "deleteChanged": "The session collection changed while this confirmation was open. Keep the session, refresh and review it before deleting.",
+    "missingDraftTitle": "Draft from a deleted session",
+    "missingDraftHint": "This session was deleted elsewhere. Your unsaved text remains here to copy. It cannot be saved to the deleted record. Discard it explicitly after recovering what you need.",
+    "discardMissingDraft": "Discard this recovered draft",
     "title": "Sessions",
     "hint": "Prepare a meeting, keep play notes and return to previous sessions.",
     "refresh": "Refresh sessions",

@@ -56,6 +56,9 @@ h3 {
   flex-direction: column;
   gap: 0.5rem;
 }
+.missing-record {
+  grid-column: 1 / -1;
+}
 .session-list button {
   text-align: left;
   display: flex;
@@ -73,6 +76,9 @@ h3 {
 }
 .record-heading h2 {
   overflow-wrap: anywhere;
+}
+.record-delete {
+  margin-left: auto;
 }
 .status {
   padding: 0.3rem 0.6rem;

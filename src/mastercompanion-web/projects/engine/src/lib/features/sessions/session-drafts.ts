@@ -45,6 +45,13 @@ export class SessionDrafts {
     return !!draft && !sameText(draft, draft.original);
   }
 
+  missingRecords(records: readonly SessionRecord[]): readonly SessionRecord[] {
+    const ids = new Set(records.map((record) => record.id));
+    return [...this.drafts().values()]
+      .filter((draft) => !ids.has(draft.original.id) && !sameText(draft, draft.original))
+      .map((draft) => draft.original);
+  }
+
   discard(record: SessionRecord): void {
     this.drafts.update((drafts) => {
       const next = new Map(drafts);

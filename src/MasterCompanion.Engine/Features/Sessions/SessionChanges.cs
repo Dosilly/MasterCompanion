@@ -20,9 +20,12 @@ internal static class SessionChanges
             }
             sessions.Add(new CampaignSession
             {
-                CampaignId = campaignId, Id = create.SessionId, Title = create.Title.Trim(),
+                CampaignId = campaignId,
+                Id = create.SessionId,
+                Title = create.Title.Trim(),
                 PreparationMaterialId = $"session-{create.SessionId:D}-prep",
-                NotesMaterialId = $"session-{create.SessionId:D}-notes", Sequence = nextRevision
+                NotesMaterialId = $"session-{create.SessionId:D}-notes",
+                Sequence = nextRevision
             });
             return null;
         }
@@ -33,6 +36,9 @@ internal static class SessionChanges
         }
         switch (operation)
         {
+            case DeleteSessionOperation:
+                sessions.Remove(session);
+                return null;
             case UpdateSessionOperation update:
                 session.Title = update.Title.Trim();
                 session.Summary = update.Summary;

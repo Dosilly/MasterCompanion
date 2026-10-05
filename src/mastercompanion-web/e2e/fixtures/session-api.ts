@@ -53,7 +53,7 @@ function decode(value: unknown): SessionOperationRequest {
       summary: raw['summary'],
       followUp: raw['followUp'],
     };
-  } else if (kind === 'start' || kind === 'complete') {
+  } else if (kind === 'start' || kind === 'complete' || kind === 'delete') {
     operation = { kind, sessionId };
   } else if ((kind === 'pin' || kind === 'unpin') && typeof raw['materialId'] === 'string') {
     operation = { kind, sessionId, materialId: raw['materialId'] };
@@ -143,6 +143,8 @@ export class SessionApi {
           document: { type: 'doc', content: [{ type: 'paragraph' }] },
         });
       }
+    } else if (operation.kind === 'delete') {
+      records = records.filter((record) => record.id !== operation.sessionId);
     } else {
       records = records.map((record) => {
         if (record.id !== operation.sessionId) {
@@ -172,6 +174,8 @@ export class SessionApi {
                 (id) => id !== operation.materialId,
               ),
             };
+          case 'delete':
+            throw new Error('Deletion must remove the fixture record before field updates.');
         }
       });
     }
