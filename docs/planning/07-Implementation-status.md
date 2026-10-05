@@ -1,5 +1,25 @@
 # Implementation status
 
+## UX/UI audit and corrective plan — 5 October 2026
+
+Reviewed the running reader/editor, search/navigation, maps, gameplay, party,
+creation dialog and empty sessions in both themes at Full HD, plus gameplay at
+the existing smaller desktop viewport. Populated session layouts use previous
+isolated delivery screenshots; conflict/recovery findings use source review.
+No campaign content or game/session operation was submitted for this audit.
+
+[The audit](27-UX-UI-audit.md) records 24 prioritized findings, distinguishes
+observed/measured issues from usability hypotheses, and includes selected visual
+evidence. The user's follow-up specifically confirms unsearchable dropdowns,
+missing session deletion, missing note ordering, generic/scattered actions and
+unsustainable upper-right navigation. [The corrective plan](28-UX-UI-improvement-plan.md)
+prioritizes these capabilities with the visual/accessibility foundation and
+persistent search/reader commands, then draft recovery, gameplay hierarchy,
+session workflow, retrieval and map interaction corrections.
+These corrections are planned, not implemented. They now precede map authoring
+and multiple campaigns in the recommended delivery order. Documentation review
+requires no application tests, image rebuild or container update.
+
 ## Campaign sessions and pinned materials — 5 October 2026
 
 Named sessions progress from planned to active to completed, with one active
@@ -12,9 +32,11 @@ Scoped evidence includes 26 isolated HTTP/PostgreSQL cases, session/recovery/dra
 and routing unit checks, all 24 session browser cases across both themes and
 viewports, reviewed Full HD screenshots, successful solution compilation and
 frontend quality/library compilation. See [the session delivery plan](26-Campaign-sessions.md)
-for the contract, exact limits and local delivery status. Map authoring is the next
-product slice, followed by multiple campaigns. Chronicle and remaining UI-library
-extractions are separate later scope.
+for the contract, exact limits and local delivery status. At delivery, map authoring
+was the next product slice, followed by multiple campaigns. The subsequent UX/UI
+plan above prioritizes corrections before these features. Chronicle remains
+separate later scope; UI extractions follow the corrective plan's demonstrated
+consumer needs.
 
 Commit `2562798` was merged into local `trunk`. Image
 `mastercompanion:sessions-2562798` was built from that checkout and the application

@@ -14,6 +14,14 @@ Related: [engineering instructions](../../AGENTS.md),
 [module architecture](06-Module-architecture.md), and
 [code quality review](16-Code-quality-review.md).
 
+The 5 October [UX/UI audit](27-UX-UI-audit.md) and
+[corrective implementation plan](28-UX-UI-improvement-plan.md) now set the
+recommended consumer priorities: control contrast/action hierarchy and feedback,
+then persistent reader/search commands, recovery, gameplay and session layouts.
+The ownership rules below remain current. The original extraction stages are
+architectural guidance, not an independent schedule requiring all primitives to
+be completed before visible improvements. Corrective UI changes remain planned.
+
 ## Ownership and dependencies
 
 ```mermaid

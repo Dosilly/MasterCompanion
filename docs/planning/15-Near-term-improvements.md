@@ -13,10 +13,21 @@ Related: [execution plan](05-MVP-execution-plan.md),
 [engine and module ownership](06-Module-architecture.md),
 [folder organization story](02-User-stories.md#us-03-folder-organization).
 
-All requests in this near-term list have been delivered. [Sessions and pinned
-materials](26-Campaign-sessions.md) were delivered on 5 October. The next product
-slice is map authoring, followed by multiple campaigns. Dialogs and feedback remain
-separate technical slices in [the reusable UI plan](17-Reusable-frontend-ui.md).
+All requests in the original near-term list below have been delivered. [Sessions
+and pinned materials](26-Campaign-sessions.md) were delivered on 5 October.
+The subsequent user-requested [UX/UI audit](27-UX-UI-audit.md) identified corrections
+to navigation, reading/editing, recovery, gameplay, sessions and visual hierarchy.
+[The corrective delivery plan](28-UX-UI-improvement-plan.md) now recommends those
+slices before map authoring, followed by multiple campaigns. Corrections remain
+planned. Dialogs, feedback and theme/control foundations are coordinated with
+[the reusable UI plan](17-Reusable-frontend-ui.md), not a separate competing rewrite.
+
+The user's audit follow-up prioritizes searchable material/folder choices, session
+deletion and note ordering within folders. Generic/scattered buttons and the growing
+upper-right destination row also require correction. The first proposed cycle is
+small control/icon foundations, searchable choices, session deletion, note ordering
+and bounded navigation with persistent search/reader commands. These requests are
+planned capabilities and corrections, not delivered behavior.
 
 ## Improvement: preload campaign materials at startup
 

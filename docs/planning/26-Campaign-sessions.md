@@ -115,6 +115,8 @@ keyboard focus and no horizontal overflow or browser errors. All API writes were
 blocked during that check; verification created no live session or document.
 
 No remote push or external deployment occurred. Local backup/preservation probes
-are outside this development update under the current data policy. The next
-product slice is map authoring, followed by multiple campaigns; chronicle and
-neutral UI extraction retain their separate scope.
+are outside this development update under the current data policy. At delivery,
+map authoring was the next product slice, followed by multiple campaigns. The
+subsequent [UX/UI audit](27-UX-UI-audit.md) and
+[corrective plan](28-UX-UI-improvement-plan.md) recommend corrections first;
+chronicle remains separate scope and neutral UI extraction follows actual consumers.

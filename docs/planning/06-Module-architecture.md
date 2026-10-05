@@ -332,3 +332,28 @@ the existing persistent workspace routing. Views and editors remain mounted duri
 navigation. These owners do not enlarge the neutral UI library or module API.
 
 See [scope and delivery evidence](26-Campaign-sessions.md).
+
+## Planned UX contract extensions — 5 October 2026
+
+The [UX/UI corrective plan](28-UX-UI-improvement-plan.md) includes user-requested
+session deletion and material ordering within a folder. These contracts are
+planned; this documentation update changes no implementation or persisted schema.
+
+Session deletion belongs to the existing engine meeting operation boundary:
+collection revision, campaign ownership, deletion and receipt commit atomically.
+The proposed deletion retains ordinary preparation/play-note documents and pinned
+materials, clears active-meeting context when appropriate, and never changes game
+time, module state or gameplay undo. Record draft disposal must be explicit.
+
+Material ordering belongs to campaign organization, independent of content-save
+revisions. Define a coherent organization snapshot/revision covering the tree and
+material order before implementation; campaign locking, sibling updates and receipt
+persistence retain one transactional owner. Refresh/recovery must carry that order.
+Stable material IDs, links, map destinations and mounted editor state stay intact.
+This request does not include moving notes between folders.
+
+Searchable material/folder choices use neutral typed presentation options in UI;
+the engine resolves paths, campaign IDs, invalid move destinations and writes.
+Bounded primary navigation, session context and page action placement remain engine
+responsibilities. Module-specific activity consequences and attention stay in the
+module; any new cross-boundary projection needs an explicit neutral contract.
