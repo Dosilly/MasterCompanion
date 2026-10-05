@@ -1,3 +1,4 @@
+import { selectChoice } from './searchable-choice';
 import type { Page } from '@playwright/test';
 import {
   test,
@@ -40,7 +41,7 @@ test('Preparation, pinned material and separate play notes use the existing edit
 }, testInfo) => {
   await openSessions(page);
   await createSession(page);
-  await view(page).getByLabel(label('chooseMaterial'), { exact: true }).selectOption(readerId);
+  await selectChoice(view(page).getByLabel(label('chooseMaterial'), { exact: true }), readerId);
   await view(page)
     .getByRole('button', { name: label('pin'), exact: true })
     .click();

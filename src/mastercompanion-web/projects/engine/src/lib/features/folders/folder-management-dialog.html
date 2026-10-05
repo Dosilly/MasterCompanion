@@ -20,28 +20,29 @@
         (input)="updateTitle($event)"
       />
     } @else {
-      <label for="folder-parent">{{ ui.folders.parent }}</label>
-      <select id="folder-parent" [disabled]="management().locked()" (change)="updateParent($event)">
-        <option value="" [selected]="parentId() === null">{{ ui.folders.root }}</option>
-        @for (folder of parentOptions(); track folder.id) {
-          <option [value]="folder.id" [selected]="parentId() === folder.id">
-            {{ folder.label }}
-          </option>
-        }
-      </select>
-      <label for="folder-position">{{ ui.folders.position }}</label>
-      <select
-        id="folder-position"
+      <mc-searchable-choice
+        #parentChoice
+        controlId="folder-parent"
+        [label]="ui.folders.parent"
+        [options]="parentOptions()"
+        [value]="parentId() ?? ''"
+        [searchLabel]="ui.choices.search"
+        [noResultsLabel]="ui.choices.noResults"
+        [loadingLabel]="ui.choices.loading"
         [disabled]="management().locked()"
-        (change)="updatePosition($event)"
-      >
-        <option value="" [selected]="beforeId() === null">{{ ui.folders.atEnd }}</option>
-        @for (folder of siblingOptions(); track folder.id) {
-          <option [value]="folder.id" [selected]="beforeId() === folder.id">
-            {{ ui.folders.before }} {{ folder.title }}
-          </option>
-        }
-      </select>
+        (selectionChanged)="updateParent($event)"
+      />
+      <mc-searchable-choice
+        controlId="folder-position"
+        [label]="ui.folders.position"
+        [options]="siblingOptions()"
+        [value]="beforeId() ?? ''"
+        [searchLabel]="ui.choices.search"
+        [noResultsLabel]="ui.choices.noResults"
+        [loadingLabel]="ui.choices.loading"
+        [disabled]="management().locked()"
+        (selectionChanged)="updatePosition($event)"
+      />
     }
     @if (management().pending()) {
       <p role="status">{{ ui.folders.saving }}</p>

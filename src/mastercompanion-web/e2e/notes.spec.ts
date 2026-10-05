@@ -1,3 +1,4 @@
+import { selectChoice } from './searchable-choice';
 import type { Page } from '@playwright/test';
 import { test, expect, text, openReader, expectNoHorizontalOverflow } from './fixtures';
 import { readerId, readerTitle } from './fixtures/campaign';
@@ -44,7 +45,7 @@ test('Root note creation preserves keyboard focus and opens a persisted reader @
   // Act
   await openCreation(page);
   await titleFor(page).fill('  Campaign note  ');
-  await folderFor(page).selectOption('');
+  await selectChoice(folderFor(page), '');
 
   // Assert
   await expectNoHorizontalOverflow(page, dialogFor(page));
@@ -131,7 +132,7 @@ test('Folder creation blocks repeated submissions and preserves another editable
   await openCreation(page);
 
   // Assert
-  await expect(folderFor(page)).toHaveValue('ui-child');
+  await expect(folderFor(page)).toHaveAttribute('value', 'ui-child');
 
   // Act
   await titleFor(page).fill('Nested note');
@@ -201,7 +202,7 @@ test('A lost creation response survives reload and retries the same request once
   // Act
   await openCreation(page);
   await titleFor(page).fill('Uncertain note');
-  await folderFor(page).selectOption('');
+  await selectChoice(folderFor(page), '');
   await createFor(page).click();
 
   // Assert
@@ -285,7 +286,7 @@ test('Rejected creation retains editable input and renders title text safely aft
   // Act
   await openCreation(page);
   await titleFor(page).fill('Rejected draft');
-  await folderFor(page).selectOption('ui-child');
+  await selectChoice(folderFor(page), 'ui-child');
   await createFor(page).click();
 
   // Assert
@@ -293,7 +294,7 @@ test('Rejected creation retains editable input and renders title text safely aft
   await expect(dialogFor(page)).not.toContainText('Private fixture diagnostic');
   await expect(titleFor(page)).toHaveValue('Rejected draft');
   await expect(titleFor(page)).toBeEnabled();
-  await expect(folderFor(page)).toHaveValue('ui-child');
+  await expect(folderFor(page)).toHaveAttribute('value', 'ui-child');
   await expect(folderFor(page)).toBeEnabled();
   expect(api.createdMaterials).toHaveLength(0);
   // Arrange

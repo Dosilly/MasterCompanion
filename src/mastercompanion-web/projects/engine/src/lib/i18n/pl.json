@@ -1,4 +1,9 @@
 {
+  "choices": {
+    "search": "Szukaj po tytule lub ścieżce",
+    "noResults": "Brak pasujących opcji. Spróbuj innego tytułu lub ścieżki.",
+    "loading": "Wczytywanie opcji…"
+  },
   "meetings": {
     "title": "Sesje",
     "hint": "Przygotuj spotkanie, zapisuj przebieg gry i wracaj do poprzednich sesji.",
@@ -141,10 +146,8 @@
     "insertMaterialLink": "Link do materiału",
     "markdownSource": "Tekst Markdown",
     "markdownHelp": "Wstaw w miejscu kursora lub zastąp zaznaczenie. Obsługiwane są nagłówki, listy, cytaty i tabele. HTML pozostaje tekstem. Obrazy i linki zewnętrzne nie są obsługiwane.",
-    "linkFilter": "Znajdź materiał",
     "linkTarget": "Materiał docelowy",
     "chooseMaterial": "Wybierz materiał…",
-    "noLinkResults": "Brak materiałów pasujących do wyszukiwania.",
     "linkHelp": "Zaznaczony tekst stanie się linkiem. Bez zaznaczenia zostanie wstawiony tytuł materiału.",
     "cancelInsertion": "Anuluj",
     "confirmInsertion": "Wstaw",
