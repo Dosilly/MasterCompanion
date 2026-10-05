@@ -1,10 +1,14 @@
 # UX/UI improvement implementation plan
 
-5 October 2026 · planned corrections; no corrective application change delivered
+5 October 2026 · first corrective cycle implemented; subsequent slices planned
 
 This plan follows the [independent UX/UI audit](27-UX-UI-audit.md). Its purpose is
 to make daily preparation and session play easier before adding more screens.
-It proposes delivery order and concrete acceptance criteria; estimates are relative
+The first A/H/I/J/B cycle is implemented; C–G remain planned. Delivery records are
+[controls](29-Control-foundation.md), [choices](31-Searchable-choices.md),
+[deletion](30-Session-deletion.md), [ordering](32-Material-ordering.md), and
+[navigation/reader commands](33-Workspace-navigation.md).
+It records delivery order and concrete acceptance criteria; estimates are relative
 engineering effort, not dates or observed user-performance results.
 
 Related: [near-term roadmap](15-Near-term-improvements.md),
@@ -52,8 +56,8 @@ not a new documentation framework or a requirement for a whole-app prototype.
 
 Implement one focused branch from `trunk` per delivered feature. Work within each
 slice can be split into additional branches where it creates independently useful
-behavior. Do not treat this plan as authorization to implement all corrections
-in this documentation-only audit task.
+behavior. The user authorized parallel implementation of the first corrective
+cycle on 5 October. Later cycles require their own agreed scope.
 
 | Order | Slice | Audit coverage | Relative effort | Main dependency |
 | --- | --- | --- | --- | --- |

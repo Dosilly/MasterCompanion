@@ -9,7 +9,10 @@ test('Game clock, expedition tools and Arcane Blight remain readable @gameplay @
 
   // Act
   await page
-    .locator('.header-actions')
+    .getByRole('navigation', {
+      name: text('engine', 'workspace', 'primaryNavigationLabel'),
+      exact: true,
+    })
     .getByRole('button', { name: new RegExp(`^${text('engine', 'game', 'title')}`) })
     .click();
   const game = page.locator('.game-view');
@@ -74,7 +77,10 @@ test('Rival force counters and casualty inputs remain accessible @gameplay @forc
 }) => {
   await openReader(page);
   await page
-    .locator('.header-actions')
+    .getByRole('navigation', {
+      name: text('engine', 'workspace', 'primaryNavigationLabel'),
+      exact: true,
+    })
     .getByRole('button', { name: new RegExp(`^${text('engine', 'game', 'title')}`) })
     .click();
   const forces = page.getByRole('region', { name: text('ythryn', 'forces', 'title'), exact: true });
@@ -135,7 +141,10 @@ test('Confirmed casualty form writes one module operation and refreshes counters
   });
   await openReader(page);
   await page
-    .locator('.header-actions')
+    .getByRole('navigation', {
+      name: text('engine', 'workspace', 'primaryNavigationLabel'),
+      exact: true,
+    })
     .getByRole('button', { name: new RegExp(`^${text('engine', 'game', 'title')}`) })
     .click();
   const row = page.locator('[data-force-unit="cultFanatics"]');

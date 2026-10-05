@@ -151,6 +151,7 @@ export class Workspace {
   });
   readonly closing = signal(new Set<string>());
   readonly expanded = signal(new Set<string>());
+  private readonly searchView = viewChild(MaterialSearchView);
   private readonly navigation = viewChild<ElementRef<HTMLElement>>('navigation');
   private readonly tabStrip = viewChild<ElementRef<HTMLElement>>('tabStrip');
   readonly views = viewChildren(MaterialView);
@@ -611,6 +612,10 @@ export class Workspace {
   }
 
   private revealNavigationSelection(focus: boolean): void {
+    if (this.materialSearch()?.state().kind !== 'idle') {
+      this.searchView()?.revealSelected(focus);
+      return;
+    }
     const nav = this.navigation()?.nativeElement;
     const selected = nav?.querySelector<HTMLElement>('[aria-current="page"]');
     if (!nav || !selected) {

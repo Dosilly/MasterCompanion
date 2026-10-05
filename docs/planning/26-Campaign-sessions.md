@@ -120,3 +120,11 @@ map authoring was the next product slice, followed by multiple campaigns. The
 subsequent [UX/UI audit](27-UX-UI-audit.md) and
 [corrective plan](28-UX-UI-improvement-plan.md) recommend corrections first;
 chronicle remains separate scope and neutral UI extraction follows actual consumers.
+
+## Subsequent corrective delivery — 5 October 2026
+
+[Session deletion](30-Session-deletion.md) adds confirmed deletion with retained
+materials and recoverable drafts. [Searchable choices](31-Searchable-choices.md)
+replace the pin dropdown with title/path filtering. Session creation now advances
+the shared organization revision when adding its two ordinary documents. Record-level
+URLs and broader session workflow restructuring remain cycle E scope.

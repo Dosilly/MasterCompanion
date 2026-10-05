@@ -67,6 +67,7 @@ test('Session pinning filters 200 materials by title/path and keeps selection th
   await page.keyboard.press('Enter');
   await expect(trigger).toBeFocused();
   await expect(trigger).toHaveAttribute('value', 'choice-material-199');
+  await expect(trigger).toHaveAccessibleDescription('Shared title Chapter 98 / Northern district');
 
   await trigger.click();
   await query.fill('No such material');

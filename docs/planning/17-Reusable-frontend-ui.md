@@ -204,3 +204,9 @@ choice primitive with four actual engine consumers: session pinning, folder move
 note destination and material link insertion. Campaign path adaptation remains
 engine-owned. The existing catalog includes query, selected, empty, loading,
 disabled, long-path and focus examples in both themes.
+
+On 5 October, [the shared control foundation](29-Control-foundation.md) moved
+neutral theme/control styles to the UI package and introduced decorative typed
+icons, native action variants and separate control-border tokens. The host and
+catalog consume published style assets. Engine-owned navigation/document commands
+use these controls. Dialog shells, feedback primitives and neutral tabs remain planned.

@@ -24,6 +24,7 @@ export class SessionView {
     ...materialChoices(this.availablePins(), this.folders(), uiMessages.workspace.unfiledMaterials),
   ]);
   readonly materialRequested = output<string>();
+  readonly materialsCreated = output<void>();
   readonly text = uiMessages.meetings;
   readonly selectedId = signal('');
   readonly selectedRecordMissing = computed(
@@ -150,6 +151,7 @@ export class SessionView {
     if (created) {
       this.newTitle.set('');
       this.selectedId.set(sessionId);
+      this.materialsCreated.emit();
     }
   }
 
@@ -174,6 +176,7 @@ export class SessionView {
         this.newTitle.set('');
       }
       this.selectedId.set(operation.sessionId);
+      this.materialsCreated.emit();
     }
     this.drafts().acceptConfirmed(this.meetings().snapshot().sessions);
     if (operation?.kind === 'update') {

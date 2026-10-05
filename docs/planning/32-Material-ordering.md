@@ -28,3 +28,8 @@ frontend quality/type checks and Full HD ordering browser scenarios in both them
 Material-creation regression verification covers the changed campaign lock and
 global identity-conflict response. Final combined consumer compilation and browser
 checks are recorded in the workspace delivery and implementation status.
+
+Integration also refreshes organization after confirmed session creation and exact
+creation replay, preventing a guaranteed stale ordering request in the same window.
+The browser fixture advances the revision once for the two-document atomic creation;
+a focused composed scenario verifies the next ordering request uses that revision.

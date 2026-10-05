@@ -103,17 +103,13 @@ function folderRequest(value: unknown): FolderOperationRequest {
 
 export class TestApi {
   readonly meetings = new SessionApi(
-    (document) => {
-      this.createdMaterials.push(document);
+    (documents) => {
+      this.createdMaterials.push(...documents);
       this.data.workspace.materials = [
         ...this.data.workspace.materials,
-        {
-          id: document.id,
-          title: document.title,
-          group: document.group,
-          folderId: document.folderId,
-        },
+        ...documents.map(({ id, title, group, folderId }) => ({ id, title, group, folderId })),
       ];
+      this.data.workspace.foldersRevision++;
     },
     (url, status) => this.expectedHttpErrors.push({ url, status }),
     (url) => this.expectedNetworkFailures.push(url),

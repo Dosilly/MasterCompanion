@@ -76,6 +76,7 @@
     "lightMode": "Tryb jasny",
     "retry": "Ponów",
     "navigationLabel": "Materiały kampanii",
+    "primaryNavigationLabel": "Widoki kampanii",
     "searchPlaceholder": "Szukaj w tytułach i treści…",
     "noSearchResults": "Brak materiałów pasujących do wyszukiwania.",
     "unfiledMaterials": "Pozostałe materiały",

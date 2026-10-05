@@ -13,7 +13,8 @@ locally. See [near-term improvements](15-Near-term-improvements.md) and
 materials](26-Campaign-sessions.md) were delivered on 5 October. The subsequent
 [UX/UI audit](27-UX-UI-audit.md) and [corrective plan](28-UX-UI-improvement-plan.md)
 now prioritize usability/accessibility and visual corrections before map authoring,
-followed by multiple campaigns. Neutral UI extraction follows demonstrated needs
+followed by multiple campaigns. The first A/H/I/J/B corrective cycle is implemented;
+its delivery records are linked from the corrective plan. Neutral UI extraction follows demonstrated needs
 within that sequence and the ownership rules in [the UI plan](17-Reusable-frontend-ui.md).
 
 Navigation delivery, 4 October 2026: [URL-based workspace navigation](22-Workspace-routing.md)

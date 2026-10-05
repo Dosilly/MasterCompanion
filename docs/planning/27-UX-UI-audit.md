@@ -453,3 +453,13 @@ backups, campaign export/import, offline acceptance or a mobile redesign.
 
 Proceed with the [ordered corrective slices](28-UX-UI-improvement-plan.md).
 Implementation and participant validation are still pending.
+
+## Corrective implementation follow-up — 5 October 2026
+
+The first A/H/I/J/B cycle is implemented; see the [current delivery plan](28-UX-UI-improvement-plan.md).
+The observations above remain the original audit evidence. Persistent search and
+document commands, bounded primary destinations, control contrast/utility labels,
+searchable choices, session deletion and material ordering have delivery records.
+Gameplay/session hierarchy, explicit conflict recovery, advanced tree/tab retrieval
+and map interactions remain subsequent work. Partial visual foundation delivery
+does not claim that all typography or module-tool hierarchy findings are closed.

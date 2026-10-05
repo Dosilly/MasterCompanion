@@ -44,7 +44,11 @@
       (input)="updateNewTitle($event)"
       [disabled]="meetings().locked()"
     />
-    <button type="submit" [disabled]="meetings().locked() || !newTitle().trim()">
+    <button
+      class="mc-action--primary"
+      type="submit"
+      [disabled]="meetings().locked() || !newTitle().trim()"
+    >
       {{ text.create }}
     </button>
   </form>
@@ -123,7 +127,11 @@
               [disabled]="meetings().locked()"
               (selectionChanged)="changePin($event)"
             />
-            <button type="submit" [disabled]="meetings().locked() || !pinId()">
+            <button
+              class="mc-action--primary"
+              type="submit"
+              [disabled]="meetings().locked() || !pinId()"
+            >
               {{ text.pin }}
             </button>
           </form>
@@ -190,6 +198,7 @@
             }
             <div class="actions">
               <button
+                class="mc-action--primary"
                 type="submit"
                 [disabled]="
                   meetings().locked() || !drafts().hasChanges(record) || !fields.title.trim()

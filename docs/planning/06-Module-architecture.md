@@ -333,22 +333,24 @@ navigation. These owners do not enlarge the neutral UI library or module API.
 
 See [scope and delivery evidence](26-Campaign-sessions.md).
 
-## Planned UX contract extensions — 5 October 2026
+## UX contract extensions — 5 October 2026
 
 The [UX/UI corrective plan](28-UX-UI-improvement-plan.md) includes user-requested
-session deletion and material ordering within a folder. These contracts are
-planned; this documentation update changes no implementation or persisted schema.
+session deletion and material ordering within a folder. Both contracts are now
+implemented; the existing persistence schema supports them without a migration.
 
 Session deletion belongs to the existing engine meeting operation boundary:
 collection revision, campaign ownership, deletion and receipt commit atomically.
-The proposed deletion retains ordinary preparation/play-note documents and pinned
+Deletion retains ordinary preparation/play-note documents and pinned
 materials, clears active-meeting context when appropriate, and never changes game
 time, module state or gameplay undo. Record draft disposal must be explicit.
 
 Material ordering belongs to campaign organization, independent of content-save
-revisions. Define a coherent organization snapshot/revision covering the tree and
-material order before implementation; campaign locking, sibling updates and receipt
-persistence retain one transactional owner. Refresh/recovery must carry that order.
+revisions. The folder snapshot now includes ordered material identities and folder
+membership. The stored `FoldersRevision` is the shared organization revision;
+folder mutations, ordering, note creation and session-document creation advance it
+under the campaign lock. Sibling updates and exact receipts retain one transactional
+owner. Refresh/recovery carry the complete confirmed organization snapshot.
 Stable material IDs, links, map destinations and mounted editor state stay intact.
 This request does not include moving notes between folders.
 
@@ -357,3 +359,7 @@ the engine resolves paths, campaign IDs, invalid move destinations and writes.
 Bounded primary navigation, session context and page action placement remain engine
 responsibilities. Module-specific activity consequences and attention stay in the
 module; any new cross-boundary projection needs an explicit neutral contract.
+
+See [control ownership](29-Control-foundation.md), [searchable choices](31-Searchable-choices.md),
+[session deletion](30-Session-deletion.md), [ordering](32-Material-ordering.md), and
+[workspace navigation](33-Workspace-navigation.md) for implemented boundaries.

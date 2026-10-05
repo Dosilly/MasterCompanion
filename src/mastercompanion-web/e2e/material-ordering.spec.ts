@@ -177,3 +177,38 @@ test('Ordering conflict retains confirmed order and the dialog position for reco
     page.locator('[data-folder-id="ui-child"] [data-material-id]').first(),
   ).toHaveAttribute('data-material-id', readerId);
 });
+
+test('Confirmed session creation refreshes organization before ordering an existing note @ordering', async ({
+  page,
+  api,
+}) => {
+  const initialOrganizationRevision = api.data.workspace.foldersRevision;
+  await openReader(page);
+  await page
+    .getByRole('navigation', {
+      name: text('engine', 'workspace', 'primaryNavigationLabel'),
+      exact: true,
+    })
+    .getByRole('button', { name: text('engine', 'meetings', 'title'), exact: true })
+    .click();
+  const sessions = page.locator('mc-session-view');
+  await sessions
+    .getByLabel(text('engine', 'meetings', 'newTitle'), { exact: true })
+    .fill('Organization refresh fixture');
+  await sessions
+    .getByRole('button', { name: text('engine', 'meetings', 'create'), exact: true })
+    .click();
+  await expect(
+    sessions.getByRole('heading', { name: 'Organization refresh fixture', exact: true }),
+  ).toBeVisible();
+
+  await keyboardOrder(page, readerId);
+  await dialog(page).locator('#material-order-position').selectOption('last');
+  await dialog(page)
+    .getByRole('button', { name: text('engine', 'folders', 'save'), exact: true })
+    .click();
+
+  await expect(dialog(page)).not.toBeVisible();
+  expect(api.folderRequests[0]?.expectedRevision).toBe(initialOrganizationRevision + 1);
+  expect(api.folderRequests[0]?.operation.kind).toBe('reorderMaterial');
+});

@@ -222,7 +222,10 @@ test('Maps resolve by stable ID and history preserves zoom and mounted view @rou
   await expect(image).toHaveAttribute('style', /scale\(1\.25\)/);
   const mounted = await image.elementHandle();
   await page
-    .locator('.header-actions')
+    .getByRole('navigation', {
+      name: text('engine', 'workspace', 'primaryNavigationLabel'),
+      exact: true,
+    })
     .getByRole('button', { name: text('engine', 'game', 'partyTitle'), exact: true })
     .click();
   await expect(page).toHaveURL(/\/party$/);
@@ -271,7 +274,10 @@ test('History retains an unsaved editor and a failed close preserves its URL and
   const mounted = await editor.elementHandle();
   await expect.poll(() => api.saves.length).toBe(1);
   await page
-    .locator('.header-actions')
+    .getByRole('navigation', {
+      name: text('engine', 'workspace', 'primaryNavigationLabel'),
+      exact: true,
+    })
     .getByRole('button', { name: text('engine', 'game', 'partyTitle'), exact: true })
     .click();
   await expect(page).toHaveURL(/\/party$/);

@@ -54,6 +54,30 @@ export class MaterialView implements AfterViewInit, OnDestroy {
   private selection?: InsertionSelection;
   private insertionOpener?: HTMLElement;
   editor?: Editor;
+  readonly commandState = signal({
+    bold: false,
+    italic: false,
+    heading: false,
+    list: false,
+    quote: false,
+    canUndo: false,
+    canRedo: false,
+  });
+  private readonly updateCommandState = (): void => {
+    const editor = this.editor;
+    if (!editor) {
+      return;
+    }
+    this.commandState.set({
+      bold: editor.isActive('bold'),
+      italic: editor.isActive('italic'),
+      heading: editor.isActive('heading', { level: 2 }),
+      list: editor.isActive('bulletList'),
+      quote: editor.isActive('blockquote'),
+      canUndo: editor.can().undo(),
+      canRedo: editor.can().redo(),
+    });
+  };
 
   ngAfterViewInit() {
     this.editor = createMaterialEditor(
@@ -61,6 +85,8 @@ export class MaterialView implements AfterViewInit, OnDestroy {
       this.session(),
       this.ui.material.contentLabel,
     );
+    this.editor.on('transaction', this.updateCommandState);
+    this.updateCommandState();
   }
   async toggleEdit() {
     if (this.session().editing()) {
@@ -204,6 +230,7 @@ export class MaterialView implements AfterViewInit, OnDestroy {
     return true;
   }
   ngOnDestroy() {
+    this.editor?.off('transaction', this.updateCommandState);
     this.editor?.destroy();
   }
 }

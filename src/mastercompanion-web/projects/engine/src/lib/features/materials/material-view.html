@@ -1,4 +1,4 @@
-<div class="material-scroll" (click)="followLink($event)">
+<div class="material-commands">
   <div class="reading-bar">
     <span class="breadcrumb">{{ session().material.group || ui.workspace.unfiledMaterials }}</span>
     <div class="actions">
@@ -21,6 +21,8 @@
     <div class="editor-toolbar" [attr.aria-label]="ui.material.formattingLabel">
       <button
         [attr.aria-label]="ui.material.bold"
+        [attr.aria-pressed]="commandState().bold"
+        [title]="ui.material.bold"
         (mousedown)="$event.preventDefault()"
         (click)="editor?.chain().focus().toggleBold().run()"
       >
@@ -28,6 +30,8 @@
       </button>
       <button
         [attr.aria-label]="ui.material.italic"
+        [attr.aria-pressed]="commandState().italic"
+        [title]="ui.material.italic"
         (mousedown)="$event.preventDefault()"
         (click)="editor?.chain().focus().toggleItalic().run()"
       >
@@ -36,25 +40,36 @@
       <button
         (mousedown)="$event.preventDefault()"
         (click)="editor?.chain().focus().toggleHeading({ level: 2 }).run()"
+        [attr.aria-pressed]="commandState().heading"
       >
         {{ ui.material.heading }}
       </button>
       <button
         (mousedown)="$event.preventDefault()"
         (click)="editor?.chain().focus().toggleBulletList().run()"
+        [attr.aria-pressed]="commandState().list"
       >
         {{ ui.material.list }}
       </button>
       <button
         (mousedown)="$event.preventDefault()"
         (click)="editor?.chain().focus().toggleBlockquote().run()"
+        [attr.aria-pressed]="commandState().quote"
       >
         {{ ui.material.quote }}
       </button>
-      <button (mousedown)="$event.preventDefault()" (click)="editor?.chain().focus().undo().run()">
+      <button
+        (mousedown)="$event.preventDefault()"
+        (click)="editor?.chain().focus().undo().run()"
+        [disabled]="!commandState().canUndo"
+      >
         {{ ui.material.undo }}
       </button>
-      <button (mousedown)="$event.preventDefault()" (click)="editor?.chain().focus().redo().run()">
+      <button
+        (mousedown)="$event.preventDefault()"
+        (click)="editor?.chain().focus().redo().run()"
+        [disabled]="!commandState().canRedo"
+      >
         {{ ui.material.redo }}
       </button>
       <button (mousedown)="$event.preventDefault()" (click)="openInsertion('markdown', $event)">
@@ -65,6 +80,8 @@
       </button>
     </div>
   }
+</div>
+<div class="material-scroll" (click)="followLink($event)">
   <article class="reading-paper" [class.is-editing]="session().editing()">
     <h1>{{ session().material.title }}</h1>
     <div #editorElement class="document-body"></div>

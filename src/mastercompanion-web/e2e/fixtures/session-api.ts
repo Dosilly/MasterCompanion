@@ -76,7 +76,7 @@ export class SessionApi {
   private readonly gate = Promise.withResolvers<void>();
 
   constructor(
-    private readonly addDocument: (document: MaterialDto) => void,
+    private readonly addDocument: (documents: readonly MaterialDto[]) => void,
     private readonly failure: (url: string, status: number) => void,
     private readonly lost: (url: string) => void,
   ) {}
@@ -132,8 +132,9 @@ export class SessionApi {
         [session.preparationMaterialId, operation.preparationTitle],
         [session.notesMaterialId, operation.notesTitle],
       ];
+      const created: MaterialDto[] = [];
       for (const [id, title] of documents) {
-        this.addDocument({
+        created.push({
           id,
           title,
           group: '',
@@ -143,6 +144,7 @@ export class SessionApi {
           document: { type: 'doc', content: [{ type: 'paragraph' }] },
         });
       }
+      this.addDocument(created);
     } else if (operation.kind === 'delete') {
       records = records.filter((record) => record.id !== operation.sessionId);
     } else {

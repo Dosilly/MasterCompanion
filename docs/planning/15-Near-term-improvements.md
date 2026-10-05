@@ -18,16 +18,16 @@ and pinned materials](26-Campaign-sessions.md) were delivered on 5 October.
 The subsequent user-requested [UX/UI audit](27-UX-UI-audit.md) identified corrections
 to navigation, reading/editing, recovery, gameplay, sessions and visual hierarchy.
 [The corrective delivery plan](28-UX-UI-improvement-plan.md) now recommends those
-slices before map authoring, followed by multiple campaigns. Corrections remain
-planned. Dialogs, feedback and theme/control foundations are coordinated with
+slices before map authoring, followed by multiple campaigns. The first corrective
+cycle A/H/I/J/B is implemented; C–G remain planned. Dialogs, feedback and theme/control foundations are coordinated with
 [the reusable UI plan](17-Reusable-frontend-ui.md), not a separate competing rewrite.
 
 The user's audit follow-up prioritizes searchable material/folder choices, session
 deletion and note ordering within folders. Generic/scattered buttons and the growing
 upper-right destination row also require correction. The first proposed cycle is
 small control/icon foundations, searchable choices, session deletion, note ordering
-and bounded navigation with persistent search/reader commands. These requests are
-planned capabilities and corrections, not delivered behavior.
+and bounded navigation with persistent search/reader commands. This first cycle
+is now implemented; the delivery records describe exact behavior and scoped evidence.
 
 ## Improvement: preload campaign materials at startup
 

@@ -16,9 +16,12 @@ unsustainable upper-right navigation. [The corrective plan](28-UX-UI-improvement
 prioritizes these capabilities with the visual/accessibility foundation and
 persistent search/reader commands, then draft recovery, gameplay hierarchy,
 session workflow, retrieval and map interaction corrections.
-These corrections are planned, not implemented. They now precede map authoring
-and multiple campaigns in the recommended delivery order. Documentation review
-requires no application tests, image rebuild or container update.
+The audit originally changed documentation only. The first corrective cycle
+A/H/I/J/B has since been implemented: shared controls/icons, searchable choices,
+session deletion, within-folder note ordering, and bounded navigation with
+persistent search/document commands. See [the current delivery records](28-UX-UI-improvement-plan.md).
+Later recovery, gameplay/session restructuring, retrieval and map corrections
+remain planned before map authoring and multiple campaigns.
 
 ## Campaign sessions and pinned materials — 5 October 2026
 

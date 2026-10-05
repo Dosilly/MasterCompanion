@@ -33,7 +33,7 @@ button supplies the action label and title, for example:
 
 Workspace, gameplay, party and session heading refresh actions consume the icon.
 The theme utility announces the next action in either theme. Reader edit/finish,
-document insertion and note creation use the primary treatment. Editable engine
+document insertion, note creation and session create/save use the primary treatment. Editable engine
 fields use the control border; document and dialog dividers retain their quieter
 appearance. The catalog shows enabled, disabled, pending, consequential, long
 text and error examples, with keyboard focus and theme switching.
