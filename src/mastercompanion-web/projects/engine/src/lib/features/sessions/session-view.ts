@@ -1,11 +1,14 @@
 import { Component, computed, input, output, signal } from '@angular/core';
-import type { MaterialSummary, SessionRecord } from '@mastercompanion/contracts';
+import type { CampaignFolder, MaterialSummary, SessionRecord } from '@mastercompanion/contracts';
+import { SearchableChoiceComponent } from '@mastercompanion/ui';
+import { materialChoices } from '../choices/campaign-choices';
 import { uiMessages } from '../../i18n/messages';
 import { MeetingRecords } from './meeting-records';
 import { SessionDrafts } from './session-drafts';
 
 @Component({
   selector: 'mc-session-view',
+  imports: [SearchableChoiceComponent],
   templateUrl: './session-view.html',
   styleUrl: './session-view.scss',
 })
@@ -13,6 +16,12 @@ export class SessionView {
   readonly meetings = input.required<MeetingRecords>();
   readonly drafts = input.required<SessionDrafts>();
   readonly materials = input<readonly MaterialSummary[]>([]);
+  readonly folders = input<readonly CampaignFolder[]>([]);
+  readonly choiceText = uiMessages.choices;
+  readonly pinOptions = computed(() => [
+    { id: '', label: this.text.chooseMaterial },
+    ...materialChoices(this.availablePins(), this.folders(), uiMessages.workspace.unfiledMaterials),
+  ]);
   readonly materialRequested = output<string>();
   readonly text = uiMessages.meetings;
   readonly selectedId = signal('');
@@ -148,10 +157,8 @@ export class SessionView {
     }
   }
 
-  changePin(event: Event): void {
-    if (event.target instanceof HTMLSelectElement) {
-      this.pinId.set(event.target.value);
-    }
+  changePin(id: string): void {
+    this.pinId.set(id);
   }
 
   async pin(event: Event): Promise<void> {

@@ -1,0 +1,70 @@
+<label [attr.for]="controlId()">{{ label() }}</label>
+<button
+  #trigger
+  type="button"
+  class="choice-trigger"
+  [id]="controlId()"
+  [value]="value()"
+  [disabled]="disabled() || loading()"
+  [attr.aria-label]="label()"
+  aria-haspopup="listbox"
+  [attr.aria-expanded]="expanded()"
+  [attr.aria-controls]="controlId() + '-list'"
+  (click)="toggle()"
+>
+  <span class="choice-value"
+    ><strong>{{ selected()?.label || label() }}</strong>
+    @if (selected()?.detail; as detail) {
+      <small>{{ detail }}</small>
+    }
+  </span>
+  <svg aria-hidden="true" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4" /></svg>
+</button>
+@if (loading()) {
+  <span role="status" class="choice-state">{{ loadingLabel() }}</span>
+}
+@if (expanded()) {
+  <div class="choice-panel">
+    <input
+      #search
+      type="search"
+      role="combobox"
+      autocomplete="off"
+      [attr.aria-label]="searchLabel()"
+      [placeholder]="searchLabel()"
+      aria-autocomplete="list"
+      aria-expanded="true"
+      [attr.aria-controls]="controlId() + '-list'"
+      [attr.aria-activedescendant]="activeId()"
+      [disabled]="disabled() || loading()"
+      [value]="query()"
+      (input)="updateQuery($event)"
+    />
+    <div
+      role="listbox"
+      class="choice-list"
+      [id]="controlId() + '-list'"
+      [attr.aria-label]="label()"
+    >
+      @for (option of filtered(); track option.id; let index = $index) {
+        <div
+          role="option"
+          [id]="optionId(index)"
+          [attr.data-choice-id]="option.id"
+          [attr.aria-selected]="value() === option.id"
+          [class.active]="activeIndex() === index"
+          (mousedown)="$event.preventDefault()"
+          (click)="choose(option)"
+        >
+          <strong>{{ option.label }}</strong>
+          @if (option.detail) {
+            <small>{{ option.detail }}</small>
+          }
+        </div>
+      }
+    </div>
+    @if (filtered().length === 0) {
+      <p role="status" class="choice-state">{{ noResultsLabel() }}</p>
+    }
+  </div>
+}

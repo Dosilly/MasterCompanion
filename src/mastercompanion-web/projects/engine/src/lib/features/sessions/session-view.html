@@ -95,15 +95,17 @@
         <section [attr.aria-label]="text.pins">
           <h3>{{ text.pins }}</h3>
           <form class="pin-form" (submit)="pin($event)">
-            <label for="session-pin">{{ text.chooseMaterial }}</label>
-            <select id="session-pin" (change)="changePin($event)" [disabled]="meetings().locked()">
-              <option value="" [selected]="pinId() === ''">{{ text.chooseMaterial }}</option>
-              @for (material of availablePins(); track material.id) {
-                <option [value]="material.id" [selected]="pinId() === material.id">
-                  {{ material.title }}
-                </option>
-              }
-            </select>
+            <mc-searchable-choice
+              controlId="session-pin"
+              [label]="text.chooseMaterial"
+              [options]="pinOptions()"
+              [value]="pinId()"
+              [searchLabel]="choiceText.search"
+              [noResultsLabel]="choiceText.noResults"
+              [loadingLabel]="choiceText.loading"
+              [disabled]="meetings().locked()"
+              (selectionChanged)="changePin($event)"
+            />
             <button type="submit" [disabled]="meetings().locked() || !pinId()">
               {{ text.pin }}
             </button>

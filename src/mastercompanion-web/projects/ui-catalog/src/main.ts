@@ -1,13 +1,28 @@
 import { Component, signal } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { ContextMenuComponent, type ContextMenuPresentation } from '@mastercompanion/ui';
+import {
+  ContextMenuComponent,
+  SearchableChoiceComponent,
+  type ChoiceOption,
+  type ContextMenuPresentation,
+} from '@mastercompanion/ui';
 
 @Component({
   selector: 'mc-ui-catalog',
-  imports: [ContextMenuComponent],
+  imports: [ContextMenuComponent, SearchableChoiceComponent],
   templateUrl: './catalog.html',
 })
 class UiCatalog {
+  readonly choice = signal('');
+  readonly choices: readonly ChoiceOption[] = [
+    { id: '', label: 'Unfiled' },
+    { id: 'first', label: 'Shared title', detail: 'Campaign / Locations / Northern district' },
+    {
+      id: 'second',
+      label: 'Shared title',
+      detail: 'Campaign / Rules / A long path that wraps without hiding the selected destination',
+    },
+  ];
   readonly menu = signal<ContextMenuPresentation | null>(null);
   readonly dark = signal(false);
   readonly lastAction = signal('No action selected');
