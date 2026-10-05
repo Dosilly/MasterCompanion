@@ -1,17 +1,22 @@
 # Near-term improvements
 
-3 October 2026 · recorded roadmap; delivery status updated 4 October 2026
+3 October 2026 · recorded roadmap; delivery status updated 5 October 2026
 
 The user requested the improvements below, then authorized search, URL navigation
 and campaign material memory. Search and routing have been delivered; material
-memory is implemented and verified. Folder management and context menus are also
-implemented and verified; see [the scoped delivery plan](25-Folder-management-and-context-menus.md). See
+memory is delivered locally. Folder management and context menus are also
+delivered locally; see [the scoped delivery plan](25-Folder-management-and-context-menus.md). See
 [search delivery](20-Material-search.md), [routing delivery](22-Workspace-routing.md)
 and [material memory](23-Campaign-material-memory.md) for current evidence.
 
 Related: [execution plan](05-MVP-execution-plan.md),
 [engine and module ownership](06-Module-architecture.md),
 [folder organization story](02-User-stories.md#us-03-folder-organization).
+
+All requests in this near-term list have been delivered. The next product slice
+is [sessions and pinned materials](26-Campaign-sessions.md), followed by map
+authoring and multiple campaigns. Dialogs and feedback remain separate technical
+slices in [the reusable UI plan](17-Reusable-frontend-ui.md).
 
 ## Improvement: preload campaign materials at startup
 

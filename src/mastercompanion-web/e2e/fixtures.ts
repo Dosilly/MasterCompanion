@@ -7,6 +7,7 @@ import type {
   MaterialSearchResponse,
 } from '@mastercompanion/contracts';
 import { campaignFixture, campaignId, readerId, readerTitle } from './fixtures/campaign';
+import { SessionApi } from './fixtures/session-api';
 
 // Read canonical localization data, without importing private library implementations.
 const catalogs: Record<'engine' | 'ythryn', unknown> = {
@@ -85,6 +86,22 @@ function folderRequest(value: unknown): FolderOperationRequest {
 }
 
 export class TestApi {
+  readonly meetings = new SessionApi(
+    (document) => {
+      this.createdMaterials.push(document);
+      this.data.workspace.materials = [
+        ...this.data.workspace.materials,
+        {
+          id: document.id,
+          title: document.title,
+          group: document.group,
+          folderId: document.folderId,
+        },
+      ];
+    },
+    (url, status) => this.expectedHttpErrors.push({ url, status }),
+    (url) => this.expectedNetworkFailures.push(url),
+  );
   readonly data = campaignFixture();
   readonly saves: unknown[] = [];
   readonly creations: CreationRequest[] = [];
@@ -159,6 +176,10 @@ export class TestApi {
         return;
       }
       if (url.origin === origin) {
+        if (path === `/api/campaigns/${campaignId}/sessions`) {
+          await this.meetings.handle(route);
+          return;
+        }
         if (path === `/api/campaigns/${campaignId}/folders` && method === 'GET') {
           await route.fulfill({
             json: {
@@ -444,6 +465,7 @@ export const test = base.extend<{ api: TestApi }>({
         await use(api);
       } finally {
         api.releaseSave();
+        api.meetings.release();
         api.releaseCreation();
         api.releaseFolders();
         api.releaseSearches();

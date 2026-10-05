@@ -309,3 +309,26 @@ enforce the boundary before consumer compilation. Localized workspace menu actio
 remain engine-owned and use existing navigation and confirmed tab-closing operations.
 
 See [scope, operation contract and delivery evidence](25-Folder-management-and-context-menus.md).
+## Campaign meeting ownership — 5 October 2026
+
+Campaign sessions are generic engine records, independent of mounted material
+editing sessions and module gameplay. The engine stores a named meeting with
+planned/active/completed status, stable preparation/play-note material IDs,
+existing-material pins, summary and follow-up text. The two rich documents remain
+ordinary campaign materials and reuse the supported reader/editor/save contract.
+Pinning references a stable ID and does not copy a document. No adventure-specific
+session identifiers or rules enter the engine.
+
+A separate campaign session-collection revision and immutable receipts own
+meeting operations. One campaign row lock and transaction cover session updates,
+creation of preparation/play documents and receipt persistence. Sessions never
+advance time, reset module/party state or enter game undo. Material saves retain
+their independent revisions. Only one meeting may be active per campaign.
+
+The frontend contracts expose explicit record/snapshot/operation shapes. The
+engine owns confirmed records/recovery in `MeetingRecords`, per-record text drafts
+in `SessionDrafts` and presentation in `SessionView`. The host adds `/sessions` to
+the existing persistent workspace routing. Views and editors remain mounted during
+navigation. These owners do not enlarge the neutral UI library or module API.
+
+See [scope and delivery evidence](26-Campaign-sessions.md).

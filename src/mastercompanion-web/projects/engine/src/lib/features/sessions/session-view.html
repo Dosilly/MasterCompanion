@@ -1,0 +1,196 @@
+<section class="session-page" [attr.aria-label]="text.title">
+  <header class="page-heading">
+    <div>
+      <h1>{{ text.title }}</h1>
+      <p>{{ text.hint }}</p>
+    </div>
+    <button (click)="meetings().refresh()" [disabled]="meetings().pending()">
+      {{ text.refresh }}
+    </button>
+  </header>
+  @if (meetings().pending()) {
+    <p role="status">{{ text.pending }}</p>
+  }
+  @if (meetings().error(); as error) {
+    <div class="feedback" role="alert">
+      <p>{{ text.errors[error] }}</p>
+      @if (meetings().request()) {
+        <button (click)="retry()" [disabled]="meetings().pending()">
+          {{ text.retry }}
+        </button>
+      } @else if (meetings().invalidRecovery()) {
+        <p>{{ text.discardRecoveryWarning }}</p>
+        <button (click)="meetings().discardUnreadable()">{{ text.discardRecovery }}</button>
+      } @else {
+        <button (click)="meetings().refresh()" [disabled]="meetings().pending()">
+          {{ text.refresh }}
+        </button>
+      }
+    </div>
+  }
+  <form class="create-session" (submit)="create($event)">
+    <label for="new-session-title">{{ text.newTitle }}</label>
+    <input
+      id="new-session-title"
+      required
+      maxlength="240"
+      [value]="newTitle()"
+      (input)="updateNewTitle($event)"
+      [disabled]="meetings().locked()"
+    />
+    <button type="submit" [disabled]="meetings().locked() || !newTitle().trim()">
+      {{ text.create }}
+    </button>
+  </form>
+  @if (closeBlocked()) {
+    <p role="alert">{{ text.closeBlocked }}</p>
+  }
+  <div class="session-layout">
+    <nav class="session-list" [attr.aria-label]="text.listLabel">
+      @for (record of meetings().snapshot().sessions; track record.id) {
+        <button
+          [attr.aria-current]="selected()?.id === record.id ? 'true' : null"
+          [class.selected]="selected()?.id === record.id"
+          (click)="select(record)"
+        >
+          <strong>{{ record.title }}</strong
+          ><span>{{ text.status[record.status] }}</span>
+        </button>
+      } @empty {
+        @if (meetings().loaded()) {
+          <p>{{ text.empty }}</p>
+        }
+      }
+    </nav>
+    @if (selected(); as record) {
+      <article class="session-record" [attr.aria-label]="record.title">
+        <div class="record-heading">
+          <h2>{{ record.title }}</h2>
+          <span class="status">{{ text.status[record.status] }}</span>
+        </div>
+        <div class="actions">
+          @if (record.status === 'planned') {
+            <button
+              (click)="transition('start')"
+              [disabled]="meetings().locked() || !!meetings().activeSession()"
+            >
+              {{ text.start }}
+            </button>
+            @if (meetings().activeSession()) {
+              <span>{{ text.activeExists }}</span>
+            }
+          } @else if (record.status === 'active') {
+            <button (click)="transition('complete')" [disabled]="meetings().locked()">
+              {{ text.complete }}
+            </button>
+          }
+        </div>
+        <div class="document-actions">
+          <button (click)="materialRequested.emit(record.preparationMaterialId)">
+            {{ text.preparation }}
+          </button>
+          <button (click)="materialRequested.emit(record.notesMaterialId)">{{ text.notes }}</button>
+        </div>
+        <p class="document-hint">{{ text.documentHint }}</p>
+        <section [attr.aria-label]="text.pins">
+          <h3>{{ text.pins }}</h3>
+          <form class="pin-form" (submit)="pin($event)">
+            <label for="session-pin">{{ text.chooseMaterial }}</label>
+            <select id="session-pin" (change)="changePin($event)" [disabled]="meetings().locked()">
+              <option value="" [selected]="pinId() === ''">{{ text.chooseMaterial }}</option>
+              @for (material of availablePins(); track material.id) {
+                <option [value]="material.id" [selected]="pinId() === material.id">
+                  {{ material.title }}
+                </option>
+              }
+            </select>
+            <button type="submit" [disabled]="meetings().locked() || !pinId()">
+              {{ text.pin }}
+            </button>
+          </form>
+          <ul class="pin-list">
+            @for (id of record.pinnedMaterialIds; track id) {
+              <li>
+                <button class="material-link" (click)="materialRequested.emit(id)">
+                  {{ materialTitle(id) }}
+                </button>
+                <button
+                  (click)="unpin(record, id)"
+                  [disabled]="meetings().locked()"
+                  [attr.aria-label]="text.unpin + ': ' + materialTitle(id)"
+                >
+                  {{ text.unpin }}
+                </button>
+              </li>
+            } @empty {
+              <li>{{ text.noPins }}</li>
+            }
+          </ul>
+        </section>
+        @if (!editing()) {
+          <section class="record-text" [attr.aria-label]="text.summary">
+            <h3>{{ text.summary }}</h3>
+            <p>{{ record.summary || text.noSummary }}</p>
+            <h3>{{ text.followUp }}</h3>
+            <p>{{ record.followUp || text.noFollowUp }}</p>
+            <button (click)="beginEditing()" [disabled]="meetings().locked()">
+              {{ text.edit }}
+            </button>
+          </section>
+        } @else if (draft(); as fields) {
+          <form class="record-form" (submit)="save($event)">
+            <label for="session-title">{{ text.name }}</label>
+            <input
+              id="session-title"
+              required
+              maxlength="300"
+              [value]="fields.title"
+              (input)="edit('title', $event)"
+              [disabled]="meetings().locked()"
+            />
+            <label for="session-summary">{{ text.summary }}</label>
+            <textarea
+              id="session-summary"
+              maxlength="20000"
+              rows="5"
+              [value]="fields.summary"
+              (input)="edit('summary', $event)"
+              [disabled]="meetings().locked()"
+            ></textarea>
+            <label for="session-follow-up">{{ text.followUp }}</label>
+            <textarea
+              id="session-follow-up"
+              maxlength="20000"
+              rows="4"
+              [value]="fields.followUp"
+              (input)="edit('followUp', $event)"
+              [disabled]="meetings().locked()"
+            ></textarea>
+            @if (drafts().conflict()) {
+              <p class="feedback" role="alert">{{ text.draftConflict }}</p>
+            }
+            <div class="actions">
+              <button
+                type="submit"
+                [disabled]="
+                  meetings().locked() || !drafts().hasChanges(record) || !fields.title.trim()
+                "
+              >
+                {{ text.save }}
+              </button>
+              @if (drafts().hasChanges(record)) {
+                <span role="status">{{ text.unsaved }}</span>
+                <button type="button" (click)="discardEditing()" [disabled]="meetings().locked()">
+                  {{ text.discardDraft }}
+                </button>
+              } @else {
+                <span role="status">{{ text.saved }}</span>
+                <button type="button" (click)="discardEditing()">{{ text.finishEditing }}</button>
+              }
+            </div>
+          </form>
+        }
+      </article>
+    }
+  </div>
+</section>

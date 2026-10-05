@@ -4,6 +4,7 @@ using MasterCompanion.Engine.Features.Gameplay;
 using MasterCompanion.Engine.Features.Folders;
 using MasterCompanion.Engine.Features.Materials;
 using MasterCompanion.Engine.Features.Workspace;
+using MasterCompanion.Engine.Features.Sessions;
 using MasterCompanion.Engine.Persistence;
 using MasterCompanion.Modules.Ythryn;
 using MasterCompanion.Modules.Ythryn.Gameplay;
@@ -35,6 +36,7 @@ if (Directory.Exists(app.Environment.WebRootPath))
 app.MapDefaultEndpoints();
 GetWorkspace.Map(app);
 FolderEndpoints.Map(app);
+SessionEndpoints.Map(app);
 GetMaterial.Map(app);
 GetCampaignMaterials.Map(app);
 SaveMaterial.Map(app);

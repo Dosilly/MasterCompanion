@@ -1,5 +1,21 @@
 # Implementation status
 
+## Campaign sessions and pinned materials — 5 October 2026
+
+Named sessions progress from planned to active to completed, with one active
+meeting per campaign. Preparation and play notes are separate ordinary rich
+materials; pins open existing campaign documents without copying them. Explicitly
+edited summaries and follow-up text retain per-record drafts across navigation
+and conflicts. Session actions preserve game time, party/module state and undo.
+
+Scoped evidence includes 26 isolated HTTP/PostgreSQL cases, session/recovery/draft
+and routing unit checks, all 24 session browser cases across both themes and
+viewports, reviewed Full HD screenshots, successful solution compilation and
+frontend quality/library compilation. See [the session delivery plan](26-Campaign-sessions.md)
+for the contract, exact limits and local delivery status. Map authoring is the next
+product slice, followed by multiple campaigns. Chronicle and remaining UI-library
+extractions are separate later scope.
+
 ## Folder interaction corrections — 4 October 2026
 
 The move dialog reflects the actual parent and sibling position, including moves

@@ -23,3 +23,7 @@ export * from './lib/game-operation-request';
 export * from './lib/material-target';
 export * from './lib/game-tool-context';
 export * from './lib/campaign-game';
+export * from './lib/session-record';
+export * from './lib/session-snapshot';
+export * from './lib/session-operation';
+export * from './lib/session-operation-request';

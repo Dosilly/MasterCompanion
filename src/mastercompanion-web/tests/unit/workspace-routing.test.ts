@@ -73,6 +73,7 @@ describe('Workspace route addresses', () => {
     { kind: 'map', mapId: 'map.one' },
     { kind: 'game' },
     { kind: 'party' },
+    { kind: 'sessions' },
     { kind: 'empty' },
   ] satisfies WorkspaceRouteTarget[]) {
     test(`Serializing ${target.kind} preserves its stable target`, () => {

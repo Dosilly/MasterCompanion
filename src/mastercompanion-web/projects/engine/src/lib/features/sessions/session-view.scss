@@ -1,0 +1,143 @@
+:host {
+  display: block;
+  height: 100%;
+  overflow: auto;
+}
+:host[hidden] {
+  display: none;
+}
+.session-page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem 3rem;
+}
+.page-heading,
+.record-heading,
+.actions,
+.document-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.page-heading {
+  justify-content: space-between;
+}
+h1,
+h2 {
+  margin: 0.25rem 0;
+}
+h3 {
+  margin-bottom: 0.75rem;
+}
+.page-heading p,
+.document-hint,
+.session-list span {
+  color: var(--muted);
+}
+.create-session,
+.pin-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  margin: 1rem 0 1.5rem;
+}
+.create-session label,
+.pin-form label {
+  grid-column: 1 / -1;
+}
+.session-layout {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+  gap: 1.5rem;
+}
+.session-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.session-list button {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  overflow-wrap: anywhere;
+}
+.session-list .selected {
+  background: var(--soft);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.session-record {
+  min-width: 0;
+}
+.record-heading h2 {
+  overflow-wrap: anywhere;
+}
+.status {
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.3rem;
+  background: var(--soft);
+}
+.actions {
+  margin: 0.75rem 0;
+}
+.document-actions {
+  margin-top: 1rem;
+}
+.feedback {
+  padding: 0.75rem;
+  border: 1px solid var(--accent);
+  background: var(--soft);
+  margin: 1rem 0;
+}
+.pin-list {
+  list-style: none;
+  padding: 0;
+}
+.pin-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+.material-link {
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.record-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+.record-form label {
+  margin-top: 0.5rem;
+}
+textarea {
+  resize: vertical;
+  min-height: 6rem;
+}
+.record-text p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+input,
+select,
+textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 0.5rem 0.75rem;
+}
+@media (max-width: 850px) {
+  .session-layout {
+    grid-template-columns: 1fr;
+  }
+  .session-page {
+    padding: 1rem;
+  }
+}

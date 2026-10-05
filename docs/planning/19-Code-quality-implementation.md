@@ -100,9 +100,10 @@ weakened to accept a failed request or changed persisted data.
 
 ## Remaining product scope
 
-[URL navigation](15-Near-term-improvements.md#improvement-url-based-workspace-navigation)
-and the [neutral UI library and component catalog](17-Reusable-frontend-ui.md)
-remain planned features. This quality change introduces reusable campaign controls
-without creating a speculative UI framework or changing navigation semantics.
+[URL navigation](22-Workspace-routing.md) and the neutral UI library's
+[context-menu foundation/catalog](17-Context-menu-catalog.md) were subsequently
+delivered on 4 October. Dialog, feedback, theme and neutral tab extraction remain
+in [the UI plan](17-Reusable-frontend-ui.md). This quality change introduced
+reusable campaign controls; those later slices own their delivery evidence.
 The workspace remains the composition owner for its navigation and mounted views;
 further extraction should follow demonstrated responsibilities and behavior.

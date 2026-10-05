@@ -3,6 +3,11 @@
     <strong>MasterCompanion</strong><span class="campaign-name"> / {{ workspace()?.title }}</span>
   </div>
   <div class="header-actions">
+    @if (meetings()) {
+      <button (click)="openMeetings()" [attr.aria-pressed]="active() === '@sessions'">
+        {{ ui.meetings.title }}
+      </button>
+    }
     @if (game()) {
       <button (click)="openParty()" [attr.aria-pressed]="active() === '@party'">
         {{ ui.game.partyTitle }}
@@ -202,6 +207,19 @@
         [attr.aria-label]="ui.workspace.tabsLabel"
         (keydown)="tabKey($event)"
       >
+        @if (meetingsOpen()) {
+          <mc-workspace-tab
+            key="@sessions"
+            [label]="ui.meetings.title"
+            [closeLabel]="ui.workspace.closeTab"
+            [selected]="active() === '@sessions'"
+            [dirty]="meetingDrafts.dirty()"
+            (activate)="activate('@sessions')"
+            (close)="close('@sessions')"
+            (contextmenu)="menus.open($event, 'tab', '@sessions')"
+            (keydown)="menus.open($event, 'tab', '@sessions')"
+          />
+        }
         @if (partyOpen()) {
           <mc-workspace-tab
             key="@party"
@@ -263,6 +281,26 @@
         <p class="empty-workspace">
           {{ data.maps.length ? ui.workspace.emptyWithMap : ui.workspace.emptyMaterials }}
         </p>
+      }
+      @if (meetingsMounted()) {
+        @if (meetings(); as records) {
+          <mc-session-view
+            id="panel-sessions"
+            role="tabpanel"
+            aria-labelledby="tab-sessions"
+            [hidden]="active() !== '@sessions'"
+            [meetings]="records"
+            [drafts]="meetingDrafts"
+            [materials]="data.materials"
+            (materialRequested)="openMeetingMaterial($event)"
+          />
+        }
+      }
+      @if (meetingDocument(); as document) {
+        <div class="meeting-document-context">
+          <button (click)="openMeetings()">{{ ui.meetings.title }}</button>
+          <span>{{ document.title }} · {{ document.role }}</span>
+        </div>
       }
       @for (map of mapViews(); track map.id) {
         <mc-map-view

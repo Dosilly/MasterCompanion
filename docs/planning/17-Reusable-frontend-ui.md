@@ -178,8 +178,9 @@ On 4 October 2026, [the quality implementation](19-Code-quality-implementation.m
 extracted the engine-owned `WorkspaceMaterials` session owner and a shared
 `WorkspaceTab` view used by the party, gameplay, map and material tabs. These
 campaign controls remain internal to the engine and do not create the planned
-neutral UI library. UI library scaffolding, its catalog, and URL routing remain
-separate planned slices.
+neutral UI library. At that point library scaffolding, the catalog and URL routing
+were separate planned slices. The subsequent deliveries below and
+[routing record](22-Workspace-routing.md) supersede that historical status.
 
 On 4 October 2026, folder management introduced the separately compiled
 `@mastercompanion/ui` foundation and its first neutral context-menu interaction

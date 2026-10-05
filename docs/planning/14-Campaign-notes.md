@@ -229,8 +229,9 @@ scoped to the browser tab's session storage. Rename, move and delete are deferre
 The next implementation slice at this delivery was full-text search for campaign
 materials. It was subsequently implemented and verified on 4 October 2026; see
 [search delivery](20-Material-search.md) for its contract, scope and evidence.
-Session records and pinned materials remain next in the delivery order, followed
-by map authoring and multiple campaigns. Campaign export/import was removed
+Session records and pinned materials are the 5 October implementation slice; see
+[the session plan](26-Campaign-sessions.md). Map authoring and multiple campaigns
+follow in the delivery order. Campaign export/import was removed
 from that order on 4 October 2026.
 The separate URL, preloading and folder requests have no newly assigned order.
 

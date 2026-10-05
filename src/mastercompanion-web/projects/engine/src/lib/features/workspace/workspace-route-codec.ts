@@ -66,6 +66,8 @@ export function decodeWorkspaceRoute(url: string, workspace: WorkspaceDto): Deco
         return { kind: 'target', target: { kind: 'game' } };
       case 'party':
         return { kind: 'target', target: { kind: 'party' } };
+      case 'sessions':
+        return { kind: 'target', target: { kind: 'sessions' } };
       case 'workspace':
         return { kind: 'target', target: { kind: 'empty' } };
     }

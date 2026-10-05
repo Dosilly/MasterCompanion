@@ -49,6 +49,9 @@ import { FolderDrag } from '../folders/folder-drag';
 import { WorkspaceContextMenuComponent } from '../context-menu/workspace-context-menu';
 import type { WorkspaceContextMenuAction } from '../context-menu/workspace-context-menu-action';
 import { WorkspaceContextMenuState } from '../context-menu/workspace-context-menu-state';
+import { MeetingRecords } from '../sessions/meeting-records';
+import { SessionDrafts } from '../sessions/session-drafts';
+import { SessionView } from '../sessions/session-view';
 
 @Component({
   selector: 'mc-workspace',
@@ -63,6 +66,7 @@ import { WorkspaceContextMenuState } from '../context-menu/workspace-context-men
     PartyView,
     FolderManagementDialog,
     WorkspaceContextMenuComponent,
+    SessionView,
   ],
   templateUrl: './workspace.html',
   styleUrl: './workspace.scss',
@@ -104,6 +108,22 @@ export class Workspace {
   readonly gameMounted = signal(false);
   readonly partyOpen = signal(false);
   readonly partyMounted = signal(false);
+  readonly meetingsOpen = signal(false);
+  readonly meetingsMounted = signal(false);
+  readonly meetings = signal<MeetingRecords | null>(null);
+  readonly meetingDrafts = new SessionDrafts();
+  private readonly meetingView = viewChild(SessionView);
+  readonly meetingDocument = computed(() => {
+    for (const record of this.meetings()?.snapshot().sessions ?? []) {
+      if (record.preparationMaterialId === this.active()) {
+        return { title: record.title, role: this.ui.meetings.preparation };
+      }
+      if (record.notesMaterialId === this.active()) {
+        return { title: record.title, role: this.ui.meetings.notes };
+      }
+    }
+    return null;
+  });
   readonly partyView = viewChild(PartyView);
   readonly game = signal<GameSession | null>(null);
   readonly creation = signal<MaterialCreation | null>(null);
@@ -149,12 +169,17 @@ export class Workspace {
       this.creation()?.destroy();
       this.folderManagement()?.destroy();
       this.materialSearch()?.destroy();
+      this.meetings()?.destroy();
     });
     effect(() => {
       for (const session of this.sessions()) {
         session.confirmedRevision();
       }
       untracked(() => this.materialSearch()?.refresh());
+    });
+    effect(() => {
+      const records = this.meetings()?.snapshot().sessions ?? [];
+      untracked(() => this.meetingDrafts.acceptConfirmed(records));
     });
     void this.load();
   }
@@ -209,6 +234,18 @@ export class Workspace {
           /* Creation reports inaccessible recovery storage before sending. */
         }
         this.creation.set(new MaterialCreation(workspace.campaignId, this.http, storage));
+      }
+      if (this.meetings()?.campaignId !== workspace.campaignId) {
+        this.meetings()?.destroy();
+        let storage: Storage | null = null;
+        try {
+          storage = window.sessionStorage;
+        } catch {
+          /* Session writes report inaccessible recovery storage before sending. */
+        }
+        this.meetings.set(new MeetingRecords(workspace.campaignId, this.http, storage));
+      } else if (this.meetings()?.loaded()) {
+        void this.meetings()?.refresh();
       }
       if (this.folderManagement()?.campaignId !== workspace.campaignId) {
         this.folderManagement()?.destroy();
@@ -344,6 +381,14 @@ export class Workspace {
         this.partyOpen.set(true);
         await this.display('@party', undefined, context);
         break;
+      case 'sessions':
+        this.meetingsMounted.set(true);
+        this.meetingsOpen.set(true);
+        if (!this.meetings()?.loaded()) {
+          void this.meetings()?.refresh();
+        }
+        await this.display('@sessions', undefined, context);
+        break;
       case 'empty':
         await this.display('', undefined, context);
         break;
@@ -405,6 +450,7 @@ export class Workspace {
 
   private async closeOtherTabs(keepId: string): Promise<void> {
     const ids = [
+      ...(this.meetingsOpen() ? ['@sessions'] : []),
       ...(this.partyOpen() ? ['@party'] : []),
       ...(this.gameOpen() ? ['@game'] : []),
       ...this.maps().map((map) => `@map:${map.id}`),
@@ -446,6 +492,15 @@ export class Workspace {
   openParty() {
     void this.routing.navigate({ kind: 'party' });
   }
+  openMeetings(): void {
+    void this.routing.navigate({ kind: 'sessions' });
+  }
+  async openMeetingMaterial(id: string): Promise<void> {
+    if (!this.workspace()?.materials.some((item) => item.id === id)) {
+      await this.load();
+    }
+    await this.open(id);
+  }
 
   activate(id: string, anchor?: string, focusTab = false) {
     return this.routing.navigate(this.targetForTab(id, anchor), { focusTab });
@@ -460,6 +515,9 @@ export class Workspace {
     }
     if (id === '@party') {
       return { kind: 'party' };
+    }
+    if (id === '@sessions') {
+      return { kind: 'sessions' };
     }
     return id ? { kind: 'material', materialId: id, anchor } : { kind: 'empty' };
   }
@@ -596,6 +654,17 @@ export class Workspace {
       return;
     }
     const session = this.sessions().find((tab) => tab.material.id === id);
+    if (id === '@sessions') {
+      const meetings = this.meetings();
+      if (
+        !meetings ||
+        meetings.request() ||
+        meetings.pending() ||
+        !(await this.meetingView()?.prepareToClose())
+      ) {
+        return;
+      }
+    }
     if (session) {
       this.closing.update((current) => new Set([...current, id]));
       const saved = await session.prepareToClose();
@@ -609,6 +678,7 @@ export class Workspace {
       }
     }
     const tabIds = [
+      ...(this.meetingsOpen() ? ['@sessions'] : []),
       ...(this.partyOpen() ? ['@party'] : []),
       ...(this.gameOpen() ? ['@game'] : []),
       ...this.openMaps().map((mapId) => `@map:${mapId}`),
@@ -624,6 +694,8 @@ export class Workspace {
       this.gameOpen.set(false);
     } else if (id === '@party') {
       this.partyOpen.set(false);
+    } else if (id === '@sessions') {
+      this.meetingsOpen.set(false);
     } else {
       this.materials.removeConfirmedSession(id);
     }
@@ -638,6 +710,8 @@ export class Workspace {
     if (
       this.sessions().some((tab) => tab.dirty()) ||
       this.partyView()?.dirty() ||
+      this.meetingDrafts.dirty() ||
+      (!this.meetings()?.request() && this.meetingView()?.newTitle().trim()) ||
       (!this.creation()?.hasRecovery() && this.creation()?.title().trim())
     ) {
       event.preventDefault();
