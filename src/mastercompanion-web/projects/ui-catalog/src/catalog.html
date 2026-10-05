@@ -66,4 +66,52 @@
       (dismissed)="menu.set(null)"
     />
   }
+  <section aria-label="Searchable choices">
+    <h2>Searchable choices</h2>
+    <p>
+      Search title and path. Arrow keys move through results; Enter selects; Escape closes the
+      choices and returns focus. Filtering never changes the confirmed choice.
+    </p>
+    <mc-searchable-choice
+      controlId="catalog-choice"
+      label="Destination"
+      searchLabel="Search title or path"
+      noResultsLabel="No matching choices"
+      loadingLabel="Loading choices"
+      [options]="choices"
+      [value]="choice()"
+      (selectionChanged)="choice.set($event)"
+    />
+    <mc-searchable-choice
+      controlId="catalog-empty-choice"
+      label="Empty choices"
+      searchLabel="Search title or path"
+      noResultsLabel="No matching choices"
+      loadingLabel="Loading choices"
+      [options]="[]"
+    />
+    <mc-searchable-choice
+      controlId="catalog-loading-choice"
+      label="Pending choices"
+      searchLabel="Search title or path"
+      noResultsLabel="No matching choices"
+      loadingLabel="Loading choices"
+      [options]="choices"
+      [loading]="true"
+    />
+    <mc-searchable-choice
+      controlId="catalog-disabled-choice"
+      label="Disabled choices"
+      searchLabel="Search title or path"
+      noResultsLabel="No matching choices"
+      loadingLabel="Loading choices"
+      [options]="choices"
+      value="second"
+      [disabled]="true"
+    />
+    <p role="alert">
+      Example owner-provided error: choices could not be loaded. Existing selection stays visible;
+      the owner supplies its recovery action.
+    </p>
+  </section>
 </main>

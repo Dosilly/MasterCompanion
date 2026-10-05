@@ -198,3 +198,9 @@ source cache enforce the new boundary. A separate loopback developer catalog
 documents light/dark, focus, disabled and long-label states. See the
 [context menu API and catalog](17-Context-menu-catalog.md). Dialog, feedback,
 theme and tab extractions remain planned; they are not part of this slice.
+
+On 5 October 2026, [searchable choices](31-Searchable-choices.md) added a neutral
+choice primitive with four actual engine consumers: session pinning, folder move,
+note destination and material link insertion. Campaign path adaptation remains
+engine-owned. The existing catalog includes query, selected, empty, loading,
+disabled, long-path and focus examples in both themes.

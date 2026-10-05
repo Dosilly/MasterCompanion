@@ -1,3 +1,4 @@
+import { selectChoice } from './searchable-choice';
 import type { Page } from '@playwright/test';
 import { test, expect, text, openReader, expectNoHorizontalOverflow } from './fixtures';
 import { linkedId, linkedTitle, readerId, readerTitle } from './fixtures/campaign';
@@ -22,8 +23,8 @@ test('Move dialog selects the actual parent and moves a nested folder to the roo
   await openFolderMenu(page, 'ui-child');
   await action(page, 'move').click();
   const parent = folderDialog(page).locator('#folder-parent');
-  await expect(parent).toHaveValue('ui-root');
-  await parent.selectOption('');
+  await expect(parent).toHaveAttribute('value', 'ui-root');
+  await selectChoice(parent, '');
   await folderSave(page).click();
   await expect(folderDialog(page)).not.toBeVisible();
   expect(api.folderRequests[0]?.operation).toEqual({
@@ -60,11 +61,11 @@ test('Move dialog reflects sibling position and clears it when changing parent @
   await action(page, 'move').click();
   const parent = folderDialog(page).locator('#folder-parent');
   const position = folderDialog(page).locator('#folder-position');
-  await expect(parent).toHaveValue('ui-root');
-  await expect(position).toHaveValue('ui-next');
-  await parent.selectOption('');
-  await expect(position).toHaveValue('');
-  await position.selectOption('ui-root');
+  await expect(parent).toHaveAttribute('value', 'ui-root');
+  await expect(position).toHaveAttribute('value', 'ui-next');
+  await selectChoice(parent, '');
+  await expect(position).toHaveAttribute('value', '');
+  await selectChoice(position, 'ui-root');
   await folderSave(page).click();
   await expect(folderDialog(page)).not.toBeVisible();
   expect(api.folderRequests[0]?.operation).toEqual({
@@ -75,8 +76,8 @@ test('Move dialog reflects sibling position and clears it when changing parent @
   });
   await openFolderMenu(page, 'ui-child');
   await action(page, 'move').click();
-  await expect(parent).toHaveValue('');
-  await expect(position).toHaveValue('ui-root');
+  await expect(parent).toHaveAttribute('value', '');
+  await expect(position).toHaveAttribute('value', 'ui-root');
   await page.keyboard.press('Escape');
   expect(api.folderRequests).toHaveLength(1);
 });
@@ -246,7 +247,7 @@ test('Folder context note creation uses the clicked folder and preserves a cance
   const title = dialog.getByLabel(text('engine', 'notes', 'title'), { exact: true });
   const destination = dialog.getByLabel(text('engine', 'notes', 'folder'), { exact: true });
   await expect(title).toBeFocused();
-  await expect(destination).toHaveValue('ui-root');
+  await expect(destination).toHaveAttribute('value', 'ui-root');
   await title.fill('Context note');
   await page.keyboard.press('Escape');
   await expect(folder(page, 'ui-root')).toBeFocused();
@@ -254,7 +255,7 @@ test('Folder context note creation uses the clicked folder and preserves a cance
   await openFolderMenu(page, 'ui-child');
   await action(page, 'new-note').click();
   await expect(title).toHaveValue('Context note');
-  await expect(destination).toHaveValue('ui-child');
+  await expect(destination).toHaveAttribute('value', 'ui-child');
   await dialog
     .getByRole('button', { name: text('engine', 'notes', 'create'), exact: true })
     .click();
@@ -327,7 +328,7 @@ test('Keyboard folder move exposes valid parents and retains the complete subtre
   await expect(folderDialog(page).locator('#folder-parent option[value="ui-child"]')).toHaveCount(
     0,
   );
-  await folderDialog(page).locator('#folder-parent').selectOption('ui-other');
+  await selectChoice(folderDialog(page).locator('#folder-parent'), 'ui-other');
   await folderSave(page).click();
 
   await expect(

@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   Component,
+  computed,
   ElementRef,
   Injector,
   OnDestroy,
@@ -12,7 +13,9 @@ import {
   viewChild,
 } from '@angular/core';
 import { Editor } from '@tiptap/core';
-import type { MaterialSummary } from '@mastercompanion/contracts';
+import type { CampaignFolder, MaterialSummary } from '@mastercompanion/contracts';
+import { SearchableChoiceComponent } from '@mastercompanion/ui';
+import { materialChoices } from '../choices/campaign-choices';
 import { createMaterialEditor } from './material-editor';
 import { MaterialSession } from './material-session';
 import { uiMessages } from '../../i18n/messages';
@@ -25,6 +28,7 @@ import {
 
 @Component({
   selector: 'mc-material-view',
+  imports: [SearchableChoiceComponent],
   templateUrl: './material-view.html',
   styleUrl: './material-view.scss',
 })
@@ -32,14 +36,18 @@ export class MaterialView implements AfterViewInit, OnDestroy {
   readonly ui = uiMessages;
   readonly session = input.required<MaterialSession>();
   readonly materials = input<readonly MaterialSummary[]>([]);
+  readonly folders = input<readonly CampaignFolder[]>([]);
+  readonly linkOptions = computed(() => [
+    { id: '', label: this.ui.material.chooseMaterial },
+    ...materialChoices(this.materials(), this.folders(), this.ui.workspace.unfiledMaterials),
+  ]);
   readonly openMaterial = output<{ id: string; anchor?: string }>();
   readonly editorElement = viewChild.required<ElementRef<HTMLElement>>('editorElement');
   readonly insertionDialog = viewChild.required<ElementRef<HTMLDialogElement>>('insertionDialog');
   readonly markdownSource = viewChild.required<ElementRef<HTMLTextAreaElement>>('markdownSource');
-  readonly materialFilter = viewChild.required<ElementRef<HTMLInputElement>>('materialFilter');
+  readonly materialChoice = viewChild.required<SearchableChoiceComponent>('materialChoice');
   readonly insertionMode = signal<'markdown' | 'link' | null>(null);
   readonly markdownDraft = signal('');
-  readonly linkFilter = signal('');
   readonly linkTarget = signal('');
   readonly insertionError = signal<InsertionError | null>(null);
   private readonly injector = inject(Injector);
@@ -86,10 +94,11 @@ export class MaterialView implements AfterViewInit, OnDestroy {
           return;
         }
         this.insertionDialog().nativeElement.showModal();
-        (mode === 'markdown'
-          ? this.markdownSource().nativeElement
-          : this.materialFilter().nativeElement
-        ).focus();
+        if (mode === 'markdown') {
+          this.markdownSource().nativeElement.focus();
+        } else {
+          this.materialChoice().focus();
+        }
       },
       { injector: this.injector },
     );
@@ -112,26 +121,9 @@ export class MaterialView implements AfterViewInit, OnDestroy {
     }
     this.insertionError.set(null);
   }
-  updateLinkFilter(event: Event) {
-    if (event.target instanceof HTMLInputElement) {
-      this.linkFilter.set(event.target.value);
-    }
-    if (!this.filteredMaterials().some((item) => item.id === this.linkTarget())) {
-      this.linkTarget.set('');
-    }
+  updateLinkTarget(id: string) {
+    this.linkTarget.set(id);
     this.insertionError.set(null);
-  }
-  updateLinkTarget(event: Event) {
-    if (event.target instanceof HTMLSelectElement) {
-      this.linkTarget.set(event.target.value);
-    }
-    this.insertionError.set(null);
-  }
-  filteredMaterials() {
-    const filter = this.linkFilter().trim().toLocaleLowerCase();
-    return this.materials().filter((item) =>
-      `${item.title} ${item.group}`.toLocaleLowerCase().includes(filter),
-    );
   }
   confirmInsertion() {
     if (!this.editor || !this.selection) {

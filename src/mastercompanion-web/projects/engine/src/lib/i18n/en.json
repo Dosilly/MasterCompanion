@@ -1,4 +1,9 @@
 {
+  "choices": {
+    "search": "Search by title or path",
+    "noResults": "No matching choices. Try a different title or path.",
+    "loading": "Loading choices…"
+  },
   "meetings": {
     "title": "Sessions",
     "hint": "Prepare a meeting, keep play notes and return to previous sessions.",
@@ -141,10 +146,8 @@
     "insertMaterialLink": "Link to material",
     "markdownSource": "Markdown text",
     "markdownHelp": "Insert at the cursor or replace the selection. Headings, lists, quotes and tables are supported. HTML is kept as text. Images and external links are not supported.",
-    "linkFilter": "Find material",
     "linkTarget": "Target material",
     "chooseMaterial": "Choose a material…",
-    "noLinkResults": "No materials match the search.",
     "linkHelp": "The selected text becomes a link. Without a selection, the material title is inserted.",
     "cancelInsertion": "Cancel",
     "confirmInsertion": "Insert",

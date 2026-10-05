@@ -94,26 +94,17 @@
     ></textarea>
   </div>
   <div [hidden]="insertionMode() !== 'link'">
-    <label [attr.for]="insertionId('filter')">{{ ui.material.linkFilter }}</label>
-    <input
-      #materialFilter
-      [id]="insertionId('filter')"
-      type="search"
-      [value]="linkFilter()"
-      (input)="updateLinkFilter($event)"
+    <mc-searchable-choice
+      #materialChoice
+      [controlId]="insertionId('target')"
+      [label]="ui.material.linkTarget"
+      [options]="linkOptions()"
+      [value]="linkTarget()"
+      [searchLabel]="ui.choices.search"
+      [noResultsLabel]="ui.choices.noResults"
+      [loadingLabel]="ui.choices.loading"
+      (selectionChanged)="updateLinkTarget($event)"
     />
-    <label [attr.for]="insertionId('target')">{{ ui.material.linkTarget }}</label>
-    <select [id]="insertionId('target')" [value]="linkTarget()" (change)="updateLinkTarget($event)">
-      <option value="">{{ ui.material.chooseMaterial }}</option>
-      @for (material of filteredMaterials(); track material.id) {
-        <option [value]="material.id">
-          {{ material.title }} — {{ material.group || ui.workspace.unfiledMaterials }}
-        </option>
-      }
-    </select>
-    @if (filteredMaterials().length === 0) {
-      <p role="status">{{ ui.material.noLinkResults }}</p>
-    }
     <p>{{ ui.material.linkHelp }}</p>
   </div>
   @if (insertionError(); as error) {

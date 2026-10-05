@@ -294,6 +294,7 @@
             [meetings]="records"
             [drafts]="meetingDrafts"
             [materials]="data.materials"
+            [folders]="data.folders"
             (materialRequested)="openMeetingMaterial($event)"
           />
         }
@@ -349,6 +350,7 @@
           [hidden]="active() !== tab.material.id"
           [session]="tab"
           [materials]="data.materials"
+          [folders]="data.folders"
           (openMaterial)="open($event.id, $event.anchor)"
         />
       }
