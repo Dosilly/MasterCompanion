@@ -61,7 +61,27 @@ replace its mounted draft.
   context-menu, ordering, session/deletion and folder-drag scenarios pass.
 - Frontend quality and consumer compilation verify the shared contract change.
   The new move-dialog screenshots and affected gameplay visual baselines are
-  reviewed before local runtime delivery.
+  reviewed in both themes. All affected gameplay visual checks pass with snapshot
+  updates disabled; the compact reminder buttons retain the existing layout.
 
-See [implementation status](07-Implementation-status.md) for the deployed image
-and local runtime evidence after integration.
+## Local runtime delivery
+
+Commit `44ee190` was merged into local `trunk`. Image
+`mastercompanion:ux-followup-44ee190` was built from that checkout; the production
+frontend build and backend Release publication passed. Compose updated only the
+application service. Application and PostgreSQL report healthy status, with the
+app still bound to `127.0.0.1:4200`.
+
+Eight read-only container checks passed:
+
+```powershell
+node --test tests/e2e/container.test.mjs tests/e2e/folder-management-container.test.mjs tests/e2e/session-container.test.mjs
+```
+
+A live Full HD review confirms `Sesja 2026-10-05`, closure of the untouched form,
+the three document context-menu commands and the move dialog with the actual
+current folder selected. It reports no horizontal overflow or console errors.
+No campaign write was submitted. The current live campaign has no pending checks;
+reminder navigation and write/recovery behavior were verified in isolated tests.
+The local runtime review image is `.local/ux-followup-review/live-move-dialog.jpg`.
+See [implementation status](07-Implementation-status.md) for the current delivery.

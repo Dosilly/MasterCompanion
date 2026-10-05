@@ -1,5 +1,22 @@
 # Implementation status
 
+## UX follow-up corrections — 5 October 2026
+
+[The follow-up delivery](34-UX-follow-up-corrections.md) fixes gameplay reminder
+navigation, simplifies document context menus, supplies an editable session name
+with today's local date and implements cross-folder/unfiled document movement
+through searchable choices and drag/drop. Confirmed organization membership
+retains precedence over delayed cache reads while keeping mounted drafts intact.
+
+Commit `44ee190` was merged into local `trunk`. Image
+`mastercompanion:ux-followup-44ee190` was built from that merged checkout and the
+application container updated. Both services are healthy. Eight read-only
+container checks pass. A live Full HD check confirms the dated name, closing an
+untouched session form, the three document menu commands and the searchable move
+dialog without horizontal overflow or console errors. No live campaign write
+was submitted; reminder focus/navigation and confirmed movement/recovery use
+isolated functional tests. The gameplay visual baselines pass without updates.
+
 ## UX/UI audit and corrective plan — 5 October 2026
 
 Reviewed the running reader/editor, search/navigation, maps, gameplay, party,
