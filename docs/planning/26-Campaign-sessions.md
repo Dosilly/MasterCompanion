@@ -1,6 +1,6 @@
 # Campaign sessions and pinned materials
 
-5 October 2026 · implemented and verified on `codex/campaign-sessions`; local delivery pending
+5 October 2026 · implemented, verified, merged into local `trunk` and delivered
 
 ## Scope
 
@@ -95,4 +95,26 @@ the mounted form's edit state on reopening and wait for confirmed completion
 before reload. Failures were inspected and relevant scenarios rerun; no assertions
 were weakened and no existing visual baselines were changed.
 
-Local merge, image build and readiness verification follow the repository workflow.
+## Local delivery
+
+Feature commit `2562798` was fast-forward merged into the existing clean local
+`trunk` worktree. The runtime image was built directly from that merged checkout
+as `mastercompanion:sessions-2562798`; its digest is
+`sha256:29b34116b327f764ba25d37e825d5495f727db8e0e90535d65277805301ef8a2`.
+The Docker build passed the normal frontend quality/build pipeline, all four
+separately compiled libraries, production Angular host and Release API publication.
+The standard `mastercompanion:local` tag also points to this verified image.
+
+Compose updated only the application container and waited for healthy readiness.
+The additive migration applies through ordinary startup. The existing PostgreSQL
+service/volume remains in use, and both services are healthy on the local setup.
+Seven read-only container checks pass, including the session collection, `/sessions`
+deep route and appropriate unknown-campaign response. A fresh production browser
+check at Full HD in both themes confirms loading, empty-state/create controls,
+keyboard focus and no horizontal overflow or browser errors. All API writes were
+blocked during that check; verification created no live session or document.
+
+No remote push or external deployment occurred. Local backup/preservation probes
+are outside this development update under the current data policy. The next
+product slice is map authoring, followed by multiple campaigns; chronicle and
+neutral UI extraction retain their separate scope.

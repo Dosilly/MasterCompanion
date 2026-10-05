@@ -51,8 +51,8 @@ The following items remain outside phase one, without a newly assigned schedule:
 This is the historical phase-one scope boundary. Campaign notes, search, URL
 navigation, material preloading and folder management have subsequently been
 delivered; [current status](07-Implementation-status.md) is authoritative for
-implementation. [Session records and pins](26-Campaign-sessions.md) are the
-5 October follow-up slice. Later delivery does not change the original acceptance.
+implementation. [Session records and pins](26-Campaign-sessions.md) were delivered
+on 5 October. Later delivery does not change the original acceptance.
 
 - Multiple-campaign selection, empty campaign creation, new separate notes and
   folder editing.

@@ -9,10 +9,10 @@ Version 0.6 · 2 October 2026 · phase one accepted
 Current roadmap update, 5 October 2026: campaign notes, full-text search, material
 preloading, folder management/context menus and URL navigation have been delivered
 locally. See [near-term improvements](15-Near-term-improvements.md) and
-[implementation status](07-Implementation-status.md). The next product slice is
-[sessions and pinned materials](26-Campaign-sessions.md), followed by map authoring
-and multiple campaigns. Neutral dialog/feedback extraction remains separate
-technical scope in [the UI plan](17-Reusable-frontend-ui.md).
+[implementation status](07-Implementation-status.md). [Sessions and pinned
+materials](26-Campaign-sessions.md) were delivered on 5 October. The next product
+slice is map authoring, followed by multiple campaigns. Neutral dialog/feedback
+extraction remains separate technical scope in [the UI plan](17-Reusable-frontend-ui.md).
 
 Navigation delivery, 4 October 2026: [URL-based workspace navigation](22-Workspace-routing.md)
 supports direct links, browser history and restoring the addressed view on reload

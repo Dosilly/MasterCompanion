@@ -13,10 +13,10 @@ Related: [execution plan](05-MVP-execution-plan.md),
 [engine and module ownership](06-Module-architecture.md),
 [folder organization story](02-User-stories.md#us-03-folder-organization).
 
-All requests in this near-term list have been delivered. The next product slice
-is [sessions and pinned materials](26-Campaign-sessions.md), followed by map
-authoring and multiple campaigns. Dialogs and feedback remain separate technical
-slices in [the reusable UI plan](17-Reusable-frontend-ui.md).
+All requests in this near-term list have been delivered. [Sessions and pinned
+materials](26-Campaign-sessions.md) were delivered on 5 October. The next product
+slice is map authoring, followed by multiple campaigns. Dialogs and feedback remain
+separate technical slices in [the reusable UI plan](17-Reusable-frontend-ui.md).
 
 ## Improvement: preload campaign materials at startup
 

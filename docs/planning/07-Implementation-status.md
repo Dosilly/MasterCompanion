@@ -16,6 +16,11 @@ for the contract, exact limits and local delivery status. Map authoring is the n
 product slice, followed by multiple campaigns. Chronicle and remaining UI-library
 extractions are separate later scope.
 
+Commit `2562798` was merged into local `trunk`. Image
+`mastercompanion:sessions-2562798` was built from that checkout and the application
+container updated. Both services are healthy; seven read-only container checks
+and a live Full HD session-page check in both themes pass without API writes.
+
 ## Folder interaction corrections — 4 October 2026
 
 The move dialog reflects the actual parent and sibling position, including moves
