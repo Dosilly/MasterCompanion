@@ -47,6 +47,8 @@ import { UiMessages, uiMessages } from '../../i18n/messages';
 import { FolderManagement } from '../folders/folder-management';
 import { FolderManagementDialog } from '../folders/folder-management-dialog';
 import { FolderDrag } from '../folders/folder-drag';
+import { MaterialDrag } from '../folders/material-drag';
+import { MaterialOrderDialog } from '../folders/material-order-dialog';
 import { WorkspaceContextMenuComponent } from '../context-menu/workspace-context-menu';
 import type { WorkspaceContextMenuAction } from '../context-menu/workspace-context-menu-action';
 import { WorkspaceContextMenuState } from '../context-menu/workspace-context-menu-state';
@@ -67,6 +69,7 @@ import { SessionView } from '../sessions/session-view';
     GameView,
     PartyView,
     FolderManagementDialog,
+    MaterialOrderDialog,
     WorkspaceContextMenuComponent,
     SessionView,
   ],
@@ -131,6 +134,8 @@ export class Workspace {
   readonly creation = signal<MaterialCreation | null>(null);
   readonly folderManagement = signal<FolderManagement | null>(null);
   readonly folderDrag = new FolderDrag();
+  readonly materialDrag = new MaterialDrag();
+  private readonly materialOrderDialog = viewChild(MaterialOrderDialog);
   private readonly folderDialog = viewChild(FolderManagementDialog);
   readonly menus = new WorkspaceContextMenuState(
     () => this.folderManagement()?.locked() ?? true,
@@ -288,6 +293,7 @@ export class Workspace {
       this.folderManagement()?.accept({
         revision: workspace.foldersRevision,
         folders: workspace.folders,
+        materialOrder: workspace.materials.map(({ id, folderId }) => ({ id, folderId })),
       });
       await this.routing.initialize(this.workspace() ?? workspace);
     } catch {
@@ -431,6 +437,13 @@ export class Workspace {
           this.folderDialog()?.open(action, folder, target.trigger);
         }
         break;
+      case 'reorder': {
+        const material = this.workspace()?.materials.find((item) => item.id === target.id);
+        if (material) {
+          this.materialOrderDialog()?.open(material, target.trigger);
+        }
+        break;
+      }
       case 'open':
         await this.open(target.id);
         break;
@@ -472,8 +485,22 @@ export class Workspace {
       void this.folderManagement()?.execute(operation);
     }
   }
+  overMaterial(event: DragEvent, id: string): void {
+    const snapshot = this.folderManagement()?.snapshot();
+    if (snapshot) {
+      this.materialDrag.over(event, snapshot, id);
+    }
+  }
+  dropMaterial(event: DragEvent, id: string): void {
+    this.overMaterial(event, id);
+    const operation = this.materialDrag.drop(event);
+    if (operation) {
+      void this.folderManagement()?.execute(operation);
+    }
+  }
   acceptCreatedMaterial(material: MaterialDto): void {
     this.materials.acceptCreatedMaterial(material);
+    void this.folderManagement()?.refresh();
     this.materialSearch()?.updateQuery('');
     const workspace = this.workspace();
     if (workspace) {

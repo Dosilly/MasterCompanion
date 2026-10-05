@@ -42,7 +42,7 @@ function fixture(t: TestContext, store: ReturnType<typeof storage> | null = stor
   const management = new FolderManagement('campaign', transport.client, store, (snapshot) =>
     confirmations.push(snapshot),
   );
-  management.accept({ revision: 0, folders });
+  management.accept({ revision: 0, folders, materialOrder: [] });
   t.after(() => management.destroy());
   return { management, transport, store, confirmations };
 }
@@ -50,6 +50,7 @@ function fixture(t: TestContext, store: ReturnType<typeof storage> | null = stor
 function renamed(revision: number, title = 'Renamed'): FolderSnapshot {
   return {
     revision,
+    materialOrder: [],
     folders: folders.map((folder) => (folder.id === 'root' ? { ...folder, title } : folder)),
   };
 }
@@ -120,7 +121,7 @@ describe('Folder hierarchy rules', () => {
     },
   ]) {
     test(`Malformed hierarchy ${JSON.stringify(snapshot.folders)} is rejected`, () => {
-      assert.equal(isFolderSnapshot(snapshot), false);
+      assert.equal(isFolderSnapshot({ ...snapshot, materialOrder: [] }), false);
     });
   }
 });

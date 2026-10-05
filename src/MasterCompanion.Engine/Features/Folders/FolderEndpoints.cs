@@ -25,7 +25,10 @@ public static class FolderEndpoints
             return Problem(404, "campaign_not_found");
         }
         var folders = await db.Folders.AsNoTracking().Where(item => item.CampaignId == campaignId).ToListAsync(token);
-        return Results.Ok(FolderSnapshot.From(campaign.FoldersRevision, folders));
+        var materials = await db.Materials.AsNoTracking().Where(item => item.CampaignId == campaignId)
+            .OrderBy(item => item.SortOrder).ThenBy(item => item.Id)
+            .Select(item => new OrderedMaterial(item.Id, item.FolderId)).ToListAsync(token);
+        return Results.Ok(FolderSnapshot.From(campaign.FoldersRevision, folders, materials));
     }
 
     private static async Task<IResult> ChangeAsync(Guid campaignId, HttpRequest httpRequest, AppDbContext db,
@@ -77,13 +80,18 @@ public static class FolderEndpoints
         }
 
         var folders = await db.Folders.Where(item => item.CampaignId == campaignId).ToListAsync(token);
-        var error = FolderChanges.Apply(folders, request.Operation);
+        var materials = await db.Materials.Where(item => item.CampaignId == campaignId).ToListAsync(token);
+        var error = request.Operation is ReorderMaterialOperation reorder
+            ? MaterialOrdering.Apply(materials, reorder)
+            : FolderChanges.Apply(folders, request.Operation);
         if (error is not null)
         {
-            return Problem(error == "folder_not_found" ? 404 : 400, error);
+            return Problem(error is "folder_not_found" or "material_not_found" ? 404 : 400, error);
         }
         campaign.FoldersRevision++;
-        var response = FolderSnapshot.From(campaign.FoldersRevision, folders);
+        var response = FolderSnapshot.From(campaign.FoldersRevision, folders, materials
+            .OrderBy(item => item.SortOrder).ThenBy(item => item.Id, StringComparer.Ordinal)
+            .Select(item => new OrderedMaterial(item.Id, item.FolderId)));
         db.FolderOperationReceipts.Add(new FolderOperationReceipt
         {
             CampaignId = campaignId,

@@ -10,6 +10,7 @@ export class WorkspaceMaterials {
   private readonly workspaceState = signal<WorkspaceDto | null>(null);
   private readonly sessionState = signal<readonly MaterialSession[]>([]);
   private readonly loadStateValue = signal<'idle' | 'loading' | 'ready' | 'error'>('idle');
+  private organization: FolderSnapshot | null = null;
   private cache: CampaignMaterialCache | null = null;
   private destroyed = false;
   readonly workspace = this.workspaceState.asReadonly();
@@ -25,7 +26,13 @@ export class WorkspaceMaterials {
     if (this.cache && this.cache.campaignId !== workspace.campaignId) {
       throw new Error('An existing workspace cannot switch campaigns.');
     }
-    if (!isFolderSnapshot({ revision: workspace.foldersRevision, folders: workspace.folders })) {
+    if (
+      !isFolderSnapshot({
+        revision: workspace.foldersRevision,
+        folders: workspace.folders,
+        materialOrder: workspace.materials.map(({ id, folderId }) => ({ id, folderId })),
+      })
+    ) {
       throw new Error('The workspace folder hierarchy is invalid.');
     }
     this.cache ??= new CampaignMaterialCache(workspace.campaignId, this.http);
@@ -72,9 +79,21 @@ export class WorkspaceMaterials {
   }
 
   acceptFolders(snapshot: FolderSnapshot): void {
+    if (
+      !isFolderSnapshot(snapshot) ||
+      (this.organization && snapshot.revision < this.organization.revision)
+    ) {
+      return;
+    }
+    this.organization = snapshot;
     this.workspaceState.update((workspace) =>
       workspace && snapshot.revision >= workspace.foldersRevision
-        ? { ...workspace, folders: snapshot.folders, foldersRevision: snapshot.revision }
+        ? {
+            ...workspace,
+            folders: snapshot.folders,
+            foldersRevision: snapshot.revision,
+            materials: this.orderMaterials(workspace.materials, snapshot.materialOrder),
+          }
         : workspace,
     );
   }
@@ -110,13 +129,31 @@ export class WorkspaceMaterials {
       ...(current && current.foldersRevision >= workspace.foldersRevision
         ? { folders: current.folders, foldersRevision: current.foldersRevision }
         : {}),
-      materials: [...materials.values()].map(({ id, title, group, folderId }) => ({
-        id,
-        title,
-        group,
-        folderId,
-      })),
+      materials: this.orderMaterials(
+        [...materials.values()].map(({ id, title, group, folderId }) => ({
+          id,
+          title,
+          group,
+          folderId,
+        })),
+        this.organization && this.organization.revision >= workspace.foldersRevision
+          ? this.organization.materialOrder
+          : workspace.materials,
+      ),
     });
+  }
+
+  private orderMaterials(
+    materials: WorkspaceDto['materials'],
+    order: FolderSnapshot['materialOrder'],
+  ): WorkspaceDto['materials'] {
+    const byId = new Map(materials.map((material) => [material.id, material]));
+    const ordered = order.flatMap(({ id }) => {
+      const material = byId.get(id);
+      byId.delete(id);
+      return material ? [material] : [];
+    });
+    return [...ordered, ...byId.values()];
   }
 
   private requireCache(): CampaignMaterialCache {

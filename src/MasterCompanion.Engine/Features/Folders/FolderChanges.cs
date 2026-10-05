@@ -6,7 +6,13 @@ internal static class FolderChanges
 {
     internal static string? Apply(IReadOnlyList<CampaignFolder> folders, FolderOperation operation)
     {
-        var folder = folders.SingleOrDefault(item => item.Id == operation.FolderId);
+        var folderId = operation switch
+        {
+            RenameFolderOperation renamed => renamed.FolderId,
+            MoveFolderOperation moved => moved.FolderId,
+            _ => throw new InvalidOperationException("The folder operation kind is unsupported.")
+        };
+        var folder = folders.SingleOrDefault(item => item.Id == folderId);
         if (folder is null)
         {
             return "folder_not_found";

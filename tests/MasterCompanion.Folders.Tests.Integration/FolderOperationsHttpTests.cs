@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace MasterCompanion.Folders.Tests.Integration;
 
 [Collection("PostgreSQL")]
-public sealed class FolderOperationsHttpTests(PostgreSqlFixture database) : IAsyncLifetime
+public sealed partial class FolderOperationsHttpTests(PostgreSqlFixture database) : IAsyncLifetime
 {
     private readonly Guid campaignId = Guid.NewGuid();
     private readonly Guid foreignCampaignId = Guid.NewGuid();
@@ -312,6 +312,9 @@ public sealed class FolderOperationsHttpTests(PostgreSqlFixture database) : IAsy
     [InlineData("{\"kind\":\"move\",\"folderId\":\"a\",\"parentId\":null,\"beforeId\":null,\"title\":\"New\"}")]
     [InlineData("{\"kind\":\"delete\",\"folderId\":\"a\"}")]
     [InlineData("{\"folderId\":\"a\",\"title\":\"New\"}")]
+    [InlineData("""{"kind":"reorderMaterial","materialId":"first","beforeId":null}""")]
+    [InlineData("""{"kind":"reorderMaterial","materialId":"","folderId":null,"beforeId":null}""")]
+    [InlineData("""{"kind":"reorderMaterial","materialId":"first","folderId":null,"beforeId":null,"parentId":null}""")]
     public async Task Change_InvalidOperationShape_ReturnsValidationProblem(string operation)
     {
         // Arrange
@@ -390,8 +393,10 @@ public sealed class FolderOperationsHttpTests(PostgreSqlFixture database) : IAsy
         await AssertProblemAsync(response, status, code);
     }
 
-    [Fact]
-    public async Task Change_DeferredReceiptFailure_RollsBackFoldersRevisionAndReceipt()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Change_DeferredReceiptFailure_RollsBackFoldersRevisionAndReceipt(bool reorderMaterial)
     {
         // Arrange
         await using var scope = App.Services.CreateAsyncScope();
@@ -406,8 +411,11 @@ public sealed class FolderOperationsHttpTests(PostgreSqlFixture database) : IAsy
                 DEFERRABLE INITIALLY DEFERRED
                 FOR EACH ROW EXECUTE FUNCTION engine.reject_test_folder_receipt();
             """);
+        if (reorderMaterial) { await AddOrderingMaterialsAsync(); }
         var before = await ReadAsync();
-        var request = Move("x", "b", null);
+        var request = reorderMaterial
+            ? new FolderOperationRequest(Guid.NewGuid(), 0, new ReorderMaterialOperation("second", "leaf", "first"))
+            : Move("x", "b", null);
         try
         {
             // Act
@@ -461,7 +469,7 @@ public sealed class FolderOperationsHttpTests(PostgreSqlFixture database) : IAsy
     {
         await using var scope = App.Services.CreateAsyncScope();
         var material = await scope.ServiceProvider.GetRequiredService<AppDbContext>().Materials.AsNoTracking()
-            .SingleAsync(item => item.CampaignId == campaignId);
+            .SingleAsync(item => item.CampaignId == campaignId && item.Id == $"note-{campaignId:D}");
         return JsonSerializer.Serialize(material);
     }
 

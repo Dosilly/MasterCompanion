@@ -27,7 +27,11 @@
     "closeBlocked": "Utwórz nazwaną sesję albo wyczyść jej nazwę przed zamknięciem tej karty.",
     "listLabel": "Sesje kampanii",
     "empty": "Nie ma jeszcze sesji. Utwórz pierwsze spotkanie.",
-    "status": { "planned": "Planowana", "active": "W trakcie", "completed": "Zakończona" },
+    "status": {
+      "planned": "Planowana",
+      "active": "W trakcie",
+      "completed": "Zakończona"
+    },
     "start": "Rozpocznij sesję",
     "complete": "Zakończ sesję",
     "activeExists": "Zakończ bieżącą sesję przed rozpoczęciem kolejnej.",
@@ -297,6 +301,18 @@
     "close": "Zamknij kartę",
     "closeOthers": "Zamknij pozostałe karty",
     "copied": "Odnośnik do materiału skopiowany.",
-    "copyFailed": "Nie udało się skopiować odnośnika. Otwórz materiał i skopiuj jego adres."
+    "copyFailed": "Nie udało się skopiować odnośnika. Otwórz materiał i skopiuj jego adres.",
+    "reorder": "Zmień kolejność dokumentu"
+  },
+  "materialOrder": {
+    "title": "Zmień kolejność dokumentu",
+    "hint": "Zmień kolejność w bieżącym folderze. Dokumenty pozostają w swoim folderze.",
+    "position": "Pozycja",
+    "first": "Na początku",
+    "last": "Na końcu",
+    "before": "Przed dokumentem",
+    "after": "Za dokumentem",
+    "sibling": "Dokument",
+    "crossFolder": "Kolejność dokumentów można zmieniać tylko w ich bieżącym folderze."
   }
 }

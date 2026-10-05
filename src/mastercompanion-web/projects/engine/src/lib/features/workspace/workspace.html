@@ -104,6 +104,9 @@
           </div>
         }
       }
+      @if (materialDrag.rejected()) {
+        <p class="folder-status" role="status">{{ ui.materialOrder.crossFolder }}</p>
+      }
       @if (menus.feedback(); as feedback) {
         <p role="status" class="folder-status">{{ ui.contextMenu[feedback] }}</p>
       }
@@ -156,6 +159,22 @@
               @for (material of folder.materials; track material.id) {
                 <button
                   [attr.data-material-id]="material.id"
+                  [draggable]="!folderManagement()?.locked()"
+                  [class.drop-before]="
+                    materialDrag.target()?.id === material.id &&
+                    materialDrag.target()?.placement === 'before'
+                  "
+                  [class.drop-after]="
+                    materialDrag.target()?.id === material.id &&
+                    materialDrag.target()?.placement === 'after'
+                  "
+                  (dragstart)="
+                    materialDrag.start($event, material.id, folderManagement()?.locked() ?? true)
+                  "
+                  (dragend)="materialDrag.end()"
+                  (dragover)="overMaterial($event, material.id)"
+                  (dragleave)="materialDrag.leave()"
+                  (drop)="dropMaterial($event, material.id)"
                   [class.selected]="active() === material.id"
                   [attr.aria-current]="active() === material.id ? 'page' : null"
                   (click)="open(material.id)"
@@ -365,6 +384,7 @@
   }
   @if (folderManagement(); as management) {
     <mc-folder-management-dialog [management]="management" />
+    <mc-material-order-dialog [management]="management" [materials]="data.materials" />
   }
   <mc-workspace-context-menu
     [presentation]="menus.presentation()"
