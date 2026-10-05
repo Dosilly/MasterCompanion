@@ -55,7 +55,10 @@ export class WorkspaceContextMenuState {
     } else {
       actions =
         kind === 'material'
-          ? [{ id: 'open', label: labels.open }]
+          ? [
+              { id: 'open', label: labels.open },
+              { id: 'reorder', label: labels.reorder, disabled: this.folderLocked() },
+            ]
           : [
               { id: 'close', label: labels.close, disabled: this.closing(id) },
               { id: 'close-others', label: labels.closeOthers },

@@ -8,6 +8,7 @@ import type {
 } from '@mastercompanion/contracts';
 import {
   canMoveFolder,
+  canReorderMaterial,
   confirmsFolderOperation,
   isFolderOperation,
   isFolderSnapshot,
@@ -43,7 +44,11 @@ function isRequest(value: unknown): value is FolderOperationRequest {
 
 /** Owns confirmed hierarchy and durable receipts independently of document editing. */
 export class FolderManagement {
-  private readonly confirmed = signal<FolderSnapshot>({ revision: 0, folders: [] });
+  private readonly confirmed = signal<FolderSnapshot>({
+    revision: 0,
+    folders: [],
+    materialOrder: [],
+  });
   readonly snapshot = this.confirmed.asReadonly();
   readonly pending = signal(false);
   readonly error = signal<FolderError | null>(null);
@@ -88,7 +93,7 @@ export class FolderManagement {
     if (
       this.initialized &&
       snapshot.revision === current.revision &&
-      JSON.stringify(snapshot.folders) !== JSON.stringify(current.folders)
+      JSON.stringify(snapshot) !== JSON.stringify(current)
     ) {
       this.error.set('loadFailed');
       return false;
@@ -132,7 +137,15 @@ export class FolderManagement {
     const folders = this.snapshot().folders;
     if (
       !isFolderOperation(operation) ||
-      !folders.some((folder) => folder.id === operation.folderId) ||
+      (operation.kind !== 'reorderMaterial' &&
+        !folders.some((folder) => folder.id === operation.folderId)) ||
+      (operation.kind === 'reorderMaterial' &&
+        !canReorderMaterial(
+          this.snapshot(),
+          operation.materialId,
+          operation.folderId,
+          operation.beforeId,
+        )) ||
       (operation.kind === 'move' &&
         !canMoveFolder(folders, operation.folderId, operation.parentId, operation.beforeId))
     ) {
@@ -272,6 +285,9 @@ export class FolderManagement {
         'folder_parent_not_found',
         'folder_target_not_found',
         'folder_cycle',
+        'material_not_found',
+        'material_folder_conflict',
+        'material_order_target_invalid',
         'folder_revision_conflict',
         'folder_request_conflict',
         'folder_revision_limit',

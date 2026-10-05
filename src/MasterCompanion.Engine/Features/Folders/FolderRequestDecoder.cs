@@ -64,17 +64,19 @@ internal static class FolderRequestDecoder
         {
             return new Rejected(400, "invalid_folder_operation");
         }
-        if (request is null || request.RequestId == Guid.Empty || request.ExpectedRevision is < 0 or > MaxRevision ||
-            !ValidId(request.Operation.FolderId))
+        if (request is null || request.RequestId == Guid.Empty || request.ExpectedRevision is < 0 or > MaxRevision)
         {
             return new Rejected(400, "invalid_folder_operation");
         }
 
         var validOperation = request.Operation switch
         {
-            RenameFolderOperation rename => rename.Title.Trim().Length is >= 1 and <= 300 &&
+            RenameFolderOperation rename => ValidId(rename.FolderId) && rename.Title.Trim().Length is >= 1 and <= 300 &&
                 !rename.Title.Any(char.IsControl),
-            MoveFolderOperation move => (move.ParentId is null || ValidId(move.ParentId)) &&
+            ReorderMaterialOperation reorder => ValidId(reorder.MaterialId) &&
+                (reorder.FolderId is null || ValidId(reorder.FolderId)) &&
+                (reorder.BeforeId is null || ValidId(reorder.BeforeId)),
+            MoveFolderOperation move => ValidId(move.FolderId) && (move.ParentId is null || ValidId(move.ParentId)) &&
                 (move.BeforeId is null || ValidId(move.BeforeId)),
             _ => false
         };

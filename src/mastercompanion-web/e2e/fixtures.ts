@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { test as base, expect, type Locator, type Page } from '@playwright/test';
 import type {
-  CampaignFolder,
   FolderOperationRequest,
+  FolderSnapshot,
   MaterialDto,
   MaterialSearchResponse,
 } from '@mastercompanion/contracts';
@@ -46,13 +46,29 @@ function folderRequest(value: unknown): FolderOperationRequest {
     !record(value) ||
     typeof value['requestId'] !== 'string' ||
     typeof value['expectedRevision'] !== 'number' ||
-    !record(value['operation']) ||
-    typeof value['operation']['folderId'] !== 'string'
+    !record(value['operation'])
   ) {
     throw new Error('Expected a typed folder operation request.');
   }
   expect(Object.keys(value).sort()).toEqual(['expectedRevision', 'operation', 'requestId']);
   const operation = value['operation'];
+  if (
+    operation['kind'] === 'reorderMaterial' &&
+    typeof operation['materialId'] === 'string' &&
+    (operation['folderId'] === null || typeof operation['folderId'] === 'string') &&
+    (operation['beforeId'] === null || typeof operation['beforeId'] === 'string')
+  ) {
+    return {
+      requestId: value['requestId'],
+      expectedRevision: value['expectedRevision'],
+      operation: {
+        kind: 'reorderMaterial',
+        materialId: operation['materialId'],
+        folderId: operation['folderId'],
+        beforeId: operation['beforeId'],
+      },
+    };
+  }
   const folderId = operation['folderId'];
   if (typeof folderId !== 'string') {
     throw new Error('Expected a stable folder identity.');
@@ -111,7 +127,7 @@ export class TestApi {
     string,
     {
       request: FolderOperationRequest;
-      response: { revision: number; folders: CampaignFolder[] };
+      response: FolderSnapshot;
     }
   >();
   private readonly folderGate = Promise.withResolvers<void>();
@@ -185,6 +201,10 @@ export class TestApi {
             json: {
               revision: this.data.workspace.foldersRevision,
               folders: this.data.workspace.folders,
+              materialOrder: this.data.workspace.materials.map(({ id, folderId }) => ({
+                id,
+                folderId,
+              })),
             },
           });
           return;
@@ -221,22 +241,41 @@ export class TestApi {
             return;
           }
           const operation = body.operation;
-          const folder = this.data.workspace.folders.find((item) => item.id === operation.folderId);
-          if (!folder) {
-            throw new Error('Folder writes must target a fixture-owned folder.');
-          }
-          if (operation.kind === 'rename') {
-            folder.title = operation.title;
-          } else {
-            folder.parentId = operation.parentId;
-            const others = this.data.workspace.folders.filter((item) => item.id !== folder.id);
+          if (operation.kind === 'reorderMaterial') {
+            const material = this.data.workspace.materials.find(
+              (item) => item.id === operation.materialId,
+            );
+            if (!material || material.folderId !== operation.folderId) {
+              throw new Error('Invalid material fixture organization.');
+            }
+            const others = this.data.workspace.materials.filter((item) => item.id !== material.id);
             const beforeIndex = others.findIndex((item) => item.id === operation.beforeId);
-            others.splice(beforeIndex < 0 ? others.length : beforeIndex, 0, folder);
-            this.data.workspace.folders = others;
+            others.splice(beforeIndex < 0 ? others.length : beforeIndex, 0, material);
+            this.data.workspace.materials = others;
+          } else {
+            const folder = this.data.workspace.folders.find(
+              (item) => item.id === operation.folderId,
+            );
+            if (!folder) {
+              throw new Error('Folder writes must target a fixture-owned folder.');
+            }
+            if (operation.kind === 'rename') {
+              folder.title = operation.title;
+            } else {
+              folder.parentId = operation.parentId;
+              const others = this.data.workspace.folders.filter((item) => item.id !== folder.id);
+              const beforeIndex = others.findIndex((item) => item.id === operation.beforeId);
+              others.splice(beforeIndex < 0 ? others.length : beforeIndex, 0, folder);
+              this.data.workspace.folders = others;
+            }
           }
           const response = {
             revision: ++this.data.workspace.foldersRevision,
             folders: structuredClone(this.data.workspace.folders),
+            materialOrder: this.data.workspace.materials.map(({ id, folderId }) => ({
+              id,
+              folderId,
+            })),
           };
           this.folderReceipts.set(body.requestId, { request: body, response });
           if (this.folderMode === 'lostResponse') {

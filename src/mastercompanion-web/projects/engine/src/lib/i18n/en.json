@@ -14,7 +14,11 @@
     "closeBlocked": "Create the named session or clear its name before closing this tab.",
     "listLabel": "Campaign sessions",
     "empty": "No sessions yet. Create your first meeting.",
-    "status": { "planned": "Planned", "active": "In progress", "completed": "Completed" },
+    "status": {
+      "planned": "Planned",
+      "active": "In progress",
+      "completed": "Completed"
+    },
     "start": "Start session",
     "complete": "End session",
     "activeExists": "End the current session before starting another.",
@@ -284,6 +288,18 @@
     "close": "Close tab",
     "closeOthers": "Close other tabs",
     "copied": "Material link copied.",
-    "copyFailed": "The link could not be copied. Open the material and copy its address."
+    "copyFailed": "The link could not be copied. Open the material and copy its address.",
+    "reorder": "Change document order"
+  },
+  "materialOrder": {
+    "title": "Change document order",
+    "hint": "Reorder within the current folder. Documents remain in their folder.",
+    "position": "Position",
+    "first": "First",
+    "last": "Last",
+    "before": "Before document",
+    "after": "After document",
+    "sibling": "Document",
+    "crossFolder": "Documents can only be reordered within their current folder."
   }
 }

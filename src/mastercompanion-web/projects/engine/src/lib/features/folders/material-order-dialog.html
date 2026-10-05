@@ -1,0 +1,73 @@
+<dialog
+  #dialog
+  class="material-order-dialog"
+  aria-labelledby="material-order-title"
+  (cancel)="cancel($event)"
+>
+  <h2 id="material-order-title">{{ ui.materialOrder.title }}</h2>
+  <p>{{ ui.materialOrder.hint }}</p>
+  <form (submit)="submit($event)">
+    <label for="material-order-position">{{ ui.materialOrder.position }}</label>
+    <select
+      id="material-order-position"
+      [disabled]="management().locked()"
+      (change)="choosePosition($event)"
+    >
+      <option value="first" [selected]="position() === 'first'">
+        {{ ui.materialOrder.first }}
+      </option>
+      <option value="last" [selected]="position() === 'last'">{{ ui.materialOrder.last }}</option>
+      <option value="before" [selected]="position() === 'before'">
+        {{ ui.materialOrder.before }}
+      </option>
+      <option value="after" [selected]="position() === 'after'">
+        {{ ui.materialOrder.after }}
+      </option>
+    </select>
+    @if (position() === 'before' || position() === 'after') {
+      <mc-searchable-choice
+        controlId="material-order-sibling"
+        [options]="siblingOptions()"
+        [value]="siblingId()"
+        [label]="ui.materialOrder.sibling"
+        [searchLabel]="ui.choices.search"
+        [noResultsLabel]="ui.choices.noResults"
+        [loadingLabel]="ui.choices.loading"
+        [disabled]="management().locked()"
+        (selectionChanged)="siblingId.set($event)"
+      />
+    }
+    @if (management().pending()) {
+      <p role="status">{{ ui.folders.saving }}</p>
+    }
+    @if (management().error(); as error) {
+      <p role="alert">{{ ui.folders.errors[error] }}</p>
+      @if (error === 'conflict') {
+        <button type="button" [disabled]="management().pending()" (click)="management().refresh()">
+          {{ ui.folders.refresh }}
+        </button>
+      }
+    }
+    <div class="dialog-actions">
+      <button type="button" [disabled]="management().pending()" (click)="close()">
+        {{ ui.notes.cancel }}
+      </button>
+      @if (management().request()) {
+        <button type="button" [disabled]="management().pending()" (click)="retry()">
+          {{ ui.folders.retry }}
+        </button>
+      } @else {
+        <button
+          class="mc-action--primary"
+          type="submit"
+          [disabled]="
+            management().locked() ||
+            ((position() === 'before' || position() === 'after') && !siblingId())
+          "
+        >
+          {{ ui.folders.save }}
+        </button>
+      }
+    </div>
+  </form>
+</dialog>
