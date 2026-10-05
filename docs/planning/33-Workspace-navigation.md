@@ -52,3 +52,28 @@ A final session/organization integration correction has 52 scoped browser cases
 passing (48 unchanged cases plus the four new creation/revision scenarios). The
 normal 28-case visual run passes with snapshot updates disabled. C# whitespace
 verification passed for the affected organization/material files.
+
+## Local runtime delivery
+
+The combined A/H/I/J/B implementation was merged into local `trunk` at
+`e6a135c83fd10e95afe84cb8d6a4f30a166f2ac2`. The image
+`mastercompanion:ux-e6a135c` was built from that clean merged checkout, with the
+source revision recorded in its OCI label. The production frontend build and
+backend restore/publish succeeded. The application container was updated using
+the image; both application and PostgreSQL report healthy status.
+
+Eight read-only runtime cases passed:
+
+```powershell
+node --test tests/e2e/container.test.mjs tests/e2e/folder-management-container.test.mjs tests/e2e/session-container.test.mjs
+```
+
+The organization probe additionally verifies unique material-order IDs, valid
+folder references and the complete workspace material set at the same revision.
+That extended probe passed against the updated container. Live Full HD review
+covered light/dark reader layout without horizontal page overflow, the read-mode
+document role, one header utility, sidebar destinations, session empty state,
+Shift+F10 ordering access and filtering the ordering picker by document title.
+No campaign write was submitted during live review. Local review screenshots
+are stored under `.local/ux-cycle-review`; maintained visual baselines and the
+isolated functional tests remain the repeatable evidence.

@@ -27,7 +27,18 @@ test('Deployed folder snapshot exposes the workspace hierarchy revision and stab
     assert.ok(folder.title.trim().length > 0);
     assert.ok(folder.parentId === null || ids.has(folder.parentId));
   }
+  assert.ok(Array.isArray(snapshot.materialOrder));
+  const materialIds = snapshot.materialOrder.map(material => material.id);
+  assert.equal(new Set(materialIds).size, materialIds.length);
+  for (const material of snapshot.materialOrder) {
+    assert.equal(typeof material.id, 'string');
+    assert.ok(material.folderId === null || ids.has(material.folderId));
+  }
   if (snapshot.revision === workspace.foldersRevision) {
     assert.deepEqual(snapshot.folders, workspace.folders);
+    assert.deepEqual(
+      [...materialIds].sort(),
+      workspace.materials.map(material => material.id).sort(),
+    );
   }
 });

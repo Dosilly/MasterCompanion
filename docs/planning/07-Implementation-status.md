@@ -23,6 +23,17 @@ persistent search/document commands. See [the current delivery records](28-UX-UI
 Later recovery, gameplay/session restructuring, retrieval and map corrections
 remain planned before map authoring and multiple campaigns.
 
+The combined implementation was merged into local `trunk` at `e6a135c`. Image
+`mastercompanion:ux-e6a135c` was built from that merged checkout and installed in
+the local application container at `http://localhost:4200`. Both services are
+healthy. Eight read-only container checks passed, including the organization
+snapshot's material-order references. Live Full HD review confirmed the reader
+in both themes, one header utility, sidebar navigation, session empty state,
+keyboard access to note ordering and filtering the document picker. Functional
+write and recovery coverage uses isolated tests; live review submitted no
+campaign writes. [The combined delivery record](33-Workspace-navigation.md)
+records the scoped browser, visual, build and runtime evidence.
+
 ## Campaign sessions and pinned materials — 5 October 2026
 
 Named sessions progress from planned to active to completed, with one active
