@@ -25,10 +25,11 @@
     }
     <button
       (click)="theme.toggle()"
-      [attr.aria-pressed]="theme.dark()"
-      [attr.aria-label]="ui.workspace.darkMode"
+      class="mc-icon-button mc-action--quiet"
+      [attr.aria-label]="theme.dark() ? ui.workspace.lightMode : ui.workspace.darkMode"
+      [title]="theme.dark() ? ui.workspace.lightMode : ui.workspace.darkMode"
     >
-      {{ theme.dark() ? '☀ ' + ui.workspace.lightMode : '☾ ' + ui.workspace.darkMode }}
+      <mc-icon [name]="theme.dark() ? 'sun' : 'moon'" />
     </button>
   </div>
 </header>
@@ -65,12 +66,13 @@
       }
       <button class="new-note-button" (click)="openCreation($event)">{{ ui.notes.newNote }}</button>
       <button
-        class="refresh-materials-button"
+        class="refresh-materials-button mc-icon-button mc-action--quiet"
+        [attr.aria-label]="ui.workspace.refreshMaterials"
         (click)="load()"
         [disabled]="refreshing()"
         [title]="ui.materialCache.refreshHint"
       >
-        {{ ui.workspace.refreshMaterials }}
+        <mc-icon name="refresh" />
       </button>
       @if (creation()?.hasRecovery()) {
         <div class="note-recovery" role="status">

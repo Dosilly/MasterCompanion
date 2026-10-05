@@ -4,8 +4,14 @@
       <h1>{{ text.title }}</h1>
       <p>{{ text.hint }}</p>
     </div>
-    <button (click)="meetings().refresh()" [disabled]="meetings().pending()">
-      {{ text.refresh }}
+    <button
+      class="mc-icon-button mc-action--quiet"
+      [attr.aria-label]="text.refresh"
+      [title]="text.refresh"
+      (click)="meetings().refresh()"
+      [disabled]="meetings().pending()"
+    >
+      <mc-icon name="refresh" />
     </button>
   </header>
   @if (meetings().pending()) {

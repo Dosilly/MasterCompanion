@@ -1,3 +1,4 @@
+import { IconComponent } from '@mastercompanion/ui';
 import {
   AfterRenderRef,
   Component,
@@ -56,6 +57,7 @@ import { SessionView } from '../sessions/session-view';
 @Component({
   selector: 'mc-workspace',
   imports: [
+    IconComponent,
     WorkspaceTab,
     NgTemplateOutlet,
     MaterialView,

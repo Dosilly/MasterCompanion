@@ -55,7 +55,11 @@
           {{ ui.notes.retry }}
         </button>
       } @else {
-        <button type="submit" [disabled]="creation().locked() || !creation().title().trim()">
+        <button
+          class="mc-action--primary"
+          type="submit"
+          [disabled]="creation().locked() || !creation().title().trim()"
+        >
           {{ ui.notes.create }}
         </button>
       }

@@ -1,3 +1,4 @@
+import { IconComponent } from '@mastercompanion/ui';
 import {
   Component,
   computed,
@@ -25,7 +26,7 @@ import { uiMessages } from '../../i18n/messages';
 
 @Component({
   selector: 'mc-game-view',
-  imports: [NgComponentOutlet],
+  imports: [IconComponent, NgComponentOutlet],
   providers: [{ provide: CAMPAIGN_GAME, useExisting: forwardRef(() => GameView) }],
   templateUrl: './game-view.html',
   styleUrl: './game-view.scss',

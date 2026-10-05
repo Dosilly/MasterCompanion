@@ -1,10 +1,14 @@
 import { Component, signal } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { ContextMenuComponent, type ContextMenuPresentation } from '@mastercompanion/ui';
+import {
+  ContextMenuComponent,
+  IconComponent,
+  type ContextMenuPresentation,
+} from '@mastercompanion/ui';
 
 @Component({
   selector: 'mc-ui-catalog',
-  imports: [ContextMenuComponent],
+  imports: [ContextMenuComponent, IconComponent],
   templateUrl: './catalog.html',
 })
 class UiCatalog {

@@ -1,52 +1,13 @@
-:root {
-  --page: #edf1ef;
-  --paper: #fffdf8;
-  --ink: #233f46;
-  --muted: #61747a;
-  --line: #d1dcd9;
-  --accent: #255b69;
-  --soft: #e6eeeb;
-  color-scheme: light;
-  font:
-    16px/1.6 'Segoe UI',
-    Arial,
-    sans-serif;
-  background: var(--page);
-  color: var(--ink);
-}
-
-:root[data-theme='dark'] {
-  --page: #171e23;
-  --paper: #222c32;
-  --ink: #e4eceb;
-  --muted: #b0c0c3;
-  --line: #475960;
-  --accent: #9ad4cd;
-  --soft: #303e45;
-  color-scheme: dark;
-}
-
-* {
-  box-sizing: border-box;
-}
-
 main {
   max-width: 800px;
   margin: 40px auto;
   padding: 24px;
 }
 
-button {
-  color: inherit;
-  background: var(--paper);
-  font: inherit;
-  padding: 8px 14px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  cursor: pointer;
-
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+.control-examples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
 }

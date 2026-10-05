@@ -1,3 +1,4 @@
+import { IconComponent } from '@mastercompanion/ui';
 import { Component, computed, input, output, signal } from '@angular/core';
 import type { MaterialSummary, SessionRecord } from '@mastercompanion/contracts';
 import { uiMessages } from '../../i18n/messages';
@@ -5,6 +6,7 @@ import { MeetingRecords } from './meeting-records';
 import { SessionDrafts } from './session-drafts';
 
 @Component({
+  imports: [IconComponent],
   selector: 'mc-session-view',
   templateUrl: './session-view.html',
   styleUrl: './session-view.scss',

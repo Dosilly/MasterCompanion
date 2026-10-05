@@ -3,7 +3,7 @@
     <span class="breadcrumb">{{ session().material.group || ui.workspace.unfiledMaterials }}</span>
     <div class="actions">
       <span class="save-state" role="status" aria-live="polite">{{ statusLabel() }}</span>
-      <button (click)="toggleEdit()">
+      <button class="mc-action--primary" (click)="toggleEdit()">
         {{ session().editing() ? ui.material.finishEditing : ui.material.edit }}
       </button>
     </div>
@@ -121,7 +121,11 @@
   }
   <div class="dialog-actions">
     <button (click)="closeInsertion()">{{ ui.material.cancelInsertion }}</button>
-    <button (click)="confirmInsertion()" [disabled]="insertionMode() === 'link' && !linkTarget()">
+    <button
+      class="mc-action--primary"
+      (click)="confirmInsertion()"
+      [disabled]="insertionMode() === 'link' && !linkTarget()"
+    >
       {{ ui.material.confirmInsertion }}
     </button>
   </div>

@@ -12,8 +12,15 @@
       >
         <span aria-hidden="true">↶</span>
       </button>
-      <button type="button" [disabled]="pending()" (click)="session().load()">
-        {{ text.refresh }}
+      <button
+        class="mc-icon-button mc-action--quiet"
+        [attr.aria-label]="text.refresh"
+        [title]="text.refresh"
+        type="button"
+        [disabled]="pending()"
+        (click)="session().load()"
+      >
+        <mc-icon name="refresh" />
       </button>
     </div>
   </div>
