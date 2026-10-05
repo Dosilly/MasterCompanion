@@ -1,7 +1,7 @@
 <section class="session-page" [attr.aria-label]="text.title">
   <header class="page-heading">
     <div>
-      <h1>{{ text.title }}</h1>
+      <h1 #pageTitle tabindex="-1">{{ text.title }}</h1>
       <p>{{ text.hint }}</p>
     </div>
     <button
@@ -52,6 +52,9 @@
     <p role="alert">{{ text.closeBlocked }}</p>
   }
   <div class="session-layout">
+    @if (selectedRecordMissing()) {
+      <p class="feedback missing-record" role="status">{{ text.deletedRecordRecovery }}</p>
+    }
     <nav class="session-list" [attr.aria-label]="text.listLabel">
       @for (record of meetings().snapshot().sessions; track record.id) {
         <button
@@ -73,6 +76,14 @@
         <div class="record-heading">
           <h2>{{ record.title }}</h2>
           <span class="status">{{ text.status[record.status] }}</span>
+          <button
+            class="record-delete"
+            (click)="requestDeletion($event)"
+            [disabled]="meetings().locked()"
+            [attr.aria-label]="text.deleteNamed.replace('{title}', record.title)"
+          >
+            {{ text.delete }}
+          </button>
         </div>
         <div class="actions">
           @if (record.status === 'planned') {
@@ -201,4 +212,37 @@
       </article>
     }
   </div>
+  @for (record of missingDraftRecords(); track record.id) {
+    <section class="feedback" [attr.aria-label]="text.missingDraftTitle">
+      <h2>{{ text.missingDraftTitle }}</h2>
+      <p role="alert">{{ text.missingDraftHint }}</p>
+      <p>{{ drafts().value(record).title }}</p>
+      <label [for]="'missing-summary-' + record.id">{{ text.summary }}</label>
+      <textarea
+        [id]="'missing-summary-' + record.id"
+        readonly
+        [value]="drafts().value(record).summary"
+      ></textarea>
+      <label [for]="'missing-follow-up-' + record.id">{{ text.followUp }}</label>
+      <textarea
+        [id]="'missing-follow-up-' + record.id"
+        readonly
+        [value]="drafts().value(record).followUp"
+      ></textarea>
+      <button (click)="drafts().discard(record)" [disabled]="meetings().locked()">
+        {{ text.discardMissingDraft }}
+      </button>
+    </section>
+  }
+  <mc-session-deletion-dialog
+    [record]="deletionTarget()"
+    [dirty]="deletionDirty()"
+    [pending]="meetings().pending()"
+    [locked]="meetings().locked() || deletionConflict()"
+    [error]="deletionError()"
+    [retryAvailable]="meetings().request()?.operation?.kind === 'delete'"
+    (confirmed)="confirmDeletion()"
+    (cancelled)="cancelDeletion()"
+    (retried)="retry()"
+  />
 </section>

@@ -63,6 +63,7 @@ export function isSessionOperation(value: unknown): value is SessionOperation {
       );
     case 'start':
     case 'complete':
+    case 'delete':
       return keys(value, ['kind', 'sessionId']);
     case 'pin':
     case 'unpin':
@@ -135,6 +136,9 @@ export function confirmsSessionOperation(
   operation: SessionOperation,
 ): boolean {
   const session = snapshot.sessions.find((item) => item.id === operation.sessionId);
+  if (operation.kind === 'delete') {
+    return session === undefined;
+  }
   if (!session) {
     return false;
   }

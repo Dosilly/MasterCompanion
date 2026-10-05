@@ -9,4 +9,5 @@ namespace MasterCompanion.Engine.Features.Sessions;
 [JsonDerivedType(typeof(CompleteSessionOperation), "complete")]
 [JsonDerivedType(typeof(PinSessionMaterialOperation), "pin")]
 [JsonDerivedType(typeof(UnpinSessionMaterialOperation), "unpin")]
+[JsonDerivedType(typeof(DeleteSessionOperation), "delete")]
 public abstract record SessionOperation(Guid SessionId);

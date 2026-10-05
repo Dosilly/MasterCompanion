@@ -1,6 +1,7 @@
 using System.Data;
 using System.Text.Json;
 using MasterCompanion.Engine.Persistence;
+using MasterCompanion.Engine.Features.Folders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -77,6 +78,10 @@ public static class SessionEndpoints
         {
             return Problem(409, "session_revision_limit");
         }
+        if (request.Operation is CreateSessionOperation && campaign.FoldersRevision >= FolderRequestDecoder.MaxRevision)
+        {
+            return Problem(409, "session_revision_limit");
+        }
         if (request.Operation is PinSessionMaterialOperation pin &&
             !await db.Materials.AsNoTracking().AnyAsync(item => item.CampaignId == campaignId && item.Id == pin.MaterialId, token))
         {
@@ -84,6 +89,9 @@ public static class SessionEndpoints
         }
         var sessions = await db.Sessions.Where(item => item.CampaignId == campaignId)
             .OrderBy(item => item.Sequence).Take(1_001).ToListAsync(token);
+        var deleted = request.Operation is DeleteSessionOperation
+            ? sessions.SingleOrDefault(item => item.Id == request.Operation.SessionId)
+            : null;
         var error = SessionChanges.Apply(sessions, campaignId, campaign.SessionsRevision + 1, request.Operation);
         if (error is not null)
         {
@@ -91,6 +99,7 @@ public static class SessionEndpoints
         }
         if (request.Operation is CreateSessionOperation create)
         {
+            campaign.FoldersRevision++;
             var created = sessions.Single(item => item.Id == create.SessionId);
             db.Sessions.Add(created);
             var maximumOrder = await db.Materials.Where(item => item.CampaignId == campaignId)
@@ -98,12 +107,20 @@ public static class SessionEndpoints
             db.Materials.AddRange(NewDocument(campaignId, created.PreparationMaterialId, create.PreparationTitle, checked(maximumOrder + 1)),
                 NewDocument(campaignId, created.NotesMaterialId, create.NotesTitle, checked(maximumOrder + 2)));
         }
+        if (deleted is not null)
+        {
+            // Materials are independently owned documents; deleting their meeting keeps them intact.
+            db.Sessions.Remove(deleted);
+        }
         campaign.SessionsRevision++;
         var snapshot = SessionSnapshot.From(campaign.SessionsRevision, sessions);
         db.SessionOperationReceipts.Add(new SessionOperationReceipt
         {
-            CampaignId = campaignId, RequestId = request.RequestId, Revision = snapshot.Revision,
-            RequestJson = requestJson, ResponseJson = JsonSerializer.Serialize(snapshot, SessionRequestDecoder.JsonOptions),
+            CampaignId = campaignId,
+            RequestId = request.RequestId,
+            Revision = snapshot.Revision,
+            RequestJson = requestJson,
+            ResponseJson = JsonSerializer.Serialize(snapshot, SessionRequestDecoder.JsonOptions),
             CreatedAtUtc = DateTime.UtcNow
         });
         await db.SaveChangesAsync(token);
@@ -113,9 +130,14 @@ public static class SessionEndpoints
 
     private static Material NewDocument(Guid campaignId, string id, string title, int order) => new()
     {
-        CampaignId = campaignId, Id = id, Title = title.Trim(), Group = string.Empty,
+        CampaignId = campaignId,
+        Id = id,
+        Title = title.Trim(),
+        Group = string.Empty,
         DocumentJson = "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\"}]}",
-        DocumentSchemaVersion = 1, Revision = 1, SortOrder = order
+        DocumentSchemaVersion = 1,
+        Revision = 1,
+        SortOrder = order
     };
 
     private static IResult Problem(int status, string code) => Results.Problem(statusCode: status,

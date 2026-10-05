@@ -60,6 +60,38 @@ const create = {
 } as const;
 
 describe('Meeting records and operation recovery', () => {
+  test('Confirmed deletion clears active context and its exact recovery request', async (t) => {
+    const { records, http, stored } = fixture(t);
+    records.accept({ revision: 1, sessions: [{ ...meeting(), status: 'active' }] });
+
+    const result = records.execute({ kind: 'delete', sessionId: id });
+    http.requests[0].response.next({ revision: 2, sessions: [] });
+
+    assert.equal(await result, true);
+    assert.equal(records.activeSession(), undefined);
+    assert.deepEqual(records.snapshot(), { revision: 2, sessions: [] });
+    assert.equal(stored.size, 0);
+  });
+
+  test('Deletion response retaining its target stays uncertain and retries the same request', async (t) => {
+    const { records, http } = fixture(t);
+    records.accept({ revision: 1, sessions: [meeting()] });
+    const result = records.execute({ kind: 'delete', sessionId: id });
+    const original = http.requests[0].body;
+    http.requests[0].response.next({ revision: 2, sessions: [meeting()] });
+    assert.equal(await result, false);
+    assert.equal(records.error(), 'uncertain');
+    assert.deepEqual(records.snapshot().sessions, [meeting()]);
+
+    const retry = records.retry();
+    assert.deepEqual(http.requests[1].body, original);
+    http.requests[1].response.next({ revision: 2, sessions: [] });
+    await new Promise<void>((resolve) => setImmediate(resolve));
+    http.requests[2].response.next({ revision: 2, sessions: [] });
+
+    assert.equal(await retry, true);
+    assert.equal(records.request(), null);
+  });
   test('Confirmed creation advances records and clears durable recovery', async (t) => {
     const { records, http, stored } = fixture(t);
 

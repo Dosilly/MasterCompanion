@@ -70,7 +70,7 @@ internal static class SessionRequestDecoder
             UpdateSessionOperation update => ValidTitle(update.Title) && ValidText(update.Summary) && ValidText(update.FollowUp),
             PinSessionMaterialOperation pin => ValidMaterialId(pin.MaterialId),
             UnpinSessionMaterialOperation unpin => ValidMaterialId(unpin.MaterialId),
-            StartSessionOperation or CompleteSessionOperation => true,
+            StartSessionOperation or CompleteSessionOperation or DeleteSessionOperation => true,
             _ => false
         };
         return valid ? new Accepted(request) : new Rejected(400, "invalid_session_operation");

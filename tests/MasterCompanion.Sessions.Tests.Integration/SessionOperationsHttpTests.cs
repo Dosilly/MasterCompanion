@@ -75,7 +75,7 @@ public sealed class SessionOperationsHttpTests(PostgreSqlFixture database) : IAs
         Assert.Equal(7, (await db.GameStates.SingleAsync(item => item.CampaignId == campaignId)).Revision);
         Assert.Equal("{\"timeMinutes\":180}", (await db.GameStates.SingleAsync(item => item.CampaignId == campaignId)).SnapshotJson.Replace(" ", ""));
         Assert.Empty(await db.GameOperations.Where(item => item.CampaignId == campaignId).ToListAsync());
-        Assert.Equal(0, (await db.Campaigns.SingleAsync(item => item.Id == campaignId)).FoldersRevision);
+        Assert.Equal(1, (await db.Campaigns.SingleAsync(item => item.Id == campaignId)).FoldersRevision);
     }
 
     [Fact]
@@ -285,6 +285,7 @@ public sealed class SessionOperationsHttpTests(PostgreSqlFixture database) : IAs
         Assert.Empty(await current.Sessions.Where(item => item.CampaignId == campaignId).ToListAsync());
         Assert.Empty(await current.SessionOperationReceipts.Where(item => item.CampaignId == campaignId).ToListAsync());
         Assert.Equal(1, await current.Materials.CountAsync(item => item.CampaignId == campaignId));
+        Assert.Equal(0, (await current.Campaigns.SingleAsync(item => item.Id == campaignId)).FoldersRevision);
     }
 
     [Fact]
@@ -363,6 +364,186 @@ public sealed class SessionOperationsHttpTests(PostgreSqlFixture database) : IAs
         await AssertProblemAsync(response, HttpStatusCode.BadRequest, "invalid_session_operation");
         Assert.Equal(0, (await ReadAsync()).Revision);
         Assert.Empty((await ReadAsync()).Sessions);
+    }
+
+    [Theory]
+    [InlineData("planned")]
+    [InlineData("active")]
+    [InlineData("completed")]
+    public async Task DeleteSession_AnyLifecycle_RemovesOnlyRecordAndRetainsEditedDocumentsAndGameplay(string status)
+    {
+        // Arrange
+        var create = Create();
+        var created = Assert.Single((await ChangeAsync(create)).Sessions);
+        await ChangeAsync(new PinSessionMaterialOperation(create.SessionId, MaterialId));
+        await ChangeAsync(new UpdateSessionOperation(create.SessionId, "Saved meeting", "Summary", "Follow-up"));
+        if (status is "active" or "completed")
+        {
+            await ChangeAsync(new StartSessionOperation(create.SessionId));
+        }
+        if (status == "completed")
+        {
+            await ChangeAsync(new CompleteSessionOperation(create.SessionId));
+        }
+        using var saved = await Client.PutAsJsonAsync($"/api/materials/{created.NotesMaterialId}", new
+        {
+            expectedRevision = 1,
+            document = JsonSerializer.Deserialize<JsonElement>("{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Authored play notes\"}]}]}")
+        });
+        Assert.Equal(HttpStatusCode.OK, saved.StatusCode);
+        var before = await ReadAsync();
+        var materialIds = new[] { created.PreparationMaterialId, created.NotesMaterialId, MaterialId };
+        var originals = new List<MaterialResponse>();
+        foreach (var id in materialIds)
+        {
+            originals.Add(await Client.GetFromJsonAsync<MaterialResponse>($"/api/materials/{id}")
+                ?? throw new InvalidOperationException("Missing material."));
+        }
+
+        // Act
+        var deleted = await ChangeAsync(new DeleteSessionOperation(create.SessionId));
+
+        // Assert
+        Assert.Empty(deleted.Sessions);
+        Assert.Equal(before.Revision + 1, deleted.Revision);
+        Assert.Empty((await ReadAsync()).Sessions);
+        foreach (var original in originals)
+        {
+            var current = await Client.GetFromJsonAsync<MaterialResponse>($"/api/materials/{original.Id}");
+            Assert.NotNull(current);
+            Assert.Equal(JsonSerializer.Serialize(original), JsonSerializer.Serialize(current));
+        }
+        await using var scope = App.Services.CreateAsyncScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        Assert.Equal(3, await db.Materials.CountAsync(item => item.CampaignId == campaignId));
+        Assert.Equal(1, (await db.Campaigns.SingleAsync(item => item.Id == campaignId)).FoldersRevision);
+        var game = await db.GameStates.SingleAsync(item => item.CampaignId == campaignId);
+        Assert.Equal(7, game.Revision);
+        Assert.Equal("{\"timeMinutes\":180}", game.SnapshotJson.Replace(" ", ""));
+        Assert.Empty(await db.GameOperations.Where(item => item.CampaignId == campaignId).ToListAsync());
+    }
+
+    [Fact]
+    public async Task DeleteActiveSession_AllowsAnotherSessionToStart()
+    {
+        // Arrange
+        var first = Create();
+        await ChangeAsync(first);
+        await ChangeAsync(new StartSessionOperation(first.SessionId));
+        var second = Create("Next meeting");
+        await ChangeAsync(second);
+
+        // Act
+        await ChangeAsync(new DeleteSessionOperation(first.SessionId));
+        var started = await ChangeAsync(new StartSessionOperation(second.SessionId));
+
+        // Assert
+        Assert.Equal(second.SessionId, Assert.Single(started.Sessions).Id);
+        Assert.Equal("active", Assert.Single(started.Sessions).Status);
+    }
+
+    [Fact]
+    public async Task Delete_ExactConcurrentRetryAndLaterReplay_ReturnOneReceiptWithoutRecreatingRecords()
+    {
+        // Arrange
+        var create = Create();
+        await ChangeAsync(create);
+        var request = new SessionOperationRequest(Guid.NewGuid(), 1, new DeleteSessionOperation(create.SessionId));
+
+        // Act
+        var responses = await Task.WhenAll(SendAsync(request), SendAsync(request));
+        try
+        {
+            // Assert
+            Assert.All(responses, response => Assert.Equal(HttpStatusCode.OK, response.StatusCode));
+            var original = await responses[0].Content.ReadAsStringAsync();
+            Assert.Equal(original, await responses[1].Content.ReadAsStringAsync());
+            await ChangeAsync(Create("Next meeting"));
+            using var replay = await SendAsync(request);
+            Assert.Equal(original, await replay.Content.ReadAsStringAsync());
+            using var divergent = await SendAsync(request with { Operation = new StartSessionOperation(create.SessionId) });
+            await AssertProblemAsync(divergent, HttpStatusCode.Conflict, "session_request_conflict");
+            Assert.Equal("Next meeting", Assert.Single((await ReadAsync()).Sessions).Title);
+            await using var scope = App.Services.CreateAsyncScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            Assert.Equal(1, await db.SessionOperationReceipts.CountAsync(item => item.RequestId == request.RequestId));
+        }
+        finally
+        {
+            foreach (var response in responses)
+            {
+                response.Dispose();
+            }
+        }
+    }
+
+    [Fact]
+    public async Task Delete_StaleRevisionAndForeignCampaign_LeaveRecordIntact()
+    {
+        // Arrange
+        var create = Create();
+        await ChangeAsync(create);
+        var operation = new DeleteSessionOperation(create.SessionId);
+
+        // Act
+        using var stale = await SendAsync(new(Guid.NewGuid(), 0, operation));
+        using var foreign = await Client.PostAsJsonAsync($"/api/campaigns/{otherCampaignId:D}/sessions",
+            new SessionOperationRequest(Guid.NewGuid(), 0, operation));
+
+        // Assert
+        await AssertProblemAsync(stale, HttpStatusCode.Conflict, "session_revision_conflict");
+        await AssertProblemAsync(foreign, HttpStatusCode.NotFound, "session_not_found");
+        Assert.Equal(1, (await ReadAsync()).Revision);
+        Assert.Equal(create.SessionId, Assert.Single((await ReadAsync()).Sessions).Id);
+    }
+
+    [Fact]
+    public async Task Delete_ReceiptWriteFailure_RollsBackRecordAndRevision()
+    {
+        // Arrange
+        var create = Create();
+        await ChangeAsync(create);
+        await using (var scope = App.Services.CreateAsyncScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            await db.Database.ExecuteSqlRawAsync("ALTER TABLE engine.\"SessionOperationReceipts\" ADD CONSTRAINT reject_new_receipt CHECK (\"Revision\" < 2)");
+        }
+
+        // Act
+        using var response = await SendAsync(new(Guid.NewGuid(), 1, new DeleteSessionOperation(create.SessionId)));
+
+        // Assert
+        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        Assert.Equal(1, (await ReadAsync()).Revision);
+        Assert.Equal(create.SessionId, Assert.Single((await ReadAsync()).Sessions).Id);
+        await using var check = App.Services.CreateAsyncScope();
+        var current = check.ServiceProvider.GetRequiredService<AppDbContext>();
+        Assert.Equal(1, await current.SessionOperationReceipts.CountAsync(item => item.CampaignId == campaignId));
+    }
+
+    [Fact]
+    public async Task Create_OrganizationRevisionLimit_RejectsBeforeAddingDocumentsOrReceipts()
+    {
+        // Arrange
+        await using (var scope = App.Services.CreateAsyncScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var campaign = await db.Campaigns.SingleAsync(item => item.Id == campaignId);
+            campaign.FoldersRevision = 9_007_199_254_740_991;
+            await db.SaveChangesAsync();
+        }
+
+        // Act
+        using var response = await SendAsync(new(Guid.NewGuid(), 0, Create()));
+
+        // Assert
+        await AssertProblemAsync(response, HttpStatusCode.Conflict, "session_revision_limit");
+        Assert.Equal(0, (await ReadAsync()).Revision);
+        Assert.Empty((await ReadAsync()).Sessions);
+        await using var check = App.Services.CreateAsyncScope();
+        var current = check.ServiceProvider.GetRequiredService<AppDbContext>();
+        Assert.Equal(1, await current.Materials.CountAsync(item => item.CampaignId == campaignId));
+        Assert.Empty(await current.SessionOperationReceipts.Where(item => item.CampaignId == campaignId).ToListAsync());
     }
 
     private static CreateSessionOperation Create(string title = "First meeting") =>
