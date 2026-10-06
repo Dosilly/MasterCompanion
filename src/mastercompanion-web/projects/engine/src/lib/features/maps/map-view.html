@@ -1,19 +1,49 @@
 <div class="map-heading">
   <h1>{{ map().title }}</h1>
   <div class="actions">
-    <button (click)="zoom(1 / 1.25)" [attr.aria-label]="ui.map.zoomOut">−</button>
+    <button (click)="zoom(1 / 1.25)" [attr.aria-label]="ui.map.zoomOut" [disabled]="scale() <= 0.5">
+      −
+    </button>
     <span>{{ (scale() * 100).toFixed(0) }}%</span>
-    <button (click)="zoom(1.25)" [attr.aria-label]="ui.map.zoomIn">+</button>
+    <button (click)="zoom(1.25)" [attr.aria-label]="ui.map.zoomIn" [disabled]="scale() >= 4">
+      +
+    </button>
     <button (click)="reset()">{{ ui.map.fit }}</button>
   </div>
+</div>
+<div class="map-locations">
+  <mc-searchable-choice
+    [options]="locationOptions()"
+    [disabled]="!map().markers.length"
+    [value]="locationValue()"
+    [label]="ui.map.locations"
+    [searchLabel]="ui.choices.search"
+    [noResultsLabel]="ui.choices.noResults"
+    [loadingLabel]="ui.choices.loading"
+    [controlId]="'map-locations-' + map().id"
+    (selectionChanged)="selectLocation($event)"
+  />
+  @if (!map().markers.length) {
+    <p>{{ ui.map.noLocations }}</p>
+  }
+  @if (selectedMarker(); as marker) {
+    <button class="open-location mc-action--primary" (click)="openMarker(marker)">
+      {{ ui.map.openLocation.replace('{title}', marker.title) }}
+    </button>
+  }
 </div>
 <div
   #viewport
   class="map-viewport"
+  tabindex="0"
+  role="region"
+  [attr.aria-label]="ui.map.viewport + ': ' + map().title"
+  (keydown)="key($event)"
   (pointerdown)="startPan($event)"
   (pointermove)="pan($event)"
   (pointerup)="endPan($event)"
   (pointercancel)="endPan($event)"
+  (lostpointercapture)="endPan($event)"
 >
   <div
     class="map-image"
@@ -27,9 +57,11 @@
         class="map-marker"
         [style.left.%]="marker.x"
         [style.top.%]="marker.y"
+        [style.transform]="'translate(-50%, -50%) scale(' + 1 / scale() + ')'"
+        [class.selected]="selectedMarker()?.code === marker.code"
         [title]="marker.title"
         [attr.aria-label]="marker.code + ': ' + marker.title"
-        (click)="openMaterial.emit(marker.materialId)"
+        (click)="openMarker(marker)"
       >
         {{ marker.code }}
       </button>

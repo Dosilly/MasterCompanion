@@ -1,6 +1,6 @@
 # Near-term improvements
 
-3 October 2026 · recorded roadmap; delivery status updated 5 October 2026
+3 October 2026 · recorded roadmap; delivery status updated 6 October 2026
 
 The user requested the improvements below, then authorized search, URL navigation
 and campaign material memory. Search and routing have been delivered; material
@@ -19,7 +19,7 @@ The subsequent user-requested [UX/UI audit](27-UX-UI-audit.md) identified correc
 to navigation, reading/editing, recovery, gameplay, sessions and visual hierarchy.
 [The corrective delivery plan](28-UX-UI-improvement-plan.md) now recommends those
 slices before map authoring, followed by multiple campaigns. The first corrective
-cycle A/H/I/J/B is implemented; C–G remain planned. Dialogs, feedback and theme/control foundations are coordinated with
+cycle A/H/I/J/B and remaining C–G corrections are implemented locally. Dialogs, feedback and theme/control foundations are coordinated with
 [the reusable UI plan](17-Reusable-frontend-ui.md), not a separate competing rewrite.
 
 The user's audit follow-up prioritizes searchable material/folder choices, session

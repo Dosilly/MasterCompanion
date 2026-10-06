@@ -1,11 +1,14 @@
 # UX/UI improvement implementation plan
 
-6 October 2026 · first corrective cycle and C implemented; D–G authorized
+6 October 2026 · corrective cycle A–J implemented locally
 
 This plan follows the [independent UX/UI audit](27-UX-UI-audit.md). Its purpose is
 to make daily preparation and session play easier before adding more screens.
-The first A/H/I/J/B cycle and [C recovery](35-Draft-recovery.md) are implemented;
-D–G remain planned and were authorized on 6 October. Delivery records are
+The A/H/I/J/B cycle and remaining C–G corrections authorized on 6 October are implemented.
+Delivery records include [C recovery](35-Draft-recovery.md),
+[D gameplay](36-Gameplay-hierarchy.md), [E sessions](38-Session-workflow.md),
+[F navigation](39-Navigation-at-scale.md), [F retrieval](40-Document-retrieval.md)
+and [G maps](41-Map-interaction.md). Earlier delivery records are
 [controls](29-Control-foundation.md), [choices](31-Searchable-choices.md),
 [deletion](30-Session-deletion.md), [ordering](32-Material-ordering.md), and
 [navigation/reader commands](33-Workspace-navigation.md).
@@ -435,7 +438,6 @@ solely because a visual baseline passes.
 
 ## Next implementation boundary
 
-A/H/I/J/B and C are implemented. Continue with D's gameplay hierarchy, E's session
-workflow, F's tree/tab and retrieval features, and G's map interaction. Map authoring
-and multiple campaigns remain subsequent product scope. Keep feature delivery
-records and actual verification separate from planned acceptance criteria.
+The corrective cycle A–J is implemented locally with scoped delivery records.
+Map authoring and multiple campaigns remain subsequent product scope. Keep actual
+verification separate from the original planned acceptance criteria.

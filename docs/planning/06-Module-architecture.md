@@ -10,6 +10,13 @@ report elements skipped because of campaign edits. These are future requirements
 with no implemented storage or contract changes. See
 [the recorded ideas and open design decisions](37-Module-editor-and-campaign-updates.md).
 
+## Map viewer presentation, 6 October 2026
+
+The engine viewer owns zoom/pan, named location choice and marker hit-area scaling.
+Modules provide neutral map metadata and assets. These viewer operations never
+write map records; future authoring requires a separate explicit save contract.
+The existing neutral SearchableChoice receives presentation options and emits IDs.
+
 ## Reader retrieval ownership, 6 October 2026
 
 DocumentNavigation indexes the supported editor model and owns temporary

@@ -1,5 +1,15 @@
 # Implementation status
 
+## Map viewer corrections — 6 October 2026
+
+[Slice G](41-Map-interaction.md) keeps marker labels/targets stable through zoom,
+adds searchable named locations and keyboard panning/zoom/Fit, and preserves
+mounted map state. Twenty focused map/routing/search cases pass across both
+themes/sizes, with sixteen map/control cases passing again after final presentation
+changes. Real Ythryn map geometry/art was reviewed at Full HD in both themes.
+Frontend quality and production compilation pass. All remaining C–G source changes
+are verified; the final local container update follows this merge.
+
 ## Document retrieval — 6 October 2026
 
 [The retrieval part of F](40-Document-retrieval.md) adds search paths/counts, literal

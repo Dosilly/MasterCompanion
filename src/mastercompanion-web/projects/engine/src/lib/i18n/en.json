@@ -303,7 +303,12 @@
     "zoomOut": "Zoom out",
     "zoomIn": "Zoom in",
     "fit": "Fit",
-    "hint": "Select a marker to open its description. Drag the map to move it."
+    "hint": "Select a marker to open its description, or choose a named location. Drag to move the map. Focus the map and use arrow keys to pan, +/− to zoom and Home to fit.",
+    "chooseLocation": "Choose a location",
+    "locations": "Map locations",
+    "openLocation": "Open: {title}",
+    "viewport": "Map viewport",
+    "noLocations": "This map has no linked locations."
   },
   "folders": {
     "rename": "Rename folder",

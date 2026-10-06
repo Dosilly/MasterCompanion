@@ -303,7 +303,12 @@
     "zoomOut": "Oddal mapę",
     "zoomIn": "Przybliż mapę",
     "fit": "Dopasuj",
-    "hint": "Wybierz znacznik, aby otworzyć opis. Przeciągnij mapę, aby ją przesunąć."
+    "hint": "Kliknij znacznik, aby otworzyć opis, lub wybierz lokalizację po nazwie. Przeciągnij mapę, aby ją przesunąć. Po ustawieniu fokusu na mapie użyj strzałek do przesuwania, +/− do powiększania i Home do dopasowania.",
+    "chooseLocation": "Wybierz lokalizację",
+    "locations": "Lokalizacje na mapie",
+    "openLocation": "Otwórz: {title}",
+    "viewport": "Obszar mapy",
+    "noLocations": "Ta mapa nie ma powiązanych lokalizacji."
   },
   "folders": {
     "rename": "Zmień nazwę folderu",
