@@ -1,5 +1,27 @@
 # Implementation status
 
+## Remaining UX corrections delivered — 6 October 2026
+
+The authorized C–G cycle is complete: explicit draft recovery, gameplay hierarchy,
+session workflow/context, navigation at scale, document retrieval and map viewer
+interaction. Each feature was committed and merged into local trunk separately;
+delivery records [C](35-Draft-recovery.md), [D](36-Gameplay-hierarchy.md),
+[E](38-Session-workflow.md), [F navigation](39-Navigation-at-scale.md),
+[F retrieval](40-Document-retrieval.md) and [G](41-Map-interaction.md) retain scoped
+test evidence and deliberate exclusions.
+
+Image `mastercompanion:ux-ui-3e2d268` was built from merged trunk at `3e2d268`
+and installed in the local application container. Application and PostgreSQL are
+healthy, with the app published only on IPv4 loopback port 4200. Four read-only
+container probes pass. Live Full HD review in light/dark verifies document
+outline/find, collapsed navigation context, named map selection and tab overview
+focus. No campaign write or browser page error occurred during live verification.
+The real map and both live themes were visually reviewed.
+
+Map authoring and multiple campaigns remain subsequent product work. No external
+publication or remote push was performed. Unrelated module-editor planning edits
+in the original checkout were preserved; F/G used an isolated feature worktree.
+
 ## Map viewer corrections — 6 October 2026
 
 [Slice G](41-Map-interaction.md) keeps marker labels/targets stable through zoom,
