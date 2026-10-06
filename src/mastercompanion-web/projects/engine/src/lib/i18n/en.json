@@ -116,7 +116,13 @@
     "emptyMaterials": "Select a material from the navigation.",
     "errors": {
       "campaignLoadFailed": "Could not load the campaign. Check that the backend and database are running."
-    }
+    },
+    "showNavigation": "Show navigation",
+    "hideNavigation": "Hide navigation",
+    "resizeNavigation": "Navigation width",
+    "openTabs": "Open tabs",
+    "unsavedTab": "Unsaved changes",
+    "closingTab": "Saving before close…"
   },
   "materialCache": {
     "loading": "Loading campaign materials…",

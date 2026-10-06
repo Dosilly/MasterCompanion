@@ -1,5 +1,14 @@
 # Implementation status
 
+## Navigation at scale — 6 October 2026
+
+[The tree/tab part of F](39-Navigation-at-scale.md) adds bounded pointer/keyboard
+sidebar resizing, collapse with retained active path and an on-demand overview of
+all tabs, including dirty and saving-before-close states. Twenty focused browser
+cases pass; overview close/focus recovery is also checked after the final change.
+Both Full HD collapsed themes were reviewed. C–E are now running in the healthy
+local container; four read-only container probes pass. Retrieval and maps follow.
+
 ## Session workflow — 6 October 2026
 
 [Slice E](38-Session-workflow.md) adds record-specific routes, independently loaded

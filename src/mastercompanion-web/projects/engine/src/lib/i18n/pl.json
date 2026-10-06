@@ -116,7 +116,13 @@
     "emptyMaterials": "Wybierz materiał ze spisu.",
     "errors": {
       "campaignLoadFailed": "Nie udało się wczytać kampanii. Sprawdź, czy backend i baza działają."
-    }
+    },
+    "showNavigation": "Pokaż nawigację",
+    "hideNavigation": "Ukryj nawigację",
+    "resizeNavigation": "Szerokość nawigacji",
+    "openTabs": "Otwarte karty",
+    "unsavedTab": "Niezapisane zmiany",
+    "closingTab": "Zapisywanie przed zamknięciem…"
   },
   "materialCache": {
     "loading": "Wczytywanie materiałów kampanii…",

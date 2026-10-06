@@ -1,5 +1,13 @@
 <header class="app-header">
-  <div>
+  <div class="brand-context">
+    <button
+      class="navigation-toggle"
+      (click)="navigationLayout.toggle()"
+      [attr.aria-expanded]="!navigationLayout.collapsed()"
+      aria-controls="material-sidebar"
+    >
+      {{ navigationLayout.collapsed() ? ui.workspace.showNavigation : ui.workspace.hideNavigation }}
+    </button>
     <strong>MasterCompanion</strong><span class="campaign-name"> / {{ workspace()?.title }}</span>
   </div>
   <div class="header-actions">
@@ -41,8 +49,12 @@
   }
 </ng-template>
 @if (workspace(); as data) {
-  <div class="workspace-shell">
-    <aside class="material-sidebar">
+  <div
+    class="workspace-shell"
+    [class.navigation-collapsed]="navigationLayout.collapsed()"
+    [style.--navigation-width]="navigationLayout.width() + 'px'"
+  >
+    <aside id="material-sidebar" class="material-sidebar" [hidden]="navigationLayout.collapsed()">
       <nav class="primary-navigation" [attr.aria-label]="ui.workspace.primaryNavigationLabel">
         @if (meetings()) {
           <button
@@ -237,6 +249,23 @@
         }
       </nav>
     </aside>
+    <div
+      class="navigation-resizer"
+      role="separator"
+      tabindex="0"
+      aria-controls="material-sidebar"
+      aria-orientation="vertical"
+      [hidden]="navigationLayout.collapsed()"
+      [attr.aria-label]="ui.workspace.resizeNavigation"
+      [attr.aria-valuenow]="navigationLayout.width()"
+      [attr.aria-valuemin]="navigationLayout.minimumWidth"
+      [attr.aria-valuemax]="navigationLayout.maximumWidth"
+      (keydown)="navigationLayout.key($event)"
+      (pointerdown)="navigationLayout.start($event)"
+      (pointermove)="navigationLayout.move($event)"
+      (pointerup)="navigationLayout.end($event)"
+      (pointercancel)="navigationLayout.end($event)"
+    ></div>
     @if (folderDrag.dragging() || materialDrag.dragging()) {
       <div
         class="folder-root-drop"
@@ -265,79 +294,92 @@
         </div>
       }
 
-      <div
-        #tabStrip
-        class="material-tabs"
-        role="tablist"
-        [attr.aria-label]="ui.workspace.tabsLabel"
-        (keydown)="tabKey($event)"
-      >
-        @if (meetingsOpen()) {
-          <mc-workspace-tab
-            key="@sessions"
-            [label]="ui.meetings.title"
-            [closeLabel]="ui.workspace.closeTab"
-            [selected]="active() === '@sessions'"
-            [dirty]="meetingDrafts.dirty()"
-            (activate)="activate('@sessions')"
-            (close)="close('@sessions')"
-            (contextmenu)="menus.open($event, 'tab', '@sessions')"
-            (keydown)="menus.open($event, 'tab', '@sessions')"
-          />
+      @if (navigationLayout.collapsed()) {
+        @if (activeTab(); as tab) {
+          <p class="collapsed-context">{{ tab.context }} · {{ tab.title }}</p>
         }
-        @if (partyOpen()) {
-          <mc-workspace-tab
-            key="@party"
-            [label]="ui.game.partyTitle"
-            [closeLabel]="ui.workspace.closeTab"
-            [selected]="active() === '@party'"
-            [dirty]="partyView()?.dirty() ?? false"
-            (activate)="activate('@party')"
-            (close)="close('@party')"
-            (contextmenu)="menus.open($event, 'tab', '@party')"
-            (keydown)="menus.open($event, 'tab', '@party')"
-          />
-        }
-        @if (gameOpen()) {
-          <mc-workspace-tab
-            key="@game"
-            [label]="ui.game.title"
-            [closeLabel]="ui.workspace.closeTab"
-            [selected]="active() === '@game'"
-            (activate)="activate('@game')"
-            (close)="close('@game')"
-            (contextmenu)="menus.open($event, 'tab', '@game')"
-            (keydown)="menus.open($event, 'tab', '@game')"
-          />
-        }
-        @for (map of maps(); track map.id) {
-          <mc-workspace-tab
-            [key]="'@map:' + map.id"
-            [label]="data.maps.length === 1 ? ui.workspace.map : map.title"
-            [closeLabel]="ui.workspace.closeTab"
-            [closeHint]="ui.workspace.closeTabHint"
-            [selected]="active() === '@map:' + map.id"
-            (activate)="activate('@map:' + map.id)"
-            (close)="close('@map:' + map.id)"
-            (contextmenu)="menus.open($event, 'tab', '@map:' + map.id)"
-            (keydown)="menus.open($event, 'tab', '@map:' + map.id)"
-          />
-        }
-        @for (tab of sessions(); track tab.material.id) {
-          <mc-workspace-tab
-            [key]="tab.material.id"
-            [label]="tab.material.title"
-            [closeLabel]="ui.workspace.closeTab"
-            [closeHint]="ui.workspace.closeTabHint"
-            [selected]="active() === tab.material.id"
-            [dirty]="tab.dirty()"
-            [closing]="closing().has(tab.material.id)"
-            (activate)="activate(tab.material.id)"
-            (close)="close(tab.material.id)"
-            (contextmenu)="menus.open($event, 'tab', tab.material.id)"
-            (keydown)="menus.open($event, 'tab', tab.material.id)"
-          />
-        }
+      }
+      <div class="tab-strip-row">
+        <div
+          #tabStrip
+          class="material-tabs"
+          role="tablist"
+          [attr.aria-label]="ui.workspace.tabsLabel"
+          (keydown)="tabKey($event)"
+        >
+          @if (meetingsOpen()) {
+            <mc-workspace-tab
+              key="@sessions"
+              [label]="ui.meetings.title"
+              [closeLabel]="ui.workspace.closeTab"
+              [selected]="active() === '@sessions'"
+              [dirty]="meetingDrafts.dirty()"
+              (activate)="activate('@sessions')"
+              (close)="close('@sessions')"
+              (contextmenu)="menus.open($event, 'tab', '@sessions')"
+              (keydown)="menus.open($event, 'tab', '@sessions')"
+            />
+          }
+          @if (partyOpen()) {
+            <mc-workspace-tab
+              key="@party"
+              [label]="ui.game.partyTitle"
+              [closeLabel]="ui.workspace.closeTab"
+              [selected]="active() === '@party'"
+              [dirty]="partyView()?.dirty() ?? false"
+              (activate)="activate('@party')"
+              (close)="close('@party')"
+              (contextmenu)="menus.open($event, 'tab', '@party')"
+              (keydown)="menus.open($event, 'tab', '@party')"
+            />
+          }
+          @if (gameOpen()) {
+            <mc-workspace-tab
+              key="@game"
+              [label]="ui.game.title"
+              [closeLabel]="ui.workspace.closeTab"
+              [selected]="active() === '@game'"
+              (activate)="activate('@game')"
+              (close)="close('@game')"
+              (contextmenu)="menus.open($event, 'tab', '@game')"
+              (keydown)="menus.open($event, 'tab', '@game')"
+            />
+          }
+          @for (map of maps(); track map.id) {
+            <mc-workspace-tab
+              [key]="'@map:' + map.id"
+              [label]="data.maps.length === 1 ? ui.workspace.map : map.title"
+              [closeLabel]="ui.workspace.closeTab"
+              [closeHint]="ui.workspace.closeTabHint"
+              [selected]="active() === '@map:' + map.id"
+              (activate)="activate('@map:' + map.id)"
+              (close)="close('@map:' + map.id)"
+              (contextmenu)="menus.open($event, 'tab', '@map:' + map.id)"
+              (keydown)="menus.open($event, 'tab', '@map:' + map.id)"
+            />
+          }
+          @for (tab of sessions(); track tab.material.id) {
+            <mc-workspace-tab
+              [key]="tab.material.id"
+              [label]="tab.material.title"
+              [closeLabel]="ui.workspace.closeTab"
+              [closeHint]="ui.workspace.closeTabHint"
+              [selected]="active() === tab.material.id"
+              [dirty]="tab.dirty()"
+              [closing]="closing().has(tab.material.id)"
+              (activate)="activate(tab.material.id)"
+              (close)="close(tab.material.id)"
+              (contextmenu)="menus.open($event, 'tab', tab.material.id)"
+              (keydown)="menus.open($event, 'tab', tab.material.id)"
+            />
+          }
+        </div>
+        <mc-open-tabs
+          [items]="openTabItems()"
+          [activeId]="active()"
+          (activate)="activate($event, undefined, true)"
+          (close)="close($event)"
+        />
       </div>
       @if (opening()) {
         <div class="opening-state" role="status">{{ ui.routes.loading }}</div>
