@@ -25,13 +25,18 @@ export class SessionView {
     ...materialChoices(this.availablePins(), this.folders(), uiMessages.workspace.unfiledMaterials),
   ]);
   readonly materialRequested = output<string>();
+  readonly recordRequested = output<string>();
   readonly materialsCreated = output<void>();
   readonly text = uiMessages.meetings;
   readonly recoveryText = uiMessages.recovery;
   readonly recoveryError = signal(false);
   readonly copyState = signal<'idle' | 'copied' | 'failed'>('idle');
   readonly copiedText = signal('');
-  readonly selectedId = signal('');
+  readonly selectedId = input('');
+  readonly creating = signal(false);
+  readonly showCreation = computed(
+    () => this.creating() || !this.meetings().snapshot().sessions.length,
+  );
   readonly selectedRecordMissing = computed(
     () =>
       !!this.selectedId() &&
@@ -68,6 +73,9 @@ export class SessionView {
   readonly pinId = signal('');
   readonly selected = computed(() => {
     const records = this.meetings().snapshot().sessions;
+    if (this.selectedId()) {
+      return records.find((item) => item.id === this.selectedId());
+    }
     return (
       records.find((item) => item.id === this.selectedId()) ??
       this.meetings().activeSession() ??
@@ -84,10 +92,16 @@ export class SessionView {
   });
 
   select(record: SessionRecord): void {
-    this.selectedId.set(record.id);
+    this.recordRequested.emit(record.id);
     this.pinId.set('');
     this.copyState.set('idle');
     this.recoveryError.set(false);
+  }
+  cancelCreation(): void {
+    if (!this.meetings().locked()) {
+      this.resetSuggestedTitle();
+      this.creating.set(false);
+    }
   }
 
   async copyDraft(record: SessionRecord): Promise<void> {
@@ -153,11 +167,14 @@ export class SessionView {
     if (this.deletionTarget() || this.meetings().locked()) {
       return false;
     }
-    if (this.newTitle().trim() && this.newTitle().trim() !== this.suggestedTitle) {
+    if (this.hasCreationDraft()) {
       this.closeBlocked.set(true);
       return false;
     }
     return this.drafts().saveAll(this.meetings());
+  }
+  hasCreationDraft(): boolean {
+    return !!this.newTitle().trim() && this.newTitle().trim() !== this.suggestedTitle;
   }
 
   edit(field: 'title' | 'summary' | 'followUp', event: Event): void {
@@ -187,7 +204,8 @@ export class SessionView {
     });
     if (created) {
       this.resetSuggestedTitle();
-      this.selectedId.set(sessionId);
+      this.creating.set(false);
+      this.recordRequested.emit(sessionId);
       this.materialsCreated.emit();
     }
   }
@@ -212,7 +230,8 @@ export class SessionView {
       if (this.newTitle().trim() === operation.title.trim()) {
         this.resetSuggestedTitle();
       }
-      this.selectedId.set(operation.sessionId);
+      this.creating.set(false);
+      this.recordRequested.emit(operation.sessionId);
       this.materialsCreated.emit();
     }
     this.drafts().acceptConfirmed(this.meetings().snapshot().sessions);
@@ -273,7 +292,7 @@ export class SessionView {
     }
     this.finishEditing(id);
     this.pinId.set('');
-    this.selectedId.set(
+    this.recordRequested.emit(
       this.meetings().activeSession()?.id ?? this.meetings().snapshot().sessions.at(-1)?.id ?? '',
     );
     this.deletionDialog().close(false);

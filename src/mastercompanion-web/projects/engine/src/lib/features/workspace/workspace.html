@@ -3,6 +3,14 @@
     <strong>MasterCompanion</strong><span class="campaign-name"> / {{ workspace()?.title }}</span>
   </div>
   <div class="header-actions">
+    @if (meetings()?.activeSession(); as meeting) {
+      <div class="active-meeting-context" [attr.aria-label]="ui.meetings.activeContext">
+        <button (click)="openMeetings(meeting.id)">{{ meeting.title }}</button>
+        <button (click)="openMeetingMaterial(meeting.notesMaterialId)">
+          {{ ui.meetings.openActiveNotes }}
+        </button>
+      </div>
+    }
     @if (game()?.state()) {
       <span class="header-context" [attr.aria-label]="ui.game.elapsedTime">{{ gameTime() }}</span>
     }
@@ -347,6 +355,8 @@
             aria-labelledby="tab-sessions"
             [hidden]="active() !== '@sessions'"
             [meetings]="records"
+            [selectedId]="meetingsSelection()"
+            (recordRequested)="openMeetings($event)"
             [drafts]="meetingDrafts"
             [materials]="data.materials"
             [folders]="data.folders"
@@ -357,7 +367,7 @@
       }
       @if (meetingDocument(); as document) {
         <div class="meeting-document-context">
-          <button (click)="openMeetings()">{{ ui.meetings.title }}</button>
+          <button (click)="openMeetings(document.id)">{{ ui.meetings.title }}</button>
           <span>{{ document.title }} · {{ document.role }}</span>
         </div>
       }

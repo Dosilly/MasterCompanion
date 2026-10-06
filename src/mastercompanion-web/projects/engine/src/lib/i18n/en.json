@@ -22,6 +22,15 @@
     "loading": "Loading choices…"
   },
   "meetings": {
+    "newSession": "New session",
+    "cancelCreation": "Discard new session form",
+    "activeContext": "Active meeting",
+    "openActiveNotes": "Open active play notes",
+    "stages": {
+      "planned": "Prepare the meeting: open preparation notes, pin useful materials, then start when play begins.",
+      "active": "Play is in progress: open live notes or pinned materials. Complete the meeting when play ends; summary is optional.",
+      "completed": "Review this meeting's summary and follow-up. Preparation and play notes remain available."
+    },
     "delete": "Delete session",
     "deletedRecordRecovery": "The selected session is no longer available. Choose another session or create one. Any unsaved text remains available below.",
     "deleteNamed": "Delete session: {title}",

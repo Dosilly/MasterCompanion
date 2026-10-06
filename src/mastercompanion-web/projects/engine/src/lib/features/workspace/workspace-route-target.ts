@@ -3,5 +3,5 @@ export type WorkspaceRouteTarget =
   | { kind: 'map'; mapId: string }
   | { kind: 'game' }
   | { kind: 'party' }
-  | { kind: 'sessions' }
+  | { kind: 'sessions'; sessionId?: string }
   | { kind: 'empty' };

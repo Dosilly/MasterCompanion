@@ -18,6 +18,17 @@
   display: flex;
   gap: 8px;
 }
+.active-meeting-context {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.active-meeting-context button:first-child {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .workspace-shell {
   position: relative;
   --navigation-width: 260px;

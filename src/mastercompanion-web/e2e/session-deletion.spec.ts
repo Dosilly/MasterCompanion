@@ -6,6 +6,13 @@ const view = (page: Page) => page.locator('mc-session-view');
 const dialog = (page: Page) => page.getByRole('dialog', { name: label('deleteTitle') });
 
 async function createSession(page: Page, title: string): Promise<void> {
+  await expect(view(page)).toBeVisible();
+  await expect(view(page).getByLabel(label('newTitle'), { exact: true })).toBeEnabled();
+  if (!(await view(page).getByLabel(label('newTitle'), { exact: true }).isVisible())) {
+    await view(page)
+      .getByRole('button', { name: label('newSession'), exact: true })
+      .click();
+  }
   await view(page).getByLabel(label('newTitle'), { exact: true }).fill(title);
   await view(page)
     .getByRole('button', { name: label('create'), exact: true })

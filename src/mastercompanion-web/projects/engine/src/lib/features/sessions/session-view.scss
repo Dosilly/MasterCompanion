@@ -42,6 +42,21 @@ h3 {
   gap: 0.5rem;
   margin: 1rem 0 1.5rem;
 }
+.create-session[hidden] {
+  display: none;
+}
+.stage-hint {
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--soft);
+}
+.record-form > .actions {
+  position: sticky;
+  bottom: -48px;
+  padding: 0.75rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
 .create-session label,
 .pin-form label {
   grid-column: 1 / -1;

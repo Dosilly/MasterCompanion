@@ -1,5 +1,15 @@
 # Implementation status
 
+## Session workflow — 6 October 2026
+
+[Slice E](38-Session-workflow.md) adds record-specific routes, independently loaded
+active-meeting context, one-action play notes, stage guidance and explicit creation
+after first use. Per-record drafts retain their existing save/conflict ownership.
+Thirty-three scoped unit cases and sixty session browser cases pass; twelve workflow
+cases passed again after the final document-return correction. Quality and production
+compilation pass; both Full HD themes were reviewed. C–E are merged locally;
+Docker is available again and container delivery resumes. F/G follow.
+
 ## Gameplay hierarchy — 6 October 2026
 
 [Slice D](36-Gameplay-hierarchy.md) makes clock activity selection explicit,

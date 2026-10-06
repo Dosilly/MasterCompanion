@@ -4,6 +4,15 @@
       <h1 #pageTitle tabindex="-1">{{ text.title }}</h1>
       <p>{{ text.hint }}</p>
     </div>
+    @if (!showCreation()) {
+      <button
+        class="mc-action--primary"
+        (click)="creating.set(true)"
+        [disabled]="meetings().locked()"
+      >
+        {{ text.newSession }}
+      </button>
+    }
     <button
       class="mc-icon-button mc-action--quiet"
       [attr.aria-label]="text.refresh"
@@ -34,7 +43,7 @@
       }
     </div>
   }
-  <form class="create-session" (submit)="create($event)">
+  <form class="create-session" [hidden]="!showCreation()" (submit)="create($event)">
     <label for="new-session-title">{{ text.newTitle }}</label>
     <input
       id="new-session-title"
@@ -51,6 +60,11 @@
     >
       {{ text.create }}
     </button>
+    @if (meetings().snapshot().sessions.length) {
+      <button type="button" (click)="cancelCreation()" [disabled]="meetings().locked()">
+        {{ text.cancelCreation }}
+      </button>
+    }
   </form>
   @if (closeBlocked()) {
     <p role="alert">{{ text.closeBlocked }}</p>
@@ -77,6 +91,7 @@
     </nav>
     @if (selected(); as record) {
       <article class="session-record" [attr.aria-label]="record.title">
+        <p class="stage-hint">{{ text.stages[record.status] }}</p>
         <div class="record-heading">
           <h2>{{ record.title }}</h2>
           <span class="status">{{ text.status[record.status] }}</span>
@@ -107,10 +122,18 @@
           }
         </div>
         <div class="document-actions">
-          <button (click)="materialRequested.emit(record.preparationMaterialId)">
+          <button
+            [class.mc-action--primary]="record.status === 'planned'"
+            (click)="materialRequested.emit(record.preparationMaterialId)"
+          >
             {{ text.preparation }}
           </button>
-          <button (click)="materialRequested.emit(record.notesMaterialId)">{{ text.notes }}</button>
+          <button
+            [class.mc-action--primary]="record.status === 'active'"
+            (click)="materialRequested.emit(record.notesMaterialId)"
+          >
+            {{ text.notes }}
+          </button>
         </div>
         <p class="document-hint">{{ text.documentHint }}</p>
         <section [attr.aria-label]="text.pins">

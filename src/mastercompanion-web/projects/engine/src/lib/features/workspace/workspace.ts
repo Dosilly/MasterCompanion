@@ -118,15 +118,16 @@ export class Workspace {
   readonly meetingsOpen = signal(false);
   readonly meetingsMounted = signal(false);
   readonly meetings = signal<MeetingRecords | null>(null);
+  readonly meetingsSelection = signal('');
   readonly meetingDrafts = new SessionDrafts();
   private readonly meetingView = viewChild(SessionView);
   readonly meetingDocument = computed(() => {
     for (const record of this.meetings()?.snapshot().sessions ?? []) {
       if (record.preparationMaterialId === this.active()) {
-        return { title: record.title, role: this.ui.meetings.preparation };
+        return { id: record.id, title: record.title, role: this.ui.meetings.preparation };
       }
       if (record.notesMaterialId === this.active()) {
-        return { title: record.title, role: this.ui.meetings.notes };
+        return { id: record.id, title: record.title, role: this.ui.meetings.notes };
       }
     }
     return null;
@@ -254,7 +255,9 @@ export class Workspace {
         } catch {
           /* Session writes report inaccessible recovery storage before sending. */
         }
-        this.meetings.set(new MeetingRecords(workspace.campaignId, this.http, storage));
+        const meetings = new MeetingRecords(workspace.campaignId, this.http, storage);
+        this.meetings.set(meetings);
+        void meetings.refresh();
       } else if (this.meetings()?.loaded()) {
         void this.meetings()?.refresh();
       }
@@ -397,8 +400,12 @@ export class Workspace {
         this.meetingsMounted.set(true);
         this.meetingsOpen.set(true);
         if (!this.meetings()?.loaded()) {
-          void this.meetings()?.refresh();
+          await this.meetings()?.refresh();
         }
+        if (!context.isCurrent()) {
+          return { kind: 'ready' };
+        }
+        this.meetingsSelection.set(target.sessionId ?? '');
         await this.display('@sessions', undefined, context);
         break;
       case 'empty':
@@ -586,8 +593,8 @@ export class Workspace {
   openParty() {
     void this.routing.navigate({ kind: 'party' });
   }
-  openMeetings(): void {
-    void this.routing.navigate({ kind: 'sessions' });
+  openMeetings(sessionId?: string): void {
+    void this.routing.navigate({ kind: 'sessions', ...(sessionId ? { sessionId } : {}) });
   }
   async openMeetingMaterial(id: string): Promise<void> {
     if (!this.workspace()?.materials.some((item) => item.id === id)) {
@@ -611,7 +618,10 @@ export class Workspace {
       return { kind: 'party' };
     }
     if (id === '@sessions') {
-      return { kind: 'sessions' };
+      return {
+        kind: 'sessions',
+        ...(this.meetingsSelection() ? { sessionId: this.meetingsSelection() } : {}),
+      };
     }
     return id ? { kind: 'material', materialId: id, anchor } : { kind: 'empty' };
   }
@@ -809,7 +819,7 @@ export class Workspace {
       this.sessions().some((tab) => tab.dirty()) ||
       this.partyView()?.dirty() ||
       this.meetingDrafts.dirty() ||
-      (!this.meetings()?.request() && this.meetingView()?.newTitle().trim()) ||
+      (!this.meetings()?.request() && this.meetingView()?.hasCreationDraft()) ||
       (!this.creation()?.hasRecovery() && this.creation()?.title().trim())
     ) {
       event.preventDefault();

@@ -22,6 +22,15 @@
     "loading": "Wczytywanie opcji…"
   },
   "meetings": {
+    "newSession": "Nowa sesja",
+    "cancelCreation": "Odrzuć formularz nowej sesji",
+    "activeContext": "Aktywna sesja",
+    "openActiveNotes": "Otwórz notatki aktywnej sesji",
+    "stages": {
+      "planned": "Przygotuj spotkanie: otwórz notatki przygotowania, przypnij przydatne materiały i rozpocznij sesję, gdy zacznie się gra.",
+      "active": "Trwa gra: otwórz notatki lub przypięte materiały. Zakończ sesję po spotkaniu; podsumowanie jest opcjonalne.",
+      "completed": "Przejrzyj podsumowanie i dalsze kroki z tego spotkania. Notatki przygotowania i przebiegu pozostają dostępne."
+    },
     "delete": "Usuń sesję",
     "deletedRecordRecovery": "Wybrana sesja nie jest już dostępna. Wybierz inną sesję lub utwórz nową. Niezapisany tekst nadal jest dostępny poniżej.",
     "deleteNamed": "Usuń sesję: {title}",
