@@ -1,7 +1,7 @@
 import { test, expect, text, openReader, expectNoHorizontalOverflow } from './fixtures';
 import { readerTitle } from './fixtures/campaign';
 
-test('Activity selection explains clock effects before submitting the selected rest @gameplay-hierarchy', async ({
+test('Activity selection shows its scope before submitting the selected rest @gameplay-hierarchy', async ({
   page,
   api,
 }) => {
@@ -29,7 +29,10 @@ test('Activity selection explains clock effects before submitting the selected r
   await game
     .getByRole('button', { name: text('engine', 'game', 'shortRest'), exact: true })
     .click();
-  await expect(game).toContainText(text('engine', 'game', 'shortRestEffect'));
+  await expect(game).toContainText(text('engine', 'game', 'restEffect'));
+  await expect(
+    game.getByRole('button', { name: text('engine', 'game', 'shortRest'), exact: true }),
+  ).toHaveAttribute('aria-pressed', 'true');
   expect(writes).toHaveLength(0);
   await game
     .getByRole('button', { name: text('engine', 'game', 'applyActivity'), exact: true })
@@ -38,6 +41,88 @@ test('Activity selection explains clock effects before submitting the selected r
   await expect(
     game.getByRole('button', { name: text('engine', 'game', 'undo'), exact: true }),
   ).toBeEnabled();
+});
+
+test('Clock rows, arrival controls and disclosed rule links have clear spacing @gameplay-hierarchy', async ({
+  page,
+  api,
+}) => {
+  await page.goto('/game');
+  const clock = page.locator('.game-actions').first();
+  const review = page.locator('.activity-review');
+  const clockBox = await clock.boundingBox();
+  const reviewBox = await review.boundingBox();
+  if (!clockBox || !reviewBox) {
+    throw new Error('Expected visible clock controls.');
+  }
+  expect(reviewBox.y - clockBox.y - clockBox.height).toBeGreaterThanOrEqual(16);
+
+  const auril = page.locator('#auril-arrival');
+  const disable = auril.getByRole('button', {
+    name: text('ythryn', 'expedition', 'disableAuril'),
+    exact: true,
+  });
+  const rules = auril.locator('.tool-rules');
+  await expect(rules).not.toHaveAttribute('open', '');
+  await rules.locator('summary').click();
+  const ruleLink = rules.getByRole('button', {
+    name: text('ythryn', 'expedition', 'rules'),
+    exact: true,
+  });
+  const disableBox = await disable.boundingBox();
+  const summaryBox = await rules.locator('summary').boundingBox();
+  const linkBox = await ruleLink.boundingBox();
+  if (!disableBox || !summaryBox || !linkBox) {
+    throw new Error('Expected visible arrival actions and disclosed rules.');
+  }
+  expect(summaryBox.y - disableBox.y - disableBox.height).toBeGreaterThanOrEqual(16);
+  expect(linkBox.y - summaryBox.y - summaryBox.height).toBeGreaterThanOrEqual(8);
+  await expect(auril.locator('input')).toHaveValue('1500');
+  await expectNoHorizontalOverflow(page, auril);
+  expect(api.saves).toHaveLength(0);
+});
+
+test('Scrolled commands cover the full game viewport and keep their content aligned @gameplay-hierarchy', async ({
+  page,
+}, testInfo) => {
+  await page.goto('/game');
+  const game = page.locator('.game-view');
+  await expect(page.locator('#auril-arrival')).toBeVisible();
+  await game.evaluate((element) => {
+    element.scrollTop = 500;
+  });
+  await expect.poll(() => game.evaluate((element) => element.scrollTop)).toBeGreaterThan(100);
+  const bounds = await game.evaluate((element) => {
+    const viewport = element.getBoundingClientRect();
+    const heading = element.querySelector('.game-heading');
+    const content = element.querySelector('.game-heading-content');
+    if (!heading || !content) {
+      throw new Error('Expected the game command area.');
+    }
+    const header = heading.getBoundingClientRect();
+    const inner = content.getBoundingClientRect();
+    const resizer = document.querySelector('.navigation-resizer')?.getBoundingClientRect();
+    const visibleLeft = Math.max(header.left, resizer?.right ?? header.left);
+    return {
+      viewportLeft: viewport.left,
+      viewportRight: viewport.left + element.clientWidth,
+      viewportTop: viewport.top,
+      headerLeft: header.left,
+      headerRight: header.right,
+      headerTop: header.top,
+      contentWidth: inner.width,
+      coveredEdges: [visibleLeft + 2, header.right - 2].every((x) =>
+        heading.contains(document.elementFromPoint(x, header.top + header.height / 2)),
+      ),
+    };
+  });
+  expect(bounds.headerLeft).toBeCloseTo(bounds.viewportLeft, 0);
+  expect(bounds.headerRight).toBeCloseTo(bounds.viewportRight, 0);
+  expect(bounds.headerTop).toBeCloseTo(bounds.viewportTop, 0);
+  expect(bounds.contentWidth).toBeLessThanOrEqual(1120);
+  expect(bounds.coveredEdges).toBe(true);
+  await expectNoHorizontalOverflow(page, game);
+  await page.screenshot({ path: testInfo.outputPath('scrolled-game-commands.png') });
 });
 
 test('Collapsed tools retain inputs and attention links open and focus their targets @gameplay-hierarchy', async ({

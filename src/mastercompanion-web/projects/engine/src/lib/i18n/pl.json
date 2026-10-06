@@ -226,10 +226,8 @@
   },
   "game": {
     "chooseActivity": "Wybierz działanie zegara",
-    "advanceEffect": "Przesuwa wyłącznie zegar gry. Nie dodaje eksploracji ani testów spotkań.",
-    "shortRestEffect": "Krótki odpoczynek · dodaje 1 godzinę czasu gry bez eksploracji.",
-    "longRestEffect": "Długi odpoczynek · dodaje 8 godzin czasu gry bez eksploracji. Nadal stosuje efekty odpoczynku określone przez moduł.",
-    "applyActivity": "Wykonaj wybrane działanie",
+    "advanceEffect": "Sam zegar · bez eksploracji.",
+    "applyActivity": "Zastosuj",
     "title": "Gra",
     "refresh": "Odśwież stan",
     "working": "Zapisywanie lub wczytywanie stanu gry…",
@@ -264,9 +262,8 @@
     "hour": "godz.",
     "shortRest": "Krótki odpoczynek (1 godz.)",
     "longRest": "Długi odpoczynek (8 godz.)",
-    "customMinutes": "Przesuń o liczbę minut",
+    "customMinutes": "Liczba minut",
     "advance": "Przesuń czas",
-    "restHint": "Przeszukanie przesuwa czas o 30 minut, a krótki odpoczynek o godzinę. Długi odpoczynek przesuwa czas o 8 godzin i zapisuje jego zakończenie dla reguł modułu.",
     "tools": "Narzędzia modułu",
     "loadingTool": "Wczytywanie narzędzia…",
     "toolFailed": "Nie udało się wczytać narzędzia. Spróbuj ponownie.",
@@ -297,7 +294,8 @@
       "storageUnavailable": "Przeglądarka nie może zachować lub usunąć oczekującego żądania. Włącz pamięć sesji i ponów, aby potwierdzić wynik operacji.",
       "invalidPending": "Zachowane oczekujące żądanie jest nieczytelne. Odśwież aktualny stan, zanim świadomie je usuniesz.",
       "invalidResponse": "Nie udało się zweryfikować odpowiedzi gry. Odśwież lub ponów oczekujące żądanie przed kontynuowaniem."
-    }
+    },
+    "restEffect": "Odpoczynek bez eksploracji."
   },
   "map": {
     "zoomOut": "Oddal mapę",

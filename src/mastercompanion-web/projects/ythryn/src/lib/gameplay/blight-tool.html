@@ -1,12 +1,14 @@
 <section class="blight-tool" aria-labelledby="blight-title">
   <h2 id="blight-title">{{ text.toolTitle }}</h2>
-  <p class="description">{{ text.toolDescription }}</p>
-  <p>
-    <a href="#material/sac11d9beb0d8/sa401a28def19" (click)="openRules($event)">{{
-      text.rulesLink
-    }}</a>
-  </p>
-  <p class="description">{{ text.checkScheduleHint }}</p>
+  <details class="tool-rules">
+    <summary>{{ text.expedition.activityRules }}</summary>
+    <div class="tool-rules-content">
+      <p>{{ text.checkScheduleHint }}</p>
+      <a href="#material/sac11d9beb0d8/sa401a28def19" (click)="openRules($event)">{{
+        text.rulesLink
+      }}</a>
+    </div>
+  </details>
   @if (!game.state()) {
     <p role="status">{{ text.loading }}</p>
   } @else if (game.state()?.snapshot?.party?.length === 0) {

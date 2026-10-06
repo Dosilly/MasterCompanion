@@ -7,9 +7,11 @@
   margin: 0 0 8px;
   font-size: 21px;
 }
-.description,
 .no-check {
   color: var(--muted);
+}
+.blight-tool > .tool-rules {
+  margin: 0 0 16px;
 }
 .characters {
   display: grid;

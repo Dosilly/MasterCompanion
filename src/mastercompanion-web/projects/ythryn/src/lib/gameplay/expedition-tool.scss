@@ -17,6 +17,9 @@
   border-radius: 0.6rem;
   background: var(--paper);
 }
+.tool-card > button {
+  display: block;
+}
 h3 {
   margin-top: 0;
 }
@@ -52,7 +55,6 @@ input[type='number'] {
 }
 button {
   padding: 0.5rem 0.8rem;
-  margin-right: 0.4rem;
   border: 1px solid var(--line);
   border-radius: 0.3rem;
   background: var(--paper);

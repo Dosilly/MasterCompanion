@@ -1,6 +1,5 @@
 <section class="expedition-tool" aria-labelledby="expedition-title">
   <h2 id="expedition-title">{{ text.title }}</h2>
-  <p>{{ text.scheduleHint }}</p>
   @if (view(); as current) {
     <div class="tool-grid">
       <section class="tool-card" aria-labelledby="hourly-title">
@@ -25,11 +24,13 @@
             <button type="submit">{{ text.explore }}</button>
           </fieldset>
         </form>
-        <details>
+        <details class="tool-rules">
           <summary>{{ text.activityRules }}</summary>
-          <p>{{ text.explorationHint }}</p>
+          <div class="tool-rules-content">
+            <p>{{ text.explorationHint }}</p>
+            <button type="button" (click)="open('rules')">{{ text.rules }}</button>
+          </div>
         </details>
-        <button type="button" (click)="open('rules')">{{ text.rules }}</button>
       </section>
       <section class="tool-card" aria-labelledby="building-title">
         <h3 id="building-title">{{ text.buildingTitle }}</h3>
@@ -50,10 +51,12 @@
             {{ text.search }}
           </button>
         </fieldset>
-        <details>
+        <details class="tool-rules">
           <summary>{{ text.activityRules }}</summary>
-          <p>{{ text.buildingHint }}</p>
-          <p>{{ text.patrolHint }}</p>
+          <div class="tool-rules-content">
+            <p>{{ text.buildingHint }}</p>
+            <p>{{ text.patrolHint }}</p>
+          </div>
         </details>
       </section>
       @for (faction of factions; track faction) {
@@ -65,7 +68,6 @@
           [attr.aria-labelledby]="faction + '-title'"
         >
           <h3 [id]="faction + '-title'">{{ text.factions[faction] }}</h3>
-          <p>{{ faction === 'avarice' ? text.avariceHint : text.aurilHint }}</p>
           @if (current[faction].arrivedAt; as at) {
             <p>{{ text.arrived }}: {{ format(at) }}</p>
           } @else if (current[faction].arrivedAt === 0) {
@@ -99,8 +101,12 @@
                   (input)="setArrival(faction, $event)"
                 />
                 <p class="consequence-review">{{ arrivalReview(faction) }}</p>
-                <button class="mc-action--primary" type="submit">
-                  {{ text.confirmArrival }} — {{ text.factions[faction] }}
+                <button
+                  class="mc-action--primary"
+                  type="submit"
+                  [attr.aria-label]="text.confirmArrival + ' — ' + text.factions[faction]"
+                >
+                  {{ text.confirmArrival }}
                 </button>
               </fieldset>
             </form>
@@ -110,7 +116,13 @@
               {{ current.aurilEnabled ? text.disableAuril : text.enableAuril }}
             </button>
           }
-          <button type="button" (click)="open(faction)">{{ text.rules }}</button>
+          <details class="tool-rules">
+            <summary>{{ text.activityRules }}</summary>
+            <div class="tool-rules-content">
+              <p>{{ faction === 'avarice' ? text.avariceHint : text.aurilHint }}</p>
+              <button type="button" (click)="open(faction)">{{ text.rules }}</button>
+            </div>
+          </details>
         </section>
       }
     </div>
@@ -127,11 +139,11 @@
           <mc-action-required>{{ ui.actionRequired }}</mc-action-required>
         </p>
       }
-      <p>{{ text.queueHint }}</p>
       @if (current.pending.length >= 216) {
         <p role="status">{{ text.queueLimitHint }}</p>
       }
       @if (current.pending[0]; as check) {
+        <p>{{ text.arrivalOrderHint }}</p>
         <p>
           <strong>{{ text.kinds[check.kind] }}</strong> · {{ text.gameTime }}:
           {{ format(check.minute) }}
@@ -172,11 +184,16 @@
             }
           }
         </div>
-        <p>{{ text.previewHint }}</p>
       } @else {
         <p>{{ text.noPending }}</p>
       }
       <button type="button" (click)="open('table')">{{ text.table }}</button>
+      <details class="tool-rules">
+        <summary>{{ text.activityRules }}</summary>
+        <div class="tool-rules-content">
+          <p>{{ text.queueHint }}</p>
+        </div>
+      </details>
       @if (current.lastResult; as result) {
         <div class="last-result" role="status">
           <h4>{{ text.lastResult }}</h4>

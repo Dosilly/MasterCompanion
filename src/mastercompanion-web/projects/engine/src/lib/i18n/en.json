@@ -226,10 +226,8 @@
   },
   "game": {
     "chooseActivity": "Choose clock activity",
-    "advanceEffect": "Advances the game clock only. It adds no exploration or encounter checks.",
-    "shortRestEffect": "Short rest · adds 1 hour of game time and no exploration.",
-    "longRestEffect": "Long rest · adds 8 hours of game time and no exploration. Module rest effects still apply.",
-    "applyActivity": "Apply selected activity",
+    "advanceEffect": "Clock only · no exploration.",
+    "applyActivity": "Apply",
     "title": "Game",
     "refresh": "Refresh state",
     "working": "Saving or loading game state…",
@@ -264,9 +262,8 @@
     "hour": "h",
     "shortRest": "Short rest (1 h)",
     "longRest": "Long rest (8 h)",
-    "customMinutes": "Advance by minutes",
+    "customMinutes": "Minutes",
     "advance": "Advance time",
-    "restHint": "Search advances time by 30 minutes and short rest by 1 hour. Long rest advances time by 8 hours and records its end for module rules.",
     "tools": "Module tools",
     "loadingTool": "Loading tool…",
     "toolFailed": "Could not load the tool. Try again.",
@@ -297,7 +294,8 @@
       "storageUnavailable": "The browser could not preserve or clear the pending request. Enable session storage and retry to confirm the operation's outcome.",
       "invalidPending": "The preserved pending request is unreadable. Refresh the current state before explicitly discarding it.",
       "invalidResponse": "The game response could not be verified. Refresh or retry the pending request before continuing."
-    }
+    },
+    "restEffect": "Rest without exploration."
   },
   "map": {
     "zoomOut": "Zoom out",

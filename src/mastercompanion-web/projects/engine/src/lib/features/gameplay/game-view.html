@@ -1,27 +1,29 @@
 <section class="game-view" [attr.aria-label]="text.title">
   <div class="game-heading">
-    <h1>{{ text.title }}</h1>
-    <div class="game-heading-actions">
-      <button
-        type="button"
-        class="game-undo"
-        [disabled]="!canOperate() || !state()?.lastOperation"
-        [attr.aria-label]="text.undo"
-        [title]="text.undo"
-        (click)="openUndo($event)"
-      >
-        <span aria-hidden="true">↶</span>
-      </button>
-      <button
-        class="mc-icon-button mc-action--quiet"
-        [attr.aria-label]="text.refresh"
-        [title]="text.refresh"
-        type="button"
-        [disabled]="pending()"
-        (click)="session().load()"
-      >
-        <mc-icon name="refresh" />
-      </button>
+    <div class="game-heading-content">
+      <h1>{{ text.title }}</h1>
+      <div class="game-heading-actions">
+        <button
+          type="button"
+          class="game-undo"
+          [disabled]="!canOperate() || !state()?.lastOperation"
+          [attr.aria-label]="text.undo"
+          [title]="text.undo"
+          (click)="openUndo($event)"
+        >
+          <span aria-hidden="true">↶</span>
+        </button>
+        <button
+          class="mc-icon-button mc-action--quiet"
+          [attr.aria-label]="text.refresh"
+          [title]="text.refresh"
+          type="button"
+          [disabled]="pending()"
+          (click)="session().load()"
+        >
+          <mc-icon name="refresh" />
+        </button>
+      </div>
     </div>
   </div>
   @if (pending()) {
@@ -89,8 +91,7 @@
               />
               <p>{{ text.advanceEffect }}</p>
             } @else {
-              <p>{{ activity() === 'shortRest' ? text.shortRestEffect : text.longRestEffect }}</p>
-              <p class="game-hint">{{ text.restHint }}</p>
+              <p>{{ text.restEffect }}</p>
             }
             <button class="mc-action--primary" type="submit">{{ text.applyActivity }}</button>
           </form>
