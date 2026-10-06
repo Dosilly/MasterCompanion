@@ -81,3 +81,31 @@ button:hover {
   font-size: 12px;
   line-height: 1.5;
 }
+
+.search-controls {
+  display: flex;
+  align-items: start;
+  gap: 4px;
+}
+.search-controls input {
+  flex: 1;
+  min-width: 0;
+}
+.search-controls .clear-search {
+  width: auto;
+  flex: none;
+  padding: 8px 5px;
+  margin: 0;
+  border: 1px solid var(--control-line);
+}
+.search-result-path {
+  display: block;
+  font-size: 11px;
+  margin-top: 4px;
+  color: var(--muted);
+}
+mark {
+  background: var(--selection);
+  color: var(--selection-ink);
+  font-weight: 600;
+}

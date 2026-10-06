@@ -27,6 +27,7 @@ for (const name of [
 // Exercise the real editor/session integration without publishing internal library classes.
 import { MaterialSession } from '../../projects/engine/src/lib/features/materials/material-session';
 import { createMaterialEditor } from '../../projects/engine/src/lib/features/materials/material-editor';
+import { DocumentNavigation } from '../../projects/engine/src/lib/features/materials/document-navigation';
 const paragraph = (text) => ({ type: 'paragraph', content: [{ type: 'text', text }] });
 const endings = {
   paragraph: paragraph('Last paragraph'),
@@ -83,6 +84,46 @@ function fixture(t, ending = endings.rule) {
 }
 const nextTurn = () => new Promise((resolve) => setImmediate(resolve));
 describe('Material editor and session integration', () => {
+  test('Matches reindex on actual edits and undo restores content without decoration history', async (t) => {
+    const { editor, session } = fixture(t, endings.paragraph);
+    session.editing.set(true);
+    editor.setEditable(true, false);
+    const navigation = new DocumentNavigation(editor);
+    t.after(() => navigation.destroy());
+    navigation.search('Original');
+    const original = editor.getJSON();
+
+    editor.commands.setTextSelection(editor.state.doc.content.size - 1);
+    editor.commands.insertContent(' Original');
+    assert.equal(navigation.index().matches.length, 2);
+    editor.commands.undo();
+
+    assert.equal(navigation.index().matches.length, 1);
+    assert.deepEqual(editor.getJSON(), original);
+    assert.equal(editor.can().undo(), false);
+  });
+  test('Temporary matches preserve editable document, selection, history and save state', async (t) => {
+    const { editor, session, requests } = fixture(t);
+    session.editing.set(true);
+    editor.setEditable(true, false);
+    editor.commands.setTextSelection(3);
+    const content = editor.getJSON();
+    const selection = editor.state.selection.toJSON();
+    const navigation = new DocumentNavigation(editor);
+
+    navigation.search('Original');
+    navigation.search('Last');
+    navigation.search('');
+    navigation.destroy();
+    t.mock.timers.tick(700);
+    await nextTurn();
+
+    assert.deepEqual(editor.getJSON(), content);
+    assert.deepEqual(editor.state.selection.toJSON(), selection);
+    assert.equal(editor.can().undo(), false);
+    assert.equal(session.dirty(), false);
+    assert.deepEqual(requests, []);
+  });
   for (const [name, ending] of Object.entries(endings)) {
     test(`Selecting a document ending in ${name} preserves reader content and never saves`, async (t) => {
       // Arrange

@@ -139,7 +139,9 @@
       "invalidQuery": "Wpisz frazę do 160 znaków, bez znaków sterujących.",
       "campaignMissing": "Ta kampania nie jest już dostępna. Odśwież kampanię i spróbuj ponownie.",
       "failed": "Nie udało się przeszukać materiałów. Spróbuj ponownie."
-    }
+    },
+    "clear": "Wyczyść",
+    "resultCount": "Wyniki: {count}"
   },
   "routes": {
     "loading": "Otwieranie widoku…",
@@ -358,5 +360,15 @@
     "hint": "Przenieś „{title}” na koniec wybranego folderu.",
     "destination": "Folder docelowy",
     "unfiledDrop": "Przenieś dokument do materiałów bez folderu"
+  },
+  "readerNavigation": {
+    "title": "Spis treści i szukanie",
+    "find": "Szukaj w tej notatce",
+    "clear": "Wyczyść trafienia",
+    "previous": "Poprzednie trafienie",
+    "next": "Następne trafienie",
+    "return": "Wróć do miejsca czytania",
+    "outline": "Spis treści notatki",
+    "noHeadings": "Ta notatka nie ma nagłówków."
   }
 }

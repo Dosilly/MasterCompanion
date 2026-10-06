@@ -10,6 +10,13 @@ report elements skipped because of campaign edits. These are future requirements
 with no implemented storage or contract changes. See
 [the recorded ideas and open design decisions](37-Module-editor-and-campaign-updates.md).
 
+## Reader retrieval ownership, 6 October 2026
+
+DocumentNavigation indexes the supported editor model and owns temporary
+decorations/scroll state. It does not own material persistence or undo. Campaign
+search paths come from confirmed folder metadata; no API contract changes are
+required. The engine stylesheet intentionally reaches generated decoration markup.
+
 ## Workspace recovery and presentation ownership, 6 October 2026
 
 Saved-version inspection and adoption/reapplication remain campaign use cases in

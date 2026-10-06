@@ -1,0 +1,44 @@
+<details class="reader-navigation">
+  <summary>{{ ui.title }}</summary>
+  <div class="reader-navigation-content">
+    <div class="document-find">
+      <label [for]="'find-' + materialId()">{{ ui.find }}</label>
+      <input
+        [id]="'find-' + materialId()"
+        type="search"
+        maxlength="160"
+        [value]="navigation().query()"
+        (input)="update($event)"
+        (keydown.enter)="findNext($event)"
+        (keydown.escape)="navigation().search('')"
+      />
+      <button (click)="navigation().search('')" [disabled]="!navigation().query()">
+        {{ ui.clear }}
+      </button>
+      <button (click)="navigation().move(-1)" [disabled]="!navigation().index().matches.length">
+        {{ ui.previous }}
+      </button>
+      <button (click)="navigation().move(1)" [disabled]="!navigation().index().matches.length">
+        {{ ui.next }}
+      </button>
+      <span role="status"
+        >{{ navigation().selected() + 1 }} / {{ navigation().index().matches.length }}</span
+      >
+      <button (click)="navigation().returnToReading()" [disabled]="!navigation().canReturn()">
+        {{ ui.return }}
+      </button>
+    </div>
+    <nav [attr.aria-label]="ui.outline" class="document-outline">
+      @for (heading of navigation().index().outline; track heading.position) {
+        <button
+          [style.margin-left.px]="(heading.level - 1) * 12"
+          (click)="navigation().reveal(heading.position + 1)"
+        >
+          {{ heading.label }}
+        </button>
+      } @empty {
+        <p>{{ ui.noHeadings }}</p>
+      }
+    </nav>
+  </div>
+</details>

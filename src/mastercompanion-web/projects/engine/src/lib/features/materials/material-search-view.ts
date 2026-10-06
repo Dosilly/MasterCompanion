@@ -1,13 +1,27 @@
+import { NgTemplateOutlet } from '@angular/common';
+import type { CampaignFolder } from '@mastercompanion/contracts';
+import { folderPath } from '../workspace/navigation';
+import { searchHighlight } from './search-highlight';
 import { Component, ElementRef, input, output, viewChild } from '@angular/core';
 import { uiMessages } from '../../i18n/messages';
 import { MaterialSearch } from './material-search';
 
 @Component({
   selector: 'mc-material-search',
+  imports: [NgTemplateOutlet],
   templateUrl: './material-search-view.html',
   styleUrl: './material-search-view.scss',
 })
 export class MaterialSearchView {
+  readonly folders = input<readonly CampaignFolder[]>([]);
+  readonly highlight = searchHighlight;
+  path(folderId: string | null): string {
+    return (
+      folderPath(this.folders(), folderId)
+        .map((id) => this.folders().find((folder) => folder.id === id)?.title)
+        .join(' / ') || uiMessages.workspace.unfiledMaterials
+    );
+  }
   readonly search = input.required<MaterialSearch>();
   readonly activeId = input.required<string>();
   readonly materialRequested = output<string>();
@@ -40,6 +54,7 @@ export class MaterialSearchView {
     if (this.search().query()) {
       event.preventDefault();
       this.search().updateQuery('');
+      this.results().nativeElement.parentElement?.querySelector('input')?.focus();
     }
   }
 }

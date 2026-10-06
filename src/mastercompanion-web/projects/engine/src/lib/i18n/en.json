@@ -139,7 +139,9 @@
       "invalidQuery": "Enter a search phrase of up to 160 characters without control characters.",
       "campaignMissing": "This campaign is no longer available. Reload the campaign and try again.",
       "failed": "Could not search materials. Try again."
-    }
+    },
+    "clear": "Clear",
+    "resultCount": "Results: {count}"
   },
   "routes": {
     "loading": "Opening view…",
@@ -358,5 +360,15 @@
     "hint": "Move “{title}” to the end of the selected folder.",
     "destination": "Destination folder",
     "unfiledDrop": "Move document to unfiled materials"
+  },
+  "readerNavigation": {
+    "title": "Outline and find",
+    "find": "Find in this document",
+    "clear": "Clear matches",
+    "previous": "Previous match",
+    "next": "Next match",
+    "return": "Return to reading position",
+    "outline": "Document outline",
+    "noHeadings": "This document has no headings."
   }
 }

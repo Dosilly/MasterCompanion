@@ -8,6 +8,9 @@
       </button>
     </div>
   </div>
+  @if (documentNavigation(); as navigation) {
+    <mc-document-navigation [navigation]="navigation" [materialId]="session().material.id" />
+  }
   @if (session().error(); as error) {
     <div class="save-error" role="alert">
       <p>{{ ui.material.errors[error] }}</p>

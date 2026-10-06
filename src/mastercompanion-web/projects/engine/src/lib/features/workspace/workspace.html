@@ -115,6 +115,7 @@
       @if (materialSearch(); as search) {
         <mc-material-search
           [search]="search"
+          [folders]="data.folders"
           [class.searching]="search.state().kind !== 'idle'"
           [activeId]="active()"
           (materialRequested)="openSearchResult($event)"

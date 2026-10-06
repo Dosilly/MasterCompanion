@@ -1,5 +1,15 @@
 # Implementation status
 
+## Document retrieval — 6 October 2026
+
+[The retrieval part of F](40-Document-retrieval.md) adds search paths/counts, literal
+highlights and a persistent clear action, plus an on-demand document outline/find
+with return to reading position. Temporary decorations preserve content, selection,
+undo and save state. Fourteen focused unit/integration cases and eight new browser
+cases pass. Existing reader/search/editor checks and intentional visual references
+cover the affected surfaces. Navigation is running in the healthy local container;
+four read-only runtime probes pass. Map interaction is the remaining slice.
+
 ## Navigation at scale — 6 October 2026
 
 [The tree/tab part of F](39-Navigation-at-scale.md) adds bounded pointer/keyboard
