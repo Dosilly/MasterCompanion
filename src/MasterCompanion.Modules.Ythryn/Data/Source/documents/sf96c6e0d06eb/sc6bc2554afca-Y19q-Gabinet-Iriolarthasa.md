@@ -77,7 +77,7 @@ Wśród rupieci na górnym poziomie znajdują się:
 
 -   **Etykieta:** „DWA BRZEGI — POWRÓT ROZDZIELONYCH PODRÓŻNIKÓW”. Tabliczka i dokumenty są w **Loross, alfabetem drakońskim**; stosuj [zasady odczytywania Loross](#material/s210a67f4cc8e).
 
--   **Bez testu — zawartość:** po otwarciu skrzynki odczytaj opis poniżej. Są w niej także [instrukcja](#material/sb68cccad8d50) i [karta pomiarów](#material/s691e9446ee5a), wsunięte pod wieko. Drewniana szkatułka ma mosiężne okucia, uchwyt do noszenia i **1 stopę szerokości**; komplet waży **5 funtów**.
+-   **Bez testu — zawartość:** po otwarciu skrzynki odczytaj opis poniżej. Pod wieko wsunięto [instrukcję Orrena](#material/sb68cccad8d50). Drewniana szkatułka ma mosiężne okucia, uchwyt do noszenia i **1 stopę szerokości**; komplet waży **5 funtów**.
 
 > Pod wiekiem kryje się przyrząd osadzony w dnie skrzynki. Z tyłu po lewej leży mała miedziana tuba, złożona na bok w wyściełanym zagłębieniu; przegub u podstawy pozwala unieść jej kielich w stronę siedzącej przed skrzynką osoby. Obok, po prawej, pod szkłem połyskuje srebrna igła nad okrągłą tarczą z drobną podziałką. Bliżej was znajduje się miedziana płytka z obrysem dłoni, a na lewo od niej cztery cienkie srebrne płytki tkwią w równoległych szczelinach. Na wewnętrznej stronie wieka wyryto dwa połączone koła.
 
@@ -91,7 +91,7 @@ Wśród rupieci na górnym poziomie znajdują się:
 
 -   **Zapis:** cztery płytki zachowują ślady czterech osób. Przyrząd działa również poza Ythryn, bez mythallaru. Nie otwiera portalu. Fala wrzeciona z **Y19n** tłumi go w promieniu **3 mil** na **24 godziny**, ale nie ściera śladów.
 
--   **Wspólna praca:** każda strona wybiera trwały, bezpieczny punkt i dotyka go podczas pełnej rozmowy. Fenes zapisuje ruch igły na tarczy, przyjaciel opisuje objawy po swojej stronie. Tarcza przypomina kompas, ale nie wskazuje kierunku podróży ani położenia rozmówcy. Powtórzenie pomiaru przy następnej rozmowie potwierdza przydatność miejsc; pierwsza bezpieczna para nadaje się do dalszych badań. Oboje szukają następnie miejscowej wiedzy o bramach i przejściach.
+-   **Wspólna praca:** najpierw ustalić sytuację rozmówcy i porę następnej próby. Oboje szukają przejść oraz miejscowej wiedzy o ich otwieraniu. Przyrząd pomaga porównywać odkrycia i badać znalezioną drogę; tarcza nie wskazuje kierunku ani położenia rozmówcy. Konkretna trasa i jej przygotowanie należą do dalszej przygody po określeniu świata po drugiej stronie.
 
 -   **Epilog:** rozmowy i zapisane ślady nie wygasają od przerwy w badaniach. Fenes może prowadzić poszukiwania z Kuldahar albo wyruszyć w drogę. [Pełny plan dla MG i granice magii](#material/s7fe42d45a1c9).
 

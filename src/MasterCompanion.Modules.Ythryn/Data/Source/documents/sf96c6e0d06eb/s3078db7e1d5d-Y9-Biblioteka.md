@@ -63,7 +63,7 @@ Bohaterowie odnajdują także dziennik **Thufeusa**, jednego z nielicznych magó
 
 *Po odnalezieniu działu poświęconego podróżom między sferami.*
 
-> Wśród grubych tomów trafia się znacznie cieńszy raport, spięty miedzianymi klamrami. Jego okładkę zdobi prosty rysunek: koło, od którego rozchodzą się trzy linie. Jedna zatacza łuk i wraca do początku, druga dociera do kolejnego koła, a trzecia biegnie aż do krawędzi pergaminu, gdzie nagle się urywa.
+> Wśród grubych tomów trafia się znacznie cieńszy raport, spięty miedzianymi klamrami. Jego okładkę zdobi prosty rysunek: dwa koła połączone linią. Przy jednym z nich dopisano kilka słów mniejszym pismem, a obok odciśnięto pieczęć pracowni.
 
 **Działanie i reakcje — dla MG**
 
