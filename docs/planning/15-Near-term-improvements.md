@@ -29,6 +29,16 @@ small control/icon foundations, searchable choices, session deletion, note order
 and bounded navigation with persistent search/reader commands. This first cycle
 is now implemented; the delivery records describe exact behavior and scoped evidence.
 
+## Future ideas: module editor and campaign updates
+
+6 October 2026 · recorded for later work; no delivery priority assigned.
+
+The user requested an editor that saves the module itself outside the application
+repository, and notifications offering an update to a newer module version.
+Campaign updates should replace only unchanged elements, preserve edited notes
+and report skipped elements. See [the future requirements and open design
+decisions](37-Module-editor-and-campaign-updates.md).
+
 ## Improvement: preload campaign materials at startup
 
 4 October 2026 · implemented and verified. See

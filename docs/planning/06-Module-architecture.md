@@ -1,5 +1,15 @@
 # Engine and module boundary
 
+## Future module authoring and campaign updates, 6 October 2026
+
+The user recorded a module editor that reuses the campaign workflow but writes
+the authoritative module outside the application repository; a repository copy
+may serve as a backup. A separate campaign update workflow should notify about
+new module versions, ask before updating, replace only unchanged elements and
+report elements skipped because of campaign edits. These are future requirements,
+with no implemented storage or contract changes. See
+[the recorded ideas and open design decisions](37-Module-editor-and-campaign-updates.md).
+
 ## Campaign persistence scope, 4 October 2026
 
 The database stores campaign-owned materials and game state. Campaign
