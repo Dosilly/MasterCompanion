@@ -3,11 +3,18 @@
     <span class="breadcrumb">{{ session().material.group || ui.workspace.unfiledMaterials }}</span>
     <div class="actions">
       <span class="save-state" role="status" aria-live="polite">{{ statusLabel() }}</span>
-      <button class="mc-action--primary" (click)="toggleEdit()">
+      <button
+        class="mc-action--primary"
+        (click)="toggleEdit()"
+        [title]="session().editing() ? ui.material.finishEditingHint : ui.material.edit"
+      >
         {{ session().editing() ? ui.material.finishEditing : ui.material.edit }}
       </button>
     </div>
   </div>
+  @if (documentNavigation(); as navigation) {
+    <mc-document-navigation [navigation]="navigation" [materialId]="session().material.id" />
+  }
   @if (session().error(); as error) {
     <div class="save-error" role="alert">
       <p>{{ ui.material.errors[error] }}</p>

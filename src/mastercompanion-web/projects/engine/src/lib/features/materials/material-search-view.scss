@@ -81,3 +81,36 @@ button:hover {
   font-size: 12px;
   line-height: 1.5;
 }
+
+.search-controls {
+  display: flex;
+  align-items: start;
+  gap: 4px;
+}
+.search-controls input {
+  flex: 1;
+  min-width: 0;
+}
+.search-controls input::-webkit-search-cancel-button {
+  appearance: none;
+}
+.search-controls .clear-search {
+  display: inline-flex;
+  width: var(--control-height);
+  padding: 6px;
+  margin: 0;
+}
+.search-result-path {
+  display: block;
+  font-size: 11px;
+  margin-top: 4px;
+  color: var(--muted);
+}
+.search-result.selected .search-result-path {
+  color: inherit;
+}
+mark {
+  background: var(--selection);
+  color: var(--selection-ink);
+  font-weight: 600;
+}

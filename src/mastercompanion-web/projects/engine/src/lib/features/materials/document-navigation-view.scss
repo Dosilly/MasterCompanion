@@ -1,0 +1,76 @@
+:host {
+  display: block;
+  max-width: 1020px;
+  margin: 0 auto 12px;
+}
+.reader-tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.reader-tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+}
+.reader-tool[aria-expanded='true'] {
+  background: var(--soft);
+  color: var(--accent);
+}
+.return-to-reading {
+  margin-left: auto;
+}
+.reader-tool-panel {
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--control-radius);
+  margin-top: 6px;
+  background: var(--paper);
+}
+.document-find {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.document-find input {
+  width: min(320px, 100%);
+  min-width: 0;
+  padding: 8px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--control-line);
+  border-radius: var(--control-radius);
+  font: inherit;
+}
+.match-count {
+  min-width: 4ch;
+  color: var(--muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.document-find input::-webkit-search-cancel-button {
+  appearance: none;
+}
+.find-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.document-outline {
+  max-height: 180px;
+  overflow: auto;
+}
+.document-outline button {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border-color: transparent;
+  padding: 6px 12px;
+  text-align: left;
+}
+.document-outline p {
+  margin: 4px;
+  color: var(--muted);
+}

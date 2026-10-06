@@ -20,6 +20,11 @@ target. Features group these controls around their own operation.
 
 `IconComponent` is exported from `@mastercompanion/ui`. Its required `name` input
 accepts the public `IconName` union; it has no outputs or application dependency.
+The compact-navigation refinement adds `sidebar-close`, `sidebar-open`, `note-add`,
+`search`, `outline`, `close`, `arrow-up`, `arrow-down` and `return`. Actual uses
+are the sidebar toolbar, material library actions, campaign-search clear and the
+reader's separately controlled outline/find panels. The catalog demonstrates
+their localized-owner naming pattern, quiet targets and disabled return action.
 The SVG is decorative and hidden from assistive technology. Its owning native
 button supplies the action label and title, for example:
 

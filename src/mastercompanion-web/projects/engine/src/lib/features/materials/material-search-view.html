@@ -1,13 +1,33 @@
 <label for="material-search">{{ ui.search.label }}</label>
-<input
-  id="material-search"
-  type="search"
-  maxlength="160"
-  [placeholder]="ui.workspace.searchPlaceholder"
-  [value]="search().query()"
-  (input)="updateQuery($event)"
-  (keydown.escape)="clear($event)"
-/>
+<div class="search-controls">
+  <input
+    id="material-search"
+    type="search"
+    maxlength="160"
+    [placeholder]="ui.workspace.searchPlaceholder"
+    [value]="search().query()"
+    (input)="updateQuery($event)"
+    (keydown.escape)="clear($event)"
+  />
+  <button
+    class="clear-search mc-icon-button mc-action--quiet"
+    (click)="clear($event)"
+    [disabled]="!search().query()"
+    [attr.aria-label]="ui.search.clear"
+    [title]="ui.search.clear"
+  >
+    <mc-icon name="close" />
+  </button>
+</div>
+<ng-template #highlighted let-value>
+  @for (part of highlight(value, search().query()); track $index) {
+    @if (part.matched) {
+      <mark>{{ part.text }}</mark>
+    } @else {
+      {{ part.text }}
+    }
+  }
+</ng-template>
 <div #results class="search-content">
   @if (search().state(); as state) {
     @switch (state.kind) {
@@ -22,7 +42,11 @@
       }
       @case ('ready') {
         <p class="search-status" role="status">
-          {{ state.results.length ? ui.search.resultsLabel : ui.workspace.noSearchResults }}
+          {{
+            state.results.length
+              ? ui.search.resultCount.replace('{count}', state.results.length.toString())
+              : ui.workspace.noSearchResults
+          }}
         </p>
         @if (state.results.length) {
           <ul class="search-results" [attr.aria-label]="ui.search.resultsLabel">
@@ -35,8 +59,15 @@
                   [attr.aria-current]="activeId() === result.id ? 'page' : null"
                   (click)="materialRequested.emit(result.id)"
                 >
-                  <span class="search-result-title">{{ result.title }}</span>
-                  <span class="search-result-snippet">{{ result.snippet }}</span>
+                  <span class="search-result-title"
+                    ><ng-container
+                      *ngTemplateOutlet="highlighted; context: { $implicit: result.title }"
+                  /></span>
+                  <span class="search-result-path">{{ path(result.folderId) }}</span>
+                  <span class="search-result-snippet"
+                    ><ng-container
+                      *ngTemplateOutlet="highlighted; context: { $implicit: result.snippet }"
+                  /></span>
                 </button>
               </li>
             }

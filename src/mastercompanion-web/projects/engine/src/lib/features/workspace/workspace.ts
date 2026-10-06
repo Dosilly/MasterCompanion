@@ -26,6 +26,9 @@ import {
   MaterialDto,
   WorkspaceDto,
 } from '@mastercompanion/contracts';
+import { NavigationLayout } from './navigation-layout';
+import { OpenTabs } from './open-tabs';
+import type { OpenTabItem } from './open-tab-item';
 import { WorkspaceTab } from './workspace-tab';
 import { WorkspaceMaterials } from './workspace-materials';
 import { MaterialView } from '../materials/material-view';
@@ -62,6 +65,7 @@ import { SessionView } from '../sessions/session-view';
   imports: [
     IconComponent,
     WorkspaceTab,
+    OpenTabs,
     NgTemplateOutlet,
     MaterialView,
     MaterialCreationDialog,
@@ -153,6 +157,54 @@ export class Workspace {
     const minutes = this.game()?.state()?.snapshot.timeMinutes ?? 0;
     return `${Math.floor(minutes / 60)} ${this.ui.game.hour} ${minutes % 60} ${this.ui.game.minute}`;
   });
+  readonly navigationLayout = new NavigationLayout();
+  readonly openTabItems = computed<readonly OpenTabItem[]>(() => [
+    ...(this.meetingsOpen()
+      ? [
+          {
+            id: '@sessions',
+            title: this.ui.meetings.title,
+            context: '',
+            dirty: this.meetingDrafts.dirty(),
+            closing: false,
+          },
+        ]
+      : []),
+    ...(this.partyOpen()
+      ? [
+          {
+            id: '@party',
+            title: this.ui.game.partyTitle,
+            context: '',
+            dirty: this.partyView()?.dirty() ?? false,
+            closing: false,
+          },
+        ]
+      : []),
+    ...(this.gameOpen()
+      ? [{ id: '@game', title: this.ui.game.title, context: '', dirty: false, closing: false }]
+      : []),
+    ...this.maps().map((map) => ({
+      id: '@map:' + map.id,
+      title: map.title,
+      context: '',
+      dirty: false,
+      closing: false,
+    })),
+    ...this.sessions().map((tab) => ({
+      id: tab.material.id,
+      title: tab.material.title,
+      context:
+        folderPath(this.workspace()?.folders ?? [], tab.material.folderId)
+          .map((id) => this.workspace()?.folders.find((folder) => folder.id === id)?.title ?? '')
+          .join(' / ') || this.ui.workspace.unfiledMaterials,
+      dirty: tab.dirty(),
+      closing: this.closing().has(tab.material.id),
+    })),
+  ]);
+  readonly activeTab = computed(() =>
+    this.openTabItems().find((item) => item.id === this.active()),
+  );
   readonly closing = signal(new Set<string>());
   readonly expanded = signal(new Set<string>());
   private readonly searchView = viewChild(MaterialSearchView);
@@ -686,6 +738,9 @@ export class Workspace {
   }
 
   private revealNavigationSelection(focus: boolean): void {
+    if (this.navigationLayout.collapsed()) {
+      return;
+    }
     if (this.materialSearch()?.state().kind !== 'idle') {
       this.searchView()?.revealSelected(focus);
       return;

@@ -1,0 +1,31 @@
+<details #details (keydown.escape)="dismiss($event)">
+  <summary>{{ ui.openTabs }} ({{ items().length }})</summary>
+  <div class="open-tabs-list" [attr.aria-label]="ui.openTabs">
+    @for (item of items(); track item.id) {
+      <div class="open-tab-entry">
+        <button
+          [attr.aria-current]="activeId() === item.id ? 'page' : null"
+          (click)="select(item.id)"
+        >
+          <strong>{{ item.title }}</strong>
+          @if (item.context) {
+            <small>{{ item.context }}</small>
+          }
+          @if (item.dirty) {
+            <span>{{ ui.unsavedTab }}</span>
+          }
+          @if (item.closing) {
+            <span>{{ ui.closingTab }}</span>
+          }
+        </button>
+        <button
+          [attr.aria-label]="ui.closeTab + ' ' + item.title"
+          [disabled]="item.closing"
+          (click)="closeItem(item.id)"
+        >
+          ×
+        </button>
+      </div>
+    }
+  </div>
+</details>

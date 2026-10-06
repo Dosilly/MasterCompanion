@@ -1,1 +1,18 @@
-export type IconName = 'refresh' | 'sun' | 'moon' | 'book' | 'sessions' | 'party' | 'game' | 'map';
+export type IconName =
+  | 'refresh'
+  | 'sun'
+  | 'moon'
+  | 'book'
+  | 'sessions'
+  | 'party'
+  | 'game'
+  | 'map'
+  | 'sidebar-close'
+  | 'sidebar-open'
+  | 'note-add'
+  | 'search'
+  | 'outline'
+  | 'close'
+  | 'arrow-up'
+  | 'arrow-down'
+  | 'return';

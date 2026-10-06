@@ -1,5 +1,86 @@
 # Implementation status
 
+## Compact navigation and separate reader tools — 6 October 2026
+
+[The user-requested refinement](43-Compact-navigation-and-reader-tools.md) moves
+collapse/expand onto the sidebar with a retained narrow rail, replaces routine
+new/clear/match actions with named icons and shortens Edit/Done/Create labels.
+Outline and Find have separate controls and panels; their query and mounted work
+remain intact. Repository instructions now require compact contextual controls.
+
+Twenty-four scoped navigation/retrieval/note browser cases pass; sixteen final
+retrieval/search cases and twenty normal visual comparisons pass across both
+themes/sizes. Five selected projection/editor cases, frontend quality, current
+production compilation and the reviewed icon catalog pass. The feature branch
+includes the already delivered F/G and gameplay polish absent from the squashed
+trunk checkout. Feature commit `4b10b26` remains on `codex/compact-navigation-controls`;
+image `mastercompanion:compact-ui-4b10b26` is installed locally. Both services are
+healthy, four read-only container probes pass and live Full HD checks confirm the
+new controls/panels in both themes without campaign writes or page errors. Merging
+and remote pushing remain user-controlled.
+
+## Gameplay spacing and concise guidance — 6 October 2026
+
+[The UI follow-up](42-Gameplay-layout-polish.md) fixes clock/action spacing and
+full-width sticky commands, moves detailed rules behind disclosures and retains
+short consequence notices at the affected actions. Twenty-four hierarchy cases,
+eight reviewed visual cases with snapshot updates disabled, frontend quality
+and production compilation pass. Image `mastercompanion:ui-polish-6892924` is
+running locally; four read-only container probes and live Full HD checks in both
+themes pass. App and PostgreSQL are healthy. Per the revised 6 October workflow,
+the verified changes remain on `codex/ux-gameplay-polish` for the user's merge.
+
+## Remaining UX corrections delivered — 6 October 2026
+
+The authorized C–G cycle is complete: explicit draft recovery, gameplay hierarchy,
+session workflow/context, navigation at scale, document retrieval and map viewer
+interaction. Each feature was committed and merged into local trunk separately;
+delivery records [C](35-Draft-recovery.md), [D](36-Gameplay-hierarchy.md),
+[E](38-Session-workflow.md), [F navigation](39-Navigation-at-scale.md),
+[F retrieval](40-Document-retrieval.md) and [G](41-Map-interaction.md) retain scoped
+test evidence and deliberate exclusions.
+
+Image `mastercompanion:ux-ui-3e2d268` was built from merged trunk at `3e2d268`
+and installed in the local application container. Application and PostgreSQL are
+healthy, with the app published only on IPv4 loopback port 4200. Four read-only
+container probes pass. Live Full HD review in light/dark verifies document
+outline/find, collapsed navigation context, named map selection and tab overview
+focus. No campaign write or browser page error occurred during live verification.
+The real map and both live themes were visually reviewed.
+
+Map authoring and multiple campaigns remain subsequent product work. No external
+publication or remote push was performed. Unrelated module-editor planning edits
+in the original checkout were preserved; F/G used an isolated feature worktree.
+
+## Map viewer corrections — 6 October 2026
+
+[Slice G](41-Map-interaction.md) keeps marker labels/targets stable through zoom,
+adds searchable named locations and keyboard panning/zoom/Fit, and preserves
+mounted map state. Twenty focused map/routing/search cases pass across both
+themes/sizes, with sixteen map/control cases passing again after final presentation
+changes. Real Ythryn map geometry/art was reviewed at Full HD in both themes.
+Frontend quality and production compilation pass. All remaining C–G source changes
+are verified; the final local container update follows this merge.
+
+## Document retrieval — 6 October 2026
+
+[The retrieval part of F](40-Document-retrieval.md) adds search paths/counts, literal
+highlights and a persistent clear action, plus an on-demand document outline/find
+with return to reading position. Temporary decorations preserve content, selection,
+undo and save state. Fourteen focused unit/integration cases and eight new browser
+cases pass. Existing reader/search/editor checks and intentional visual references
+cover the affected surfaces. Navigation is running in the healthy local container;
+four read-only runtime probes pass. Map interaction is the remaining slice.
+
+## Navigation at scale — 6 October 2026
+
+[The tree/tab part of F](39-Navigation-at-scale.md) adds bounded pointer/keyboard
+sidebar resizing, collapse with retained active path and an on-demand overview of
+all tabs, including dirty and saving-before-close states. Twenty focused browser
+cases pass; overview close/focus recovery is also checked after the final change.
+Both Full HD collapsed themes were reviewed. C–E are now running in the healthy
+local container; four read-only container probes pass. Retrieval and maps follow.
+
 ## Session workflow — 6 October 2026
 
 [Slice E](38-Session-workflow.md) adds record-specific routes, independently loaded

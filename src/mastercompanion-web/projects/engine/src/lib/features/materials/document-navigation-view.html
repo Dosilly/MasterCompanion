@@ -1,0 +1,97 @@
+<div class="reader-tools" role="group" [attr.aria-label]="ui.toolsLabel">
+  <button
+    class="reader-tool mc-action--quiet"
+    [attr.aria-expanded]="activeTool() === 'outline'"
+    [attr.aria-controls]="'outline-' + materialId()"
+    (click)="toggle('outline')"
+  >
+    <mc-icon name="outline" />
+    {{ ui.outline }}
+  </button>
+  <button
+    class="reader-tool mc-action--quiet"
+    [attr.aria-expanded]="activeTool() === 'find'"
+    [attr.aria-controls]="'document-find-' + materialId()"
+    (click)="toggle('find')"
+  >
+    <mc-icon name="search" />
+    {{ ui.search }}
+  </button>
+  <button
+    class="return-to-reading mc-icon-button mc-action--quiet"
+    (click)="navigation().returnToReading()"
+    [disabled]="!navigation().canReturn()"
+    [attr.aria-label]="ui.return"
+    [title]="ui.return"
+  >
+    <mc-icon name="return" />
+  </button>
+</div>
+<nav
+  [id]="'outline-' + materialId()"
+  [hidden]="activeTool() !== 'outline'"
+  [attr.aria-label]="ui.outline"
+  class="reader-tool-panel document-outline"
+>
+  @for (heading of navigation().index().outline; track heading.position) {
+    <button
+      [style.padding-left.px]="12 + (heading.level - 1) * 12"
+      (click)="navigation().reveal(heading.position + 1)"
+    >
+      {{ heading.label }}
+    </button>
+  } @empty {
+    <p>{{ ui.noHeadings }}</p>
+  }
+</nav>
+<div
+  [id]="'document-find-' + materialId()"
+  [hidden]="activeTool() !== 'find'"
+  role="search"
+  [attr.aria-label]="ui.find"
+  class="reader-tool-panel document-find"
+>
+  <input
+    [id]="'find-' + materialId()"
+    type="search"
+    maxlength="160"
+    [attr.aria-label]="ui.find"
+    [placeholder]="ui.find"
+    [value]="navigation().query()"
+    (input)="update($event)"
+    (keydown.enter)="findNext($event)"
+    (keydown.escape)="navigation().search('')"
+  />
+  <span class="match-count" role="status" aria-live="polite">
+    {{ navigation().selected() + 1 }} / {{ navigation().index().matches.length }}
+  </span>
+  <div class="find-actions">
+    <button
+      class="mc-icon-button mc-action--quiet"
+      (click)="navigation().move(-1)"
+      [disabled]="!navigation().index().matches.length"
+      [attr.aria-label]="ui.previous"
+      [title]="ui.previous"
+    >
+      <mc-icon name="arrow-up" />
+    </button>
+    <button
+      class="mc-icon-button mc-action--quiet"
+      (click)="navigation().move(1)"
+      [disabled]="!navigation().index().matches.length"
+      [attr.aria-label]="ui.next"
+      [title]="ui.next"
+    >
+      <mc-icon name="arrow-down" />
+    </button>
+    <button
+      class="mc-icon-button mc-action--quiet"
+      (click)="navigation().search('')"
+      [disabled]="!navigation().query()"
+      [attr.aria-label]="ui.clear"
+      [title]="ui.clear"
+    >
+      <mc-icon name="close" />
+    </button>
+  </div>
+</div>

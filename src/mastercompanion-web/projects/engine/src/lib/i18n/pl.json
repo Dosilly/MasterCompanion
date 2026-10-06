@@ -98,6 +98,8 @@
     "defaultTitle": "Sesja {date}"
   },
   "workspace": {
+    "navigationTitle": "Nawigacja",
+    "materialsTitle": "Materiały",
     "map": "Mapa",
     "darkMode": "Tryb ciemny",
     "lightMode": "Tryb jasny",
@@ -116,7 +118,13 @@
     "emptyMaterials": "Wybierz materiał ze spisu.",
     "errors": {
       "campaignLoadFailed": "Nie udało się wczytać kampanii. Sprawdź, czy backend i baza działają."
-    }
+    },
+    "showNavigation": "Pokaż nawigację",
+    "hideNavigation": "Ukryj nawigację",
+    "resizeNavigation": "Szerokość nawigacji",
+    "openTabs": "Otwarte karty",
+    "unsavedTab": "Niezapisane zmiany",
+    "closingTab": "Zapisywanie przed zamknięciem…"
   },
   "materialCache": {
     "loading": "Wczytywanie materiałów kampanii…",
@@ -133,7 +141,9 @@
       "invalidQuery": "Wpisz frazę do 160 znaków, bez znaków sterujących.",
       "campaignMissing": "Ta kampania nie jest już dostępna. Odśwież kampanię i spróbuj ponownie.",
       "failed": "Nie udało się przeszukać materiałów. Spróbuj ponownie."
-    }
+    },
+    "clear": "Wyczyść",
+    "resultCount": "Wyniki: {count}"
   },
   "routes": {
     "loading": "Otwieranie widoku…",
@@ -152,12 +162,12 @@
     "newNote": "Nowa notatka",
     "title": "Tytuł notatki",
     "folder": "Folder",
-    "create": "Utwórz notatkę",
+    "create": "Utwórz",
     "cancel": "Zamknij",
     "retry": "Ponów tworzenie",
     "recover": "Odzyskaj tworzenie notatki",
     "creating": "Tworzenie notatki…",
-    "readModeHint": "Notatka otworzy się w trybie czytania. Wybierz Edytuj notatkę, aby rozpocząć pisanie.",
+    "readModeHint": "Notatka otworzy się w trybie czytania. Wybierz Edytuj, aby rozpocząć pisanie.",
     "recoveryHint": "Tworzenie notatki wymaga potwierdzenia. Odzyskaj je przed utworzeniem kolejnej notatki.",
     "discardUnreadable": "Usuń nieczytelne dane odzyskiwania",
     "discardWarning": "Ta czynność usuwa tylko nieczytelne dane odzyskiwania z przeglądarki. Notatka mogła już powstać; sprawdź nawigację przed utworzeniem kolejnej.",
@@ -174,8 +184,9 @@
     }
   },
   "material": {
-    "edit": "Edytuj notatkę",
-    "finishEditing": "Zakończ edycję",
+    "edit": "Edytuj",
+    "finishEditing": "Gotowe",
+    "finishEditingHint": "Zakończ edycję",
     "copyDraft": "Skopiuj tekst zmian",
     "retrySave": "Ponów zapis",
     "formattingLabel": "Formatowanie tekstu",
@@ -218,10 +229,8 @@
   },
   "game": {
     "chooseActivity": "Wybierz działanie zegara",
-    "advanceEffect": "Przesuwa wyłącznie zegar gry. Nie dodaje eksploracji ani testów spotkań.",
-    "shortRestEffect": "Krótki odpoczynek · dodaje 1 godzinę czasu gry bez eksploracji.",
-    "longRestEffect": "Długi odpoczynek · dodaje 8 godzin czasu gry bez eksploracji. Nadal stosuje efekty odpoczynku określone przez moduł.",
-    "applyActivity": "Wykonaj wybrane działanie",
+    "advanceEffect": "Sam zegar · bez eksploracji.",
+    "applyActivity": "Zastosuj",
     "title": "Gra",
     "refresh": "Odśwież stan",
     "working": "Zapisywanie lub wczytywanie stanu gry…",
@@ -256,9 +265,8 @@
     "hour": "godz.",
     "shortRest": "Krótki odpoczynek (1 godz.)",
     "longRest": "Długi odpoczynek (8 godz.)",
-    "customMinutes": "Przesuń o liczbę minut",
+    "customMinutes": "Liczba minut",
     "advance": "Przesuń czas",
-    "restHint": "Przeszukanie przesuwa czas o 30 minut, a krótki odpoczynek o godzinę. Długi odpoczynek przesuwa czas o 8 godzin i zapisuje jego zakończenie dla reguł modułu.",
     "tools": "Narzędzia modułu",
     "loadingTool": "Wczytywanie narzędzia…",
     "toolFailed": "Nie udało się wczytać narzędzia. Spróbuj ponownie.",
@@ -289,13 +297,19 @@
       "storageUnavailable": "Przeglądarka nie może zachować lub usunąć oczekującego żądania. Włącz pamięć sesji i ponów, aby potwierdzić wynik operacji.",
       "invalidPending": "Zachowane oczekujące żądanie jest nieczytelne. Odśwież aktualny stan, zanim świadomie je usuniesz.",
       "invalidResponse": "Nie udało się zweryfikować odpowiedzi gry. Odśwież lub ponów oczekujące żądanie przed kontynuowaniem."
-    }
+    },
+    "restEffect": "Odpoczynek bez eksploracji."
   },
   "map": {
     "zoomOut": "Oddal mapę",
     "zoomIn": "Przybliż mapę",
     "fit": "Dopasuj",
-    "hint": "Wybierz znacznik, aby otworzyć opis. Przeciągnij mapę, aby ją przesunąć."
+    "hint": "Kliknij znacznik, aby otworzyć opis, lub wybierz lokalizację po nazwie. Przeciągnij mapę, aby ją przesunąć. Po ustawieniu fokusu na mapie użyj strzałek do przesuwania, +/− do powiększania i Home do dopasowania.",
+    "chooseLocation": "Wybierz lokalizację",
+    "locations": "Lokalizacje na mapie",
+    "openLocation": "Otwórz: {title}",
+    "viewport": "Obszar mapy",
+    "noLocations": "Ta mapa nie ma powiązanych lokalizacji."
   },
   "folders": {
     "rename": "Zmień nazwę folderu",
@@ -352,5 +366,16 @@
     "hint": "Przenieś „{title}” na koniec wybranego folderu.",
     "destination": "Folder docelowy",
     "unfiledDrop": "Przenieś dokument do materiałów bez folderu"
+  },
+  "readerNavigation": {
+    "toolsLabel": "Nawigacja w notatce",
+    "search": "Szukaj",
+    "find": "Szukaj w tej notatce",
+    "clear": "Wyczyść",
+    "previous": "Poprzednie",
+    "next": "Następne",
+    "return": "Wróć do miejsca czytania",
+    "outline": "Spis treści",
+    "noHeadings": "Ta notatka nie ma nagłówków."
   }
 }

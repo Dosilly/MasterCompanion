@@ -1,11 +1,31 @@
 @use './gameplay-layout';
 
-.game-heading {
+.game-view {
+  padding-top: 0;
+  scroll-padding-top: 88px;
+}
+.game-view > .game-heading {
   position: sticky;
-  top: -24px;
+  top: 0;
   z-index: 2;
   background: var(--page);
-  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  max-width: none;
+  margin-left: -36px;
+  margin-right: -36px;
+  padding: 12px 36px;
+}
+.game-heading-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+.game-time {
+  margin-bottom: 24px;
 }
 .game-actions button[aria-pressed='true'] {
   background: var(--selection);
@@ -16,8 +36,17 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
+  margin-top: 16px;
+}
+@media (max-width: 1000px) {
+  .game-view > .game-heading {
+    margin-left: -18px;
+    margin-right: -18px;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
 }
 .activity-review p {
-  flex-basis: 100%;
-  margin: 4px 0;
+  margin: 0;
+  color: var(--muted);
 }

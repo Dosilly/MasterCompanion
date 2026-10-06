@@ -8,6 +8,11 @@
   margin: 0;
   font-size: 25px;
 }
+.map-heading .actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 .map-viewport {
   display: grid;
   place-items: center;
@@ -19,6 +24,23 @@
   border-radius: 6px;
   touch-action: none;
   cursor: grab;
+}
+.map-viewport:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+.map-locations {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 32px 12px;
+}
+.map-locations mc-searchable-choice {
+  width: min(420px, 50%);
+}
+.open-location {
+  max-width: 50%;
+  text-align: left;
 }
 .map-image {
   position: relative;
@@ -42,6 +64,14 @@
   background: #f1e9ce;
   box-shadow: 0 1px 4px #0006;
   border-radius: 4px;
+  min-width: 32px;
+  min-height: 32px;
+}
+.map-marker.selected,
+.map-marker:focus-visible {
+  z-index: 2;
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
 }
 .map-marker:hover {
   background: #fff;

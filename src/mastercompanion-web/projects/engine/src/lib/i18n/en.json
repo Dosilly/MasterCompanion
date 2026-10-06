@@ -98,6 +98,8 @@
     "defaultTitle": "Session {date}"
   },
   "workspace": {
+    "navigationTitle": "Navigation",
+    "materialsTitle": "Materials",
     "map": "Map",
     "darkMode": "Dark mode",
     "lightMode": "Light mode",
@@ -116,7 +118,13 @@
     "emptyMaterials": "Select a material from the navigation.",
     "errors": {
       "campaignLoadFailed": "Could not load the campaign. Check that the backend and database are running."
-    }
+    },
+    "showNavigation": "Show navigation",
+    "hideNavigation": "Hide navigation",
+    "resizeNavigation": "Navigation width",
+    "openTabs": "Open tabs",
+    "unsavedTab": "Unsaved changes",
+    "closingTab": "Saving before close…"
   },
   "materialCache": {
     "loading": "Loading campaign materials…",
@@ -133,7 +141,9 @@
       "invalidQuery": "Enter a search phrase of up to 160 characters without control characters.",
       "campaignMissing": "This campaign is no longer available. Reload the campaign and try again.",
       "failed": "Could not search materials. Try again."
-    }
+    },
+    "clear": "Clear",
+    "resultCount": "Results: {count}"
   },
   "routes": {
     "loading": "Opening view…",
@@ -152,12 +162,12 @@
     "newNote": "New note",
     "title": "Note title",
     "folder": "Folder",
-    "create": "Create note",
+    "create": "Create",
     "cancel": "Close",
     "retry": "Retry creation",
     "recover": "Recover note creation",
     "creating": "Creating note…",
-    "readModeHint": "The note opens in read mode. Choose Edit note to start writing.",
+    "readModeHint": "The note opens in read mode. Choose Edit to start writing.",
     "recoveryHint": "A note creation needs confirmation. Recover it before creating another note.",
     "discardUnreadable": "Discard unreadable recovery request",
     "discardWarning": "This removes only unreadable recovery information from this browser. A note may already have been created; inspect the navigation before creating another.",
@@ -174,8 +184,9 @@
     }
   },
   "material": {
-    "edit": "Edit note",
-    "finishEditing": "Finish editing",
+    "edit": "Edit",
+    "finishEditing": "Done",
+    "finishEditingHint": "Finish editing",
     "copyDraft": "Copy draft text",
     "retrySave": "Retry save",
     "formattingLabel": "Text formatting",
@@ -218,10 +229,8 @@
   },
   "game": {
     "chooseActivity": "Choose clock activity",
-    "advanceEffect": "Advances the game clock only. It adds no exploration or encounter checks.",
-    "shortRestEffect": "Short rest · adds 1 hour of game time and no exploration.",
-    "longRestEffect": "Long rest · adds 8 hours of game time and no exploration. Module rest effects still apply.",
-    "applyActivity": "Apply selected activity",
+    "advanceEffect": "Clock only · no exploration.",
+    "applyActivity": "Apply",
     "title": "Game",
     "refresh": "Refresh state",
     "working": "Saving or loading game state…",
@@ -256,9 +265,8 @@
     "hour": "h",
     "shortRest": "Short rest (1 h)",
     "longRest": "Long rest (8 h)",
-    "customMinutes": "Advance by minutes",
+    "customMinutes": "Minutes",
     "advance": "Advance time",
-    "restHint": "Search advances time by 30 minutes and short rest by 1 hour. Long rest advances time by 8 hours and records its end for module rules.",
     "tools": "Module tools",
     "loadingTool": "Loading tool…",
     "toolFailed": "Could not load the tool. Try again.",
@@ -289,13 +297,19 @@
       "storageUnavailable": "The browser could not preserve or clear the pending request. Enable session storage and retry to confirm the operation's outcome.",
       "invalidPending": "The preserved pending request is unreadable. Refresh the current state before explicitly discarding it.",
       "invalidResponse": "The game response could not be verified. Refresh or retry the pending request before continuing."
-    }
+    },
+    "restEffect": "Rest without exploration."
   },
   "map": {
     "zoomOut": "Zoom out",
     "zoomIn": "Zoom in",
     "fit": "Fit",
-    "hint": "Select a marker to open its description. Drag the map to move it."
+    "hint": "Select a marker to open its description, or choose a named location. Drag to move the map. Focus the map and use arrow keys to pan, +/− to zoom and Home to fit.",
+    "chooseLocation": "Choose a location",
+    "locations": "Map locations",
+    "openLocation": "Open: {title}",
+    "viewport": "Map viewport",
+    "noLocations": "This map has no linked locations."
   },
   "folders": {
     "rename": "Rename folder",
@@ -352,5 +366,16 @@
     "hint": "Move “{title}” to the end of the selected folder.",
     "destination": "Destination folder",
     "unfiledDrop": "Move document to unfiled materials"
+  },
+  "readerNavigation": {
+    "toolsLabel": "Document navigation",
+    "search": "Find",
+    "find": "Find in this document",
+    "clear": "Clear",
+    "previous": "Previous",
+    "next": "Next",
+    "return": "Return to reading position",
+    "outline": "Outline",
+    "noHeadings": "This document has no headings."
   }
 }

@@ -133,6 +133,11 @@ These rules concern correctness and maintainability within the task's scope. The
 
 ## Frontend and accessibility
 
+- Design calm, compact interfaces around the reader's task. Group controls with the surface they affect: sidebar controls belong on the sidebar, document commands beside the document, and search commands beside the search field. Do not scatter utilities across unrelated header areas.
+- Use short visible action labels when context already identifies the target: Edit, New, Clear, Previous and Next. Avoid repeating the document, note or search-result name in every button. Keep full target/consequence wording for ambiguous or destructive actions and recovery decisions.
+- Prefer familiar icons for routine utilities such as sidebar collapse/expand, add, clear and previous/next navigation. Reuse the shared icon system and quiet button treatment. Every icon-only control needs a localized accessible name, a hover/focus explanation and a usable target with visible keyboard focus; compact does not mean tiny.
+- Keep distinct tools visibly distinct. Outline and document search need separate entry points and panels rather than one undifferentiated group of fields and buttons. Reveal secondary tools on demand and preserve their state when switching views.
+- Review the actual rendered UI for unnecessary labels, competing primary buttons, heavy borders and wasted space before delivery. Compare compact arrangements using representative content; retain explicit save, pending, error and conflict feedback. Do not treat a passing screenshot comparison as evidence that the composition is intuitive.
 - Readability of long notes is the primary UX requirement. Tools support the reader and must not permanently consume its useful width. Verify relevant changes at Full HD in both themes. Automated browser assertions and reviewed visual baselines can provide this evidence; repeating the same manual checks is unnecessary.
 - Default to read mode; enter editing explicitly. Preserve editor state, scroll position, and map pan/zoom during tab switching. Do not emit document updates for changes that only affect UI state.
 - Maintain folder nesting from module data. Active materials must have a visible selection, open ancestor folders, appropriate focus, and predictable scrolling without disturbing typing during ordinary autosave.

@@ -1,0 +1,51 @@
+:host {
+  position: relative;
+  flex: none;
+  align-self: stretch;
+  background: var(--paper);
+}
+summary {
+  cursor: pointer;
+  padding: 16px;
+  border-left: 1px solid var(--line);
+  white-space: nowrap;
+}
+summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -3px;
+}
+.open-tabs-list {
+  position: absolute;
+  z-index: 20;
+  right: 0;
+  width: 340px;
+  max-height: 60dvh;
+  overflow: auto;
+  padding: 8px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  box-shadow: 0 4px 16px #0003;
+}
+.open-tab-entry {
+  display: flex;
+  gap: 4px;
+  margin: 4px 0;
+}
+.open-tab-entry button:first-child {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  display: grid;
+  gap: 3px;
+}
+strong,
+small {
+  overflow-wrap: anywhere;
+}
+small {
+  color: var(--muted);
+}
+button[aria-current='page'] {
+  background: var(--selection);
+  color: var(--selection-ink);
+}

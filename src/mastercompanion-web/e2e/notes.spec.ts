@@ -26,6 +26,9 @@ test('Root note creation preserves keyboard focus and opens a persisted reader @
     name: text('engine', 'notes', 'newNote'),
     exact: true,
   });
+  await expect(opener).toHaveText('');
+  await expect(opener).toHaveAttribute('title', text('engine', 'notes', 'newNote'));
+  await expect(opener.locator('svg')).toHaveAttribute('aria-hidden', 'true');
 
   // Act
   await opener.focus();

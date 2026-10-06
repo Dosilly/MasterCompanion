@@ -1,5 +1,5 @@
 <header class="app-header">
-  <div>
+  <div class="brand-context">
     <strong>MasterCompanion</strong><span class="campaign-name"> / {{ workspace()?.title }}</span>
   </div>
   <div class="header-actions">
@@ -41,202 +41,254 @@
   }
 </ng-template>
 @if (workspace(); as data) {
-  <div class="workspace-shell">
-    <aside class="material-sidebar">
-      <nav class="primary-navigation" [attr.aria-label]="ui.workspace.primaryNavigationLabel">
-        @if (meetings()) {
-          <button
-            class="destination-button"
-            (click)="openMeetings()"
-            [attr.aria-pressed]="active() === '@sessions'"
-          >
-            <mc-icon name="sessions" />
-            {{ ui.meetings.title }}
-          </button>
-        }
-        @if (game()) {
-          <button
-            class="destination-button"
-            (click)="openParty()"
-            [attr.aria-pressed]="active() === '@party'"
-          >
-            <mc-icon name="party" />
-            {{ ui.game.partyTitle }}
-          </button>
-        }
-        @if (game(); as session) {
-          <button
-            class="destination-button"
-            (click)="openGame()"
-            [attr.aria-pressed]="active() === '@game'"
-          >
-            <mc-icon name="game" />
-            {{ ui.game.title }}
-          </button>
-        }
-        @if (workspace()?.maps?.length) {
-          <button
-            class="destination-button"
-            (click)="openMap()"
-            [attr.aria-pressed]="active().startsWith('@map:')"
-          >
-            <mc-icon name="map" />
-            {{ ui.workspace.map }}
-          </button>
-        }
-      </nav>
-      <div class="library-actions">
-        <span class="library-label">{{ ui.workspace.navigationLabel }}</span>
-        <button class="new-note-button" (click)="openCreation($event)">
-          {{ ui.notes.newNote }}
-        </button>
+  <div
+    class="workspace-shell"
+    [class.navigation-collapsed]="navigationLayout.collapsed()"
+    [style.--navigation-width]="navigationLayout.width() + 'px'"
+  >
+    <aside class="navigation-panel">
+      <div class="sidebar-toolbar">
+        <span class="sidebar-title" [hidden]="navigationLayout.collapsed()">{{
+          ui.workspace.navigationTitle
+        }}</span>
         <button
-          class="refresh-materials-button mc-icon-button mc-action--quiet"
-          [attr.aria-label]="ui.workspace.refreshMaterials"
-          [title]="ui.materialCache.refreshHint"
-          (click)="load()"
-          [disabled]="refreshing()"
+          class="navigation-toggle mc-icon-button mc-action--quiet"
+          (click)="navigationLayout.toggle()"
+          [attr.aria-expanded]="!navigationLayout.collapsed()"
+          [attr.aria-label]="
+            navigationLayout.collapsed() ? ui.workspace.showNavigation : ui.workspace.hideNavigation
+          "
+          [title]="
+            navigationLayout.collapsed() ? ui.workspace.showNavigation : ui.workspace.hideNavigation
+          "
+          aria-controls="material-sidebar"
         >
-          <mc-icon name="refresh" />
+          <mc-icon [name]="navigationLayout.collapsed() ? 'sidebar-open' : 'sidebar-close'" />
         </button>
       </div>
-      @if (materialSearch(); as search) {
-        <mc-material-search
-          [search]="search"
-          [class.searching]="search.state().kind !== 'idle'"
-          [activeId]="active()"
-          (materialRequested)="openSearchResult($event)"
-        />
-      }
-      <nav
-        #navigation
-        class="material-nav"
-        [hidden]="materialSearch()?.state().kind !== 'idle'"
-        [class.dragging-folders]="folderDrag.dragging() !== null"
-        [attr.aria-label]="ui.workspace.navigationLabel"
-      >
-        @if (creation()?.hasRecovery()) {
-          <div class="note-recovery" role="status">
-            <p>{{ ui.notes.recoveryHint }}</p>
-            <button (click)="openCreation($event)">{{ ui.notes.recover }}</button>
-          </div>
-        }
-        @if (folderManagement(); as management) {
-          @if (management.pending()) {
-            <p class="folder-status" role="status">{{ ui.folders.saving }}</p>
+      <div id="material-sidebar" class="material-sidebar" [hidden]="navigationLayout.collapsed()">
+        <nav class="primary-navigation" [attr.aria-label]="ui.workspace.primaryNavigationLabel">
+          @if (meetings()) {
+            <button
+              class="destination-button"
+              (click)="openMeetings()"
+              [attr.aria-pressed]="active() === '@sessions'"
+            >
+              <mc-icon name="sessions" />
+              {{ ui.meetings.title }}
+            </button>
           }
-          @if (management.error(); as error) {
-            <div class="folder-recovery" role="alert">
-              <p>{{ ui.folders.errors[error] }}</p>
-              @if (management.request()) {
-                <button (click)="management.retry()" [disabled]="management.pending()">
-                  {{ ui.folders.retry }}
-                </button>
-              } @else if (management.invalidRecovery()) {
-                <p>{{ ui.folders.discardWarning }}</p>
-                <button (click)="management.discardUnreadable()">
-                  {{ ui.folders.discardUnreadable }}
-                </button>
-              } @else {
-                <button (click)="management.refresh()" [disabled]="management.pending()">
-                  {{ ui.folders.refresh }}
-                </button>
-              }
+          @if (game()) {
+            <button
+              class="destination-button"
+              (click)="openParty()"
+              [attr.aria-pressed]="active() === '@party'"
+            >
+              <mc-icon name="party" />
+              {{ ui.game.partyTitle }}
+            </button>
+          }
+          @if (game(); as session) {
+            <button
+              class="destination-button"
+              (click)="openGame()"
+              [attr.aria-pressed]="active() === '@game'"
+            >
+              <mc-icon name="game" />
+              {{ ui.game.title }}
+            </button>
+          }
+          @if (workspace()?.maps?.length) {
+            <button
+              class="destination-button"
+              (click)="openMap()"
+              [attr.aria-pressed]="active().startsWith('@map:')"
+            >
+              <mc-icon name="map" />
+              {{ ui.workspace.map }}
+            </button>
+          }
+        </nav>
+        <div class="library-actions">
+          <span class="library-label">{{ ui.workspace.materialsTitle }}</span>
+          <button
+            class="new-note-button mc-icon-button mc-action--quiet"
+            (click)="openCreation($event)"
+            [attr.aria-label]="ui.notes.newNote"
+            [title]="ui.notes.newNote"
+          >
+            <mc-icon name="note-add" />
+          </button>
+          <button
+            class="refresh-materials-button mc-icon-button mc-action--quiet"
+            [attr.aria-label]="ui.workspace.refreshMaterials"
+            [title]="ui.materialCache.refreshHint"
+            (click)="load()"
+            [disabled]="refreshing()"
+          >
+            <mc-icon name="refresh" />
+          </button>
+        </div>
+        @if (materialSearch(); as search) {
+          <mc-material-search
+            [search]="search"
+            [folders]="data.folders"
+            [class.searching]="search.state().kind !== 'idle'"
+            [activeId]="active()"
+            (materialRequested)="openSearchResult($event)"
+          />
+        }
+        <nav
+          #navigation
+          class="material-nav"
+          [hidden]="materialSearch()?.state().kind !== 'idle'"
+          [class.dragging-folders]="folderDrag.dragging() !== null"
+          [attr.aria-label]="ui.workspace.navigationLabel"
+        >
+          @if (creation()?.hasRecovery()) {
+            <div class="note-recovery" role="status">
+              <p>{{ ui.notes.recoveryHint }}</p>
+              <button (click)="openCreation($event)">{{ ui.notes.recover }}</button>
             </div>
           }
-        }
-        @if (menus.feedback(); as feedback) {
-          <p role="status" class="folder-status">{{ ui.contextMenu[feedback] }}</p>
-        }
-        @if (materialSearch()?.state().kind === 'idle') {
-          <ng-container *ngTemplateOutlet="folderTree; context: { $implicit: folders() }" />
-        }
-        <ng-template #folderTree let-nodes>
-          @for (folder of nodes; track folder.id) {
-            <details
-              class="nav-folder"
-              [attr.data-folder-id]="folder.id"
-              [open]="expanded().has(folder.id)"
-              (toggle)="toggleFolder(folder.id, $event)"
-            >
-              <summary
-                [draggable]="folder.id !== '@unfiled' && !folderManagement()?.locked()"
-                [class.drop-before]="
-                  folderDrag.target()?.targetId === folder.id &&
-                  folderDrag.target()?.placement === 'before'
-                "
-                [class.drop-inside]="
-                  (folderDrag.target()?.targetId === folder.id &&
-                    folderDrag.target()?.placement === 'inside') ||
-                  (materialDrag.folderTarget() !== null &&
-                    materialDrag.folderTarget()?.id ===
-                      (folder.id === '@unfiled' ? null : folder.id))
-                "
-                [class.drop-after]="
-                  folderDrag.target()?.targetId === folder.id &&
-                  folderDrag.target()?.placement === 'after'
-                "
-                (dragstart)="
-                  folderDrag.start($event, folder.id, folderManagement()?.locked() ?? true)
-                "
-                (dragend)="folderDrag.end()"
-                (dragover)="overFolder($event, folder)"
-                (dragleave)="folderDrag.leave(); materialDrag.leave()"
-                (drop)="dropFolder($event, folder)"
-                (contextmenu)="menus.open($event, 'folder', folder.id)"
-                (keydown)="menus.open($event, 'folder', folder.id)"
-              >
-                <span class="folder-title">{{ folder.title }}</span>
-                <button
-                  type="button"
-                  class="folder-actions"
-                  [attr.aria-label]="ui.contextMenu.label + ': ' + folder.title"
-                  (click)="menus.open($event, 'folder', folder.id)"
-                >
-                  ⋯
-                </button>
-              </summary>
-              <div class="folder-contents">
-                @for (material of folder.materials; track material.id) {
-                  <button
-                    [attr.data-material-id]="material.id"
-                    [draggable]="!folderManagement()?.locked()"
-                    [class.drop-before]="
-                      materialDrag.target()?.id === material.id &&
-                      materialDrag.target()?.placement === 'before'
-                    "
-                    [class.drop-after]="
-                      materialDrag.target()?.id === material.id &&
-                      materialDrag.target()?.placement === 'after'
-                    "
-                    (dragstart)="
-                      materialDrag.start($event, material.id, folderManagement()?.locked() ?? true)
-                    "
-                    (dragend)="materialDrag.end()"
-                    (dragover)="overMaterial($event, material.id)"
-                    (dragleave)="materialDrag.leave()"
-                    (drop)="dropMaterial($event, material.id)"
-                    [class.selected]="active() === material.id"
-                    [attr.aria-current]="active() === material.id ? 'page' : null"
-                    (click)="open(material.id)"
-                    (contextmenu)="menus.open($event, 'material', material.id)"
-                    (keydown)="menus.open($event, 'material', material.id)"
-                  >
-                    {{ material.title }}
+          @if (folderManagement(); as management) {
+            @if (management.pending()) {
+              <p class="folder-status" role="status">{{ ui.folders.saving }}</p>
+            }
+            @if (management.error(); as error) {
+              <div class="folder-recovery" role="alert">
+                <p>{{ ui.folders.errors[error] }}</p>
+                @if (management.request()) {
+                  <button (click)="management.retry()" [disabled]="management.pending()">
+                    {{ ui.folders.retry }}
+                  </button>
+                } @else if (management.invalidRecovery()) {
+                  <p>{{ ui.folders.discardWarning }}</p>
+                  <button (click)="management.discardUnreadable()">
+                    {{ ui.folders.discardUnreadable }}
+                  </button>
+                } @else {
+                  <button (click)="management.refresh()" [disabled]="management.pending()">
+                    {{ ui.folders.refresh }}
                   </button>
                 }
-                <ng-container
-                  *ngTemplateOutlet="folderTree; context: { $implicit: folder.children }"
-                />
               </div>
-            </details>
+            }
           }
-        </ng-template>
-        @if (materialSearch()?.state().kind === 'idle' && !folders().length) {
-          <p class="nav-empty">{{ ui.workspace.noSearchResults }}</p>
-        }
-      </nav>
+          @if (menus.feedback(); as feedback) {
+            <p role="status" class="folder-status">{{ ui.contextMenu[feedback] }}</p>
+          }
+          @if (materialSearch()?.state().kind === 'idle') {
+            <ng-container *ngTemplateOutlet="folderTree; context: { $implicit: folders() }" />
+          }
+          <ng-template #folderTree let-nodes>
+            @for (folder of nodes; track folder.id) {
+              <details
+                class="nav-folder"
+                [attr.data-folder-id]="folder.id"
+                [open]="expanded().has(folder.id)"
+                (toggle)="toggleFolder(folder.id, $event)"
+              >
+                <summary
+                  [draggable]="folder.id !== '@unfiled' && !folderManagement()?.locked()"
+                  [class.drop-before]="
+                    folderDrag.target()?.targetId === folder.id &&
+                    folderDrag.target()?.placement === 'before'
+                  "
+                  [class.drop-inside]="
+                    (folderDrag.target()?.targetId === folder.id &&
+                      folderDrag.target()?.placement === 'inside') ||
+                    (materialDrag.folderTarget() !== null &&
+                      materialDrag.folderTarget()?.id ===
+                        (folder.id === '@unfiled' ? null : folder.id))
+                  "
+                  [class.drop-after]="
+                    folderDrag.target()?.targetId === folder.id &&
+                    folderDrag.target()?.placement === 'after'
+                  "
+                  (dragstart)="
+                    folderDrag.start($event, folder.id, folderManagement()?.locked() ?? true)
+                  "
+                  (dragend)="folderDrag.end()"
+                  (dragover)="overFolder($event, folder)"
+                  (dragleave)="folderDrag.leave(); materialDrag.leave()"
+                  (drop)="dropFolder($event, folder)"
+                  (contextmenu)="menus.open($event, 'folder', folder.id)"
+                  (keydown)="menus.open($event, 'folder', folder.id)"
+                >
+                  <span class="folder-title">{{ folder.title }}</span>
+                  <button
+                    type="button"
+                    class="folder-actions"
+                    [attr.aria-label]="ui.contextMenu.label + ': ' + folder.title"
+                    (click)="menus.open($event, 'folder', folder.id)"
+                  >
+                    ⋯
+                  </button>
+                </summary>
+                <div class="folder-contents">
+                  @for (material of folder.materials; track material.id) {
+                    <button
+                      [attr.data-material-id]="material.id"
+                      [draggable]="!folderManagement()?.locked()"
+                      [class.drop-before]="
+                        materialDrag.target()?.id === material.id &&
+                        materialDrag.target()?.placement === 'before'
+                      "
+                      [class.drop-after]="
+                        materialDrag.target()?.id === material.id &&
+                        materialDrag.target()?.placement === 'after'
+                      "
+                      (dragstart)="
+                        materialDrag.start(
+                          $event,
+                          material.id,
+                          folderManagement()?.locked() ?? true
+                        )
+                      "
+                      (dragend)="materialDrag.end()"
+                      (dragover)="overMaterial($event, material.id)"
+                      (dragleave)="materialDrag.leave()"
+                      (drop)="dropMaterial($event, material.id)"
+                      [class.selected]="active() === material.id"
+                      [attr.aria-current]="active() === material.id ? 'page' : null"
+                      (click)="open(material.id)"
+                      (contextmenu)="menus.open($event, 'material', material.id)"
+                      (keydown)="menus.open($event, 'material', material.id)"
+                    >
+                      {{ material.title }}
+                    </button>
+                  }
+                  <ng-container
+                    *ngTemplateOutlet="folderTree; context: { $implicit: folder.children }"
+                  />
+                </div>
+              </details>
+            }
+          </ng-template>
+          @if (materialSearch()?.state().kind === 'idle' && !folders().length) {
+            <p class="nav-empty">{{ ui.workspace.noSearchResults }}</p>
+          }
+        </nav>
+      </div>
     </aside>
+    <div
+      class="navigation-resizer"
+      role="separator"
+      tabindex="0"
+      aria-controls="material-sidebar"
+      aria-orientation="vertical"
+      [hidden]="navigationLayout.collapsed()"
+      [attr.aria-label]="ui.workspace.resizeNavigation"
+      [attr.aria-valuenow]="navigationLayout.width()"
+      [attr.aria-valuemin]="navigationLayout.minimumWidth"
+      [attr.aria-valuemax]="navigationLayout.maximumWidth"
+      (keydown)="navigationLayout.key($event)"
+      (pointerdown)="navigationLayout.start($event)"
+      (pointermove)="navigationLayout.move($event)"
+      (pointerup)="navigationLayout.end($event)"
+      (pointercancel)="navigationLayout.end($event)"
+    ></div>
     @if (folderDrag.dragging() || materialDrag.dragging()) {
       <div
         class="folder-root-drop"
@@ -265,79 +317,92 @@
         </div>
       }
 
-      <div
-        #tabStrip
-        class="material-tabs"
-        role="tablist"
-        [attr.aria-label]="ui.workspace.tabsLabel"
-        (keydown)="tabKey($event)"
-      >
-        @if (meetingsOpen()) {
-          <mc-workspace-tab
-            key="@sessions"
-            [label]="ui.meetings.title"
-            [closeLabel]="ui.workspace.closeTab"
-            [selected]="active() === '@sessions'"
-            [dirty]="meetingDrafts.dirty()"
-            (activate)="activate('@sessions')"
-            (close)="close('@sessions')"
-            (contextmenu)="menus.open($event, 'tab', '@sessions')"
-            (keydown)="menus.open($event, 'tab', '@sessions')"
-          />
+      @if (navigationLayout.collapsed()) {
+        @if (activeTab(); as tab) {
+          <p class="collapsed-context">{{ tab.context }} · {{ tab.title }}</p>
         }
-        @if (partyOpen()) {
-          <mc-workspace-tab
-            key="@party"
-            [label]="ui.game.partyTitle"
-            [closeLabel]="ui.workspace.closeTab"
-            [selected]="active() === '@party'"
-            [dirty]="partyView()?.dirty() ?? false"
-            (activate)="activate('@party')"
-            (close)="close('@party')"
-            (contextmenu)="menus.open($event, 'tab', '@party')"
-            (keydown)="menus.open($event, 'tab', '@party')"
-          />
-        }
-        @if (gameOpen()) {
-          <mc-workspace-tab
-            key="@game"
-            [label]="ui.game.title"
-            [closeLabel]="ui.workspace.closeTab"
-            [selected]="active() === '@game'"
-            (activate)="activate('@game')"
-            (close)="close('@game')"
-            (contextmenu)="menus.open($event, 'tab', '@game')"
-            (keydown)="menus.open($event, 'tab', '@game')"
-          />
-        }
-        @for (map of maps(); track map.id) {
-          <mc-workspace-tab
-            [key]="'@map:' + map.id"
-            [label]="data.maps.length === 1 ? ui.workspace.map : map.title"
-            [closeLabel]="ui.workspace.closeTab"
-            [closeHint]="ui.workspace.closeTabHint"
-            [selected]="active() === '@map:' + map.id"
-            (activate)="activate('@map:' + map.id)"
-            (close)="close('@map:' + map.id)"
-            (contextmenu)="menus.open($event, 'tab', '@map:' + map.id)"
-            (keydown)="menus.open($event, 'tab', '@map:' + map.id)"
-          />
-        }
-        @for (tab of sessions(); track tab.material.id) {
-          <mc-workspace-tab
-            [key]="tab.material.id"
-            [label]="tab.material.title"
-            [closeLabel]="ui.workspace.closeTab"
-            [closeHint]="ui.workspace.closeTabHint"
-            [selected]="active() === tab.material.id"
-            [dirty]="tab.dirty()"
-            [closing]="closing().has(tab.material.id)"
-            (activate)="activate(tab.material.id)"
-            (close)="close(tab.material.id)"
-            (contextmenu)="menus.open($event, 'tab', tab.material.id)"
-            (keydown)="menus.open($event, 'tab', tab.material.id)"
-          />
-        }
+      }
+      <div class="tab-strip-row">
+        <div
+          #tabStrip
+          class="material-tabs"
+          role="tablist"
+          [attr.aria-label]="ui.workspace.tabsLabel"
+          (keydown)="tabKey($event)"
+        >
+          @if (meetingsOpen()) {
+            <mc-workspace-tab
+              key="@sessions"
+              [label]="ui.meetings.title"
+              [closeLabel]="ui.workspace.closeTab"
+              [selected]="active() === '@sessions'"
+              [dirty]="meetingDrafts.dirty()"
+              (activate)="activate('@sessions')"
+              (close)="close('@sessions')"
+              (contextmenu)="menus.open($event, 'tab', '@sessions')"
+              (keydown)="menus.open($event, 'tab', '@sessions')"
+            />
+          }
+          @if (partyOpen()) {
+            <mc-workspace-tab
+              key="@party"
+              [label]="ui.game.partyTitle"
+              [closeLabel]="ui.workspace.closeTab"
+              [selected]="active() === '@party'"
+              [dirty]="partyView()?.dirty() ?? false"
+              (activate)="activate('@party')"
+              (close)="close('@party')"
+              (contextmenu)="menus.open($event, 'tab', '@party')"
+              (keydown)="menus.open($event, 'tab', '@party')"
+            />
+          }
+          @if (gameOpen()) {
+            <mc-workspace-tab
+              key="@game"
+              [label]="ui.game.title"
+              [closeLabel]="ui.workspace.closeTab"
+              [selected]="active() === '@game'"
+              (activate)="activate('@game')"
+              (close)="close('@game')"
+              (contextmenu)="menus.open($event, 'tab', '@game')"
+              (keydown)="menus.open($event, 'tab', '@game')"
+            />
+          }
+          @for (map of maps(); track map.id) {
+            <mc-workspace-tab
+              [key]="'@map:' + map.id"
+              [label]="data.maps.length === 1 ? ui.workspace.map : map.title"
+              [closeLabel]="ui.workspace.closeTab"
+              [closeHint]="ui.workspace.closeTabHint"
+              [selected]="active() === '@map:' + map.id"
+              (activate)="activate('@map:' + map.id)"
+              (close)="close('@map:' + map.id)"
+              (contextmenu)="menus.open($event, 'tab', '@map:' + map.id)"
+              (keydown)="menus.open($event, 'tab', '@map:' + map.id)"
+            />
+          }
+          @for (tab of sessions(); track tab.material.id) {
+            <mc-workspace-tab
+              [key]="tab.material.id"
+              [label]="tab.material.title"
+              [closeLabel]="ui.workspace.closeTab"
+              [closeHint]="ui.workspace.closeTabHint"
+              [selected]="active() === tab.material.id"
+              [dirty]="tab.dirty()"
+              [closing]="closing().has(tab.material.id)"
+              (activate)="activate(tab.material.id)"
+              (close)="close(tab.material.id)"
+              (contextmenu)="menus.open($event, 'tab', tab.material.id)"
+              (keydown)="menus.open($event, 'tab', tab.material.id)"
+            />
+          }
+        </div>
+        <mc-open-tabs
+          [items]="openTabItems()"
+          [activeId]="active()"
+          (activate)="activate($event, undefined, true)"
+          (close)="close($event)"
+        />
       </div>
       @if (opening()) {
         <div class="opening-state" role="status">{{ ui.routes.loading }}</div>

@@ -12,6 +12,8 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { DocumentNavigation } from './document-navigation';
+import { DocumentNavigationView } from './document-navigation-view';
 import { Editor } from '@tiptap/core';
 import type { CampaignFolder, MaterialSummary } from '@mastercompanion/contracts';
 import { SearchableChoiceComponent } from '@mastercompanion/ui';
@@ -29,7 +31,7 @@ import {
 
 @Component({
   selector: 'mc-material-view',
-  imports: [SearchableChoiceComponent, RichDocumentPreview],
+  imports: [SearchableChoiceComponent, RichDocumentPreview, DocumentNavigationView],
   templateUrl: './material-view.html',
   styleUrl: './material-view.scss',
 })
@@ -64,6 +66,7 @@ export class MaterialView implements AfterViewInit, OnDestroy {
   private selection?: InsertionSelection;
   private insertionOpener?: HTMLElement;
   editor?: Editor;
+  readonly documentNavigation = signal<DocumentNavigation | null>(null);
   readonly commandState = signal({
     bold: false,
     italic: false,
@@ -98,6 +101,7 @@ export class MaterialView implements AfterViewInit, OnDestroy {
       this.session(),
       this.ui.material.contentLabel,
     );
+    this.documentNavigation.set(new DocumentNavigation(this.editor));
     this.editor.on('transaction', this.updateCommandState);
     this.updateCommandState();
   }
@@ -245,6 +249,7 @@ export class MaterialView implements AfterViewInit, OnDestroy {
     if (!this.session().adoptSavedVersion()) {
       return;
     }
+    this.documentNavigation()?.destroy();
     this.editor?.off('transaction', this.updateCommandState);
     this.editor?.destroy();
     this.session().editing.set(false);

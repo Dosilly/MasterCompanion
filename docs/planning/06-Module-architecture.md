@@ -10,6 +10,29 @@ report elements skipped because of campaign edits. These are future requirements
 with no implemented storage or contract changes. See
 [the recorded ideas and open design decisions](37-Module-editor-and-campaign-updates.md).
 
+## Map viewer presentation, 6 October 2026
+
+The engine viewer owns zoom/pan, named location choice and marker hit-area scaling.
+Modules provide neutral map metadata and assets. These viewer operations never
+write map records; future authoring requires a separate explicit save contract.
+The existing neutral SearchableChoice receives presentation options and emits IDs.
+
+## Reader retrieval ownership, 6 October 2026
+
+DocumentNavigation indexes the supported editor model and owns temporary
+decorations/scroll state. It does not own material persistence or undo. Campaign
+search paths come from confirmed folder metadata; no API contract changes are
+required. The engine stylesheet intentionally reaches generated decoration markup.
+
+## Workspace recovery and presentation ownership, 6 October 2026
+
+Saved-version inspection and adoption/reapplication remain campaign use cases in
+the engine. Session record routes and active-meeting context are engine navigation;
+the host declares route patterns. NavigationLayout and OpenTabs own presentation
+state without campaign writes. Workspace retains activation/close policy and
+SessionDrafts retains independent explicit-save drafts. None of these controls
+adds dependencies to neutral UI or module-specific engine rules.
+
 ## Campaign persistence scope, 4 October 2026
 
 The database stores campaign-owned materials and game state. Campaign
