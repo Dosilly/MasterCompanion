@@ -1,5 +1,21 @@
 # Implementation status
 
+## Compact navigation and separate reader tools — 6 October 2026
+
+[The user-requested refinement](43-Compact-navigation-and-reader-tools.md) moves
+collapse/expand onto the sidebar with a retained narrow rail, replaces routine
+new/clear/match actions with named icons and shortens Edit/Done/Create labels.
+Outline and Find have separate controls and panels; their query and mounted work
+remain intact. Repository instructions now require compact contextual controls.
+
+Twenty-four scoped navigation/retrieval/note browser cases pass; sixteen final
+retrieval/search cases and twenty normal visual comparisons pass across both
+themes/sizes. Five selected projection/editor cases, frontend quality, current
+production compilation and the reviewed icon catalog pass. The feature branch
+includes the already delivered F/G and gameplay polish absent from the squashed
+trunk checkout. Commit and local container delivery follow; merging and remote
+pushing remain user-controlled.
+
 ## Gameplay spacing and concise guidance — 6 October 2026
 
 [The UI follow-up](42-Gameplay-layout-polish.md) fixes clock/action spacing and

@@ -98,6 +98,8 @@
     "defaultTitle": "Sesja {date}"
   },
   "workspace": {
+    "navigationTitle": "Nawigacja",
+    "materialsTitle": "Materiały",
     "map": "Mapa",
     "darkMode": "Tryb ciemny",
     "lightMode": "Tryb jasny",
@@ -160,12 +162,12 @@
     "newNote": "Nowa notatka",
     "title": "Tytuł notatki",
     "folder": "Folder",
-    "create": "Utwórz notatkę",
+    "create": "Utwórz",
     "cancel": "Zamknij",
     "retry": "Ponów tworzenie",
     "recover": "Odzyskaj tworzenie notatki",
     "creating": "Tworzenie notatki…",
-    "readModeHint": "Notatka otworzy się w trybie czytania. Wybierz Edytuj notatkę, aby rozpocząć pisanie.",
+    "readModeHint": "Notatka otworzy się w trybie czytania. Wybierz Edytuj, aby rozpocząć pisanie.",
     "recoveryHint": "Tworzenie notatki wymaga potwierdzenia. Odzyskaj je przed utworzeniem kolejnej notatki.",
     "discardUnreadable": "Usuń nieczytelne dane odzyskiwania",
     "discardWarning": "Ta czynność usuwa tylko nieczytelne dane odzyskiwania z przeglądarki. Notatka mogła już powstać; sprawdź nawigację przed utworzeniem kolejnej.",
@@ -182,8 +184,9 @@
     }
   },
   "material": {
-    "edit": "Edytuj notatkę",
-    "finishEditing": "Zakończ edycję",
+    "edit": "Edytuj",
+    "finishEditing": "Gotowe",
+    "finishEditingHint": "Zakończ edycję",
     "copyDraft": "Skopiuj tekst zmian",
     "retrySave": "Ponów zapis",
     "formattingLabel": "Formatowanie tekstu",
@@ -365,13 +368,14 @@
     "unfiledDrop": "Przenieś dokument do materiałów bez folderu"
   },
   "readerNavigation": {
-    "title": "Spis treści i szukanie",
+    "toolsLabel": "Nawigacja w notatce",
+    "search": "Szukaj",
     "find": "Szukaj w tej notatce",
-    "clear": "Wyczyść trafienia",
-    "previous": "Poprzednie trafienie",
-    "next": "Następne trafienie",
+    "clear": "Wyczyść",
+    "previous": "Poprzednie",
+    "next": "Następne",
     "return": "Wróć do miejsca czytania",
-    "outline": "Spis treści notatki",
+    "outline": "Spis treści",
     "noHeadings": "Ta notatka nie ma nagłówków."
   }
 }

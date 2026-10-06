@@ -422,7 +422,7 @@ solely because a visual baseline passes.
 ## Delivery and documentation rules
 
 - Follow the repository workflow: focused `codex/` branch from `trunk`, scoped
-  review/checks, commit, local merge, runtime build/update for implemented features,
+  review/checks, commit, runtime build/update from the feature branch,
   then readiness and affected behavior. No remote push or external deployment is
   included. Documentation-only planning needs no application rebuild.
 - Maintain localization keys/placeholders and accessible recovery labels together.
@@ -437,6 +437,10 @@ solely because a visual baseline passes.
   probes are added by this UX plan; AWS production protections stay separate.
 
 ## Next implementation boundary
+
+The user-requested [compact navigation and reader-tool refinement](43-Compact-navigation-and-reader-tools.md)
+shortens contextual actions and separates outline from document find. Feature
+branches remain available for user-controlled merging and remote pushing.
 
 The corrective cycle A–J is implemented locally with scoped delivery records.
 Map authoring and multiple campaigns remain subsequent product scope. Keep actual

@@ -8,6 +8,12 @@ test('Sidebar resize is bounded by pointer and keyboard and collapse retains rea
   api,
 }, testInfo) => {
   await openReader(page);
+  const toggle = page.getByRole('button', { name: label('hideNavigation'), exact: true });
+  await expect(page.locator('.app-header .navigation-toggle')).toHaveCount(0);
+  await expect(page.locator('.navigation-panel .navigation-toggle')).toHaveCount(1);
+  await expect(toggle).toHaveText('');
+  await expect(toggle).toHaveAttribute('title', label('hideNavigation'));
+  await expect(toggle.locator('svg')).toHaveAttribute('aria-hidden', 'true');
   const separator = page.getByRole('separator', { name: label('resizeNavigation') });
   await separator.focus();
   await page.keyboard.press('End');
@@ -37,9 +43,12 @@ test('Sidebar resize is bounded by pointer and keyboard and collapse retains rea
   await expectNoHorizontalOverflow(page, page.locator('.workspace-shell'));
   await page.screenshot({ path: testInfo.outputPath('collapsed-navigation.png') });
   const reopen = page.getByRole('button', { name: label('showNavigation'), exact: true });
+  await expect(reopen).toHaveAttribute('aria-expanded', 'false');
+  await expect(reopen).toBeInViewport();
   await reopen.focus();
   await page.keyboard.press('Enter');
   await expect(separator).toHaveAttribute('aria-valuenow', '324');
+  await expect(toggle).toBeFocused();
   expect(await scroll.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
   expect(api.saves).toHaveLength(0);
 });

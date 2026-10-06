@@ -84,6 +84,28 @@ function fixture(t, ending = endings.rule) {
 }
 const nextTurn = () => new Promise((resolve) => setImmediate(resolve));
 describe('Material editor and session integration', () => {
+  test('Previous starts at the last match and arrows wrap without changing document state', (t) => {
+    const { editor, session, requests } = fixture(t, paragraph('Original second Original third'));
+    const original = editor.getJSON();
+    const navigation = new DocumentNavigation(editor);
+    t.after(() => navigation.destroy());
+    navigation.search('Original');
+
+    navigation.move(-1);
+    assert.equal(navigation.selected(), 2);
+    navigation.move(1);
+    assert.equal(navigation.selected(), 0);
+    navigation.move(-1);
+    assert.equal(navigation.selected(), 2);
+
+    navigation.search('Original');
+    navigation.move(1);
+    assert.equal(navigation.selected(), 0);
+    assert.deepEqual(editor.getJSON(), original);
+    assert.equal(session.dirty(), false);
+    assert.deepEqual(requests, []);
+  });
+
   test('Matches reindex on actual edits and undo restores content without decoration history', async (t) => {
     const { editor, session } = fixture(t, endings.paragraph);
     session.editing.set(true);

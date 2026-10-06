@@ -91,18 +91,23 @@ button:hover {
   flex: 1;
   min-width: 0;
 }
+.search-controls input::-webkit-search-cancel-button {
+  appearance: none;
+}
 .search-controls .clear-search {
-  width: auto;
-  flex: none;
-  padding: 8px 5px;
+  display: inline-flex;
+  width: var(--control-height);
+  padding: 6px;
   margin: 0;
-  border: 1px solid var(--control-line);
 }
 .search-result-path {
   display: block;
   font-size: 11px;
   margin-top: 4px;
   color: var(--muted);
+}
+.search-result.selected .search-result-path {
+  color: inherit;
 }
 mark {
   background: var(--selection);

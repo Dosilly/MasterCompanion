@@ -1,4 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
+import { IconComponent } from '@mastercompanion/ui';
 import type { CampaignFolder } from '@mastercompanion/contracts';
 import { folderPath } from '../workspace/navigation';
 import { searchHighlight } from './search-highlight';
@@ -8,7 +9,7 @@ import { MaterialSearch } from './material-search';
 
 @Component({
   selector: 'mc-material-search',
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, IconComponent],
   templateUrl: './material-search-view.html',
   styleUrl: './material-search-view.scss',
 })

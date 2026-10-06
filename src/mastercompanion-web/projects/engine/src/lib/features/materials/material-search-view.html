@@ -9,8 +9,14 @@
     (input)="updateQuery($event)"
     (keydown.escape)="clear($event)"
   />
-  <button class="clear-search" (click)="clear($event)" [disabled]="!search().query()">
-    {{ ui.search.clear }}
+  <button
+    class="clear-search mc-icon-button mc-action--quiet"
+    (click)="clear($event)"
+    [disabled]="!search().query()"
+    [attr.aria-label]="ui.search.clear"
+    [title]="ui.search.clear"
+  >
+    <mc-icon name="close" />
   </button>
 </div>
 <ng-template #highlighted let-value>

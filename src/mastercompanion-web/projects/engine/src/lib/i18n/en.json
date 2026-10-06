@@ -98,6 +98,8 @@
     "defaultTitle": "Session {date}"
   },
   "workspace": {
+    "navigationTitle": "Navigation",
+    "materialsTitle": "Materials",
     "map": "Map",
     "darkMode": "Dark mode",
     "lightMode": "Light mode",
@@ -160,12 +162,12 @@
     "newNote": "New note",
     "title": "Note title",
     "folder": "Folder",
-    "create": "Create note",
+    "create": "Create",
     "cancel": "Close",
     "retry": "Retry creation",
     "recover": "Recover note creation",
     "creating": "Creating note…",
-    "readModeHint": "The note opens in read mode. Choose Edit note to start writing.",
+    "readModeHint": "The note opens in read mode. Choose Edit to start writing.",
     "recoveryHint": "A note creation needs confirmation. Recover it before creating another note.",
     "discardUnreadable": "Discard unreadable recovery request",
     "discardWarning": "This removes only unreadable recovery information from this browser. A note may already have been created; inspect the navigation before creating another.",
@@ -182,8 +184,9 @@
     }
   },
   "material": {
-    "edit": "Edit note",
-    "finishEditing": "Finish editing",
+    "edit": "Edit",
+    "finishEditing": "Done",
+    "finishEditingHint": "Finish editing",
     "copyDraft": "Copy draft text",
     "retrySave": "Retry save",
     "formattingLabel": "Text formatting",
@@ -365,13 +368,14 @@
     "unfiledDrop": "Move document to unfiled materials"
   },
   "readerNavigation": {
-    "title": "Outline and find",
+    "toolsLabel": "Document navigation",
+    "search": "Find",
     "find": "Find in this document",
-    "clear": "Clear matches",
-    "previous": "Previous match",
-    "next": "Next match",
+    "clear": "Clear",
+    "previous": "Previous",
+    "next": "Next",
     "return": "Return to reading position",
-    "outline": "Document outline",
+    "outline": "Outline",
     "noHeadings": "This document has no headings."
   }
 }

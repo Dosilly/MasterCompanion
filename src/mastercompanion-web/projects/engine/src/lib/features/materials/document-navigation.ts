@@ -54,7 +54,13 @@ export class DocumentNavigation {
     if (!matches.length) {
       return;
     }
-    const selected = (this.selected() + delta + matches.length) % matches.length;
+    const current = this.selected();
+    const selected =
+      current < 0
+        ? delta < 0
+          ? matches.length - 1
+          : 0
+        : (current + delta + matches.length) % matches.length;
     this.selectedState.set(selected);
     this.redraw();
     const match = matches[selected];
