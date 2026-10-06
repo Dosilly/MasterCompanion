@@ -65,5 +65,17 @@ Verified results:
   rendering in both themes reports no page errors. The last test-only formatting
   correction passes its scoped formatter check.
 
-Local runtime delivery follows the feature commit. No API, persistence schema,
-module source, data-replacement or backend rule changes are part of this refinement.
+## Local runtime delivery
+
+Feature commit `4b10b26` remains on `codex/compact-navigation-controls`, created
+from trunk with the previously delivered F/G and gameplay-polish commits carried
+forward. Image `mastercompanion:compact-ui-4b10b26` was built from that verified
+branch and installed using the task-scoped `.local/compact-ui-runtime.yaml` override.
+Both services are healthy; the application remains on IPv4 loopback port 4200.
+Four read-only container probes pass. Full HD verification on the actual campaign
+confirms separate outline/find panels, icon collapse/reopen and note-dialog focus
+return in both themes, with API writes blocked and no page errors. Live screenshots
+were reviewed. The PostgreSQL service was not recreated.
+
+No API, persistence schema, module source, data-replacement or backend rule changes
+are part of this refinement. No merge, remote push or external deployment occurred.

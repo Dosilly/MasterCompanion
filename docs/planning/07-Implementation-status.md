@@ -13,8 +13,11 @@ retrieval/search cases and twenty normal visual comparisons pass across both
 themes/sizes. Five selected projection/editor cases, frontend quality, current
 production compilation and the reviewed icon catalog pass. The feature branch
 includes the already delivered F/G and gameplay polish absent from the squashed
-trunk checkout. Commit and local container delivery follow; merging and remote
-pushing remain user-controlled.
+trunk checkout. Feature commit `4b10b26` remains on `codex/compact-navigation-controls`;
+image `mastercompanion:compact-ui-4b10b26` is installed locally. Both services are
+healthy, four read-only container probes pass and live Full HD checks confirm the
+new controls/panels in both themes without campaign writes or page errors. Merging
+and remote pushing remain user-controlled.
 
 ## Gameplay spacing and concise guidance — 6 October 2026
 
