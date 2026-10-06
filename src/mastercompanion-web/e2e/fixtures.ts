@@ -145,6 +145,8 @@ export class TestApi {
   savedDocument: unknown = this.data.materials[0].document;
   revision = this.data.materials[0].revision;
   workspaceFailures = 0;
+  materialInspectionAllowed = false;
+  materialInspectionFailures = 0;
   saveMode: 'success' | 'hold' | 'conflict' | 'failure' = 'success';
   creationMode: 'success' | 'hold' | 'invalid' | 'lostResponse' = 'success';
   private readonly saveGate = Promise.withResolvers<void>();
@@ -437,6 +439,21 @@ export class TestApi {
           this.createdMaterials.find((item) => path === `/api/materials/${item.id}`);
         if (material && method === 'GET') {
           this.materialReads.push(material.id);
+          if (this.materialInspectionAllowed) {
+            if (this.materialInspectionFailures > 0) {
+              this.materialInspectionFailures--;
+              this.expectedHttpErrors.push({ url: request.url(), status: 503 });
+              await route.fulfill({ status: 503, json: { code: 'fixtureReadFailure' } });
+            } else {
+              await route.fulfill({
+                json:
+                  material.id === readerId
+                    ? { ...material, document: this.savedDocument, revision: this.revision }
+                    : material,
+              });
+            }
+            return;
+          }
           this.unexpectedRequests.push(`${method} ${request.url()}`);
           await route.abort('blockedbyclient');
           return;

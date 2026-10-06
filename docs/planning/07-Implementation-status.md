@@ -1,5 +1,17 @@
 # Implementation status
 
+## Explicit draft recovery — 6 October 2026
+
+[Slice C](35-Draft-recovery.md) adds scoped saved-version inspection, deliberate
+adoption or reapplication against the inspected revision, and visible copy/manual
+copy recovery for material and session drafts. Other open work remains independently
+owned. Fifty-two focused unit/integration cases and twenty scoped browser cases
+pass; frontend quality and isolated production compilation pass. Full HD material
+recovery previews were reviewed in both themes. Local runtime delivery is pending.
+
+The user authorized the remaining C–G UI corrections on 6 October. D (gameplay),
+E (session workflow), F (navigation/retrieval) and G (map interaction) follow C.
+
 ## UX follow-up corrections — 5 October 2026
 
 [The follow-up delivery](34-UX-follow-up-corrections.md) fixes gameplay reminder

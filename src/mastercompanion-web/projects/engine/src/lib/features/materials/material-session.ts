@@ -1,7 +1,12 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { MaterialDto, RichDocument } from '@mastercompanion/contracts';
+import { isMaterialResponse } from './material-response';
+
+type SavedVersion =
+  | { readonly kind: 'idle' | 'loading' | 'failed' }
+  | { readonly kind: 'ready'; readonly material: MaterialDto };
 
 export type MaterialErrorCode = 'saveConflict' | 'saveFailed' | 'clipboardUnavailable';
 
@@ -17,6 +22,10 @@ export class MaterialSession {
   private savedGeneration = 0;
   private timer?: ReturnType<typeof setTimeout>;
   private inFlight?: Promise<boolean>;
+  private readonly savedVersionState = signal<SavedVersion>({ kind: 'idle' });
+  readonly savedVersion = this.savedVersionState.asReadonly();
+  private readonly stop = new Subject<void>();
+  private destroyed = false;
 
   constructor(
     readonly material: MaterialDto,
@@ -27,6 +36,9 @@ export class MaterialSession {
     this.confirmedRevisionState.set(material.revision);
   }
   change(document: RichDocument) {
+    if (this.destroyed) {
+      return;
+    }
     this.document = document;
     this.generation++;
     this.dirty.set(true);
@@ -39,6 +51,9 @@ export class MaterialSession {
   }
   flush(): Promise<boolean> {
     clearTimeout(this.timer);
+    if (this.destroyed) {
+      return Promise.resolve(false);
+    }
     if (this.inFlight) {
       return this.inFlight;
     }
@@ -51,6 +66,68 @@ export class MaterialSession {
   async prepareToClose(): Promise<boolean> {
     return (await this.flush()) && !this.dirty();
   }
+  async inspectSavedVersion(): Promise<void> {
+    if (this.destroyed || this.status() !== 'conflict' || this.savedVersion().kind === 'loading') {
+      return;
+    }
+    this.savedVersionState.set({ kind: 'loading' });
+    try {
+      const material = await firstValueFrom(
+        this.http
+          .get<unknown>(`/api/materials/${encodeURIComponent(this.material.id)}`)
+          .pipe(takeUntil(this.stop)),
+      );
+      if (this.destroyed) {
+        return;
+      }
+      if (
+        !isMaterialResponse(material) ||
+        material.id !== this.material.id ||
+        material.revision < this.confirmedRevision()
+      ) {
+        this.savedVersionState.set({ kind: 'failed' });
+        return;
+      }
+      this.savedVersionState.set({ kind: 'ready', material });
+    } catch {
+      if (!this.destroyed) {
+        this.savedVersionState.set({ kind: 'failed' });
+      }
+    }
+  }
+  adoptSavedVersion(): boolean {
+    const version = this.savedVersion();
+    if (version.kind !== 'ready' || this.status() !== 'conflict') {
+      return false;
+    }
+    clearTimeout(this.timer);
+    this.document = version.material.document;
+    this.confirmedRevisionState.set(version.material.revision);
+    this.savedGeneration = ++this.generation;
+    this.dirty.set(false);
+    this.status.set('saved');
+    this.error.set(null);
+    this.savedVersionState.set({ kind: 'idle' });
+    this.onConfirmedSave?.(version.material);
+    return true;
+  }
+  reapplyDraft(): Promise<boolean> {
+    const version = this.savedVersion();
+    if (version.kind !== 'ready' || this.status() !== 'conflict') {
+      return Promise.resolve(false);
+    }
+    this.confirmedRevisionState.set(version.material.revision);
+    this.savedVersionState.set({ kind: 'idle' });
+    this.status.set('waiting');
+    this.error.set(null);
+    return this.flush();
+  }
+  destroy(): void {
+    this.destroyed = true;
+    clearTimeout(this.timer);
+    this.stop.next();
+    this.stop.complete();
+  }
   private async savePending(): Promise<boolean> {
     while (this.savedGeneration !== this.generation) {
       const generation = this.generation;
@@ -60,18 +137,23 @@ export class MaterialSession {
       this.error.set(null);
       try {
         const response = await firstValueFrom(
-          this.http.put<{ revision: number }>(
-            `/api/materials/${encodeURIComponent(this.material.id)}`,
-            {
+          this.http
+            .put<{ revision: number }>(`/api/materials/${encodeURIComponent(this.material.id)}`, {
               document,
               expectedRevision: this.confirmedRevision(),
-            },
-          ),
+            })
+            .pipe(takeUntil(this.stop)),
         );
+        if (this.destroyed) {
+          return false;
+        }
         this.confirmedRevisionState.set(response.revision);
         this.savedGeneration = generation;
         this.onConfirmedSave?.({ ...this.material, document, revision: response.revision });
       } catch (error) {
+        if (this.destroyed) {
+          return false;
+        }
         const conflict = error instanceof HttpErrorResponse && error.status === 409;
         this.status.set(conflict ? 'conflict' : 'error');
         this.error.set(conflict ? 'saveConflict' : 'saveFailed');

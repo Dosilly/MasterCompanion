@@ -17,6 +17,9 @@ function sameText(
 /** Keeps per-meeting text drafts through navigation and rejects implicit rebasing. */
 export class SessionDrafts {
   private readonly drafts = signal<ReadonlyMap<string, SessionTextDraft>>(new Map());
+  private readonly inspected = signal<
+    ReadonlyMap<string, { readonly record: SessionRecord; readonly revision: number }>
+  >(new Map());
   readonly conflict = signal(false);
   readonly dirty = computed(() =>
     [...this.drafts().values()].some((draft) => !sameText(draft, draft.original)),
@@ -59,6 +62,71 @@ export class SessionDrafts {
       return next;
     });
     this.conflict.set(false);
+    this.inspected.update((items) => {
+      const next = new Map(items);
+      next.delete(record.id);
+      return next;
+    });
+  }
+
+  inspectedRecord(id: string): SessionRecord | undefined {
+    return this.inspected().get(id)?.record;
+  }
+  adopt(record: SessionRecord, meetings: MeetingRecords): boolean {
+    const inspected = this.inspected().get(record.id);
+    if (!inspected || meetings.locked() || inspected.revision !== meetings.snapshot().revision) {
+      return false;
+    }
+    this.discard(record);
+    return true;
+  }
+
+  async inspect(record: SessionRecord, meetings: MeetingRecords): Promise<boolean> {
+    this.inspected.update((items) => {
+      const next = new Map(items);
+      next.delete(record.id);
+      return next;
+    });
+    if (!(await meetings.refresh())) {
+      return false;
+    }
+    const current = meetings.snapshot().sessions.find((item) => item.id === record.id);
+    if (!current) {
+      return false;
+    }
+    this.inspected.update((items) =>
+      new Map(items).set(record.id, { record: current, revision: meetings.snapshot().revision }),
+    );
+    return true;
+  }
+
+  async reapply(record: SessionRecord, meetings: MeetingRecords): Promise<boolean> {
+    const inspected = this.inspected().get(record.id);
+    if (!inspected || meetings.locked()) {
+      return false;
+    }
+    const draft = this.value(record);
+    const saved = await meetings.execute(
+      {
+        kind: 'update',
+        sessionId: record.id,
+        title: draft.title,
+        summary: draft.summary,
+        followUp: draft.followUp,
+      },
+      inspected.revision,
+    );
+    if (saved) {
+      this.discard(record);
+    } else {
+      this.conflict.set(true);
+      this.inspected.update((items) => {
+        const next = new Map(items);
+        next.delete(record.id);
+        return next;
+      });
+    }
+    return saved;
   }
 
   async save(record: SessionRecord, meetings: MeetingRecords): Promise<boolean> {

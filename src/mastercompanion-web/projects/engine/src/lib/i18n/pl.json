@@ -1,4 +1,21 @@
 {
+  "recovery": {
+    "inspect": "Sprawdź zapisaną wersję",
+    "hint": "Twój szkic pozostaje w edytorze. Sprawdź zapisaną wersję przed wybraniem dalszego działania.",
+    "loading": "Wczytywanie zapisanej wersji…",
+    "loadFailed": "Nie udało się sprawdzić zapisanej wersji. Szkic został zachowany. Spróbuj ponownie.",
+    "savedVersion": "Zapisana wersja",
+    "revision": "Sprawdzona rewizja: {revision}",
+    "adoptWarning": "Przyjęcie zapisanej wersji odrzuci ten szkic. Ponowny zapis prześle cały szkic względem sprawdzonej rewizji; nowsza zmiana spowoduje kolejny konflikt.",
+    "adopt": "Odrzuć szkic i przyjmij zapisaną wersję",
+    "reapply": "Zapisz szkic względem sprawdzonej wersji",
+    "back": "Wróć do szkicu",
+    "refresh": "Sprawdź ponownie",
+    "copy": "Skopiuj tekst szkicu",
+    "copied": "Tekst szkicu został skopiowany.",
+    "copyFailed": "Nie udało się skopiować. Zaznacz tekst szkicu i skopiuj go ręcznie.",
+    "manualCopy": "Tekst szkicu do ręcznego skopiowania"
+  },
   "choices": {
     "search": "Szukaj po tytule lub ścieżce",
     "noResults": "Brak pasujących opcji. Spróbuj innego tytułu lub ścieżki.",
@@ -185,7 +202,7 @@
       "conflict": "Konflikt zapisu"
     },
     "errors": {
-      "saveConflict": "Materiał zmieniono w innym oknie. Skopiuj swoje zmiany i odśwież stronę, aby wczytać aktualną wersję.",
+      "saveConflict": "Materiał zmieniono w innym oknie. Twój szkic został zachowany. Sprawdź zapisaną wersję, aby wybrać dalsze działanie.",
       "saveFailed": "Nie udało się zapisać. Zmiany pozostają w tej karcie; ponów zapis po przywróceniu połączenia.",
       "clipboardUnavailable": "Przeglądarka nie pozwoliła skopiować tekstu. Zaznacz treść i skopiuj ją ręcznie."
     }

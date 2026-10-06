@@ -196,6 +196,58 @@
             @if (drafts().conflict()) {
               <p class="feedback" role="alert">{{ text.draftConflict }}</p>
             }
+            @if (drafts().hasChanges(record)) {
+              <div class="draft-recovery">
+                <div class="actions">
+                  <button type="button" (click)="copyDraft(record)">{{ recoveryText.copy }}</button>
+                  <button
+                    type="button"
+                    (click)="inspectSaved(record)"
+                    [disabled]="meetings().locked()"
+                  >
+                    {{ recoveryText.inspect }}
+                  </button>
+                </div>
+                @if (copyState() === 'copied') {
+                  <p role="status">{{ recoveryText.copied }}</p>
+                } @else if (copyState() === 'failed') {
+                  <p role="alert">{{ recoveryText.copyFailed }}</p>
+                  <label for="session-manual-copy">{{ recoveryText.manualCopy }}</label>
+                  <textarea id="session-manual-copy" readonly [value]="copiedText()"></textarea>
+                }
+                @if (recoveryError()) {
+                  <p role="alert">{{ recoveryText.loadFailed }}</p>
+                }
+                @if (drafts().inspectedRecord(record.id); as saved) {
+                  <section class="saved-fields" [attr.aria-label]="recoveryText.savedVersion">
+                    <h3>{{ recoveryText.savedVersion }}</h3>
+                    <h4>{{ saved.title }}</h4>
+                    <h4>{{ text.summary }}</h4>
+                    <p>{{ saved.summary || text.noSummary }}</p>
+                    <h4>{{ text.followUp }}</h4>
+                    <p>{{ saved.followUp || text.noFollowUp }}</p>
+                    <p>{{ recoveryText.adoptWarning }}</p>
+                    <div class="actions">
+                      <button
+                        type="button"
+                        (click)="adoptSaved(record)"
+                        [disabled]="meetings().locked()"
+                      >
+                        {{ recoveryText.adopt }}
+                      </button>
+                      <button
+                        type="button"
+                        class="mc-action--primary"
+                        (click)="reapplyDraft(record)"
+                        [disabled]="meetings().locked()"
+                      >
+                        {{ recoveryText.reapply }}
+                      </button>
+                    </div>
+                  </section>
+                }
+              </div>
+            }
             <div class="actions">
               <button
                 class="mc-action--primary"
@@ -232,6 +284,12 @@
         readonly
         [value]="drafts().value(record).summary"
       ></textarea>
+      <button (click)="copyDraft(record)">{{ recoveryText.copy }}</button>
+      @if (copyState() === 'copied') {
+        <p role="status">{{ recoveryText.copied }}</p>
+      } @else if (copyState() === 'failed') {
+        <p role="alert">{{ recoveryText.copyFailed }}</p>
+      }
       <label [for]="'missing-follow-up-' + record.id">{{ text.followUp }}</label>
       <textarea
         [id]="'missing-follow-up-' + record.id"

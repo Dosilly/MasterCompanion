@@ -79,9 +79,9 @@ export class MeetingRecords {
     return true;
   }
 
-  async refresh(): Promise<void> {
+  async refresh(): Promise<boolean> {
     if (this.pending() || this.destroyed) {
-      return;
+      return false;
     }
     this.pendingState.set(true);
     try {
@@ -91,9 +91,11 @@ export class MeetingRecords {
       if (!this.destroyed) {
         if (!isSessionSnapshot(value) || !this.accept(value)) {
           this.errorState.set('loadFailed');
+          return false;
         } else if (!this.request() && !this.invalidRecovery()) {
           this.errorState.set(null);
         }
+        return true;
       }
     } catch {
       if (!this.destroyed) {
@@ -102,9 +104,13 @@ export class MeetingRecords {
     } finally {
       this.pendingState.set(false);
     }
+    return false;
   }
 
-  async execute(operation: SessionOperation): Promise<boolean> {
+  async execute(
+    operation: SessionOperation,
+    expectedRevision = this.snapshot().revision,
+  ): Promise<boolean> {
     if (this.destroyed || this.locked()) {
       return false;
     }
@@ -114,7 +120,7 @@ export class MeetingRecords {
     }
     const request: SessionOperationRequest = {
       requestId: crypto.randomUUID(),
-      expectedRevision: this.snapshot().revision,
+      expectedRevision,
       operation,
     };
     if (!this.persist(request)) {

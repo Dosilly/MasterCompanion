@@ -27,6 +27,10 @@ export class SessionView {
   readonly materialRequested = output<string>();
   readonly materialsCreated = output<void>();
   readonly text = uiMessages.meetings;
+  readonly recoveryText = uiMessages.recovery;
+  readonly recoveryError = signal(false);
+  readonly copyState = signal<'idle' | 'copied' | 'failed'>('idle');
+  readonly copiedText = signal('');
   readonly selectedId = signal('');
   readonly selectedRecordMissing = computed(
     () =>
@@ -82,6 +86,37 @@ export class SessionView {
   select(record: SessionRecord): void {
     this.selectedId.set(record.id);
     this.pinId.set('');
+    this.copyState.set('idle');
+    this.recoveryError.set(false);
+  }
+
+  async copyDraft(record: SessionRecord): Promise<void> {
+    const draft = this.drafts().value(record);
+    const text = `${draft.title}\n\n${this.text.summary}\n${draft.summary}\n\n${this.text.followUp}\n${draft.followUp}`;
+    this.copiedText.set(text);
+    try {
+      await navigator.clipboard.writeText(text);
+      this.copyState.set('copied');
+    } catch {
+      this.copyState.set('failed');
+    }
+  }
+
+  async inspectSaved(record: SessionRecord): Promise<void> {
+    this.recoveryError.set(!(await this.drafts().inspect(record, this.meetings())));
+  }
+
+  async reapplyDraft(record: SessionRecord): Promise<void> {
+    if (await this.drafts().reapply(record, this.meetings())) {
+      this.finishEditing(record.id);
+    }
+  }
+  adoptSaved(record: SessionRecord): void {
+    if (this.drafts().adopt(record, this.meetings())) {
+      this.finishEditing(record.id);
+    } else {
+      this.recoveryError.set(true);
+    }
   }
 
   beginEditing(): void {

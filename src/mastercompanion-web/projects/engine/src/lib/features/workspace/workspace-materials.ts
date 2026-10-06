@@ -167,6 +167,9 @@ export class WorkspaceMaterials {
     if (this.sessions().some((session) => session.material.id === id && session.dirty())) {
       throw new Error('A material session with unconfirmed changes cannot be removed.');
     }
+    this.sessions()
+      .find((session) => session.material.id === id)
+      ?.destroy();
     this.sessionState.update((sessions) =>
       sessions.filter((session) => session.material.id !== id),
     );
@@ -174,6 +177,9 @@ export class WorkspaceMaterials {
 
   destroy(): void {
     this.destroyed = true;
+    for (const session of this.sessions()) {
+      session.destroy();
+    }
     this.cache?.destroy();
   }
 }

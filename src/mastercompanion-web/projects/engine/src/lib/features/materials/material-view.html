@@ -12,8 +12,17 @@
     <div class="save-error" role="alert">
       <p>{{ ui.material.errors[error] }}</p>
       <button (click)="copyDraft()">{{ ui.material.copyDraft }}</button>
-      @if (session().status() !== 'conflict') {
+      @if (session().status() === 'conflict') {
+        <button (click)="inspectSaved($event)">{{ ui.recovery.inspect }}</button>
+      } @else {
         <button (click)="session().flush()">{{ ui.material.retrySave }}</button>
+      }
+      @if (copyState() === 'copied') {
+        <p role="status">{{ ui.recovery.copied }}</p>
+      } @else if (copyState() === 'failed') {
+        <p role="alert">{{ ui.material.errors.clipboardUnavailable }}</p>
+        <label [for]="insertionId('copy')">{{ ui.recovery.manualCopy }}</label>
+        <textarea [id]="insertionId('copy')" readonly [value]="copiedText()"></textarea>
       }
     </div>
   }
@@ -81,6 +90,40 @@
     </div>
   }
 </div>
+<dialog
+  #recoveryDialog
+  class="recovery-dialog"
+  [attr.aria-labelledby]="insertionId('recovery-title')"
+  (cancel)="closeRecovery($event)"
+>
+  <h2 [id]="insertionId('recovery-title')">{{ ui.recovery.inspect }}</h2>
+  <p>{{ ui.recovery.hint }}</p>
+  @if (session().savedVersion().kind === 'loading') {
+    <p role="status">{{ ui.recovery.loading }}</p>
+  } @else if (session().savedVersion().kind === 'failed') {
+    <p role="alert">{{ ui.recovery.loadFailed }}</p>
+  }
+  @if (savedMaterial(); as saved) {
+    <p>{{ ui.recovery.revision.replace('{revision}', saved.revision.toString()) }}</p>
+    <div class="saved-preview">
+      <mc-rich-document-preview [document]="saved.document" [label]="ui.recovery.savedVersion" />
+    </div>
+    <p>{{ ui.recovery.adoptWarning }}</p>
+  }
+  <div class="dialog-actions">
+    <button (click)="closeRecovery()">{{ ui.recovery.back }}</button>
+    <button
+      (click)="session().inspectSavedVersion()"
+      [disabled]="session().savedVersion().kind === 'loading'"
+    >
+      {{ ui.recovery.refresh }}
+    </button>
+    @if (savedMaterial()) {
+      <button (click)="adoptSaved()">{{ ui.recovery.adopt }}</button>
+      <button class="mc-action--primary" (click)="reapplyDraft()">{{ ui.recovery.reapply }}</button>
+    }
+  </div>
+</dialog>
 <div class="material-scroll" (click)="followLink($event)">
   <article class="reading-paper" [class.is-editing]="session().editing()">
     <h1>{{ session().material.title }}</h1>

@@ -1,10 +1,11 @@
 # UX/UI improvement implementation plan
 
-5 October 2026 · first corrective cycle implemented; subsequent slices planned
+6 October 2026 · first corrective cycle and C implemented; D–G authorized
 
 This plan follows the [independent UX/UI audit](27-UX-UI-audit.md). Its purpose is
 to make daily preparation and session play easier before adding more screens.
-The first A/H/I/J/B cycle is implemented; C–G remain planned. Delivery records are
+The first A/H/I/J/B cycle and [C recovery](35-Draft-recovery.md) are implemented;
+D–G remain planned and were authorized on 6 October. Delivery records are
 [controls](29-Control-foundation.md), [choices](31-Searchable-choices.md),
 [deletion](30-Session-deletion.md), [ordering](32-Material-ordering.md), and
 [navigation/reader commands](33-Workspace-navigation.md).
@@ -60,7 +61,7 @@ not a new documentation framework or a requirement for a whole-app prototype.
 Implement one focused branch from `trunk` per delivered feature. Work within each
 slice can be split into additional branches where it creates independently useful
 behavior. The user authorized parallel implementation of the first corrective
-cycle on 5 October. Later cycles require their own agreed scope.
+cycle on 5 October and the remaining C–G corrections on 6 October.
 
 | Order | Slice | Audit coverage | Relative effort | Main dependency |
 | --- | --- | --- | --- | --- |
@@ -434,9 +435,7 @@ solely because a visual baseline passes.
 
 ## Next implementation boundary
 
-Begin with A's small control/icon/state foundation and H's searchable material
-and folder choices; follow with I's session deletion, J's note ordering and B's
-navigation/search/reader composition. Do not delay these fixes for a full UI-library
-migration. Keep the audit's issue IDs in each delivery record. All slices above remain
-planned until implemented and verified; the audit branch contains documentation
-and visual evidence only.
+A/H/I/J/B and C are implemented. Continue with D's gameplay hierarchy, E's session
+workflow, F's tree/tab and retrieval features, and G's map interaction. Map authoring
+and multiple campaigns remain subsequent product scope. Keep feature delivery
+records and actual verification separate from planned acceptance criteria.

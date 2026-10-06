@@ -18,6 +18,7 @@ import { SearchableChoiceComponent } from '@mastercompanion/ui';
 import { materialChoices } from '../choices/campaign-choices';
 import { createMaterialEditor } from './material-editor';
 import { MaterialSession } from './material-session';
+import { RichDocumentPreview } from './rich-document-preview';
 import { uiMessages } from '../../i18n/messages';
 import {
   InsertionError,
@@ -28,7 +29,7 @@ import {
 
 @Component({
   selector: 'mc-material-view',
-  imports: [SearchableChoiceComponent],
+  imports: [SearchableChoiceComponent, RichDocumentPreview],
   templateUrl: './material-view.html',
   styleUrl: './material-view.scss',
 })
@@ -50,6 +51,15 @@ export class MaterialView implements AfterViewInit, OnDestroy {
   readonly markdownDraft = signal('');
   readonly linkTarget = signal('');
   readonly insertionError = signal<InsertionError | null>(null);
+  readonly copyState = signal<'idle' | 'copied' | 'failed'>('idle');
+  readonly copiedText = signal('');
+  readonly savedMaterial = computed(() => {
+    const version = this.session().savedVersion();
+    return version.kind === 'ready' ? version.material : null;
+  });
+  private readonly recoveryDialog =
+    viewChild.required<ElementRef<HTMLDialogElement>>('recoveryDialog');
+  private recoveryOpener?: HTMLElement;
   private readonly injector = inject(Injector);
   private selection?: InsertionSelection;
   private insertionOpener?: HTMLElement;
@@ -80,6 +90,9 @@ export class MaterialView implements AfterViewInit, OnDestroy {
   };
 
   ngAfterViewInit() {
+    this.mountEditor();
+  }
+  private mountEditor(): void {
     this.editor = createMaterialEditor(
       this.editorElement().nativeElement,
       this.session(),
@@ -208,11 +221,40 @@ export class MaterialView implements AfterViewInit, OnDestroy {
     }
   }
   async copyDraft() {
+    const text = this.editor?.getText() ?? '';
+    this.copiedText.set(text);
     try {
-      await navigator.clipboard.writeText(this.editor?.getText() ?? '');
+      await navigator.clipboard.writeText(text);
+      this.copyState.set('copied');
     } catch {
-      this.session().error.set('clipboardUnavailable');
+      this.copyState.set('failed');
     }
+  }
+  inspectSaved(event: Event): void {
+    this.recoveryOpener =
+      event.currentTarget instanceof HTMLElement ? event.currentTarget : undefined;
+    this.recoveryDialog().nativeElement.showModal();
+    void this.session().inspectSavedVersion();
+  }
+  closeRecovery(event?: Event): void {
+    event?.preventDefault();
+    this.recoveryDialog().nativeElement.close();
+    this.recoveryOpener?.focus();
+  }
+  adoptSaved(): void {
+    if (!this.session().adoptSavedVersion()) {
+      return;
+    }
+    this.editor?.off('transaction', this.updateCommandState);
+    this.editor?.destroy();
+    this.session().editing.set(false);
+    this.mountEditor();
+    this.closeRecovery();
+    this.copyState.set('idle');
+  }
+  async reapplyDraft(): Promise<void> {
+    this.closeRecovery();
+    await this.session().reapplyDraft();
   }
   scrollToAnchor(id: string): boolean {
     const element = Array.from(

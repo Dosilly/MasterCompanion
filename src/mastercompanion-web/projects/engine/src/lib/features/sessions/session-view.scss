@@ -128,6 +128,16 @@ textarea {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+.saved-fields {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: var(--soft);
+  border: 1px solid var(--control-line);
+}
+.saved-fields p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
 input,
 select,
 textarea {

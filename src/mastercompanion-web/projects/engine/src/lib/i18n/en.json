@@ -1,4 +1,21 @@
 {
+  "recovery": {
+    "inspect": "Inspect saved version",
+    "hint": "Your draft remains in the editor. Inspect the saved version before choosing how to continue.",
+    "loading": "Loading the saved version…",
+    "loadFailed": "Could not inspect the saved version. Your draft is retained. Try again.",
+    "savedVersion": "Saved version",
+    "revision": "Inspected revision: {revision}",
+    "adoptWarning": "Adopting the saved version discards this draft. Reapplying submits the complete draft against the inspected revision; a newer change causes another conflict.",
+    "adopt": "Discard draft and adopt saved version",
+    "reapply": "Save draft against inspected version",
+    "back": "Return to draft",
+    "refresh": "Inspect again",
+    "copy": "Copy draft text",
+    "copied": "Draft text copied.",
+    "copyFailed": "Could not copy. Select the draft text and copy it manually.",
+    "manualCopy": "Draft text for manual copying"
+  },
   "choices": {
     "search": "Search by title or path",
     "noResults": "No matching choices. Try a different title or path.",
@@ -185,7 +202,7 @@
       "conflict": "Save conflict"
     },
     "errors": {
-      "saveConflict": "The material was changed in another window. Copy your draft and refresh the page to load the current version.",
+      "saveConflict": "The material changed in another window. Your draft is retained. Inspect the saved version to choose how to continue.",
       "saveFailed": "Could not save. Your changes remain in this tab; retry after the connection is restored.",
       "clipboardUnavailable": "The browser could not copy the text. Select the content and copy it manually."
     }
