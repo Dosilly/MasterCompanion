@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   Component,
+  computed,
   ElementRef,
   Injector,
   OnDestroy,
@@ -12,9 +13,12 @@ import {
   viewChild,
 } from '@angular/core';
 import { Editor } from '@tiptap/core';
-import type { MaterialSummary } from '@mastercompanion/contracts';
+import type { CampaignFolder, MaterialSummary } from '@mastercompanion/contracts';
+import { SearchableChoiceComponent } from '@mastercompanion/ui';
+import { materialChoices } from '../choices/campaign-choices';
 import { createMaterialEditor } from './material-editor';
 import { MaterialSession } from './material-session';
+import { RichDocumentPreview } from './rich-document-preview';
 import { uiMessages } from '../../i18n/messages';
 import {
   InsertionError,
@@ -25,6 +29,7 @@ import {
 
 @Component({
   selector: 'mc-material-view',
+  imports: [SearchableChoiceComponent, RichDocumentPreview],
   templateUrl: './material-view.html',
   styleUrl: './material-view.scss',
 })
@@ -32,27 +37,69 @@ export class MaterialView implements AfterViewInit, OnDestroy {
   readonly ui = uiMessages;
   readonly session = input.required<MaterialSession>();
   readonly materials = input<readonly MaterialSummary[]>([]);
+  readonly folders = input<readonly CampaignFolder[]>([]);
+  readonly linkOptions = computed(() => [
+    { id: '', label: this.ui.material.chooseMaterial },
+    ...materialChoices(this.materials(), this.folders(), this.ui.workspace.unfiledMaterials),
+  ]);
   readonly openMaterial = output<{ id: string; anchor?: string }>();
   readonly editorElement = viewChild.required<ElementRef<HTMLElement>>('editorElement');
   readonly insertionDialog = viewChild.required<ElementRef<HTMLDialogElement>>('insertionDialog');
   readonly markdownSource = viewChild.required<ElementRef<HTMLTextAreaElement>>('markdownSource');
-  readonly materialFilter = viewChild.required<ElementRef<HTMLInputElement>>('materialFilter');
+  readonly materialChoice = viewChild.required<SearchableChoiceComponent>('materialChoice');
   readonly insertionMode = signal<'markdown' | 'link' | null>(null);
   readonly markdownDraft = signal('');
-  readonly linkFilter = signal('');
   readonly linkTarget = signal('');
   readonly insertionError = signal<InsertionError | null>(null);
+  readonly copyState = signal<'idle' | 'copied' | 'failed'>('idle');
+  readonly copiedText = signal('');
+  readonly savedMaterial = computed(() => {
+    const version = this.session().savedVersion();
+    return version.kind === 'ready' ? version.material : null;
+  });
+  private readonly recoveryDialog =
+    viewChild.required<ElementRef<HTMLDialogElement>>('recoveryDialog');
+  private recoveryOpener?: HTMLElement;
   private readonly injector = inject(Injector);
   private selection?: InsertionSelection;
   private insertionOpener?: HTMLElement;
   editor?: Editor;
+  readonly commandState = signal({
+    bold: false,
+    italic: false,
+    heading: false,
+    list: false,
+    quote: false,
+    canUndo: false,
+    canRedo: false,
+  });
+  private readonly updateCommandState = (): void => {
+    const editor = this.editor;
+    if (!editor) {
+      return;
+    }
+    this.commandState.set({
+      bold: editor.isActive('bold'),
+      italic: editor.isActive('italic'),
+      heading: editor.isActive('heading', { level: 2 }),
+      list: editor.isActive('bulletList'),
+      quote: editor.isActive('blockquote'),
+      canUndo: editor.can().undo(),
+      canRedo: editor.can().redo(),
+    });
+  };
 
   ngAfterViewInit() {
+    this.mountEditor();
+  }
+  private mountEditor(): void {
     this.editor = createMaterialEditor(
       this.editorElement().nativeElement,
       this.session(),
       this.ui.material.contentLabel,
     );
+    this.editor.on('transaction', this.updateCommandState);
+    this.updateCommandState();
   }
   async toggleEdit() {
     if (this.session().editing()) {
@@ -86,10 +133,11 @@ export class MaterialView implements AfterViewInit, OnDestroy {
           return;
         }
         this.insertionDialog().nativeElement.showModal();
-        (mode === 'markdown'
-          ? this.markdownSource().nativeElement
-          : this.materialFilter().nativeElement
-        ).focus();
+        if (mode === 'markdown') {
+          this.markdownSource().nativeElement.focus();
+        } else {
+          this.materialChoice().focus();
+        }
       },
       { injector: this.injector },
     );
@@ -112,26 +160,9 @@ export class MaterialView implements AfterViewInit, OnDestroy {
     }
     this.insertionError.set(null);
   }
-  updateLinkFilter(event: Event) {
-    if (event.target instanceof HTMLInputElement) {
-      this.linkFilter.set(event.target.value);
-    }
-    if (!this.filteredMaterials().some((item) => item.id === this.linkTarget())) {
-      this.linkTarget.set('');
-    }
+  updateLinkTarget(id: string) {
+    this.linkTarget.set(id);
     this.insertionError.set(null);
-  }
-  updateLinkTarget(event: Event) {
-    if (event.target instanceof HTMLSelectElement) {
-      this.linkTarget.set(event.target.value);
-    }
-    this.insertionError.set(null);
-  }
-  filteredMaterials() {
-    const filter = this.linkFilter().trim().toLocaleLowerCase();
-    return this.materials().filter((item) =>
-      `${item.title} ${item.group}`.toLocaleLowerCase().includes(filter),
-    );
   }
   confirmInsertion() {
     if (!this.editor || !this.selection) {
@@ -190,11 +221,40 @@ export class MaterialView implements AfterViewInit, OnDestroy {
     }
   }
   async copyDraft() {
+    const text = this.editor?.getText() ?? '';
+    this.copiedText.set(text);
     try {
-      await navigator.clipboard.writeText(this.editor?.getText() ?? '');
+      await navigator.clipboard.writeText(text);
+      this.copyState.set('copied');
     } catch {
-      this.session().error.set('clipboardUnavailable');
+      this.copyState.set('failed');
     }
+  }
+  inspectSaved(event: Event): void {
+    this.recoveryOpener =
+      event.currentTarget instanceof HTMLElement ? event.currentTarget : undefined;
+    this.recoveryDialog().nativeElement.showModal();
+    void this.session().inspectSavedVersion();
+  }
+  closeRecovery(event?: Event): void {
+    event?.preventDefault();
+    this.recoveryDialog().nativeElement.close();
+    this.recoveryOpener?.focus();
+  }
+  adoptSaved(): void {
+    if (!this.session().adoptSavedVersion()) {
+      return;
+    }
+    this.editor?.off('transaction', this.updateCommandState);
+    this.editor?.destroy();
+    this.session().editing.set(false);
+    this.mountEditor();
+    this.closeRecovery();
+    this.copyState.set('idle');
+  }
+  async reapplyDraft(): Promise<void> {
+    this.closeRecovery();
+    await this.session().reapplyDraft();
   }
   scrollToAnchor(id: string): boolean {
     const element = Array.from(
@@ -212,6 +272,7 @@ export class MaterialView implements AfterViewInit, OnDestroy {
     return true;
   }
   ngOnDestroy() {
+    this.editor?.off('transaction', this.updateCommandState);
     this.editor?.destroy();
   }
 }

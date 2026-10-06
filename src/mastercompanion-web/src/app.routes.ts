@@ -12,6 +12,8 @@ export const appRoutes: Routes = [
       { path: 'maps/:mapId', children: [] },
       { path: 'game', children: [] },
       { path: 'party', children: [] },
+      { path: 'sessions', children: [] },
+      { path: 'sessions/:sessionId', children: [] },
       { path: 'workspace', children: [] },
       { path: '**', children: [] },
     ],

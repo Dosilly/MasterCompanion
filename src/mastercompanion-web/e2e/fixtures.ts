@@ -1,7 +1,13 @@
 import { readFileSync } from 'node:fs';
 import { test as base, expect, type Locator, type Page } from '@playwright/test';
-import type { MaterialDto, MaterialSearchResponse } from '@mastercompanion/contracts';
+import type {
+  FolderOperationRequest,
+  FolderSnapshot,
+  MaterialDto,
+  MaterialSearchResponse,
+} from '@mastercompanion/contracts';
 import { campaignFixture, campaignId, readerId, readerTitle } from './fixtures/campaign';
+import { SessionApi } from './fixtures/session-api';
 
 // Read canonical localization data, without importing private library implementations.
 const catalogs: Record<'engine' | 'ythryn', unknown> = {
@@ -35,10 +41,92 @@ interface CreationRequest {
   folderId: string | null;
 }
 
+function folderRequest(value: unknown): FolderOperationRequest {
+  if (
+    !record(value) ||
+    typeof value['requestId'] !== 'string' ||
+    typeof value['expectedRevision'] !== 'number' ||
+    !record(value['operation'])
+  ) {
+    throw new Error('Expected a typed folder operation request.');
+  }
+  expect(Object.keys(value).sort()).toEqual(['expectedRevision', 'operation', 'requestId']);
+  const operation = value['operation'];
+  if (
+    (operation['kind'] === 'reorderMaterial' || operation['kind'] === 'moveMaterial') &&
+    typeof operation['materialId'] === 'string' &&
+    (operation['folderId'] === null || typeof operation['folderId'] === 'string') &&
+    (operation['beforeId'] === null || typeof operation['beforeId'] === 'string')
+  ) {
+    return {
+      requestId: value['requestId'],
+      expectedRevision: value['expectedRevision'],
+      operation: {
+        kind: operation['kind'],
+        materialId: operation['materialId'],
+        folderId: operation['folderId'],
+        beforeId: operation['beforeId'],
+      },
+    };
+  }
+  const folderId = operation['folderId'];
+  if (typeof folderId !== 'string') {
+    throw new Error('Expected a stable folder identity.');
+  }
+  if (operation['kind'] === 'rename' && typeof operation['title'] === 'string') {
+    expect(Object.keys(operation).sort()).toEqual(['folderId', 'kind', 'title']);
+    return {
+      requestId: value['requestId'],
+      expectedRevision: value['expectedRevision'],
+      operation: { kind: 'rename', folderId, title: operation['title'] },
+    };
+  }
+  if (
+    operation['kind'] === 'move' &&
+    (operation['parentId'] === null || typeof operation['parentId'] === 'string') &&
+    (operation['beforeId'] === null || typeof operation['beforeId'] === 'string')
+  ) {
+    expect(Object.keys(operation).sort()).toEqual(['beforeId', 'folderId', 'kind', 'parentId']);
+    return {
+      requestId: value['requestId'],
+      expectedRevision: value['expectedRevision'],
+      operation: {
+        kind: 'move',
+        folderId,
+        parentId: operation['parentId'],
+        beforeId: operation['beforeId'],
+      },
+    };
+  }
+  throw new Error('Unsupported folder fixture operation.');
+}
+
 export class TestApi {
+  readonly meetings = new SessionApi(
+    (documents) => {
+      this.createdMaterials.push(...documents);
+      this.data.workspace.materials = [
+        ...this.data.workspace.materials,
+        ...documents.map(({ id, title, group, folderId }) => ({ id, title, group, folderId })),
+      ];
+      this.data.workspace.foldersRevision++;
+    },
+    (url, status) => this.expectedHttpErrors.push({ url, status }),
+    (url) => this.expectedNetworkFailures.push(url),
+  );
   readonly data = campaignFixture();
   readonly saves: unknown[] = [];
   readonly creations: CreationRequest[] = [];
+  readonly folderRequests: FolderOperationRequest[] = [];
+  folderMode: 'success' | 'hold' | 'conflict' | 'invalid' | 'lostResponse' = 'success';
+  private readonly folderReceipts = new Map<
+    string,
+    {
+      request: FolderOperationRequest;
+      response: FolderSnapshot;
+    }
+  >();
+  private readonly folderGate = Promise.withResolvers<void>();
   readonly createdMaterials: MaterialDto[] = [];
   readonly noteDocuments = new Map<string, unknown>();
   readonly unexpectedRequests: string[] = [];
@@ -57,6 +145,8 @@ export class TestApi {
   savedDocument: unknown = this.data.materials[0].document;
   revision = this.data.materials[0].revision;
   workspaceFailures = 0;
+  materialInspectionAllowed = false;
+  materialInspectionFailures = 0;
   saveMode: 'success' | 'hold' | 'conflict' | 'failure' = 'success';
   creationMode: 'success' | 'hold' | 'invalid' | 'lostResponse' = 'success';
   private readonly saveGate = Promise.withResolvers<void>();
@@ -67,6 +157,9 @@ export class TestApi {
   }
   releaseCreation() {
     this.creationGate.resolve();
+  }
+  releaseFolders() {
+    this.folderGate.resolve();
   }
   holdSearch(query: string) {
     this.searchGates.set(query, Promise.withResolvers<void>());
@@ -97,6 +190,111 @@ export class TestApi {
         return;
       }
       if (url.origin === origin) {
+        if (path === `/api/campaigns/${campaignId}/sessions`) {
+          await this.meetings.handle(route);
+          return;
+        }
+        if (path === `/api/campaigns/${campaignId}/folders` && method === 'GET') {
+          await route.fulfill({
+            json: {
+              revision: this.data.workspace.foldersRevision,
+              folders: this.data.workspace.folders,
+              materialOrder: this.data.workspace.materials.map(({ id, folderId }) => ({
+                id,
+                folderId,
+              })),
+            },
+          });
+          return;
+        }
+        if (path === `/api/campaigns/${campaignId}/folders` && method === 'POST') {
+          const body = folderRequest(request.postDataJSON());
+          this.folderRequests.push(body);
+          if (this.folderMode === 'hold') {
+            await this.folderGate.promise;
+          }
+          const receipt = this.folderReceipts.get(body.requestId);
+          if (receipt) {
+            expect(body).toEqual(receipt.request);
+            await route.fulfill({ json: receipt.response });
+            return;
+          }
+          if (
+            this.folderMode === 'conflict' ||
+            body.expectedRevision !== this.data.workspace.foldersRevision
+          ) {
+            this.expectedHttpErrors.push({ url: request.url(), status: 409 });
+            await route.fulfill({ status: 409, json: { code: 'folder_revision_conflict' } });
+            return;
+          }
+          if (this.folderMode === 'invalid') {
+            this.expectedHttpErrors.push({ url: request.url(), status: 400 });
+            await route.fulfill({
+              status: 400,
+              json: {
+                code: 'invalid_folder_operation',
+                detail: 'Private fixture diagnostic.',
+              },
+            });
+            return;
+          }
+          const operation = body.operation;
+          if (operation.kind === 'reorderMaterial' || operation.kind === 'moveMaterial') {
+            const material = this.data.workspace.materials.find(
+              (item) => item.id === operation.materialId,
+            );
+            if (
+              !material ||
+              (operation.kind === 'reorderMaterial' && material.folderId !== operation.folderId)
+            ) {
+              throw new Error('Invalid material fixture organization.');
+            }
+            material.folderId = operation.folderId;
+            const document = [...this.data.materials, ...this.createdMaterials].find(
+              (item) => item.id === material.id,
+            );
+            if (document) {
+              document.folderId = operation.folderId;
+            }
+            const others = this.data.workspace.materials.filter((item) => item.id !== material.id);
+            const beforeIndex = others.findIndex((item) => item.id === operation.beforeId);
+            others.splice(beforeIndex < 0 ? others.length : beforeIndex, 0, material);
+            this.data.workspace.materials = others;
+          } else {
+            const folder = this.data.workspace.folders.find(
+              (item) => item.id === operation.folderId,
+            );
+            if (!folder) {
+              throw new Error('Folder writes must target a fixture-owned folder.');
+            }
+            if (operation.kind === 'rename') {
+              folder.title = operation.title;
+            } else {
+              folder.parentId = operation.parentId;
+              const others = this.data.workspace.folders.filter((item) => item.id !== folder.id);
+              const beforeIndex = others.findIndex((item) => item.id === operation.beforeId);
+              others.splice(beforeIndex < 0 ? others.length : beforeIndex, 0, folder);
+              this.data.workspace.folders = others;
+            }
+          }
+          const response = {
+            revision: ++this.data.workspace.foldersRevision,
+            folders: structuredClone(this.data.workspace.folders),
+            materialOrder: this.data.workspace.materials.map(({ id, folderId }) => ({
+              id,
+              folderId,
+            })),
+          };
+          this.folderReceipts.set(body.requestId, { request: body, response });
+          if (this.folderMode === 'lostResponse') {
+            this.folderMode = 'success';
+            this.expectedNetworkFailures.push(request.url());
+            await route.abort('failed');
+          } else {
+            await route.fulfill({ json: response });
+          }
+          return;
+        }
         if (method === 'GET' && path === `/api/campaigns/${campaignId}/materials`) {
           const requestNumber = this.bulkReads.length + 1;
           this.bulkReads.push(requestNumber);
@@ -241,6 +439,21 @@ export class TestApi {
           this.createdMaterials.find((item) => path === `/api/materials/${item.id}`);
         if (material && method === 'GET') {
           this.materialReads.push(material.id);
+          if (this.materialInspectionAllowed) {
+            if (this.materialInspectionFailures > 0) {
+              this.materialInspectionFailures--;
+              this.expectedHttpErrors.push({ url: request.url(), status: 503 });
+              await route.fulfill({ status: 503, json: { code: 'fixtureReadFailure' } });
+            } else {
+              await route.fulfill({
+                json:
+                  material.id === readerId
+                    ? { ...material, document: this.savedDocument, revision: this.revision }
+                    : material,
+              });
+            }
+            return;
+          }
           this.unexpectedRequests.push(`${method} ${request.url()}`);
           await route.abort('blockedbyclient');
           return;
@@ -314,7 +527,9 @@ export const test = base.extend<{ api: TestApi }>({
         await use(api);
       } finally {
         api.releaseSave();
+        api.meetings.release();
         api.releaseCreation();
+        api.releaseFolders();
         api.releaseSearches();
         api.releaseBulkReads();
         page.off('console', consoleListener);

@@ -1,16 +1,43 @@
 # Near-term improvements
 
-3 October 2026 · recorded roadmap; delivery status updated 4 October 2026
+3 October 2026 · recorded roadmap; delivery status updated 5 October 2026
 
 The user requested the improvements below, then authorized search, URL navigation
 and campaign material memory. Search and routing have been delivered; material
-memory is implemented and verified. Folder management remains planned. See
+memory is delivered locally. Folder management and context menus are also
+delivered locally; see [the scoped delivery plan](25-Folder-management-and-context-menus.md). See
 [search delivery](20-Material-search.md), [routing delivery](22-Workspace-routing.md)
 and [material memory](23-Campaign-material-memory.md) for current evidence.
 
 Related: [execution plan](05-MVP-execution-plan.md),
 [engine and module ownership](06-Module-architecture.md),
 [folder organization story](02-User-stories.md#us-03-folder-organization).
+
+All requests in the original near-term list below have been delivered. [Sessions
+and pinned materials](26-Campaign-sessions.md) were delivered on 5 October.
+The subsequent user-requested [UX/UI audit](27-UX-UI-audit.md) identified corrections
+to navigation, reading/editing, recovery, gameplay, sessions and visual hierarchy.
+[The corrective delivery plan](28-UX-UI-improvement-plan.md) now recommends those
+slices before map authoring, followed by multiple campaigns. The first corrective
+cycle A/H/I/J/B is implemented; C–G remain planned. Dialogs, feedback and theme/control foundations are coordinated with
+[the reusable UI plan](17-Reusable-frontend-ui.md), not a separate competing rewrite.
+
+The user's audit follow-up prioritizes searchable material/folder choices, session
+deletion and note ordering within folders. Generic/scattered buttons and the growing
+upper-right destination row also require correction. The first proposed cycle is
+small control/icon foundations, searchable choices, session deletion, note ordering
+and bounded navigation with persistent search/reader commands. This first cycle
+is now implemented; the delivery records describe exact behavior and scoped evidence.
+
+## Future ideas: module editor and campaign updates
+
+6 October 2026 · recorded for later work; no delivery priority assigned.
+
+The user requested an editor that saves the module itself outside the application
+repository, and notifications offering an update to a newer module version.
+Campaign updates should replace only unchanged elements, preserve edited notes
+and report skipped elements. See [the future requirements and open design
+decisions](37-Module-editor-and-campaign-updates.md).
 
 ## Improvement: preload campaign materials at startup
 

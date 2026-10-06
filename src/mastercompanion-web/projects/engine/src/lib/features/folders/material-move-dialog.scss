@@ -1,0 +1,21 @@
+.material-move-dialog {
+  width: min(32rem, calc(100vw - 3rem));
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+.material-move-dialog::backdrop {
+  background: rgb(0 0 0 / 45%);
+}
+form {
+  display: grid;
+  gap: 0.75rem;
+}
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}

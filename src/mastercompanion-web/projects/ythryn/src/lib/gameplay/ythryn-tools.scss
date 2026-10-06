@@ -1,0 +1,45 @@
+.pending-actions {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border: 1px solid var(--error-line);
+  border-left-width: 4px;
+  border-radius: 0.6rem;
+  background: var(--error-bg);
+}
+.tool-section {
+  margin: 1rem 0;
+  border-top: 1px solid var(--control-line);
+}
+.tool-section > summary {
+  padding: 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tool-section > summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+p {
+  margin: 0;
+}
+ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 0;
+  padding-left: 1.5rem;
+}
+.pending-action-link {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-decoration: underline;
+  color: var(--ink);
+  text-underline-offset: 3px;
+}
+.pending-action-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}

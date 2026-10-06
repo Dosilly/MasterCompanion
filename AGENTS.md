@@ -21,9 +21,9 @@ These instructions apply to all implementation work in this repository. Read the
 
 - Implement every new feature on its own `codex/` branch created from `trunk`.
 - Use an isolated worktree when the current checkout contains unrelated work; preserve uncommitted changes.
-- Complete scoped verification and review, commit the feature, then merge it into `trunk`.
-- Build the local runtime image from the merged `trunk` and update the application container; verify readiness and affected behavior. Local updates require no database backup or preservation probes. Campaign replacement follows the current development data policy; production backups and authored-data protection belong to the AWS stage.
-- This workflow is standing user authorization for local feature merges and local application-container updates. It does not authorize remote pushes, publishing or external deployment. Local campaign-content replacement is permitted within authorized module updates under the current development data policy.
+- Complete scoped verification and review, commit the feature, and leave the changes on its feature branch. The user performs merges into `trunk` and remote pushes through the Codex UI unless explicitly delegating them.
+- Build the local runtime image from the verified feature branch and update the application container; verify readiness and affected behavior. Local updates require no database backup or preservation probes. Campaign replacement follows the current development data policy; production backups and authored-data protection belong to the AWS stage.
+- User decision, 6 October 2026: this workflow is standing authorization for local application-container updates from feature branches. It does not authorize automatic merges into `trunk`, remote pushes, publishing or external deployment. Local campaign-content replacement is permitted within authorized module updates under the current development data policy.
 
 ## Compatibility policy
 

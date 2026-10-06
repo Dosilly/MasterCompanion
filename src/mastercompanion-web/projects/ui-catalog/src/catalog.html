@@ -1,0 +1,119 @@
+<main>
+  <h1>Shared UI catalog</h1>
+  <section aria-label="Control hierarchy">
+    <h2>Control hierarchy</h2>
+    <p>
+      Primary actions commit work. Quiet icon actions keep utilities compact; destructive actions
+      describe their consequence.
+    </p>
+    <div class="control-examples">
+      <button class="mc-action--primary" type="button">Save changes</button>
+      <button type="button">Cancel</button>
+      <button class="mc-action--danger" type="button">Delete session record</button>
+      <button
+        class="mc-icon-button mc-action--quiet"
+        type="button"
+        aria-label="Refresh materials"
+        title="Refresh materials"
+      >
+        <mc-icon name="refresh" />
+      </button>
+      <button class="mc-action--primary" type="button" disabled aria-busy="true">Saving…</button>
+      <button type="button" disabled>Unavailable action</button>
+    </div>
+    <div class="catalog-field">
+      <label for="example-title">Title</label>
+      <input id="example-title" value="A long session title that remains readable" />
+    </div>
+    <p role="alert">Changes could not be saved. Keep your draft and retry.</p>
+    <p>Use Tab to review visible focus. Switch themes to review borders and status contrast.</p>
+  </section>
+  <h2>Context menu</h2>
+  <p>
+    Shared neutral presentation used by workspace folders, materials and tabs. Right-click an
+    example, activate its button or press Shift+F10. Navigate with arrows, Home and End; select with
+    Enter or Space; dismiss with Escape or an outside click.
+  </p>
+  <button type="button" (click)="toggleTheme()">
+    {{ dark() ? 'Use light theme' : 'Use dark theme' }}
+  </button>
+  <section aria-label="Action states">
+    <h2>Enabled, disabled and long labels</h2>
+    <button
+      #normal
+      type="button"
+      (click)="openFromButton(normal, false)"
+      (contextmenu)="open($event, normal, false)"
+      (keydown)="keyboard($event, normal, false)"
+    >
+      Open example actions
+    </button>
+    <h2>All actions unavailable</h2>
+    <button
+      #unavailable
+      type="button"
+      (click)="openFromButton(unavailable, true)"
+      (contextmenu)="open($event, unavailable, true)"
+      (keydown)="keyboard($event, unavailable, true)"
+    >
+      Open disabled example
+    </button>
+    <p role="status">Selected action: {{ lastAction() }}</p>
+  </section>
+  <p>Focus starts on the first enabled action and returns to its own trigger when dismissed.</p>
+  @if (menu(); as presentation) {
+    <mc-context-menu
+      [presentation]="presentation"
+      (actionSelected)="select($event)"
+      (dismissed)="menu.set(null)"
+    />
+  }
+  <section aria-label="Searchable choices">
+    <h2>Searchable choices</h2>
+    <p>
+      Search title and path. Arrow keys move through results; Enter selects; Escape closes the
+      choices and returns focus. Filtering never changes the confirmed choice.
+    </p>
+    <mc-searchable-choice
+      controlId="catalog-choice"
+      label="Destination"
+      searchLabel="Search title or path"
+      noResultsLabel="No matching choices"
+      loadingLabel="Loading choices"
+      [options]="choices"
+      [value]="choice()"
+      (selectionChanged)="choice.set($event)"
+    />
+    <mc-searchable-choice
+      controlId="catalog-empty-choice"
+      label="Empty choices"
+      searchLabel="Search title or path"
+      noResultsLabel="No matching choices"
+      loadingLabel="Loading choices"
+      [options]="[]"
+    />
+    <mc-searchable-choice
+      controlId="catalog-loading-choice"
+      label="Pending choices"
+      searchLabel="Search title or path"
+      noResultsLabel="No matching choices"
+      loadingLabel="Loading choices"
+      [options]="choices"
+      [loading]="true"
+    />
+    <mc-searchable-choice
+      controlId="catalog-disabled-choice"
+      label="Disabled choices"
+      searchLabel="Search title or path"
+      noResultsLabel="No matching choices"
+      loadingLabel="Loading choices"
+      [options]="choices"
+      value="second"
+      [disabled]="true"
+    />
+    <p role="alert">
+      Example owner-provided error: choices could not be loaded. Existing selection stays visible;
+      the owner supplies its recovery action.
+    </p>
+  </section>
+</main>

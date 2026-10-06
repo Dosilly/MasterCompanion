@@ -6,4 +6,6 @@ public sealed class Campaign
     public required string Title { get; set; }
     public required string ModuleId { get; set; }
     public required string ModuleVersion { get; set; }
+    public long FoldersRevision { get; set; }
+    public long SessionsRevision { get; set; }
 }

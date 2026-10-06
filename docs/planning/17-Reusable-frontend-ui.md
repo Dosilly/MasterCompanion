@@ -1,6 +1,6 @@
 # Reusable frontend UI
 
-3 October 2026 · architecture and delivery proposal; implementation pending
+3 October 2026 · architecture and delivery proposal; context menu foundation delivered on 4 October
 
 ## Intent
 
@@ -13,6 +13,14 @@ framework is not part of this proposal.
 Related: [engineering instructions](../../AGENTS.md),
 [module architecture](06-Module-architecture.md), and
 [code quality review](16-Code-quality-review.md).
+
+The 5 October [UX/UI audit](27-UX-UI-audit.md) and
+[corrective implementation plan](28-UX-UI-improvement-plan.md) now set the
+recommended consumer priorities: control contrast/action hierarchy and feedback,
+then persistent reader/search commands, recovery, gameplay and session layouts.
+The ownership rules below remain current. The original extraction stages are
+architectural guidance, not an independent schedule requiring all primitives to
+be completed before visible improvements. Corrective UI changes remain planned.
 
 ## Ownership and dependencies
 
@@ -178,5 +186,27 @@ On 4 October 2026, [the quality implementation](19-Code-quality-implementation.m
 extracted the engine-owned `WorkspaceMaterials` session owner and a shared
 `WorkspaceTab` view used by the party, gameplay, map and material tabs. These
 campaign controls remain internal to the engine and do not create the planned
-neutral UI library. UI library scaffolding, its catalog, and URL routing remain
-separate planned slices.
+neutral UI library. At that point library scaffolding, the catalog and URL routing
+were separate planned slices. The subsequent deliveries below and
+[routing record](22-Workspace-routing.md) supersede that historical status.
+
+On 4 October 2026, folder management introduced the separately compiled
+`@mastercompanion/ui` foundation and its first neutral context-menu interaction
+primitive. Folder, material and tab consumers retain their campaign decisions in
+the engine. Dependency guards, public aliases, build/start order and the UI test
+source cache enforce the new boundary. A separate loopback developer catalog
+documents light/dark, focus, disabled and long-label states. See the
+[context menu API and catalog](17-Context-menu-catalog.md). Dialog, feedback,
+theme and tab extractions remain planned; they are not part of this slice.
+
+On 5 October 2026, [searchable choices](31-Searchable-choices.md) added a neutral
+choice primitive with four actual engine consumers: session pinning, folder move,
+note destination and material link insertion. Campaign path adaptation remains
+engine-owned. The existing catalog includes query, selected, empty, loading,
+disabled, long-path and focus examples in both themes.
+
+On 5 October, [the shared control foundation](29-Control-foundation.md) moved
+neutral theme/control styles to the UI package and introduced decorative typed
+icons, native action variants and separate control-border tokens. The host and
+catalog consume published style assets. Engine-owned navigation/document commands
+use these controls. Dialog shells, feedback primitives and neutral tabs remain planned.

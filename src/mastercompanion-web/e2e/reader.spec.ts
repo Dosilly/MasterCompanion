@@ -86,7 +86,10 @@ test('Theme selection persists across reload @reader', async ({ page }, testInfo
 
   // Act
   await page
-    .getByRole('button', { name: text('engine', 'workspace', 'darkMode'), exact: true })
+    .getByRole('button', {
+      name: text('engine', 'workspace', initial === 'dark' ? 'lightMode' : 'darkMode'),
+      exact: true,
+    })
     .click();
 
   // Assert

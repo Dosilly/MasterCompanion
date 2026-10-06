@@ -13,11 +13,13 @@ import {
 } from '@angular/core';
 import type { CampaignFolder, MaterialDto } from '@mastercompanion/contracts';
 import { MaterialCreation } from './material-creation';
-import { folderPath } from '../workspace/navigation';
+import { SearchableChoiceComponent } from '@mastercompanion/ui';
+import { folderChoices } from '../choices/campaign-choices';
 import { uiMessages } from '../../i18n/messages';
 
 @Component({
   selector: 'mc-material-creation-dialog',
+  imports: [SearchableChoiceComponent],
   templateUrl: './material-creation-dialog.html',
   styleUrl: './material-creation-dialog.scss',
 })
@@ -32,22 +34,25 @@ export class MaterialCreationDialog {
   private readonly destroyRef = inject(DestroyRef);
   private opener?: HTMLElement;
   private render?: AfterRenderRef;
-  readonly folderOptions = computed(() => {
-    const folders = this.folders();
-    const names = new Map(folders.map((folder) => [folder.id, folder.title]));
-    return folders.map((folder) => ({
-      id: folder.id,
-      label: folderPath([...folders], folder.id)
-        .map((id) => names.get(id))
-        .join(' / '),
-    }));
-  });
+  readonly folderOptions = computed(() => [
+    { id: '', label: this.ui.workspace.unfiledMaterials },
+    ...folderChoices(this.folders()),
+  ]);
   constructor() {
     this.destroyRef.onDestroy(() => this.render?.destroy());
   }
-  open(event: Event, defaultFolderId: string | null) {
-    this.creation().setDefaultFolder(defaultFolderId);
-    this.opener = event.currentTarget instanceof HTMLElement ? event.currentTarget : undefined;
+  open(event: Event | HTMLElement, defaultFolderId: string | null, explicitFolder = false) {
+    if (explicitFolder) {
+      this.creation().setFolder(defaultFolderId);
+    } else {
+      this.creation().setDefaultFolder(defaultFolderId);
+    }
+    this.opener =
+      event instanceof HTMLElement
+        ? event
+        : event.currentTarget instanceof HTMLElement
+          ? event.currentTarget
+          : undefined;
     this.render?.destroy();
     this.render = afterNextRender(
       () => {
@@ -79,10 +84,8 @@ export class MaterialCreationDialog {
       this.creation().setTitle(event.target.value);
     }
   }
-  updateFolder(event: Event) {
-    if (event.target instanceof HTMLSelectElement) {
-      this.creation().setFolder(event.target.value || null);
-    }
+  updateFolder(id: string) {
+    this.creation().setFolder(id || null);
   }
   async submit(event: Event) {
     event.preventDefault();

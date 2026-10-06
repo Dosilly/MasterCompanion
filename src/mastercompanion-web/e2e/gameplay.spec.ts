@@ -9,7 +9,10 @@ test('Game clock, expedition tools and Arcane Blight remain readable @gameplay @
 
   // Act
   await page
-    .locator('.header-actions')
+    .getByRole('navigation', {
+      name: text('engine', 'workspace', 'primaryNavigationLabel'),
+      exact: true,
+    })
     .getByRole('button', { name: new RegExp(`^${text('engine', 'game', 'title')}`) })
     .click();
   const game = page.locator('.game-view');
@@ -44,6 +47,12 @@ test('Game clock, expedition tools and Arcane Blight remain readable @gameplay @
   await expect(page.locator('.encounter-queue')).toHaveScreenshot('encounter-queue.png');
 
   // Act
+  await page
+    .locator('.tool-section')
+    .filter({ has: page.locator('mc-ythryn-blight') })
+    .locator('summary')
+    .first()
+    .click();
   await page.locator('.blight-tool').scrollIntoViewIfNeeded();
 
   // Assert
@@ -74,11 +83,20 @@ test('Rival force counters and casualty inputs remain accessible @gameplay @forc
 }) => {
   await openReader(page);
   await page
-    .locator('.header-actions')
+    .getByRole('navigation', {
+      name: text('engine', 'workspace', 'primaryNavigationLabel'),
+      exact: true,
+    })
     .getByRole('button', { name: new RegExp(`^${text('engine', 'game', 'title')}`) })
     .click();
   const forces = page.getByRole('region', { name: text('ythryn', 'forces', 'title'), exact: true });
 
+  await page
+    .locator('.tool-section')
+    .filter({ has: page.locator('mc-ythryn-rival-forces') })
+    .locator('summary')
+    .first()
+    .click();
   await forces.scrollIntoViewIfNeeded();
 
   await expect(forces).toBeVisible();
@@ -135,11 +153,20 @@ test('Confirmed casualty form writes one module operation and refreshes counters
   });
   await openReader(page);
   await page
-    .locator('.header-actions')
+    .getByRole('navigation', {
+      name: text('engine', 'workspace', 'primaryNavigationLabel'),
+      exact: true,
+    })
     .getByRole('button', { name: new RegExp(`^${text('engine', 'game', 'title')}`) })
     .click();
   const row = page.locator('[data-force-unit="cultFanatics"]');
 
+  await page
+    .locator('.tool-section')
+    .filter({ has: page.locator('mc-ythryn-rival-forces') })
+    .locator('summary')
+    .first()
+    .click();
   await row.locator('input').fill('5');
   await row.getByRole('button').click();
 

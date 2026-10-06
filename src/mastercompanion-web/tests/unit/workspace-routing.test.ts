@@ -38,6 +38,7 @@ const workspace: WorkspaceDto = {
   moduleId: 'module',
   moduleVersion: '1',
   startMaterialId: 'reader',
+  foldersRevision: 1,
   folders: [],
   materials: [{ id: 'reader', title: 'Reader', group: '', folderId: null }],
   maps: [{ id: 'map.one', title: 'Map', assetId: 'asset', width: 800, height: 600, markers: [] }],
@@ -72,6 +73,8 @@ describe('Workspace route addresses', () => {
     { kind: 'map', mapId: 'map.one' },
     { kind: 'game' },
     { kind: 'party' },
+    { kind: 'sessions' },
+    { kind: 'sessions', sessionId: 'meeting-one' },
     { kind: 'empty' },
   ] satisfies WorkspaceRouteTarget[]) {
     test(`Serializing ${target.kind} preserves its stable target`, () => {

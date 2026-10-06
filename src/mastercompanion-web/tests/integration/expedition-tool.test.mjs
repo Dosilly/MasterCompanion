@@ -1,11 +1,12 @@
 import '@angular/compiler';
-import { Injector, runInInjectionContext, signal } from '@angular/core';
+import { ElementRef, Injector, runInInjectionContext, signal } from '@angular/core';
+import { Window } from 'happy-dom';
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { CAMPAIGN_GAME } from '@mastercompanion/contracts';
 import { ExpeditionTool } from '../../projects/ythryn/src/lib/gameplay/expedition-tool';
 import { YthrynTools } from '../../projects/ythryn/src/lib/gameplay/ythryn-tools';
-function fixture() {
+function fixture(t) {
   const state = signal({
     snapshot: {
       timeMinutes: 1500,
@@ -65,15 +66,25 @@ function fixture() {
     },
     openMaterial: (target) => targets.push(target),
   };
-  const injector = Injector.create({ providers: [{ provide: CAMPAIGN_GAME, useValue: game }] });
+  const window = new Window();
+  const injector = Injector.create({
+    providers: [
+      { provide: CAMPAIGN_GAME, useValue: game },
+      { provide: ElementRef, useValue: new ElementRef(window.document.createElement('section')) },
+    ],
+  });
   const tool = runInInjectionContext(injector, () => new ExpeditionTool());
   const tools = runInInjectionContext(injector, () => new YthrynTools());
+  t.after(async () => {
+    injector.destroy();
+    await window.happyDOM.close();
+  });
   return { tool, tools, game, requests, targets };
 }
 describe('Module tools and campaign game contract', () => {
   test('Dice and repeated rerolls preview freely without writing game state', (t) => {
     // Arrange
-    const { tool, game, requests, targets } = fixture();
+    const { tool, game, requests, targets } = fixture(t);
     const before = structuredClone(game.state());
 
     // Act
@@ -119,7 +130,7 @@ describe('Module tools and campaign game contract', () => {
   });
   test('Failed confirmation preserves the draft; success clears it for the next check', async (t) => {
     // Arrange
-    const { tool, game, requests } = fixture();
+    const { tool, game, requests } = fixture(t);
 
     // Act
     t.mock.method(Math, 'random', () => 0.55);
@@ -154,7 +165,7 @@ describe('Module tools and campaign game contract', () => {
   });
   test('Recovery changing the oldest check prevents carrying a stale roll into the next operation', (t) => {
     // Arrange
-    const { tool, game } = fixture();
+    const { tool, game } = fixture(t);
 
     // Act
     t.mock.method(Math, 'random', () => 0.55);
@@ -189,9 +200,9 @@ describe('Module tools and campaign game contract', () => {
     // Assert
     assert.equal(tool.selectedRoll(2), '56');
   });
-  test('Pending summary links disappear after confirmed arrivals and resolved checks', () => {
+  test('Pending summary links disappear after confirmed arrivals and resolved checks', (t) => {
     // Arrange
-    const { tools, game } = fixture();
+    const { tools, game } = fixture(t);
 
     // Assert
     assert.deepEqual(

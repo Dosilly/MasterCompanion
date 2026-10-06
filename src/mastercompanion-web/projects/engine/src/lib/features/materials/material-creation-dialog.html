@@ -17,18 +17,17 @@
       [disabled]="creation().locked()"
       (input)="updateTitle($event)"
     />
-    <label for="note-folder">{{ ui.notes.folder }}</label>
-    <select
-      id="note-folder"
+    <mc-searchable-choice
+      controlId="note-folder"
+      [label]="ui.notes.folder"
+      [options]="folderOptions()"
       [value]="creation().folderId() ?? ''"
+      [searchLabel]="ui.choices.search"
+      [noResultsLabel]="ui.choices.noResults"
+      [loadingLabel]="ui.choices.loading"
       [disabled]="creation().locked()"
-      (change)="updateFolder($event)"
-    >
-      <option value="">{{ ui.workspace.unfiledMaterials }}</option>
-      @for (folder of folderOptions(); track folder.id) {
-        <option [value]="folder.id">{{ folder.label }}</option>
-      }
-    </select>
+      (selectionChanged)="updateFolder($event)"
+    />
     <p class="creation-hint">{{ ui.notes.readModeHint }}</p>
     @if (creation().pending()) {
       <p role="status">{{ ui.notes.creating }}</p>
@@ -55,7 +54,11 @@
           {{ ui.notes.retry }}
         </button>
       } @else {
-        <button type="submit" [disabled]="creation().locked() || !creation().title().trim()">
+        <button
+          class="mc-action--primary"
+          type="submit"
+          [disabled]="creation().locked() || !creation().title().trim()"
+        >
           {{ ui.notes.create }}
         </button>
       }

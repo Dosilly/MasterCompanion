@@ -1,0 +1,9 @@
+{
+  "name": "@mastercompanion/ui",
+  "version": "0.1.0",
+  "sideEffects": false,
+  "type": "module",
+  "peerDependencies": {
+    "@angular/core": "22.2.0"
+  }
+}

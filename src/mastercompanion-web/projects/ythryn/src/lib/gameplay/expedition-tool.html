@@ -5,7 +5,6 @@
     <div class="tool-grid">
       <section class="tool-card" aria-labelledby="hourly-title">
         <h3 id="hourly-title">{{ text.hourlyTitle }}</h3>
-        <p>{{ text.explorationHint }}</p>
         <p>{{ text.trackedExploration }}: {{ format(current.explorationMinutes) }}</p>
         <p>{{ text.nextHourly }}: {{ format(current.nextHourlyIn) }}</p>
         <form (submit)="explore($event)">
@@ -22,14 +21,18 @@
               [value]="minutes()"
               (input)="setMinutes($event)"
             />
+            <p>{{ text.exploreEffect }}</p>
             <button type="submit">{{ text.explore }}</button>
           </fieldset>
         </form>
+        <details>
+          <summary>{{ text.activityRules }}</summary>
+          <p>{{ text.explorationHint }}</p>
+        </details>
         <button type="button" (click)="open('rules')">{{ text.rules }}</button>
       </section>
       <section class="tool-card" aria-labelledby="building-title">
         <h3 id="building-title">{{ text.buildingTitle }}</h3>
-        <p>{{ text.buildingHint }}</p>
         <fieldset [disabled]="!game.canOperate()">
           <legend>{{ text.searchOptions }}</legend>
           <label class="choice"
@@ -42,15 +45,23 @@
               text.newBuilding
             }}</label
           >
-          <button type="button" (click)="search()">{{ text.search }}</button>
+          <p>{{ text.buildingEffect }}</p>
+          <button class="mc-action--primary" type="button" (click)="search()">
+            {{ text.search }}
+          </button>
         </fieldset>
-        <p>{{ text.patrolHint }}</p>
+        <details>
+          <summary>{{ text.activityRules }}</summary>
+          <p>{{ text.buildingHint }}</p>
+          <p>{{ text.patrolHint }}</p>
+        </details>
       </section>
       @for (faction of factions; track faction) {
         <section
           class="tool-card"
           [class.needs-action]="current[faction].pending"
           [id]="faction + '-arrival'"
+          tabindex="-1"
           [attr.aria-labelledby]="faction + '-title'"
         >
           <h3 [id]="faction + '-title'">{{ text.factions[faction] }}</h3>
@@ -73,9 +84,6 @@
                 }
               </p>
             }
-            @if (faction === 'auril') {
-              <p>{{ text.conversionHint }}</p>
-            }
             <form (submit)="confirm($event, faction)">
               <fieldset [disabled]="!game.canOperate()">
                 <legend>{{ text.confirmArrival }}</legend>
@@ -90,7 +98,10 @@
                   [value]="arrivalDraft()[faction] ?? game.state()?.snapshot?.timeMinutes ?? 0"
                   (input)="setArrival(faction, $event)"
                 />
-                <button type="submit">{{ text.confirmArrival }}</button>
+                <p class="consequence-review">{{ arrivalReview(faction) }}</p>
+                <button class="mc-action--primary" type="submit">
+                  {{ text.confirmArrival }} — {{ text.factions[faction] }}
+                </button>
               </fieldset>
             </form>
           }
@@ -105,6 +116,7 @@
     </div>
     <section
       id="encounter-queue"
+      tabindex="-1"
       class="tool-card encounter-queue"
       [class.needs-action]="current.pending.length > 0"
       aria-labelledby="encounter-queue-title"

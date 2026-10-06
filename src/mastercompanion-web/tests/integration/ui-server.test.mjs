@@ -53,11 +53,12 @@ describe('Isolated UI test server', () => {
   test('UI build cache changes with source, localization and dependencies, but not reports', (t) => {
     // Arrange
     const root = directory(t);
-    for (const path of ['src', 'projects/engine/i18n', 'tools', '.local'])
+    for (const path of ['src', 'projects/engine/i18n', 'projects/ui/src', 'tools', '.local'])
       mkdirSync(resolve(root, path), { recursive: true });
     for (const path of [
       'src/main.ts',
       'projects/engine/i18n/pl.json',
+      'projects/ui/src/public-api.ts',
       'angular.json',
       'tsconfig.json',
       'package.json',
@@ -73,6 +74,7 @@ describe('Isolated UI test server', () => {
     for (const path of [
       'src/main.ts',
       'projects/engine/i18n/pl.json',
+      'projects/ui/src/public-api.ts',
       'angular.json',
       'tsconfig.json',
       'package.json',

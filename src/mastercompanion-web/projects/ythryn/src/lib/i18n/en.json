@@ -1,5 +1,6 @@
 {
   "toolTitle": "Arcane Blight",
+  "transformationReview": "A third failed recovery transforms {name}. Recording Failure changes their status and stops future checks. Undo restores the operation.",
   "toolDescription": "Record each character's check result. Game time and shared rest are controlled above.",
   "rulesLink": "Arcane Blight rules",
   "checkScheduleHint": "Healthy characters check every 12 hours. Infected characters check every 12 hours or after a long rest; each recovery check starts the next 12-hour interval.",
@@ -33,6 +34,10 @@
   "heal": "Magical healing",
   "healingHint": "Magical healing restores health without granting immunity.",
   "expedition": {
+    "activityRules": "Activity rules and details",
+    "exploreEffect": "Adds the entered minutes to both game time and exploration; each crossed hour queues an encounter check.",
+    "buildingEffect": "Adds 30 minutes to game time and exploration. The selected building options determine additional checks.",
+    "arrivalReview": "Confirm {target} at elapsed minute {minute}. Encounter replacements will use this arrival time.",
     "title": "Encounters and rival arrivals",
     "scheduleHint": "Campaign rule: Avarice after the first long rest, Auril after 24 hours in Ythryn. Confirm actual arrivals separately.",
     "hourlyTitle": "Hourly encounters",

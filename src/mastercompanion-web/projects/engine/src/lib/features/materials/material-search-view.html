@@ -8,43 +8,45 @@
   (input)="updateQuery($event)"
   (keydown.escape)="clear($event)"
 />
-@if (search().state(); as state) {
-  @switch (state.kind) {
-    @case ('loading') {
-      <p class="search-status" role="status">{{ ui.search.loading }}</p>
-    }
-    @case ('error') {
-      <div class="search-error" role="alert">
-        <p>{{ ui.search.errors[state.error] }}</p>
-        <button class="search-retry" (click)="search().retry()">{{ ui.workspace.retry }}</button>
-      </div>
-    }
-    @case ('ready') {
-      <p class="search-status" role="status">
-        {{ state.results.length ? ui.search.resultsLabel : ui.workspace.noSearchResults }}
-      </p>
-      @if (state.results.length) {
-        <ul class="search-results" [attr.aria-label]="ui.search.resultsLabel">
-          @for (result of state.results; track result.id) {
-            <li>
-              <button
-                class="search-result"
-                [attr.data-material-id]="result.id"
-                [class.selected]="activeId() === result.id"
-                [attr.aria-current]="activeId() === result.id ? 'page' : null"
-                (click)="materialRequested.emit(result.id)"
-              >
-                <span class="search-result-title">{{ result.title }}</span>
-                <span class="search-result-snippet">{{ result.snippet }}</span>
-              </button>
-            </li>
-          }
-        </ul>
+<div #results class="search-content">
+  @if (search().state(); as state) {
+    @switch (state.kind) {
+      @case ('loading') {
+        <p class="search-status" role="status">{{ ui.search.loading }}</p>
       }
-      @if (state.hasMore) {
-        <p class="search-status">{{ ui.search.moreResults }}</p>
+      @case ('error') {
+        <div class="search-error" role="alert">
+          <p>{{ ui.search.errors[state.error] }}</p>
+          <button class="search-retry" (click)="search().retry()">{{ ui.workspace.retry }}</button>
+        </div>
       }
-      <p class="search-hint">{{ ui.search.persistedHint }}</p>
+      @case ('ready') {
+        <p class="search-status" role="status">
+          {{ state.results.length ? ui.search.resultsLabel : ui.workspace.noSearchResults }}
+        </p>
+        @if (state.results.length) {
+          <ul class="search-results" [attr.aria-label]="ui.search.resultsLabel">
+            @for (result of state.results; track result.id) {
+              <li>
+                <button
+                  class="search-result"
+                  [attr.data-material-id]="result.id"
+                  [class.selected]="activeId() === result.id"
+                  [attr.aria-current]="activeId() === result.id ? 'page' : null"
+                  (click)="materialRequested.emit(result.id)"
+                >
+                  <span class="search-result-title">{{ result.title }}</span>
+                  <span class="search-result-snippet">{{ result.snippet }}</span>
+                </button>
+              </li>
+            }
+          </ul>
+        }
+        @if (state.hasMore) {
+          <p class="search-status">{{ ui.search.moreResults }}</p>
+        }
+        <p class="search-hint">{{ ui.search.persistedHint }}</p>
+      }
     }
   }
-}
+</div>

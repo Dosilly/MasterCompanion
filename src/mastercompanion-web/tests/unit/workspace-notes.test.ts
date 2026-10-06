@@ -38,7 +38,8 @@ function workspaceDescription(materials: MaterialDto[]): WorkspaceDto {
     title: 'Campaign',
     moduleId: 'test-module',
     moduleVersion: '1',
-    startMaterialId: materials[0]?.id ?? null,
+    startMaterialId: materials[0]?.id ?? '',
+    foldersRevision: 1,
     maps: [],
     folders: [
       { id: 'root', title: 'Root', parentId: null },

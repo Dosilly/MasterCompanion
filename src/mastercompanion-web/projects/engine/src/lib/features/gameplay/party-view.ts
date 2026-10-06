@@ -1,9 +1,11 @@
+import { IconComponent } from '@mastercompanion/ui';
 import { Component, computed, effect, ElementRef, input, signal, viewChild } from '@angular/core';
 import { GameSession } from './game-session';
 import { PartyDraft } from './party-draft';
 import { uiMessages } from '../../i18n/messages';
 
 @Component({
+  imports: [IconComponent],
   selector: 'mc-party-view',
   templateUrl: './party-view.html',
   styleUrl: './party-view.scss',

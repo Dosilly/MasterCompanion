@@ -29,9 +29,11 @@ for (const [project, allowed] of [
         relative(root, path),
       );
 }
-for (const library of ['contracts', 'engine', 'ythryn']) {
+for (const library of ['contracts', 'ui', 'engine', 'ythryn']) {
   const directory = resolve(web, 'projects', library);
-  const allowed = library === 'contracts' ? [] : ['@mastercompanion/contracts'];
+  const allowed = ['contracts', 'ui'].includes(library)
+    ? []
+    : ['@mastercompanion/contracts', '@mastercompanion/ui'];
   const manifest = JSON.parse(readFileSync(resolve(directory, 'package.json'), 'utf8'));
   for (const dependency of Object.keys({ ...manifest.dependencies, ...manifest.peerDependencies }))
     if (dependency.startsWith('@mastercompanion/'))
@@ -51,8 +53,11 @@ for (const library of ['contracts', 'engine', 'ythryn']) {
       }
     }
     if (library === 'engine') assert.doesNotMatch(source, /\bYthryn\b/i, relative(web, path));
+    if (library === 'ui') {
+      assert.doesNotMatch(source, /@angular\/common\/http|\bHttpClient\b/, relative(web, path));
+    }
   }
 }
 console.log(
-  'Module boundaries OK: engine and modules depend only on contracts; host composes them.',
+  'Module boundaries OK: engine and modules depend on contracts and neutral UI; host composes them.',
 );

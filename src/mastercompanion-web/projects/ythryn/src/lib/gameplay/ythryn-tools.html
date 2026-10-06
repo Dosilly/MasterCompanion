@@ -8,12 +8,37 @@
     <ul>
       @for (action of pendingActions(); track action.target) {
         <li>
-          <a [href]="'#' + action.target">{{ action.label }}</a>
+          <button type="button" class="pending-action-link" (click)="revealAction(action.target)">
+            {{ action.label }}
+          </button>
         </li>
       }
     </ul>
   </nav>
 }
-<mc-ythryn-expedition />
-<mc-ythryn-blight />
-<mc-ythryn-rival-forces />
+<details
+  class="tool-section"
+  [open]="expanded().has('expedition')"
+  (toggle)="rememberSection('expedition', $event)"
+>
+  <summary>
+    {{ text.expedition.title }} · {{ text.actionRequired }}: {{ sectionCount('expedition') }}
+  </summary>
+  <mc-ythryn-expedition />
+</details>
+<details
+  class="tool-section"
+  [open]="expanded().has('blight')"
+  (toggle)="rememberSection('blight', $event)"
+>
+  <summary>{{ text.toolTitle }} · {{ text.actionRequired }}: {{ sectionCount('blight') }}</summary>
+  <mc-ythryn-blight />
+</details>
+<details
+  class="tool-section"
+  [open]="expanded().has('forces')"
+  (toggle)="rememberSection('forces', $event)"
+>
+  <summary>{{ text.forces.title }}</summary>
+  <mc-ythryn-rival-forces />
+</details>

@@ -217,7 +217,10 @@ export class MaterialCreation {
           ((error.status === 400 &&
             ['invalid_material_creation', 'material_folder_not_found'].includes(String(code))) ||
             (error.status === 404 && code === 'campaign_not_found') ||
-            (error.status === 409 && code === 'material_creation_conflict') ||
+            (error.status === 409 &&
+              ['material_creation_conflict', 'material_organization_revision_limit'].includes(
+                String(code),
+              )) ||
             (error.status === 413 && code === 'material_request_too_large') ||
             (error.status === 415 && code === 'material_json_required'));
         if (rejected) {

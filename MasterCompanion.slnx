@@ -11,5 +11,7 @@
     <Project Path="tests/MasterCompanion.Gameplay.Tests.Unit/MasterCompanion.Gameplay.Tests.Unit.csproj" />
     <Project Path="tests/MasterCompanion.Gameplay.Tests.Integration/MasterCompanion.Gameplay.Tests.Integration.csproj" />
     <Project Path="tests/MasterCompanion.Materials.Tests.Integration/MasterCompanion.Materials.Tests.Integration.csproj" />
+    <Project Path="tests/MasterCompanion.Folders.Tests.Integration/MasterCompanion.Folders.Tests.Integration.csproj" />
+    <Project Path="tests/MasterCompanion.Sessions.Tests.Integration/MasterCompanion.Sessions.Tests.Integration.csproj" />
   </Folder>
 </Solution>

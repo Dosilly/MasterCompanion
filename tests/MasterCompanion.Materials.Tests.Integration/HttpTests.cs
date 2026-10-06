@@ -69,7 +69,13 @@ public sealed class HttpTests(PostgreSqlFixture database) : IAsyncLifetime
             try
             {
                 if (originalData is not null)
+                {
                     Assert.Equal(originalData, await SnapshotAsync(db, campaignId, otherCampaignId, authoredId));
+                    var campaign = await db.Campaigns.AsNoTracking().SingleAsync(item => item.Id == campaignId);
+                    var createdNotes = await db.Materials.CountAsync(item => item.CampaignId == campaignId && item.Id != authoredId);
+                    Assert.Equal(createdNotes, campaign.FoldersRevision);
+                    Assert.Equal(0, (await db.Campaigns.AsNoTracking().SingleAsync(item => item.Id == otherCampaignId)).FoldersRevision);
+                }
             }
             finally
             {
@@ -388,7 +394,8 @@ public sealed class HttpTests(PostgreSqlFixture database) : IAsyncLifetime
     private static async Task<string> SnapshotAsync(AppDbContext db, Guid campaignId, Guid otherCampaignId, string authoredId) =>
         JsonSerializer.Serialize(new
         {
-            campaigns = await db.Campaigns.AsNoTracking().Where(x => x.Id == campaignId || x.Id == otherCampaignId).OrderBy(x => x.Id).ToArrayAsync(),
+            campaigns = await db.Campaigns.AsNoTracking().Where(x => x.Id == campaignId || x.Id == otherCampaignId).OrderBy(x => x.Id)
+                .Select(x => new { x.Id, x.Title, x.ModuleId, x.ModuleVersion, x.SessionsRevision }).ToArrayAsync(),
             folders = await db.Folders.AsNoTracking().Where(x => x.CampaignId == campaignId || x.CampaignId == otherCampaignId).OrderBy(x => x.Id).ToArrayAsync(),
             materials = await db.Materials.AsNoTracking().Where(x => x.Id == authoredId).ToArrayAsync(),
             maps = await db.Maps.AsNoTracking().Where(x => x.CampaignId == campaignId).ToArrayAsync(),

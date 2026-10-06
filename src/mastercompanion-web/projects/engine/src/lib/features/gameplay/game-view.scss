@@ -1,1 +1,23 @@
 @use './gameplay-layout';
+
+.game-heading {
+  position: sticky;
+  top: -24px;
+  z-index: 2;
+  background: var(--page);
+  padding: 12px 0;
+}
+.game-actions button[aria-pressed='true'] {
+  background: var(--selection);
+  color: var(--selection-ink);
+}
+.activity-review {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.activity-review p {
+  flex-basis: 100%;
+  margin: 4px 0;
+}

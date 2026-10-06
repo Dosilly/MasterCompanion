@@ -1,3 +1,4 @@
+import { IconComponent } from '@mastercompanion/ui';
 import {
   AfterRenderRef,
   Component,
@@ -19,7 +20,12 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { CAMPAIGN_MODULES, MaterialDto, WorkspaceDto } from '@mastercompanion/contracts';
+import {
+  CAMPAIGN_MODULES,
+  CampaignFolder,
+  MaterialDto,
+  WorkspaceDto,
+} from '@mastercompanion/contracts';
 import { WorkspaceTab } from './workspace-tab';
 import { WorkspaceMaterials } from './workspace-materials';
 import { MaterialView } from '../materials/material-view';
@@ -38,10 +44,23 @@ import { GameSession } from '../gameplay/game-session';
 import { GameView } from '../gameplay/game-view';
 import { PartyView } from '../gameplay/party-view';
 import { UiMessages, uiMessages } from '../../i18n/messages';
+import { FolderManagement } from '../folders/folder-management';
+import { FolderManagementDialog } from '../folders/folder-management-dialog';
+import { FolderDrag } from '../folders/folder-drag';
+import { MaterialDrag } from '../folders/material-drag';
+import { MaterialOrderDialog } from '../folders/material-order-dialog';
+import { MaterialMoveDialog } from '../folders/material-move-dialog';
+import { WorkspaceContextMenuComponent } from '../context-menu/workspace-context-menu';
+import type { WorkspaceContextMenuAction } from '../context-menu/workspace-context-menu-action';
+import { WorkspaceContextMenuState } from '../context-menu/workspace-context-menu-state';
+import { MeetingRecords } from '../sessions/meeting-records';
+import { SessionDrafts } from '../sessions/session-drafts';
+import { SessionView } from '../sessions/session-view';
 
 @Component({
   selector: 'mc-workspace',
   imports: [
+    IconComponent,
     WorkspaceTab,
     NgTemplateOutlet,
     MaterialView,
@@ -50,6 +69,11 @@ import { UiMessages, uiMessages } from '../../i18n/messages';
     MapView,
     GameView,
     PartyView,
+    FolderManagementDialog,
+    MaterialOrderDialog,
+    MaterialMoveDialog,
+    WorkspaceContextMenuComponent,
+    SessionView,
   ],
   templateUrl: './workspace.html',
   styleUrl: './workspace.scss',
@@ -91,9 +115,36 @@ export class Workspace {
   readonly gameMounted = signal(false);
   readonly partyOpen = signal(false);
   readonly partyMounted = signal(false);
+  readonly meetingsOpen = signal(false);
+  readonly meetingsMounted = signal(false);
+  readonly meetings = signal<MeetingRecords | null>(null);
+  readonly meetingsSelection = signal('');
+  readonly meetingDrafts = new SessionDrafts();
+  private readonly meetingView = viewChild(SessionView);
+  readonly meetingDocument = computed(() => {
+    for (const record of this.meetings()?.snapshot().sessions ?? []) {
+      if (record.preparationMaterialId === this.active()) {
+        return { id: record.id, title: record.title, role: this.ui.meetings.preparation };
+      }
+      if (record.notesMaterialId === this.active()) {
+        return { id: record.id, title: record.title, role: this.ui.meetings.notes };
+      }
+    }
+    return null;
+  });
   readonly partyView = viewChild(PartyView);
   readonly game = signal<GameSession | null>(null);
   readonly creation = signal<MaterialCreation | null>(null);
+  readonly folderManagement = signal<FolderManagement | null>(null);
+  readonly folderDrag = new FolderDrag();
+  readonly materialDrag = new MaterialDrag();
+  private readonly materialOrderDialog = viewChild(MaterialOrderDialog);
+  private readonly materialMoveDialog = viewChild(MaterialMoveDialog);
+  private readonly folderDialog = viewChild(FolderManagementDialog);
+  readonly menus = new WorkspaceContextMenuState(
+    () => this.folderManagement()?.locked() ?? true,
+    (id) => this.closing().has(id),
+  );
   private readonly creationDialog = viewChild(MaterialCreationDialog);
   readonly campaignModule = computed(() =>
     this.modules.find((module) => module.id === this.workspace()?.moduleId),
@@ -104,6 +155,7 @@ export class Workspace {
   });
   readonly closing = signal(new Set<string>());
   readonly expanded = signal(new Set<string>());
+  private readonly searchView = viewChild(MaterialSearchView);
   private readonly navigation = viewChild<ElementRef<HTMLElement>>('navigation');
   private readonly tabStrip = viewChild<ElementRef<HTMLElement>>('tabStrip');
   readonly views = viewChildren(MaterialView);
@@ -115,23 +167,31 @@ export class Workspace {
     ),
   );
   private navigationRender?: AfterRenderRef;
+  private folderNavigationRender?: AfterRenderRef;
   private finishNavigationRender?: (found: boolean) => void;
 
   constructor() {
     this.destroyRef.onDestroy(() => {
       this.navigationRender?.destroy();
+      this.folderNavigationRender?.destroy();
       this.finishNavigationRender?.(false);
       this.routing.destroy();
       this.materials.destroy();
       this.game()?.destroy();
       this.creation()?.destroy();
+      this.folderManagement()?.destroy();
       this.materialSearch()?.destroy();
+      this.meetings()?.destroy();
     });
     effect(() => {
       for (const session of this.sessions()) {
         session.confirmedRevision();
       }
       untracked(() => this.materialSearch()?.refresh());
+    });
+    effect(() => {
+      const records = this.meetings()?.snapshot().sessions ?? [];
+      untracked(() => this.meetingDrafts.acceptConfirmed(records));
     });
     void this.load();
   }
@@ -187,6 +247,61 @@ export class Workspace {
         }
         this.creation.set(new MaterialCreation(workspace.campaignId, this.http, storage));
       }
+      if (this.meetings()?.campaignId !== workspace.campaignId) {
+        this.meetings()?.destroy();
+        let storage: Storage | null = null;
+        try {
+          storage = window.sessionStorage;
+        } catch {
+          /* Session writes report inaccessible recovery storage before sending. */
+        }
+        const meetings = new MeetingRecords(workspace.campaignId, this.http, storage);
+        this.meetings.set(meetings);
+        void meetings.refresh();
+      } else if (this.meetings()?.loaded()) {
+        void this.meetings()?.refresh();
+      }
+      if (this.folderManagement()?.campaignId !== workspace.campaignId) {
+        this.folderManagement()?.destroy();
+        let storage: Storage | null = null;
+        try {
+          storage = window.sessionStorage;
+        } catch {
+          /* Folder operations report inaccessible recovery storage before sending. */
+        }
+        this.folderManagement.set(
+          new FolderManagement(workspace.campaignId, this.http, storage, (snapshot) => {
+            const previous = this.workspace()?.folders ?? [];
+            const moved =
+              previous.length !== snapshot.folders.length ||
+              snapshot.folders.some(
+                (folder, index) =>
+                  folder.id !== previous[index]?.id ||
+                  folder.parentId !== previous[index]?.parentId,
+              );
+            this.materials.acceptFolders(snapshot);
+            const material = this.workspace()?.materials.find((item) => item.id === this.active());
+            if (material) {
+              this.expanded.update(
+                (current) =>
+                  new Set([...current, ...folderPath(snapshot.folders, material.folderId)]),
+              );
+              if (moved) {
+                this.folderNavigationRender?.destroy();
+                this.folderNavigationRender = afterNextRender(
+                  () => this.revealNavigationSelection(false),
+                  { injector: this.injector },
+                );
+              }
+            }
+          }),
+        );
+      }
+      this.folderManagement()?.accept({
+        revision: workspace.foldersRevision,
+        folders: workspace.folders,
+        materialOrder: workspace.materials.map(({ id, folderId }) => ({ id, folderId })),
+      });
       await this.routing.initialize(this.workspace() ?? workspace);
     } catch {
       if (!this.destroyRef.destroyed && this.materialLoadState() !== 'error') {
@@ -281,6 +396,18 @@ export class Workspace {
         this.partyOpen.set(true);
         await this.display('@party', undefined, context);
         break;
+      case 'sessions':
+        this.meetingsMounted.set(true);
+        this.meetingsOpen.set(true);
+        if (!this.meetings()?.loaded()) {
+          await this.meetings()?.refresh();
+        }
+        if (!context.isCurrent()) {
+          return { kind: 'ready' };
+        }
+        this.meetingsSelection.set(target.sessionId ?? '');
+        await this.display('@sessions', undefined, context);
+        break;
       case 'empty':
         await this.display('', undefined, context);
         break;
@@ -304,8 +431,148 @@ export class Workspace {
       null;
     this.creationDialog()?.open(event, folderId);
   }
+
+  async contextAction(action: WorkspaceContextMenuAction): Promise<void> {
+    const target = this.menus.takeTarget();
+    if (!target) {
+      return;
+    }
+    const folder = this.workspace()?.folders.find((item) => item.id === target.id);
+    switch (action) {
+      case 'new-note':
+        this.creationDialog()?.open(target.trigger, folder?.id ?? null, true);
+        break;
+      case 'rename':
+      case 'move':
+        if (folder) {
+          this.folderDialog()?.open(action, folder, target.trigger);
+        }
+        break;
+      case 'reorder': {
+        const material = this.workspace()?.materials.find((item) => item.id === target.id);
+        if (material) {
+          this.materialOrderDialog()?.open(material, target.trigger);
+        }
+        break;
+      }
+      case 'move-material': {
+        const material = this.workspace()?.materials.find((item) => item.id === target.id);
+        if (material) {
+          this.materialMoveDialog()?.open(material, target.trigger);
+        }
+        break;
+      }
+      case 'reveal':
+        this.materialSearch()?.updateQuery('');
+        await this.open(target.id);
+        break;
+      case 'copy-link':
+        await this.menus.copyMaterialLink(target.id);
+        break;
+      case 'close':
+        await this.close(target.id);
+        break;
+      case 'close-others':
+        await this.closeOtherTabs(target.id);
+        break;
+    }
+  }
+
+  private async closeOtherTabs(keepId: string): Promise<void> {
+    const ids = [
+      ...(this.meetingsOpen() ? ['@sessions'] : []),
+      ...(this.partyOpen() ? ['@party'] : []),
+      ...(this.gameOpen() ? ['@game'] : []),
+      ...this.maps().map((map) => `@map:${map.id}`),
+      ...this.sessions().map((session) => session.material.id),
+    ];
+    for (const id of ids) {
+      if (id !== keepId) {
+        await this.close(id);
+      }
+    }
+  }
+
+  dropFolder(event: DragEvent, folder: CampaignFolder | null): void {
+    this.overFolder(event, folder);
+    if (this.materialDrag.dragging()) {
+      this.commitMaterialDrop(event);
+      return;
+    }
+    const operation = this.folderDrag.drop(event);
+    if (operation) {
+      void this.folderManagement()?.execute(operation);
+    }
+  }
+  overFolder(event: DragEvent, folder: CampaignFolder | null): void {
+    const management = this.folderManagement();
+    if (!management || management.locked()) {
+      return;
+    }
+    if (this.materialDrag.dragging()) {
+      this.materialDrag.overFolder(
+        event,
+        management.snapshot(),
+        folder?.id === '@unfiled' ? null : (folder?.id ?? null),
+      );
+    } else if (folder?.id !== '@unfiled') {
+      this.folderDrag.over(event, management.snapshot().folders, folder);
+    }
+  }
+
+  overMaterial(event: DragEvent, id: string): void {
+    const management = this.folderManagement();
+    if (management && !management.locked()) {
+      this.materialDrag.over(event, management.snapshot(), id);
+    }
+  }
+  dropMaterial(event: DragEvent, id: string): void {
+    this.overMaterial(event, id);
+    this.commitMaterialDrop(event);
+  }
+
+  private commitMaterialDrop(event: DragEvent): void {
+    const operation = this.materialDrag.drop(event);
+    if (operation) {
+      void this.folderManagement()
+        ?.execute(operation)
+        .then((confirmed) => {
+          if (confirmed && operation.kind === 'moveMaterial') {
+            this.revealMovedMaterial(operation.materialId);
+          }
+        });
+    }
+  }
+
+  revealMovedMaterial(id: string): void {
+    const material = this.workspace()?.materials.find((item) => item.id === id);
+    if (!material) {
+      return;
+    }
+    this.expanded.update(
+      (current) =>
+        new Set([
+          ...current,
+          ...folderPath(this.workspace()?.folders ?? [], material.folderId),
+          ...(material.folderId ? [] : ['@unfiled']),
+        ]),
+    );
+    this.folderNavigationRender?.destroy();
+    this.folderNavigationRender = afterNextRender(
+      () => {
+        const selected = Array.from(
+          this.navigation()?.nativeElement.querySelectorAll<HTMLElement>('[data-material-id]') ??
+            [],
+        ).find((item) => item.dataset['materialId'] === id);
+        selected?.scrollIntoView({ block: 'nearest' });
+        selected?.focus({ preventScroll: true });
+      },
+      { injector: this.injector },
+    );
+  }
   acceptCreatedMaterial(material: MaterialDto): void {
     this.materials.acceptCreatedMaterial(material);
+    void this.folderManagement()?.refresh();
     this.materialSearch()?.updateQuery('');
     const workspace = this.workspace();
     if (workspace) {
@@ -326,6 +593,15 @@ export class Workspace {
   openParty() {
     void this.routing.navigate({ kind: 'party' });
   }
+  openMeetings(sessionId?: string): void {
+    void this.routing.navigate({ kind: 'sessions', ...(sessionId ? { sessionId } : {}) });
+  }
+  async openMeetingMaterial(id: string): Promise<void> {
+    if (!this.workspace()?.materials.some((item) => item.id === id)) {
+      await this.load();
+    }
+    await this.open(id);
+  }
 
   activate(id: string, anchor?: string, focusTab = false) {
     return this.routing.navigate(this.targetForTab(id, anchor), { focusTab });
@@ -340,6 +616,12 @@ export class Workspace {
     }
     if (id === '@party') {
       return { kind: 'party' };
+    }
+    if (id === '@sessions') {
+      return {
+        kind: 'sessions',
+        ...(this.meetingsSelection() ? { sessionId: this.meetingsSelection() } : {}),
+      };
     }
     return id ? { kind: 'material', materialId: id, anchor } : { kind: 'empty' };
   }
@@ -404,6 +686,10 @@ export class Workspace {
   }
 
   private revealNavigationSelection(focus: boolean): void {
+    if (this.materialSearch()?.state().kind !== 'idle') {
+      this.searchView()?.revealSelected(focus);
+      return;
+    }
     const nav = this.navigation()?.nativeElement;
     const selected = nav?.querySelector<HTMLElement>('[aria-current="page"]');
     if (!nav || !selected) {
@@ -476,6 +762,17 @@ export class Workspace {
       return;
     }
     const session = this.sessions().find((tab) => tab.material.id === id);
+    if (id === '@sessions') {
+      const meetings = this.meetings();
+      if (
+        !meetings ||
+        meetings.request() ||
+        meetings.pending() ||
+        !(await this.meetingView()?.prepareToClose())
+      ) {
+        return;
+      }
+    }
     if (session) {
       this.closing.update((current) => new Set([...current, id]));
       const saved = await session.prepareToClose();
@@ -489,6 +786,7 @@ export class Workspace {
       }
     }
     const tabIds = [
+      ...(this.meetingsOpen() ? ['@sessions'] : []),
       ...(this.partyOpen() ? ['@party'] : []),
       ...(this.gameOpen() ? ['@game'] : []),
       ...this.openMaps().map((mapId) => `@map:${mapId}`),
@@ -504,6 +802,8 @@ export class Workspace {
       this.gameOpen.set(false);
     } else if (id === '@party') {
       this.partyOpen.set(false);
+    } else if (id === '@sessions') {
+      this.meetingsOpen.set(false);
     } else {
       this.materials.removeConfirmedSession(id);
     }
@@ -518,6 +818,8 @@ export class Workspace {
     if (
       this.sessions().some((tab) => tab.dirty()) ||
       this.partyView()?.dirty() ||
+      this.meetingDrafts.dirty() ||
+      (!this.meetings()?.request() && this.meetingView()?.hasCreationDraft()) ||
       (!this.creation()?.hasRecovery() && this.creation()?.title().trim())
     ) {
       event.preventDefault();

@@ -18,6 +18,7 @@
           class="character"
           [class.needs-action]="character.nextCheck?.pending"
           [id]="'blight-character-' + character.id"
+          tabindex="-1"
           [attr.aria-labelledby]="'blight-name-' + character.id"
         >
           <h3 [id]="'blight-name-' + character.id">{{ character.name }}</h3>
@@ -64,6 +65,11 @@
                   </select>
                 }
                 <div class="outcomes">
+                  @if (character.status === 'infected' && character.failures === 2) {
+                    <p class="transformation-review">
+                      {{ text.transformationReview.replace('{name}', character.name) }}
+                    </p>
+                  }
                   <button
                     type="button"
                     [disabled]="!canResolve(character, true)"

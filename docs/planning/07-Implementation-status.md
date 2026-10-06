@@ -1,5 +1,152 @@
 # Implementation status
 
+## Session workflow — 6 October 2026
+
+[Slice E](38-Session-workflow.md) adds record-specific routes, independently loaded
+active-meeting context, one-action play notes, stage guidance and explicit creation
+after first use. Per-record drafts retain their existing save/conflict ownership.
+Thirty-three scoped unit cases and sixty session browser cases pass; twelve workflow
+cases passed again after the final document-return correction. Quality and production
+compilation pass; both Full HD themes were reviewed. C–E are merged locally;
+Docker is available again and container delivery resumes. F/G follow.
+
+## Gameplay hierarchy — 6 October 2026
+
+[Slice D](36-Gameplay-hierarchy.md) makes clock activity selection explicit,
+shows immediate effects and named arrival/transformation consequences, and groups
+module tools into collapsible sections with visible attention links. Mounted inputs
+and section state survive navigation. Twenty-six focused module cases, sixteen new
+browser cases, existing reminder/casualty cases and eight visual cases pass in both
+themes/sizes; frontend quality and production compilation pass.
+
+C and D are merged locally; container delivery awaits Docker startup. The engine
+failed while opening a stale inference socket before starting WSL; no database
+volume or campaign data was changed. E–G remain in the authorized UI scope.
+
+## Explicit draft recovery — 6 October 2026
+
+[Slice C](35-Draft-recovery.md) adds scoped saved-version inspection, deliberate
+adoption or reapplication against the inspected revision, and visible copy/manual
+copy recovery for material and session drafts. Other open work remains independently
+owned. Fifty-two focused unit/integration cases and twenty scoped browser cases
+pass; frontend quality and isolated production compilation pass. Full HD material
+recovery previews were reviewed in both themes. Local runtime delivery is pending.
+
+The user authorized the remaining C–G UI corrections on 6 October. D (gameplay),
+E (session workflow), F (navigation/retrieval) and G (map interaction) follow C.
+
+## UX follow-up corrections — 5 October 2026
+
+[The follow-up delivery](34-UX-follow-up-corrections.md) fixes gameplay reminder
+navigation, simplifies document context menus, supplies an editable session name
+with today's local date and implements cross-folder/unfiled document movement
+through searchable choices and drag/drop. Confirmed organization membership
+retains precedence over delayed cache reads while keeping mounted drafts intact.
+
+Commit `44ee190` was merged into local `trunk`. Image
+`mastercompanion:ux-followup-44ee190` was built from that merged checkout and the
+application container updated. Both services are healthy. Eight read-only
+container checks pass. A live Full HD check confirms the dated name, closing an
+untouched session form, the three document menu commands and the searchable move
+dialog without horizontal overflow or console errors. No live campaign write
+was submitted; reminder focus/navigation and confirmed movement/recovery use
+isolated functional tests. The gameplay visual baselines pass without updates.
+
+## UX/UI audit and corrective plan — 5 October 2026
+
+Reviewed the running reader/editor, search/navigation, maps, gameplay, party,
+creation dialog and empty sessions in both themes at Full HD, plus gameplay at
+the existing smaller desktop viewport. Populated session layouts use previous
+isolated delivery screenshots; conflict/recovery findings use source review.
+No campaign content or game/session operation was submitted for this audit.
+
+[The audit](27-UX-UI-audit.md) records 24 prioritized findings, distinguishes
+observed/measured issues from usability hypotheses, and includes selected visual
+evidence. The user's follow-up specifically confirms unsearchable dropdowns,
+missing session deletion, missing note ordering, generic/scattered actions and
+unsustainable upper-right navigation. [The corrective plan](28-UX-UI-improvement-plan.md)
+prioritizes these capabilities with the visual/accessibility foundation and
+persistent search/reader commands, then draft recovery, gameplay hierarchy,
+session workflow, retrieval and map interaction corrections.
+The audit originally changed documentation only. The first corrective cycle
+A/H/I/J/B has since been implemented: shared controls/icons, searchable choices,
+session deletion, within-folder note ordering, and bounded navigation with
+persistent search/document commands. See [the current delivery records](28-UX-UI-improvement-plan.md).
+Later recovery, gameplay/session restructuring, retrieval and map corrections
+remain planned before map authoring and multiple campaigns.
+
+The combined implementation was merged into local `trunk` at `e6a135c`. Image
+`mastercompanion:ux-e6a135c` was built from that merged checkout and installed in
+the local application container at `http://localhost:4200`. Both services are
+healthy. Eight read-only container checks passed, including the organization
+snapshot's material-order references. Live Full HD review confirmed the reader
+in both themes, one header utility, sidebar navigation, session empty state,
+keyboard access to note ordering and filtering the document picker. Functional
+write and recovery coverage uses isolated tests; live review submitted no
+campaign writes. [The combined delivery record](33-Workspace-navigation.md)
+records the scoped browser, visual, build and runtime evidence.
+
+## Campaign sessions and pinned materials — 5 October 2026
+
+Named sessions progress from planned to active to completed, with one active
+meeting per campaign. Preparation and play notes are separate ordinary rich
+materials; pins open existing campaign documents without copying them. Explicitly
+edited summaries and follow-up text retain per-record drafts across navigation
+and conflicts. Session actions preserve game time, party/module state and undo.
+
+Scoped evidence includes 26 isolated HTTP/PostgreSQL cases, session/recovery/draft
+and routing unit checks, all 24 session browser cases across both themes and
+viewports, reviewed Full HD screenshots, successful solution compilation and
+frontend quality/library compilation. See [the session delivery plan](26-Campaign-sessions.md)
+for the contract, exact limits and local delivery status. At delivery, map authoring
+was the next product slice, followed by multiple campaigns. The subsequent UX/UI
+plan above prioritizes corrections before these features. Chronicle remains
+separate later scope; UI extractions follow the corrective plan's demonstrated
+consumer needs.
+
+Commit `2562798` was merged into local `trunk`. Image
+`mastercompanion:sessions-2562798` was built from that checkout and the application
+container updated. Both services are healthy; seven read-only container checks
+and a live Full HD session-page check in both themes pass without API writes.
+
+## Folder interaction corrections — 4 October 2026
+
+The move dialog reflects the actual parent and sibling position, including moves
+back to the root. Wider folder rows and ordering zones, contrasting drag markers,
+and a root target outside the scrolling navigation address difficult drag/drop.
+Folder menus now offer Add document, Rename and Move without redundant expansion
+actions. See [the correction and scoped evidence](25-Folder-management-and-context-menus.md#folder-interaction-corrections--4-october-2026).
+
+Fix `b76fea9` was merged into local `trunk` and the application container updated
+to `mastercompanion:folder-fix-b76fea9`. Twenty-four folder unit tests, sixty-four
+scoped browser cases, frontend quality/build, five container checks and a live
+browser check pass. The live check blocked API writes and confirmed root selection.
+
+## Folder management and context menus — 4 October 2026
+
+Folders support rename, sibling order, subtree nesting and moves to ancestors or
+the campaign root, with drag/drop and equivalent keyboard dialogs. Folder menus
+create notes directly in the clicked folder while retaining unsent titles and
+uncertain creation recovery. Material and tab menus open/reveal/copy addresses
+and close tabs through existing save-before-close operations. A visible folder
+action button, ContextMenu and Shift+F10 make the actions reachable without PPM.
+
+Hierarchy revision checks, campaign locking, atomic order/parent writes and
+immutable receipts keep folder persistence independent of materials and gameplay.
+The new separately compiled neutral UI library owns only menu interaction and
+presentation, with a developer catalog and enforced dependency boundaries.
+
+Forty PostgreSQL/HTTP cases, forty frontend folder/workspace cases, twelve menu
+cases, nine server/cache cases and seventy-two affected browser cases pass.
+Nine unchanged note-creation unit cases remain valid. Both themes and viewport
+sizes were verified; four new visual baselines and Full HD dialog/catalog views
+were reviewed. Builds, model/migration consistency and quality checks pass.
+See [scope, contract and delivery evidence](25-Folder-management-and-context-menus.md).
+Commit `3dd7e91` was merged into local `trunk`; image
+`mastercompanion:folders-3dd7e91` was built and the app container updated. Both
+services are healthy. Five read-only container cases and a live browser menu,
+note-destination and keyboard-focus check passed without API writes.
+
 ## Campaign material memory — 4 October 2026
 
 Campaign startup preloads persisted documents and retains confirmed content after

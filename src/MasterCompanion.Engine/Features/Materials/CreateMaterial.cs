@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using MasterCompanion.Engine.Features.Folders;
 using Npgsql;
 
 namespace MasterCompanion.Engine.Features.Materials;
@@ -72,7 +73,11 @@ public static class CreateMaterial
             return Problem(400, "invalid_material_creation");
         }
 
-        if (!await db.Campaigns.AsNoTracking().AnyAsync(x => x.Id == campaignId, token))
+        await using var transaction = await db.Database.BeginTransactionAsync(token);
+        var campaigns = await db.Campaigns.FromSqlInterpolated(
+            $"SELECT * FROM engine.\"Campaigns\" WHERE \"Id\" = {campaignId} FOR UPDATE").ToListAsync(token);
+        var campaign = campaigns.SingleOrDefault();
+        if (campaign is null)
         {
             return Problem(404, "campaign_not_found");
         }
@@ -110,17 +115,23 @@ public static class CreateMaterial
             Revision = 1,
             SortOrder = checked((maximumOrder ?? -1) + 1)
         };
+        if (campaign.FoldersRevision >= FolderRequestDecoder.MaxRevision)
+        {
+            return Problem(409, "material_organization_revision_limit");
+        }
+        campaign.FoldersRevision++;
         db.Materials.Add(material);
-        try { await db.SaveChangesAsync(token); }
+        try
+        {
+            await db.SaveChangesAsync(token);
+        }
         catch (DbUpdateException error) when (error.InnerException is PostgresException
         { SqlState: PostgresErrorCodes.UniqueViolation, ConstraintName: "PK_Materials" })
         {
-            // A concurrent retry may have committed first. Never replace its document or revision.
-            db.Entry(material).State = EntityState.Detached;
-            existing = await FindAsync(db, campaignId, id, token);
-            return existing is null ? Problem(409, "material_creation_conflict")
-                : Replay(existing, title, request.FolderId);
+            // Campaign locks serialize same-campaign retries; a global ID collision belongs to another campaign.
+            return Problem(409, "material_creation_conflict");
         }
+        await transaction.CommitAsync(token);
         return Results.Created($"/api/materials/{id}", Response(material));
     }
 

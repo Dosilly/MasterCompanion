@@ -55,6 +55,9 @@ export function decodeWorkspaceRoute(url: string, workspace: WorkspaceDto): Deco
   if (tree.fragment !== null) {
     return { kind: 'error', code: 'invalidRoute' };
   }
+  if (segments.length === 2 && area === 'sessions' && id && safeIdentifier.test(id)) {
+    return { kind: 'target', target: { kind: 'sessions', sessionId: id } };
+  }
   if (segments.length === 2 && area === 'maps' && id && safeIdentifier.test(id)) {
     return workspace.maps.some((map) => map.id === id)
       ? { kind: 'target', target: { kind: 'map', mapId: id } }
@@ -66,6 +69,8 @@ export function decodeWorkspaceRoute(url: string, workspace: WorkspaceDto): Deco
         return { kind: 'target', target: { kind: 'game' } };
       case 'party':
         return { kind: 'target', target: { kind: 'party' } };
+      case 'sessions':
+        return { kind: 'target', target: { kind: 'sessions' } };
       case 'workspace':
         return { kind: 'target', target: { kind: 'empty' } };
     }
@@ -84,6 +89,9 @@ export function workspaceRouteUrl(target: WorkspaceRouteTarget): string {
       break;
     case 'empty':
       paths = ['workspace'];
+      break;
+    case 'sessions':
+      paths = target.sessionId ? ['sessions', target.sessionId] : ['sessions'];
       break;
     default:
       paths = [target.kind];

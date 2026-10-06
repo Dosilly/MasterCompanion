@@ -1,8 +1,15 @@
 <section class="party-view" [attr.aria-label]="text.partyTitle">
   <div class="game-heading">
     <h1>{{ text.partyTitle }}</h1>
-    <button type="button" [disabled]="session().pending()" (click)="session().load()">
-      {{ text.refresh }}
+    <button
+      class="mc-icon-button mc-action--quiet"
+      [attr.aria-label]="text.refresh"
+      [title]="text.refresh"
+      type="button"
+      [disabled]="session().pending()"
+      (click)="session().load()"
+    >
+      <mc-icon name="refresh" />
     </button>
   </div>
   <p class="game-hint">{{ text.partyResourceHint }}</p>

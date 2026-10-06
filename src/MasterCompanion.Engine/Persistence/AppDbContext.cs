@@ -10,6 +10,9 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     public DbSet<CampaignFolder> Folders => Set<CampaignFolder>();
     public DbSet<CampaignGameState> GameStates => Set<CampaignGameState>();
     public DbSet<GameOperation> GameOperations => Set<GameOperation>();
+    public DbSet<FolderOperationReceipt> FolderOperationReceipts => Set<FolderOperationReceipt>();
+    public DbSet<CampaignSession> Sessions => Set<CampaignSession>();
+    public DbSet<SessionOperationReceipt> SessionOperationReceipts => Set<SessionOperationReceipt>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -19,6 +22,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
         campaign.Property(x => x.Title).HasMaxLength(300);
         campaign.Property(x => x.ModuleId).HasMaxLength(80);
         campaign.Property(x => x.ModuleVersion).HasMaxLength(40);
+        campaign.Property(x => x.FoldersRevision).IsConcurrencyToken();
+        campaign.Property(x => x.SessionsRevision).IsConcurrencyToken();
         var material = modelBuilder.Entity<Material>();
         material.HasKey(x => x.Id);
         material.Property(x => x.Id).HasMaxLength(80);
@@ -57,5 +62,31 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
         operation.HasIndex(x => new { x.CampaignId, x.Revision }).IsUnique();
         operation.HasIndex(x => new { x.CampaignId, x.Undone, x.Revision });
         operation.HasOne<Campaign>().WithMany().HasForeignKey(x => x.CampaignId);
+        var folderReceipt = modelBuilder.Entity<FolderOperationReceipt>();
+        folderReceipt.HasKey(x => new { x.CampaignId, x.RequestId });
+        folderReceipt.Property(x => x.RequestJson).HasColumnType("jsonb");
+        folderReceipt.Property(x => x.ResponseJson).HasColumnType("jsonb");
+        folderReceipt.HasIndex(x => new { x.CampaignId, x.Revision }).IsUnique();
+        folderReceipt.HasOne<Campaign>().WithMany().HasForeignKey(x => x.CampaignId);
+        var session = modelBuilder.Entity<CampaignSession>();
+        session.HasKey(x => new { x.CampaignId, x.Id });
+        session.Property(x => x.Title).HasMaxLength(300);
+        session.Property(x => x.Status).HasMaxLength(20);
+        session.Property(x => x.PreparationMaterialId).HasMaxLength(80);
+        session.Property(x => x.NotesMaterialId).HasMaxLength(80);
+        session.Property(x => x.Summary).HasMaxLength(20_000);
+        session.Property(x => x.FollowUp).HasMaxLength(20_000);
+        session.Property(x => x.PinnedMaterialIdsJson).HasColumnType("jsonb");
+        session.HasIndex(x => new { x.CampaignId, x.Sequence }).IsUnique();
+        session.HasIndex(x => x.CampaignId).IsUnique().HasFilter("\"Status\" = 'active'");
+        session.HasOne<Campaign>().WithMany().HasForeignKey(x => x.CampaignId);
+        session.HasOne<Material>().WithMany().HasForeignKey(x => x.PreparationMaterialId).OnDelete(DeleteBehavior.Restrict);
+        session.HasOne<Material>().WithMany().HasForeignKey(x => x.NotesMaterialId).OnDelete(DeleteBehavior.Restrict);
+        var sessionReceipt = modelBuilder.Entity<SessionOperationReceipt>();
+        sessionReceipt.HasKey(x => new { x.CampaignId, x.RequestId });
+        sessionReceipt.Property(x => x.RequestJson).HasColumnType("jsonb");
+        sessionReceipt.Property(x => x.ResponseJson).HasColumnType("jsonb");
+        sessionReceipt.HasIndex(x => new { x.CampaignId, x.Revision }).IsUnique();
+        sessionReceipt.HasOne<Campaign>().WithMany().HasForeignKey(x => x.CampaignId);
     }
 }

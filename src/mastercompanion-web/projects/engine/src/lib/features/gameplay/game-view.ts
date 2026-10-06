@@ -1,3 +1,4 @@
+import { IconComponent } from '@mastercompanion/ui';
 import {
   Component,
   computed,
@@ -25,7 +26,7 @@ import { uiMessages } from '../../i18n/messages';
 
 @Component({
   selector: 'mc-game-view',
-  imports: [NgComponentOutlet],
+  imports: [IconComponent, NgComponentOutlet],
   providers: [{ provide: CAMPAIGN_GAME, useExisting: forwardRef(() => GameView) }],
   templateUrl: './game-view.html',
   styleUrl: './game-view.scss',
@@ -40,6 +41,7 @@ export class GameView implements OnInit, OnDestroy, GameToolContext {
   readonly pending = computed(() => this.session().pending());
   readonly canOperate = computed(() => this.session().canOperate());
   readonly minutes = signal('60');
+  readonly activity = signal<'advanceTime' | 'shortRest' | 'longRest'>('advanceTime');
   readonly validationError = signal<'invalidMinutes' | null>(null);
   readonly selectedTool = signal<string | null>(null);
   readonly toolComponent = signal<Type<unknown> | null>(null);
@@ -82,6 +84,15 @@ export class GameView implements OnInit, OnDestroy, GameToolContext {
       return;
     }
     void this.advance(minutes);
+  }
+  submitActivity(event: Event): void {
+    event.preventDefault();
+    const activity = this.activity();
+    if (activity === 'advanceTime') {
+      this.customAdvance(event);
+    } else {
+      void this.execute({ kind: activity });
+    }
   }
   advance(minutes: number) {
     return this.execute({ kind: 'advanceTime', minutes });

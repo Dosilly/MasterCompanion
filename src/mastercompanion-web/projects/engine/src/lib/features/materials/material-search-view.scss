@@ -1,5 +1,15 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  flex: none;
+}
+:host(.searching) {
+  min-height: 0;
+  flex: 1;
+}
+.search-content {
+  overflow: auto;
+  min-height: 0;
 }
 label {
   display: block;
@@ -13,7 +23,7 @@ input {
   width: 100%;
   padding: 8px;
   background: var(--paper);
-  border: 1px solid var(--line);
+  border: 1px solid var(--control-line);
   border-radius: 5px;
   margin-bottom: 16px;
 }

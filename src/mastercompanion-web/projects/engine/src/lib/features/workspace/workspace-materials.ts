@@ -1,14 +1,16 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { signal } from '@angular/core';
-import type { MaterialDto, WorkspaceDto } from '@mastercompanion/contracts';
+import type { FolderSnapshot, MaterialDto, WorkspaceDto } from '@mastercompanion/contracts';
 import { MaterialSession } from '../materials/material-session';
 import { CampaignMaterialCache } from './campaign-material-cache';
+import { isFolderSnapshot } from '../folders/folder-rules';
 
 /** Owns campaign document memory and editing sessions independently of mounted views. */
 export class WorkspaceMaterials {
   private readonly workspaceState = signal<WorkspaceDto | null>(null);
   private readonly sessionState = signal<readonly MaterialSession[]>([]);
   private readonly loadStateValue = signal<'idle' | 'loading' | 'ready' | 'error'>('idle');
+  private organization: FolderSnapshot | null = null;
   private cache: CampaignMaterialCache | null = null;
   private destroyed = false;
   readonly workspace = this.workspaceState.asReadonly();
@@ -23,6 +25,15 @@ export class WorkspaceMaterials {
     }
     if (this.cache && this.cache.campaignId !== workspace.campaignId) {
       throw new Error('An existing workspace cannot switch campaigns.');
+    }
+    if (
+      !isFolderSnapshot({
+        revision: workspace.foldersRevision,
+        folders: workspace.folders,
+        materialOrder: workspace.materials.map(({ id, folderId }) => ({ id, folderId })),
+      })
+    ) {
+      throw new Error('The workspace folder hierarchy is invalid.');
     }
     this.cache ??= new CampaignMaterialCache(workspace.campaignId, this.http);
     this.loadStateValue.set('loading');
@@ -67,6 +78,26 @@ export class WorkspaceMaterials {
     return this.sessionFor(material);
   }
 
+  acceptFolders(snapshot: FolderSnapshot): void {
+    if (
+      !isFolderSnapshot(snapshot) ||
+      (this.organization && snapshot.revision < this.organization.revision)
+    ) {
+      return;
+    }
+    this.organization = snapshot;
+    this.workspaceState.update((workspace) =>
+      workspace && snapshot.revision >= workspace.foldersRevision
+        ? {
+            ...workspace,
+            folders: snapshot.folders,
+            foldersRevision: snapshot.revision,
+            materials: this.orderMaterials(workspace.materials, snapshot.materialOrder),
+          }
+        : workspace,
+    );
+  }
+
   private sessionFor(material: MaterialDto): MaterialSession {
     // Replayed confirmations and refreshes must not replace an editor or its newer draft.
     const existing = this.sessions().find((session) => session.material.id === material.id);
@@ -92,15 +123,37 @@ export class WorkspaceMaterials {
         materials.set(session.material.id, session.material);
       }
     }
+    const current = this.workspace();
     this.workspaceState.set({
       ...workspace,
-      materials: [...materials.values()].map(({ id, title, group, folderId }) => ({
-        id,
-        title,
-        group,
-        folderId,
-      })),
+      ...(current && current.foldersRevision >= workspace.foldersRevision
+        ? { folders: current.folders, foldersRevision: current.foldersRevision }
+        : {}),
+      materials: this.orderMaterials(
+        [...materials.values()].map(({ id, title, group, folderId }) => ({
+          id,
+          title,
+          group,
+          folderId,
+        })),
+        this.organization && this.organization.revision >= workspace.foldersRevision
+          ? this.organization.materialOrder
+          : workspace.materials,
+      ),
     });
+  }
+
+  private orderMaterials(
+    materials: WorkspaceDto['materials'],
+    order: FolderSnapshot['materialOrder'],
+  ): WorkspaceDto['materials'] {
+    const byId = new Map(materials.map((material) => [material.id, material]));
+    const ordered = order.flatMap(({ id, folderId }) => {
+      const material = byId.get(id);
+      byId.delete(id);
+      return material ? [{ ...material, folderId }] : [];
+    });
+    return [...ordered, ...byId.values()];
   }
 
   private requireCache(): CampaignMaterialCache {
@@ -114,6 +167,9 @@ export class WorkspaceMaterials {
     if (this.sessions().some((session) => session.material.id === id && session.dirty())) {
       throw new Error('A material session with unconfirmed changes cannot be removed.');
     }
+    this.sessions()
+      .find((session) => session.material.id === id)
+      ?.destroy();
     this.sessionState.update((sessions) =>
       sessions.filter((session) => session.material.id !== id),
     );
@@ -121,6 +177,9 @@ export class WorkspaceMaterials {
 
   destroy(): void {
     this.destroyed = true;
+    for (const session of this.sessions()) {
+      session.destroy();
+    }
     this.cache?.destroy();
   }
 }

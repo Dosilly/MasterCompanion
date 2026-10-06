@@ -1,5 +1,15 @@
 # Engine and module boundary
 
+## Future module authoring and campaign updates, 6 October 2026
+
+The user recorded a module editor that reuses the campaign workflow but writes
+the authoritative module outside the application repository; a repository copy
+may serve as a backup. A separate campaign update workflow should notify about
+new module versions, ask before updating, replace only unchanged elements and
+report elements skipped because of campaign edits. These are future requirements,
+with no implemented storage or contract changes. See
+[the recorded ideas and open design decisions](37-Module-editor-and-campaign-updates.md).
+
 ## Campaign persistence scope, 4 October 2026
 
 The database stores campaign-owned materials and game state. Campaign
@@ -289,3 +299,82 @@ sessions and their base revision. Delayed snapshots cannot roll back confirmed
 saves or omit notes created during the read. Neutral UI and adventure modules do
 not fetch, store or refresh campaign documents. See
 [material memory contract and evidence](23-Campaign-material-memory.md).
+
+## Folder management and neutral context menus — 4 October 2026
+
+Campaign folders now have an independent hierarchy revision and operation receipt
+boundary. The engine owns rename/move requests, campaign locking, atomic sibling
+ordering and hierarchy validation. Folder edits are independent of material saves,
+module defaults and gameplay history. The workspace response supplies the matching
+`foldersRevision`; the separate folder snapshot endpoint lets recovery refresh the
+tree without reloading or destroying material sessions.
+
+The frontend contracts export folder operations, requests and snapshots. The
+engine owns hierarchy recovery, drag/drop intent and equivalent keyboard dialogs.
+The new separately compiled `@mastercompanion/ui` library supplies neutral context
+menu interaction and presentation. It imports neither campaign contracts nor engine,
+module or HTTP code. The Angular host composes these libraries; engine and module
+libraries may consume the UI public entry point. Build order and dependency checks
+enforce the boundary before consumer compilation. Localized workspace menu actions
+remain engine-owned and use existing navigation and confirmed tab-closing operations.
+
+See [scope, operation contract and delivery evidence](25-Folder-management-and-context-menus.md).
+## Campaign meeting ownership — 5 October 2026
+
+Campaign sessions are generic engine records, independent of mounted material
+editing sessions and module gameplay. The engine stores a named meeting with
+planned/active/completed status, stable preparation/play-note material IDs,
+existing-material pins, summary and follow-up text. The two rich documents remain
+ordinary campaign materials and reuse the supported reader/editor/save contract.
+Pinning references a stable ID and does not copy a document. No adventure-specific
+session identifiers or rules enter the engine.
+
+A separate campaign session-collection revision and immutable receipts own
+meeting operations. One campaign row lock and transaction cover session updates,
+creation of preparation/play documents and receipt persistence. Sessions never
+advance time, reset module/party state or enter game undo. Material saves retain
+their independent revisions. Only one meeting may be active per campaign.
+
+The frontend contracts expose explicit record/snapshot/operation shapes. The
+engine owns confirmed records/recovery in `MeetingRecords`, per-record text drafts
+in `SessionDrafts` and presentation in `SessionView`. The host adds `/sessions` to
+the existing persistent workspace routing. Views and editors remain mounted during
+navigation. These owners do not enlarge the neutral UI library or module API.
+
+See [scope and delivery evidence](26-Campaign-sessions.md).
+
+## UX contract extensions — 5 October 2026
+
+The [UX/UI corrective plan](28-UX-UI-improvement-plan.md) includes user-requested
+session deletion and material ordering within a folder. Both contracts are now
+implemented; the existing persistence schema supports them without a migration.
+
+Session deletion belongs to the existing engine meeting operation boundary:
+collection revision, campaign ownership, deletion and receipt commit atomically.
+Deletion retains ordinary preparation/play-note documents and pinned
+materials, clears active-meeting context when appropriate, and never changes game
+time, module state or gameplay undo. Record draft disposal must be explicit.
+
+Material ordering belongs to campaign organization, independent of content-save
+revisions. The folder snapshot now includes ordered material identities and folder
+membership. The stored `FoldersRevision` is the shared organization revision;
+folder mutations, ordering, note creation and session-document creation advance it
+under the campaign lock. Sibling updates and exact receipts retain one transactional
+owner. Refresh/recovery carry the complete confirmed organization snapshot.
+Stable material IDs, links, map destinations and mounted editor state stay intact.
+The [follow-up correction](34-UX-follow-up-corrections.md) adds explicit
+`moveMaterial` operations for cross-folder/unfiled placement. Destination membership,
+source/destination sibling order, organization revision and receipt share this
+transactional owner. Content revisions and gameplay/undo remain independent.
+Confirmed organization membership takes precedence over stale document-cache
+metadata without replacing a mounted editor or its draft.
+
+Searchable material/folder choices use neutral typed presentation options in UI;
+the engine resolves paths, campaign IDs, invalid move destinations and writes.
+Bounded primary navigation, session context and page action placement remain engine
+responsibilities. Module-specific activity consequences and attention stay in the
+module; any new cross-boundary projection needs an explicit neutral contract.
+
+See [control ownership](29-Control-foundation.md), [searchable choices](31-Searchable-choices.md),
+[session deletion](30-Session-deletion.md), [ordering](32-Material-ordering.md), and
+[workspace navigation](33-Workspace-navigation.md) for implemented boundaries.

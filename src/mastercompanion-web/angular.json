@@ -1,7 +1,9 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "cli": { "analytics": false },
+  "cli": {
+    "analytics": false
+  },
   "projects": {
     "contracts": {
       "projectType": "library",
@@ -13,6 +15,20 @@
           "options": {
             "project": "projects/contracts/ng-package.json",
             "tsConfig": "projects/contracts/tsconfig.lib.json"
+          }
+        }
+      }
+    },
+    "ui": {
+      "projectType": "library",
+      "root": "projects/ui",
+      "sourceRoot": "projects/ui/src",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "project": "projects/ui/ng-package.json",
+            "tsConfig": "projects/ui/tsconfig.lib.json"
           }
         }
       }
@@ -45,6 +61,40 @@
         }
       }
     },
+    "ui-catalog": {
+      "projectType": "application",
+      "root": "projects/ui-catalog",
+      "sourceRoot": "projects/ui-catalog/src",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "projects/ui-catalog/src/main.ts",
+            "index": "projects/ui-catalog/src/index.html",
+            "tsConfig": "projects/ui-catalog/tsconfig.app.json",
+            "styles": [
+              "dist/ui/styles/tokens.scss",
+              "dist/ui/styles/controls.scss",
+              "projects/ui-catalog/src/catalog.scss"
+            ],
+            "outputPath": ".local/ui-catalog"
+          },
+          "configurations": {
+            "development": {
+              "optimization": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "options": {
+            "buildTarget": "ui-catalog:build:development"
+          }
+        }
+      }
+    },
     "web": {
       "projectType": "application",
       "root": "",
@@ -56,21 +106,39 @@
             "browser": "src/main.ts",
             "index": "src/index.html",
             "tsConfig": "tsconfig.app.json",
-            "styles": ["dist/engine/styles/engine.scss", "src/styles.scss"],
+            "styles": [
+              "dist/ui/styles/tokens.scss",
+              "dist/ui/styles/controls.scss",
+              "dist/engine/styles/engine.scss",
+              "src/styles.scss"
+            ],
             "outputPath": "dist/web"
           },
           "configurations": {
             "production": {
               "outputHashing": "all",
-              "budgets": [{ "type": "initial", "maximumWarning": "2MB", "maximumError": "3MB" }]
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2MB",
+                  "maximumError": "3MB"
+                }
+              ]
             },
-            "development": { "optimization": false, "sourceMap": true }
+            "development": {
+              "optimization": false,
+              "sourceMap": true
+            }
           },
           "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular/build:dev-server",
-          "configurations": { "development": { "buildTarget": "web:build:development" } },
+          "configurations": {
+            "development": {
+              "buildTarget": "web:build:development"
+            }
+          },
           "defaultConfiguration": "development"
         }
       }
