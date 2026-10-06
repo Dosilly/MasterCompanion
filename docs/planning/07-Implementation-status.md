@@ -1,5 +1,16 @@
 # Implementation status
 
+## Gameplay spacing and concise guidance — 6 October 2026
+
+[The UI follow-up](42-Gameplay-layout-polish.md) fixes clock/action spacing and
+full-width sticky commands, moves detailed rules behind disclosures and retains
+short consequence notices at the affected actions. Twenty-four hierarchy cases,
+eight reviewed visual cases with snapshot updates disabled, frontend quality
+and production compilation pass. Image `mastercompanion:ui-polish-6892924` is
+running locally; four read-only container probes and live Full HD checks in both
+themes pass. App and PostgreSQL are healthy. Per the revised 6 October workflow,
+the verified changes remain on `codex/ux-gameplay-polish` for the user's merge.
+
 ## Remaining UX corrections delivered — 6 October 2026
 
 The authorized C–G cycle is complete: explicit draft recovery, gameplay hierarchy,

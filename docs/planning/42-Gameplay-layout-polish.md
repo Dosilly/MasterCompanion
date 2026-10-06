@@ -31,3 +31,12 @@ Delivery follows the 6 October workflow in the primary checkout's AGENTS.md:
 commit the verified feature branch, update the local image from that branch,
 and leave merging into trunk to the user. Unrelated planning edits in the primary
 checkout remain separate.
+
+Local delivery: image `mastercompanion:ui-polish-6892924` is built from the
+verified feature source commit `6892924` and is running on loopback port 4200.
+Frontend quality, production compilation and four read-only container probes
+pass. Live Full HD light/dark checks verify the compact clock, disclosed rule
+links and sticky viewport coverage with no campaign writes or browser errors.
+The live light page and dark scrolled page were visually reviewed. Both app and
+PostgreSQL are healthy. The feature remains on `codex/ux-gameplay-polish` for the
+user's merge; no remote push was performed.
