@@ -65,6 +65,11 @@
                   </select>
                 }
                 <div class="outcomes">
+                  @if (character.status === 'infected' && character.failures === 2) {
+                    <p class="transformation-review">
+                      {{ text.transformationReview.replace('{name}', character.name) }}
+                    </p>
+                  }
                   <button
                     type="button"
                     [disabled]="!canResolve(character, true)"

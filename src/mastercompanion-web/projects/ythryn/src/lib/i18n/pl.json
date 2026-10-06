@@ -1,5 +1,6 @@
 {
   "toolTitle": "Arcane Blight",
+  "transformationReview": "Trzeci nieudany test wyzdrowienia przemieni postać {name}. Zapisanie porażki zmieni jej stan i zakończy kolejne testy. Cofnięcie przywróci stan sprzed operacji.",
   "toolDescription": "Zapisz wynik sprawdzenia osobno dla każdego bohatera. Czas gry i wspólny odpoczynek zmienisz powyżej.",
   "rulesLink": "Zasady Tajemnej zarazy",
   "checkScheduleHint": "Zdrowe postacie wykonują sprawdzenie co 12 godzin. Zakażone wykonują je co 12 godzin lub po długim odpoczynku; każde sprawdzenie leczenia rozpoczyna kolejny okres 12 godzin.",
@@ -33,6 +34,10 @@
   "heal": "Magiczne leczenie",
   "healingHint": "Magiczne leczenie przywraca zdrowie bez nadawania odporności.",
   "expedition": {
+    "activityRules": "Zasady i szczegóły działania",
+    "exploreEffect": "Dodaje podaną liczbę minut do czasu gry i eksploracji; każda przekroczona godzina dodaje test spotkania.",
+    "buildingEffect": "Dodaje 30 minut do czasu gry i eksploracji. Wybrane opcje budynku określają dodatkowe testy.",
+    "arrivalReview": "Potwierdź: {target}, w minucie {minute} od rozpoczęcia gry. Podmiany spotkań uwzględnią ten czas przybycia.",
     "title": "Spotkania i przybycie rywali",
     "scheduleHint": "Zasada kampanii: Avarice po pierwszym długim odpoczynku, Auril po 24 godzinach w Ythryn. Faktyczne przybycie potwierdź osobno.",
     "hourlyTitle": "Spotkania co godzinę",

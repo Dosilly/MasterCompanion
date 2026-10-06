@@ -1,5 +1,18 @@
 # Implementation status
 
+## Gameplay hierarchy — 6 October 2026
+
+[Slice D](36-Gameplay-hierarchy.md) makes clock activity selection explicit,
+shows immediate effects and named arrival/transformation consequences, and groups
+module tools into collapsible sections with visible attention links. Mounted inputs
+and section state survive navigation. Twenty-six focused module cases, sixteen new
+browser cases, existing reminder/casualty cases and eight visual cases pass in both
+themes/sizes; frontend quality and production compilation pass.
+
+C and D are merged locally; container delivery awaits Docker startup. The engine
+failed while opening a stale inference socket before starting WSL; no database
+volume or campaign data was changed. E–G remain in the authorized UI scope.
+
 ## Explicit draft recovery — 6 October 2026
 
 [Slice C](35-Draft-recovery.md) adds scoped saved-version inspection, deliberate

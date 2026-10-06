@@ -51,30 +51,50 @@
         <h2>{{ text.elapsedTime }}: {{ formatTime(current.snapshot.timeMinutes) }}</h2>
         <fieldset [disabled]="!canOperate()">
           <legend>{{ text.timeControls }}</legend>
-          <div class="game-actions">
-            <button type="button" (click)="execute({ kind: 'shortRest' })">
+          <div class="game-actions" [attr.aria-label]="text.chooseActivity">
+            <button
+              type="button"
+              [attr.aria-pressed]="activity() === 'advanceTime'"
+              (click)="activity.set('advanceTime')"
+            >
+              {{ text.advance }}
+            </button>
+            <button
+              type="button"
+              [attr.aria-pressed]="activity() === 'shortRest'"
+              (click)="activity.set('shortRest')"
+            >
               {{ text.shortRest }}
             </button>
-            <button type="button" (click)="execute({ kind: 'longRest' })">
+            <button
+              type="button"
+              [attr.aria-pressed]="activity() === 'longRest'"
+              (click)="activity.set('longRest')"
+            >
               {{ text.longRest }}
             </button>
           </div>
-          <form class="custom-time" (submit)="customAdvance($event)">
-            <label for="game-minutes">{{ text.customMinutes }}</label>
-            <input
-              id="game-minutes"
-              type="number"
-              min="1"
-              max="525600"
-              step="1"
-              required
-              [value]="minutes()"
-              (input)="updateMinutes($event)"
-            />
-            <button type="submit">{{ text.advance }}</button>
+          <form class="activity-review" (submit)="submitActivity($event)">
+            @if (activity() === 'advanceTime') {
+              <label for="game-minutes">{{ text.customMinutes }}</label>
+              <input
+                id="game-minutes"
+                type="number"
+                min="1"
+                max="525600"
+                step="1"
+                required
+                [value]="minutes()"
+                (input)="updateMinutes($event)"
+              />
+              <p>{{ text.advanceEffect }}</p>
+            } @else {
+              <p>{{ activity() === 'shortRest' ? text.shortRestEffect : text.longRestEffect }}</p>
+              <p class="game-hint">{{ text.restHint }}</p>
+            }
+            <button class="mc-action--primary" type="submit">{{ text.applyActivity }}</button>
           </form>
         </fieldset>
-        <p class="game-hint">{{ text.restHint }}</p>
       </section>
       @if (module().tools.length) {
         @if (module().tools.length > 1) {

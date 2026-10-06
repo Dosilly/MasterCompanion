@@ -208,6 +208,11 @@
     }
   },
   "game": {
+    "chooseActivity": "Wybierz działanie zegara",
+    "advanceEffect": "Przesuwa wyłącznie zegar gry. Nie dodaje eksploracji ani testów spotkań.",
+    "shortRestEffect": "Krótki odpoczynek · dodaje 1 godzinę czasu gry bez eksploracji.",
+    "longRestEffect": "Długi odpoczynek · dodaje 8 godzin czasu gry bez eksploracji. Nadal stosuje efekty odpoczynku określone przez moduł.",
+    "applyActivity": "Wykonaj wybrane działanie",
     "title": "Gra",
     "refresh": "Odśwież stan",
     "working": "Zapisywanie lub wczytywanie stanu gry…",

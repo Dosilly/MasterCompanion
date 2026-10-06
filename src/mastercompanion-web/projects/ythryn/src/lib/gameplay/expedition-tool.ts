@@ -76,6 +76,15 @@ export class ExpeditionTool {
       this.arrivalDraft.update((value) => ({ ...value, [faction]: input.value }));
     }
   }
+  arrivalReview(faction: Faction): string {
+    const minute =
+      this.arrivalDraft()[faction] ?? String(this.game.state()?.snapshot.timeMinutes ?? 0);
+    return (
+      this.text.arrivalReview
+        .replace('{target}', this.text.factions[faction])
+        .replace('{minute}', minute) + (faction === 'auril' ? ` ${this.text.conversionHint}` : '')
+    );
+  }
   setRoll(id: number, event: Event) {
     const check = this.view()?.pending[0];
     if (this.game.canOperate() && check?.id === id && event.target instanceof HTMLInputElement) {

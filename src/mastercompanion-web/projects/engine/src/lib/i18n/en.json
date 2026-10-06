@@ -208,6 +208,11 @@
     }
   },
   "game": {
+    "chooseActivity": "Choose clock activity",
+    "advanceEffect": "Advances the game clock only. It adds no exploration or encounter checks.",
+    "shortRestEffect": "Short rest · adds 1 hour of game time and no exploration.",
+    "longRestEffect": "Long rest · adds 8 hours of game time and no exploration. Module rest effects still apply.",
+    "applyActivity": "Apply selected activity",
     "title": "Game",
     "refresh": "Refresh state",
     "working": "Saving or loading game state…",

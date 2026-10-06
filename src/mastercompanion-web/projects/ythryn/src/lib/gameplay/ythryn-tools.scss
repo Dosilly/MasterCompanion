@@ -6,6 +6,20 @@
   border-radius: 0.6rem;
   background: var(--error-bg);
 }
+.tool-section {
+  margin: 1rem 0;
+  border-top: 1px solid var(--control-line);
+}
+.tool-section > summary {
+  padding: 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tool-section > summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
 p {
   margin: 0;
 }
