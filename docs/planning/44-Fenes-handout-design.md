@@ -47,3 +47,23 @@ materials, and lossless source export. Update only affected campaign documents
 and remove the worksheet in a revision-checked transaction. Repeating that
 transaction must not advance unchanged revisions. Preserve the existing local
 runtime's unrelated UI changes when packaging the updated module assembly.
+
+## Verification and local delivery
+
+Six scoped content cases passed: material inventory, schema round trips, internal
+links, character-folder assignments, reviewed section evidence, and lossless
+Markdown source export. The module contains 108 materials, 11 folders, and one
+map. Formatting of the changed test and reference fixture passed.
+
+The feature commit is cae3503. A Docker build compiled the module and contracts
+with zero warnings and errors. Image mastercompanion:fenes-handouts-cae3503
+replaces only the module assembly in the existing compact-navigation runtime,
+preserving its deployed frontend and backend changes.
+
+The local Ythryn campaign received eight updated documents and the worksheet
+removal in one revision-checked transaction. The transaction also handles a
+worksheet session pin if present; no such pin existed in this campaign. API
+readback matched every updated document and title, and the removed material
+returned HTTP 404. Replaying the same transaction changed no material, folder,
+or session revisions. The application container is healthy and its health
+endpoint returns HTTP 200.
