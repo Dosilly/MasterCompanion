@@ -28,3 +28,20 @@ Replace the four affected campaign materials in full using the compiled authored
 sources. Preserve stable IDs and location links. The branch includes the previously
 delivered Fenes content commits to avoid restoring older module defaults. No
 engine, contracts, persistence schema or other campaign materials are changed.
+
+## Verified local delivery
+
+Six scoped content/source integration checks passed: document-schema round trips,
+internal links, folder assignments, lossless source export, heading rendering and
+deterministic package generation. The module build succeeded with no warnings or
+errors and prepared 108 materials in 11 folders with one map.
+
+Content commit `07ab405` is on `codex/harkan-handout-revision`. Local image
+`mastercompanion:harkan-handouts-07ab405` replaces only the module assembly in
+the previously delivered runtime, retaining its UI, API and Fenes defaults.
+The application container became healthy and readiness returned HTTP 200.
+
+The four campaign materials were replaced atomically after revision checks.
+API readback matched every complete compiled document. Replaying the same
+transaction changed no material revisions. There was no merge, remote push,
+schema change or automatic startup replacement.
