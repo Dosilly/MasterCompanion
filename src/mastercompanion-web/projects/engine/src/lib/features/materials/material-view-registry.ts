@@ -13,7 +13,10 @@ interface MountedMaterial {
 export class MaterialViewRegistry {
   private readonly mounted = new Map<string, MountedMaterial>();
 
-  constructor(private readonly open: (request: { id: string; anchor?: string }) => void) {}
+  constructor(
+    private readonly open: (request: { id: string; anchor?: string }) => void,
+    private readonly deleteMaterial: (id: string, event: Event) => void,
+  ) {}
 
   synchronize(
     sessions: readonly MaterialSession[],
@@ -23,6 +26,7 @@ export class MaterialViewRegistry {
     embeddedId: string | null,
     materials: readonly MaterialSummary[],
     folders: readonly CampaignFolder[],
+    deletionLockedIds: ReadonlySet<string>,
   ): void {
     const retained = new Set(sessions.map((session) => session.material.id));
     for (const [id, mounted] of this.mounted) {
@@ -39,6 +43,7 @@ export class MaterialViewRegistry {
         const component = destination.createComponent(MaterialView);
         component.setInput('session', session);
         component.instance.openMaterial.subscribe(this.open);
+        component.instance.deleteRequested.subscribe((event) => this.deleteMaterial(id, event));
         mounted = { component, container: destination, view: component.hostView };
         this.mounted.set(id, mounted);
       } else if (mounted.container !== destination) {
@@ -56,6 +61,7 @@ export class MaterialViewRegistry {
       }
       mounted.component.setInput('materials', materials);
       mounted.component.setInput('folders', folders);
+      mounted.component.setInput('deletionLocked', deletionLockedIds.has(id));
       const element: HTMLElement = mounted.component.location.nativeElement;
       element.hidden = id !== activeId && !(embedded && id === embeddedId);
       element.id = `panel-${id}`;

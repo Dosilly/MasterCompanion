@@ -169,6 +169,6 @@ The actual served UI passed Full HD checks in both themes: the list owns New,
 creation cancellation returns focus, and all three sections can be selected against
 an existing local session with its two ordinary documents. No campaign writes were
 needed for this runtime probe. The resulting light/dark views were inspected.
-This image remains the final running local version; title editing and material
+At initial delivery this image was the running local version; title editing and material
 deletion remain independent, unmerged feature branches with separately verified
-runtime images.
+runtime images. Subsequent authorized trunk integration is recorded in [material deletion](46-Material-deletion.md#integration-with-titles-and-session-workspace---7-october-2026).

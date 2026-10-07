@@ -16,7 +16,7 @@ import { DocumentNavigation } from './document-navigation';
 import { DocumentNavigationView } from './document-navigation-view';
 import { Editor } from '@tiptap/core';
 import type { CampaignFolder, MaterialSummary } from '@mastercompanion/contracts';
-import { SearchableChoiceComponent } from '@mastercompanion/ui';
+import { IconComponent, SearchableChoiceComponent } from '@mastercompanion/ui';
 import { materialChoices } from '../choices/campaign-choices';
 import { createMaterialEditor } from './material-editor';
 import { MaterialSession } from './material-session';
@@ -32,7 +32,7 @@ import {
 
 @Component({
   selector: 'mc-material-view',
-  imports: [SearchableChoiceComponent, RichDocumentPreview, DocumentNavigationView],
+  imports: [IconComponent, SearchableChoiceComponent, RichDocumentPreview, DocumentNavigationView],
   templateUrl: './material-view.html',
   styleUrl: './material-view.scss',
 })
@@ -52,6 +52,8 @@ export class MaterialView implements AfterViewInit, OnDestroy {
     { id: '', label: this.ui.material.chooseMaterial },
     ...materialChoices(this.materials(), this.folders(), this.ui.workspace.unfiledMaterials),
   ]);
+  readonly deletionLocked = input(false);
+  readonly deleteRequested = output<Event>();
   readonly openMaterial = output<{ id: string; anchor?: string }>();
   readonly editorElement = viewChild.required<ElementRef<HTMLElement>>('editorElement');
   readonly insertionDialog = viewChild.required<ElementRef<HTMLDialogElement>>('insertionDialog');

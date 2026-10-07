@@ -40,6 +40,7 @@ SessionEndpoints.Map(app);
 GetMaterial.Map(app);
 GetCampaignMaterials.Map(app);
 SaveMaterial.Map(app);
+DeleteMaterial.Map(app);
 CreateMaterial.Map(app);
 SearchMaterials.Map(app);
 GetAsset.Map(app);

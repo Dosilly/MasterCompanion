@@ -22,7 +22,11 @@ from `@mastercompanion/ui`. The component uses the `mc-context-menu` selector.
 
 `ContextMenuPresentation` contains a viewport `anchor: { x, y }`, the original
 `trigger: HTMLElement`, a localized accessible `label`, and readonly `actions`.
-Each action has an `id`, localized `label` and optional `disabled` flag. Action
+Each action has an `id`, localized `label`, optional `disabled` flag, optional
+`icon: IconName` and optional `destructive: boolean`. The icon is decorative; the
+label supplies meaning. Destructive actions use the theme danger token while
+retaining normal keyboard behavior and disabled/focus treatment. The catalog
+includes enabled and disabled Delete actions with the shared trash icon. Action
 IDs must be unique within one menu. The caller conditionally mounts the component
 while open and unmounts it on either output. Closing a feature or changing its
 target also unmounts or replaces the presentation.

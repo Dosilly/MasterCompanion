@@ -19,6 +19,7 @@ export class WorkspaceContextMenuState {
   constructor(
     private readonly folderLocked: () => boolean,
     private readonly closing: (id: string) => boolean,
+    private readonly deletionLocked: (id: string) => boolean,
   ) {}
 
   open(event: MouseEvent | KeyboardEvent, kind: MenuTarget['kind'], id: string): void {
@@ -68,6 +69,13 @@ export class WorkspaceContextMenuState {
           actions.push({ id: 'reveal', label: labels.reveal });
         }
         actions.push({ id: 'copy-link', label: labels.copyLink });
+        actions.push({
+          id: 'delete-material',
+          label: labels.delete,
+          icon: 'trash',
+          destructive: true,
+          disabled: this.closing(id) || this.deletionLocked(id),
+        });
       }
     }
     const pointer = event instanceof MouseEvent && event.type === 'contextmenu';

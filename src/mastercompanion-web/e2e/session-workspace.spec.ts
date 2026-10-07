@@ -298,7 +298,9 @@ test('Rename requires deliberate summary saving and cancellation never commits i
     .locator('.summary-section')
     .getByRole('button', { name: label('edit'), exact: true })
     .click();
-  await view(page).getByLabel(label('summary'), { exact: true }).fill('Unconfirmed summary');
+  await view(page)
+    .getByRole('textbox', { name: label('summary'), exact: true })
+    .fill('Unconfirmed summary');
   await view(page)
     .getByRole('button', { name: label('recordActions'), exact: true })
     .click();
