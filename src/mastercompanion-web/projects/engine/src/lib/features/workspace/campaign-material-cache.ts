@@ -8,6 +8,7 @@ export class CampaignMaterialCache {
   private records = new Map<string, MaterialDto>();
   private readonly confirmedChanges = new Map<string, number>();
   private version = 0;
+  private readonly deleted = new Set<string>();
   private pending?: Promise<void>;
   private readonly stopReads = new Subject<void>();
   private destroyed = false;
@@ -26,11 +27,22 @@ export class CampaignMaterialCache {
   }
 
   confirm(material: MaterialDto): void {
-    if (this.destroyed || (this.records.get(material.id)?.revision ?? -1) > material.revision) {
+    if (
+      this.destroyed ||
+      this.deleted.has(material.id) ||
+      (this.records.get(material.id)?.revision ?? -1) > material.revision
+    ) {
       return;
     }
     this.records.set(material.id, material);
     this.confirmedChanges.set(material.id, ++this.version);
+  }
+
+  remove(id: string): void {
+    this.deleted.add(id);
+    this.records.delete(id);
+    this.confirmedChanges.delete(id);
+    this.version++;
   }
 
   refresh(): Promise<void> {
@@ -68,6 +80,9 @@ export class CampaignMaterialCache {
       }
       if (refreshed.has(material.id)) {
         throw new Error('The campaign material snapshot contains duplicate identifiers.');
+      }
+      if (this.deleted.has(material.id)) {
+        continue;
       }
       const previous = this.records.get(material.id);
       // A delayed read must not roll back a save confirmed while it was in flight.

@@ -8,11 +8,13 @@ import {
   output,
   viewChild,
 } from '@angular/core';
+import { IconComponent } from '../icon/icon';
 import { ContextMenuInteraction } from './context-menu-interaction';
 import type { ContextMenuPresentation } from './context-menu-presentation';
 
 @Component({
   selector: 'mc-context-menu',
+  imports: [IconComponent],
   templateUrl: './context-menu.html',
   styleUrl: './context-menu.scss',
 })

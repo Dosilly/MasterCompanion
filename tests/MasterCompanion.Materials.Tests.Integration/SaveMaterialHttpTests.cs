@@ -175,7 +175,7 @@ public sealed class SaveMaterialHttpTests(PostgreSqlFixture database) : IAsyncLi
     {
         // Arrange
         var materials = await new YthrynModule().LoadMaterialsAsync();
-        Assert.Equal(106, materials.Count);
+        Assert.Equal(108, materials.Count);
         long revision = 1;
 
         // Act / Assert: the supported schema must preserve every authored source document exactly.

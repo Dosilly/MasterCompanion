@@ -14,6 +14,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     public DbSet<CampaignSession> Sessions => Set<CampaignSession>();
     public DbSet<SessionOperationReceipt> SessionOperationReceipts => Set<SessionOperationReceipt>();
 
+    public DbSet<MaterialDeletionReceipt> MaterialDeletionReceipts => Set<MaterialDeletionReceipt>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("engine");
@@ -82,6 +84,11 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
         session.HasOne<Campaign>().WithMany().HasForeignKey(x => x.CampaignId);
         session.HasOne<Material>().WithMany().HasForeignKey(x => x.PreparationMaterialId).OnDelete(DeleteBehavior.Restrict);
         session.HasOne<Material>().WithMany().HasForeignKey(x => x.NotesMaterialId).OnDelete(DeleteBehavior.Restrict);
+        var deletionReceipt = modelBuilder.Entity<MaterialDeletionReceipt>();
+        deletionReceipt.HasKey(x => new { x.CampaignId, x.RequestId });
+        deletionReceipt.Property(x => x.MaterialId).HasMaxLength(80);
+        deletionReceipt.Property(x => x.RequestJson).HasColumnType("jsonb");
+        deletionReceipt.HasOne<Campaign>().WithMany().HasForeignKey(x => x.CampaignId);
         var sessionReceipt = modelBuilder.Entity<SessionOperationReceipt>();
         sessionReceipt.HasKey(x => new { x.CampaignId, x.RequestId });
         sessionReceipt.Property(x => x.RequestJson).HasColumnType("jsonb");

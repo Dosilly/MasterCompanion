@@ -27,3 +27,6 @@ export * from './lib/session-record';
 export * from './lib/session-snapshot';
 export * from './lib/session-operation';
 export * from './lib/session-operation-request';
+
+export * from './lib/material-deletion-preview';
+export * from './lib/material-deletion-request';

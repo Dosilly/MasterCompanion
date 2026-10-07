@@ -317,6 +317,22 @@
         </div>
       }
 
+      @if (deletion(); as owner) {
+        @if (owner.retryAvailable()) {
+          <section
+            class="load-error route-error"
+            role="region"
+            [attr.aria-label]="ui.deletion.recoveryTitle"
+          >
+            <p>
+              <strong>{{ owner.preview()?.title }}</strong> · {{ ui.deletion.recoveryHint }}
+            </p>
+            <button (click)="openDeletion(owner.recoveryTarget(), $event)">
+              {{ ui.deletion.resume }}
+            </button>
+          </section>
+        }
+      }
       @if (navigationLayout.collapsed()) {
         @if (activeTab(); as tab) {
           <p class="collapsed-context">{{ tab.context }} · {{ tab.title }}</p>
@@ -492,6 +508,9 @@
     <mc-material-order-dialog [management]="management" [materials]="data.materials" />
     <mc-material-move-dialog [management]="management" (moved)="revealMovedMaterial($event)" />
     <mc-folder-management-dialog [management]="management" />
+  }
+  @if (deletion(); as owner) {
+    <mc-material-deletion-dialog [deletion]="owner" (confirmed)="acceptDeletedMaterial($event)" />
   }
   <mc-workspace-context-menu
     [presentation]="menus.presentation()"

@@ -1,4 +1,5 @@
 export type WorkspaceContextMenuAction =
+  | 'delete-material'
   | 'reorder'
   | 'move-material'
   | 'new-note'

@@ -33,6 +33,8 @@ import { WorkspaceTab } from './workspace-tab';
 import { WorkspaceMaterials } from './workspace-materials';
 import { MaterialViewHost } from '../materials/material-view-host';
 import { MaterialViewRegistry } from '../materials/material-view-registry';
+import { MaterialDeletion } from '../materials/material-deletion';
+import { MaterialDeletionDialog } from '../materials/material-deletion-dialog';
 import { MaterialCreation } from '../materials/material-creation';
 import { MaterialCreationDialog } from '../materials/material-creation-dialog';
 import { MaterialSearch } from '../materials/material-search';
@@ -70,6 +72,7 @@ import { SessionView } from '../sessions/session-view';
     NgTemplateOutlet,
     MaterialViewHost,
     MaterialCreationDialog,
+    MaterialDeletionDialog,
     MaterialSearchView,
     MapView,
     GameView,
@@ -98,9 +101,12 @@ export class Workspace {
     this.sessions().filter((session) => this.materialTabIds().has(session.material.id)),
   );
   private readonly standaloneMaterialHost = viewChild(MaterialViewHost);
-  private readonly materialViews = new MaterialViewRegistry((request) => {
-    void this.open(request.id, request.anchor);
-  });
+  private readonly materialViews = new MaterialViewRegistry(
+    (request) => {
+      void this.open(request.id, request.anchor);
+    },
+    (id, event) => this.openDeletion(id, event),
+  );
   readonly meetingContentLoading = signal(false);
   readonly meetingContentError = signal(false);
   private contentRequest = 0;
@@ -152,6 +158,8 @@ export class Workspace {
   });
   readonly partyView = viewChild(PartyView);
   readonly game = signal<GameSession | null>(null);
+  readonly deletion = signal<MaterialDeletion | null>(null);
+  private readonly deletionDialog = viewChild(MaterialDeletionDialog);
   readonly creation = signal<MaterialCreation | null>(null);
   readonly folderManagement = signal<FolderManagement | null>(null);
   readonly folderDrag = new FolderDrag();
@@ -162,6 +170,7 @@ export class Workspace {
   readonly menus = new WorkspaceContextMenuState(
     () => this.folderManagement()?.locked() ?? true,
     (id) => this.closing().has(id),
+    (id) => this.deletion()?.lockedFor(id) ?? false,
   );
   private readonly creationDialog = viewChild(MaterialCreationDialog);
   readonly campaignModule = computed(() =>
@@ -253,6 +262,7 @@ export class Workspace {
       this.materials.destroy();
       this.game()?.destroy();
       this.creation()?.destroy();
+      this.deletion()?.destroy();
       this.folderManagement()?.destroy();
       this.materialSearch()?.destroy();
       this.meetings()?.destroy();
@@ -289,6 +299,11 @@ export class Workspace {
       const embeddedId =
         activeId === '@sessions' ? (this.meetingView()?.documentId() ?? null) : null;
       const workspace = this.workspace();
+      const deletionLockedIds = new Set(
+        sessions
+          .filter((session) => this.deletion()?.lockedFor(session.material.id))
+          .map((session) => session.material.id),
+      );
       if (standalone && workspace) {
         untracked(() =>
           this.materialViews.synchronize(
@@ -299,6 +314,7 @@ export class Workspace {
             embeddedId,
             workspace.materials,
             workspace.folders,
+            deletionLockedIds,
           ),
         );
       }
@@ -346,6 +362,9 @@ export class Workspace {
         const game = new GameSession(workspace.campaignId, this.http, storage);
         this.game.set(game);
         void game.load();
+      }
+      if (!this.deletion()) {
+        this.deletion.set(new MaterialDeletion(workspace.campaignId, this.http));
       }
       if (this.creation()?.campaignId !== workspace.campaignId) {
         this.creation()?.destroy();
@@ -460,7 +479,10 @@ export class Workspace {
       const campaignSearchMatch =
         searchState?.kind === 'ready' &&
         searchState.results.some((material) => material.id === target.materialId);
-      if (!knownMaterial && !campaignSearchMatch) {
+      const recoverableDraft = this.sessions().some(
+        (session) => session.material.id === target.materialId && session.dirty(),
+      );
+      if (!knownMaterial && !campaignSearchMatch && !recoverableDraft) {
         return { kind: 'error', code: 'materialNotFound' };
       }
       try {
@@ -550,6 +572,9 @@ export class Workspace {
     }
     const folder = this.workspace()?.folders.find((item) => item.id === target.id);
     switch (action) {
+      case 'delete-material':
+        this.openDeletion(target.id, target.trigger);
+        break;
       case 'new-note':
         this.creationDialog()?.open(target.trigger, folder?.id ?? null, true);
         break;
@@ -586,6 +611,46 @@ export class Workspace {
       case 'close-others':
         await this.closeOtherTabs(target.id);
         break;
+    }
+  }
+
+  openDeletion(id: string, event: Event | HTMLElement): void {
+    const trigger = event instanceof HTMLElement ? event : event.currentTarget;
+    if (
+      !(trigger instanceof HTMLElement) ||
+      !this.deletion() ||
+      this.closing().has(id) ||
+      this.deletion()?.lockedFor(id)
+    ) {
+      return;
+    }
+    this.deletionDialog()?.open(trigger);
+    void this.deletion()?.inspect(
+      id,
+      this.sessions().find((session) => session.material.id === id) ?? null,
+    );
+  }
+
+  async acceptDeletedMaterial(id: string): Promise<void> {
+    const tabs = this.openTabItems().map((tab) => tab.id);
+    const index = tabs.indexOf(id);
+    this.materials.acceptDeletion(id);
+    this.materialTabIds.update((ids) => {
+      const remaining = new Set(ids);
+      remaining.delete(id);
+      return remaining;
+    });
+    const workspace = this.workspace();
+    if (workspace) {
+      this.routing.updateWorkspace(workspace);
+    }
+    this.materialSearch()?.refresh();
+    void this.folderManagement()?.refresh();
+    void this.meetings()?.refresh();
+    if (this.active() === id) {
+      await this.routing.navigate(this.targetForTab(tabs[index + 1] ?? tabs[index - 1] ?? ''), {
+        replace: true,
+      });
     }
   }
 
@@ -991,6 +1056,8 @@ export class Workspace {
   @HostListener('window:beforeunload', ['$event'])
   protectPendingChanges(event: BeforeUnloadEvent) {
     if (
+      this.deletion()?.pending() ||
+      this.deletion()?.retryAvailable() ||
       this.sessions().some((tab) => tab.dirty()) ||
       this.partyView()?.dirty() ||
       this.meetingDrafts.dirty() ||

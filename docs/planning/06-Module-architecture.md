@@ -451,3 +451,13 @@ documents and waits for confirmed saves, including drafts from removed records.
 Section selection is presentation state, independent of lifecycle/game time. Rename
 has a separate dialog draft and never implicitly saves a summary. See
 [session workspace delivery](44-Session-workspace-redesign.md).
+
+## Campaign material deletion (7 October 2026)
+
+The engine owns deletion of campaign material copies, strict revision/reference
+confirmation, shared campaign locking with material saves, session pin cleanup and
+immutable exact-retry receipts. Required preparation/notes documents remain protected
+while their session exists. Authored incoming links and map markers retain their
+identity and use missing-target recovery; module sources, defaults and gameplay
+state remain outside the deletion boundary. The frontend contracts expose a typed
+preview and request. See [material deletion](46-Material-deletion.md).

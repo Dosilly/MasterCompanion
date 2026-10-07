@@ -6,8 +6,12 @@
       tabindex="-1"
       [attr.data-menu-action]="action.id"
       [disabled]="action.disabled"
+      [class.destructive]="action.destructive"
       [attr.aria-disabled]="action.disabled ? 'true' : null"
     >
+      @if (action.icon; as icon) {
+        <mc-icon [name]="icon" />
+      }
       {{ action.label }}
     </button>
   }

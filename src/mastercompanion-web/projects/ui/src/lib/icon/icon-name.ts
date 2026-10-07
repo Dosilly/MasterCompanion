@@ -1,4 +1,5 @@
 export type IconName =
+  | 'trash'
   | 'refresh'
   | 'sun'
   | 'moon'
