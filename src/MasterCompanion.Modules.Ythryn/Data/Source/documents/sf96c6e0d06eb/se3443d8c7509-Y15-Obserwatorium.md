@@ -5,7 +5,7 @@ folderId: sf96c6e0d06eb
 sortOrder: 31
 ---
 
-**W skrócie — dla MG:** Strzeżone przez mageny obserwatorium ze slaadami i zepsutym teleskopem, zawierające trzeci krok Rytuału Tajemnego Oktetu oraz odbiornik i dokumenty umożliwiające Fenes pierwszy kontakt z dawnym towarzyszem.
+**W skrócie — dla MG:** Strzeżone przez mageny obserwatorium ze slaadami i zepsutym teleskopem, zawierające trzeci krok Rytuału Tajemnego Oktetu oraz odbiornik i notatkę umożliwiające Fenes pierwszy kontakt z dawnym towarzyszem.
 
 **Do odczytania**
 
@@ -71,7 +71,7 @@ Fragment ściany z Y11 nosi napis po drakońsku:
 
 -   **Dodatek kampanii:** urządzenie, dokumenty i poniższe zasady to **propozycja MG**.
 
--   **Bez testu — znalezienie:** obejrzenie pulpitu ujawnia [list Lethry i protokół próby głosu](#material/s262b3a9f491c), leżące obok tuby. Dokument jest zapisany w **Loross, alfabetem drakońskim**; stosuj [zasady odczytywania Loross](#material/s210a67f4cc8e).
+-   **Bez testu — znalezienie:** obejrzenie pulpitu ujawnia [notatkę Orrena z instrukcją i zapisem rozmowy](#material/s262b3a9f491c), leżącą obok tuby. Dokument jest zapisany w **Loross, alfabetem drakońskim**; stosuj [zasady odczytywania Loross](#material/s210a67f4cc8e).
 
 -   **Odbiornik:** tuba i płytka dłoni tworzą jedno urządzenie, trwale zamocowane w kamiennym pulpicie. Działa mimo zniszczenia teleskopu. Arcymistrzyni toleruje czytanie i używanie odbiornika, dopóki bohaterowie nie przeszkadzają jej ani nie dotykają teleskopu.
 
@@ -83,10 +83,10 @@ Fragment ściany z Y11 nosi napis po drakońsku:
 
 -   **Sekret MG:** pierwszy wybrany towarzysz żyje i może odpowiedzieć. Przykładowa odpowiedź: „Fenes? Słyszę cię. Spróbuj jeszcze raz, zostanę tutaj”. Dokładne miejsce i przeżyty czas pozostają do ustalenia. Brak odpowiedzi w późniejszej próbie nie dowodzi śmierci.
 
--   **Trop:** list wskazuje pełny przyrząd w gabinecie **Y19q**. Starszy odbiornik nie jest częścią potrzebną do jego uruchomienia.
+-   **Trop:** notatka wskazuje pełny przyrząd w gabinecie **Y19q**. Starszy odbiornik nie jest częścią potrzebną do jego uruchomienia.
 
 -   **Tłumienie magii:** fala wrzeciona z **Y19n**, w zasięgu **3 mil**, wyłącza odbiornik na **24 godziny**.
 
 -   **Przygotowanie:** [Zasady śladu i dalszy przebieg wątku](#material/s7fe42d45a1c9).
 
-<details id="sefc36f1a943a" class="context"><summary>Tło — dla MG</summary><div data-details-content=""><p>List i protokół dotyczą dawnej ekspedycji. Orren badał komunikację przez zamknięte przejścia, a Iriolarthas zabrał doskonalszy przyrząd do gabinetu. Badania te dają Fenes metodę kontaktu; dokumenty nie zawierają wiadomości o jej przyszłym przybyciu.</p><p>Kierując magiczny teleskop ku odległym gwiazdom, astronomowie Ythryn mogli przywoływać pochodzące z nich obce istoty, aby je przesłuchiwać, badać albo kroić. Upadek uszkodził teleskop bez możliwości naprawy i uczynił go bezużytecznym.</p><p>Podczas katastrofy fragment Wieży Wieszczenia <strong>Y11</strong> przebił dach obserwatorium. W powstałym chaosie blue slaad z parteru uciekł z celi i zaczął szaleć. Arcymistrzyni Astronomii, zarażona przez niego <strong>chaos phage</strong>, nakazała ocalałym uczniom zapieczętować ją w wieży wraz z potworem. Przez kolejne lata, dekady i stulecia nie pozwalała blue slaadowi uciec przez dziurę w dachu.</p><hr></div></details>
+<details id="sefc36f1a943a" class="context"><summary>Tło — dla MG</summary><div data-details-content=""><p>Notatka Orrena i raport Lethry dotyczą dawnej ekspedycji. Orren badał komunikację przez zamknięte przejścia, a Iriolarthas zabrał doskonalszy przyrząd do gabinetu. Badania te dają Fenes metodę kontaktu; dokumenty nie zawierają wiadomości o jej przyszłym przybyciu.</p><p>Kierując magiczny teleskop ku odległym gwiazdom, astronomowie Ythryn mogli przywoływać pochodzące z nich obce istoty, aby je przesłuchiwać, badać albo kroić. Upadek uszkodził teleskop bez możliwości naprawy i uczynił go bezużytecznym.</p><p>Podczas katastrofy fragment Wieży Wieszczenia <strong>Y11</strong> przebił dach obserwatorium. W powstałym chaosie blue slaad z parteru uciekł z celi i zaczął szaleć. Arcymistrzyni Astronomii, zarażona przez niego <strong>chaos phage</strong>, nakazała ocalałym uczniom zapieczętować ją w wieży wraz z potworem. Przez kolejne lata, dekady i stulecia nie pozwalała blue slaadowi uciec przez dziurę w dachu.</p><hr></div></details>

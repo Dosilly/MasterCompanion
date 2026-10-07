@@ -113,8 +113,7 @@
     "s7fe42d45a1c9": "directory:f16120e95f05fc4d",
     "se2dd95232813": "directory:f16120e95f05fc4d",
     "s262b3a9f491c": "directory:f16120e95f05fc4d",
-    "sb68cccad8d50": "directory:f16120e95f05fc4d",
-    "s691e9446ee5a": "directory:f16120e95f05fc4d"
+    "sb68cccad8d50": "directory:f16120e95f05fc4d"
   },
   "locationTitle": "Lokacje",
   "removedNavigationIds": [
@@ -140,7 +139,7 @@
         {
           "id": "sb3e18b49de4c",
           "title": "Materiały i kolejność odkryć",
-          "sha256": "854a15241e483cc1ee2a5545eb5c2578f6e5c4e536f2a82e80ce7ed0b10f3bd4"
+          "sha256": "5ce64fd43b67de94511a97a312e97929bf938e6f3db262354bd511a7a7f0005f"
         },
         {
           "id": "s66cd2ffc733b",
@@ -150,7 +149,7 @@
         {
           "id": "s75fd49ad96d2",
           "title": "Odbiornik w Y15 — przy stole",
-          "sha256": "355988b03ff576540b557b23f38f873079e0ae327f5e95706210bd9caacb453c"
+          "sha256": "cd7c78d203bb4f00d59342347aa7d9dd3e48c73580bce495bc1bd100f30ac1a2"
         },
         {
           "id": "s9d65f827d9a1",
@@ -160,7 +159,7 @@
         {
           "id": "s9a7d5a3cc066",
           "title": "Wspólne poszukiwanie drogi — przy stole",
-          "sha256": "174c4ac784c56ac169311b70ada6f7f4eb02772753ecc00fa589c25a4ab44864"
+          "sha256": "4f53dac71cd2cbafc472655c26cdd1438a115b1cacb5ac1fbc57ac365b90751a"
         },
         {
           "id": "se9f2f7f52172",
@@ -170,7 +169,7 @@
         {
           "id": "sb75abd79082b",
           "title": "Kontekst — dla MG",
-          "sha256": "22c4a0c416c83c2c26e4d555da9f08d40a9645e69132554468a005d792a82f81"
+          "sha256": "bd0c2741502d638fc1c5c016a9fe8fc0a5716ca50c3e93c2e28134f259b89dfc"
         }
       ]
     },
@@ -178,29 +177,14 @@
       "id": "se2dd95232813",
       "sections": [
         {
-          "id": "s516b22b17c1d",
-          "title": "Zeznania ocalałych",
-          "sha256": "f9fa1aa563220b94d760623dfdee779f954090ec8fea3aaa9990ec0c4f89cd9f"
-        },
-        {
-          "id": "se246b9afddae",
-          "title": "Co udało się ustalić",
-          "sha256": "8184a6cc629c2c2e2edea973dcd98ebb4ddb91b88b133ea6f78edca36737efa7"
-        },
-        {
           "id": "s2f89540e8e91",
           "title": "Próba powrotu",
-          "sha256": "5d469cd7e9f049d98221aa507327281507135be3b693027270974ee98fda61ea"
-        },
-        {
-          "id": "sdbaf9a451c71",
-          "title": "Zalecenia dla kolejnych poszukiwań",
-          "sha256": "070e427c261ca94aefa664c8e708c00e154e7e0f2a8c35d1069233c3c6c03347"
+          "sha256": "40971b535a91349a32a3fd4717aacbc46bf36f081bb943de519e9e13ee1d77d7"
         },
         {
           "id": "s877ad6c0961a",
           "title": "Złożenie dokumentacji i przyrządów",
-          "sha256": "d852b8ec2fa2b78e944b04e7131b97ab2301937fdc3660bf46efade9d8c57306"
+          "sha256": "b413f3365675386c99edf6f597e595b79062f5fd9143653fb272a25e1b50307c"
         }
       ]
     },
@@ -208,24 +192,14 @@
       "id": "s262b3a9f491c",
       "sections": [
         {
-          "id": "sfb828630cc98",
-          "title": "Do Orrena, obserwatorium",
-          "sha256": "d71be013526e74d3463646ffcd269649f709e037bed2d60e31a50876944dba2e"
-        },
-        {
-          "id": "sd9d36239f51e",
-          "title": "Wyciąg z protokołu dziewiątej próby",
-          "sha256": "ae2fb1bf88c9d483ad1163f8f3303debe22a0fa8bf90932a2ef0e171fc2732ce"
-        },
-        {
           "id": "s9d9ce687b59a",
           "title": "Instrukcja starszego odbiornika",
-          "sha256": "98092d7e9e014a33ac7de3ead3e705ae24960ecf257a90f9ff94a11fc068de42"
+          "sha256": "9bc2c4ea6ab56aec68531615921f47b3b612d9295bb35330b80e5fdcd2218410"
         },
         {
-          "id": "s484c8a989123",
-          "title": "W sprawie pomiarów drogi",
-          "sha256": "da8cf49062a5aac64c11d4f1666341f577b2d2942bf9a30cfdbf926669cedb79"
+          "id": "sfb828630cc98",
+          "title": "Notatka Orrena",
+          "sha256": "a178bea6131d455aa805487d78a75b857d3d5665e5c764fa49d550c0f03ee2f6"
         }
       ]
     },
@@ -233,54 +207,19 @@
       "id": "sb68cccad8d50",
       "sections": [
         {
-          "id": "se1e11a56e86f",
-          "title": "Zawartość skrzynki",
-          "sha256": "c9516e87a5fdfd74f4cdb7456c40f4b43119dc4a6eadea63e2f3b9cdf4b56d3f"
-        },
-        {
           "id": "s6ea30af0964f",
           "title": "Przygotowanie",
-          "sha256": "a819ef563942ac0d490f33341e23e9308cc0f57d704450abc04cfd499606b59f"
+          "sha256": "8df70f5abd49f5b9c918d15bffd2c7b750564db89de76f4c4a8ba8826dfb8be5"
         },
         {
           "id": "s476946bb3359",
           "title": "Rozmowa",
-          "sha256": "e27a95cd58f352e7665d5699e803703d7392ab402188788c7024ae2f79a663e4"
-        },
-        {
-          "id": "s5eb4bb2ebbe0",
-          "title": "Wspólne punkty",
-          "sha256": "41be9d48e5ad584ee4f130802b71b2b9762b6d0eaa6366251e4eba329288b482"
+          "sha256": "83d25dba0d92a91a2bba3465d435cec86ee54a85d0d3eaa76a79e7b8564ec239"
         },
         {
           "id": "s5efe09b28ee1",
-          "title": "Gdy odczyty się zgadzają",
-          "sha256": "6e8710e252e102d7bd9184bf95b351f0cb882ce4bc33198e6c1d34164d72e5cb"
-        },
-        {
-          "id": "s86aeb1edbba9",
-          "title": "Uwagi o czasie i przechowywaniu",
-          "sha256": "b5bf4813a5a0bf300ba94ca8128cdb80a6d5125380bf366df177136c5d420bf1"
-        }
-      ]
-    },
-    {
-      "id": "s691e9446ee5a",
-      "sections": [
-        {
-          "id": "s2d5227425829",
-          "title": "Zeznania podróżnych",
-          "sha256": "1eedfe8b50bae644201517e9821456d99835f4f37ced6340724fac71fe7d11c5"
-        },
-        {
-          "id": "scf351bd874cc",
-          "title": "Punkty i odczyty",
-          "sha256": "e2c439e3c7c7fbd345e557f96f38e514c57948cd9564ce6da4d56ffcd8a1b955"
-        },
-        {
-          "id": "s734b28f2d702",
-          "title": "Czynności uzgodnione przed zamknięciem połączenia",
-          "sha256": "1a9558ff0550a2e5e13c8dcb577ae588acc2c606640696ab420f26628be92d5c"
+          "title": "Poszukiwanie drogi",
+          "sha256": "5c2b0ede74c0da23a6b883a62ebc2ffceffa8115f6fc38fb74a937e5c7ef555c"
         }
       ]
     },

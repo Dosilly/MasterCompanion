@@ -23,11 +23,11 @@ sortOrder: 111
 
 | Lokalizacja | Materiał dla graczy | Odkrycie bez testu |
 | --- | --- | --- |
-| [Y9](#material/s3078db7e1d5d) | [Raport](#material/se2dd95232813) | Ślad wspólnego przejścia pozostaje w podróżnikach. Pomiary z obu stron pozwoliły kiedyś sprowadzić zaginioną osobę. |
-| [Y15](#material/se3443d8c7509) | [List i protokół](#material/s262b3a9f491c) | Zamknięta droga może przewodzić głos. Odbiornik w Y15 pozwala spróbować; pełny przyrząd jest w gabinecie Iriolarthasa. |
-| [Y19q](#material/sc6bc2554afca) | [Instrukcja](#material/sb68cccad8d50) i [Karta](#material/s691e9446ee5a) | Obsługa kontaktu i pierwsze zadania dla obu osób. Instrukcja wystarcza także bez wcześniejszych dokumentów. |
+| [Y9](#material/s3078db7e1d5d) | [Raport](#material/se2dd95232813) | Dawni badacze sprowadzili osobę rozdzieloną przez przejście. Wskazują odbiornik i pełny przyrząd. |
+| [Y15](#material/se3443d8c7509) | [Notatka Orrena](#material/s262b3a9f491c) | Instrukcja pozwala od razu spróbować krótkiego kontaktu. Pełny przyrząd jest w gabinecie Iriolarthasa. |
+| [Y19q](#material/sc6bc2554afca) | [Instrukcja](#material/sb68cccad8d50) | Regularne rozmowy i początek wspólnego szukania drogi. Instrukcja wystarcza także bez wcześniejszych dokumentów. |
 
--   **Niezależne tropy do nagrody:** raport Y9 wymienia gabinet; list Y15 potwierdza przeniesienie urządzenia; etykieta skrzynki w Y19q brzmi **„DWA BRZEGI — POWRÓT ROZDZIELONYCH PODRÓŻNIKÓW”**. Wszystkie prowadzą do tego samego badania, bez obowiązkowej kolejności.
+-   **Niezależne tropy do nagrody:** raport Y9 wymienia gabinet; notatka Y15 potwierdza przeniesienie urządzenia; etykieta skrzynki w Y19q brzmi **„DWA BRZEGI — POWRÓT ROZDZIELONYCH PODRÓŻNIKÓW”**. Wszystkie prowadzą do tego samego badania, bez obowiązkowej kolejności.
 
 -   **Dostęp:** dokładne miejsca, czasy przeszukiwania i reakcje mieszkańców zapisano przy lokacjach. Odczytanie dokumentów nie wymaga losowania właściwego fragmentu wiedzy o Ythryn.
 
@@ -53,9 +53,9 @@ sortOrder: 111
 
 ## Odbiornik w Y15 — przy stole {#s75fd49ad96d2}
 
--   **Przedmiot:** kamienny pulpit sięgający pasa, przy ścianie na prawo od schodów na najwyższym piętrze. Przytwierdzona miedziana tuba wygina się ku górze i kończy kielichem wielkości ludzkiej głowy, zwróconym ku użytkownikowi. W głębi kielicha jest cienka srebrna tarczka; przed tubą wmontowano płytkę z obrysem dłoni. Tuba i płytka tworzą nieruchomy odbiornik, niezależny od teleskopu. Obok leżą list i protokół.
+-   **Przedmiot:** kamienny pulpit sięgający pasa, przy ścianie na prawo od schodów na najwyższym piętrze. Przytwierdzona miedziana tuba wygina się ku górze i kończy kielichem wielkości ludzkiej głowy, zwróconym ku użytkownikowi. W głębi kielicha jest cienka srebrna tarczka; przed tubą wmontowano płytkę z obrysem dłoni. Tuba i płytka tworzą nieruchomy odbiornik, niezależny od teleskopu. Obok leży notatka Orrena z instrukcją i zapisem dawnej rozmowy.
 
--   **Bez testu — uruchomienie:** po odczytaniu protokołu Fenes kładzie dłoń na płytce z jej obrysem, wybiera osobę i przez **10 minut** skupia się na dawnym przejściu. Gdy srebrna tarczka zaczyna drgać, mówi w stronę kielicha tuby. Nie wydaje komórki czaru ani PW.
+-   **Bez testu — uruchomienie:** po odczytaniu notatki Orrena Fenes kładzie dłoń na płytce z jej obrysem, wybiera osobę i przez **10 minut** skupia się na dawnym przejściu. Gdy srebrna tarczka zaczyna drgać, mówi w stronę kielicha tuby. Nie wydaje komórki czaru ani PW.
 
 -   **Bez testu — wynik:** po **10 minutach** może przekazać do **10 słów**, a odbiorca odpowiedzieć do **10 słów**. Odpowiedź dobiega z tuby i słyszą ją osoby przy pulpicie; po wymianie srebrna tarczka nieruchomieje. Słychać głos, bez obrazu i bez odgłosów otoczenia.
 
@@ -93,20 +93,13 @@ sortOrder: 111
 
 ## Wspólne poszukiwanie drogi — przy stole {#s9a7d5a3cc066}
 
--   **Pierwszy cel:** znaleźć po obu stronach miejsce, w którym ślad przejścia utrzymuje się pomiędzy rozmowami. Przyrząd może stwierdzić to dopiero po zestawieniu prób.
-
--   **Fenes:** obsługuje przyrząd, zapisuje położenia igły i przekazuje instrukcje. Może prowadzić badania z Kuldahar lub zabrać zestaw w podróż.
-
--   **Przyjaciel:** wybiera bezpieczne, trwałe miejsce, zaznacza punkt i podczas rozmowy dotyka go dłonią. Może użyć kamienia, starej belki, żywego drzewa lub innego trwałego podłoża; nie musi go uszkadzać. Szuka też miejscowej wiedzy o przejściach.
-
--   **Bez testu — pierwsza para odczytów:** jedna pełna rozmowa z obiema osobami przy wybranych punktach → zapis w [karcie pomiarów](#material/s691e9446ee5a). Jeszcze bez współrzędnych i bez portalu.
-
--   **Bez testu — porównanie:** powtórzenie z tych samych miejsc podczas następnej dostępnej rozmowy potwierdza albo wyklucza ich przydatność. **Przyjęta propozycja MG:** pierwsza bezpieczna para punktów wybrana przez oboje nadaje się do dalszych badań; nie wymaga serii losowych porażek.
-
--   **Wynik do epilogu:** mają stały kontakt i potwierdzone dwa miejsca, od których mogą zacząć rekonstruować drogę. Instrukcja wskazuje dalsze szukanie istniejących przejść lub miejscowej wiedzy o ich otwieraniu.
-
--   **Granica:** same dwa pomiary nie otwierają portalu. Konkretna trasa, potrzebne zasoby i podróż należą do dalszego wątku, zależnego od wybranego świata. Aparat jest narzędziem pomiaru i rozmowy, nie gotowym środkiem transportu.
-
+-   **Pierwsza rozmowa:** ustalić, kto odpowiada, czy jest bezpieczny, co wie o swoim otoczeniu i kiedy spróbować ponownie. Dłuższa wymiana nie musi od razu stać się badaniem.
+-   **Fenes:** ma przyrząd, szuka wiedzy o przejściach po swojej stronie i przekazuje ustalenia. Może korzystać z niego w Kuldahar albo zabrać go w podróż.
+-   **Przyjaciel:** ma własne życie i możliwość działania. Szuka istniejących przejść, śladów dawnej magii lub kogoś, kto zna miejscowe drogi między sferami.
+-   **Wspólna praca:** rozmowy pozwalają porównywać odkrycia i ustalać kolejne kroki. Przyrząd może służyć do badania znalezionego przejścia; jego igła nie wskazuje kierunku ani położenia osoby.
+-   **Dalsza przygoda:** dopiero po określeniu świata rozmówcy ustalić konkretną trasę, potrzebną wiedzę, pomiary i zasoby. Nie ma obowiązkowego formularza, pary punktów ani sekwencji odczytów.
+-   **Wynik do epilogu:** stały kontakt oraz uzgodniony pierwszy krok dalszych poszukiwań wystarczają. Obie strony mogą działać; otwarcie bezpiecznej drogi nie jest warunkiem ukończenia aktu.
+-   **Granica:** urządzenie nie otwiera portalu. Dawny powrót mierniczej wymagał przygotowania bramy po obu stronach; nie ustanawia automatycznego rozwiązania dla każdego świata.
 -   **Brak presji:** kontakt i ślady nie wygasają od odłożenia poszukiwań. Nie ma obowiązkowej katastrofy po stronie przyjaciela ani terminu, który zmusza Fenes do opuszczenia Kuldahar.
 
 ## Iriolarthas i zdobycie nagrody {#se9f2f7f52172}
@@ -119,7 +112,7 @@ sortOrder: 111
 
 ## Kontekst — dla MG {#sb75abd79082b}
 
-Lethra badała awarie przejść, a Orren pracował nad przesyłaniem głosu do zaginionych członków ekspedycji. Ich dokumenty opisują ludzi żyjących przed upadkiem Ythryn. Badacze udowodnili, że ślad tego samego wypadku może połączyć rozdzielone osoby mimo różnic miejsca i czasu.
+Lethra badała awarie przejść, a Orren pracował nad przesyłaniem głosu do zaginionych członków ekspedycji. Ich dokumenty opisują ludzi żyjących przed upadkiem Ythryn. Lethra jest dumna z odkrycia, niecierpliwa wobec niedbałych odpisów i dotrzymuje obietnicy danej rachmistrzowi. Orren pisze dla kolejnego operatora i pamięta o człowieku po drugiej stronie. Rachmistrz jest wyczerpany, ale pomaga towarzyszce; miernicza sama zdobywa miejscową pomoc i przygotowuje swoją część powrotu. Badacze udowodnili, że ślad tego samego wypadku może połączyć rozdzielone osoby mimo różnic miejsca i czasu.
 
 Iriolarthas polecił przenieść pełny przyrząd do swojego gabinetu, ponieważ dawał kontrolę nad odzyskiwaniem członków wypraw i zdobytej przez nich wiedzy. W obserwatorium zostawił starszy odbiornik, a w bibliotece zachowano raport. Katastrofa przerwała badania; dokumenty nie znają Fenes ani przyszłego wydarzenia w Zamku Ośmiu Świtów.
 
