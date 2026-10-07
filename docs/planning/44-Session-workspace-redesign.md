@@ -156,3 +156,19 @@ Commands used from the repository root:
 - pnpm --dir src/mastercompanion-web build
 - pnpm --dir src/mastercompanion-web exec playwright test e2e/session-workspace.spec.ts e2e/sessions.spec.ts e2e/session-deletion.spec.ts e2e/session-workflow.spec.ts
 - Focused Playwright reader/editor runs selected save, conflict, scroll and tab-navigation scenarios.
+
+## Local runtime
+
+The runtime image mastercompanion:session-workspace was built from implementation
+commit 9f5fbd2 and applied to the existing local Compose application without changing
+the database volume. Compose reported healthy application and database containers.
+Three read-only deployed session checks passed for readiness/deep routes, stable
+material references and the expected unknown-campaign error.
+
+The actual served UI passed Full HD checks in both themes: the list owns New,
+creation cancellation returns focus, and all three sections can be selected against
+an existing local session with its two ordinary documents. No campaign writes were
+needed for this runtime probe. The resulting light/dark views were inspected.
+This image remains the final running local version; title editing and material
+deletion remain independent, unmerged feature branches with separately verified
+runtime images.
