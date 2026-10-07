@@ -65,7 +65,7 @@ Napis po drakońsku na ścianie za tronem:
 
 - **Bez testu:** zwykłe przeszukanie piętra ujawnia niezamkniętą kasetę. Dokument nie wymaga dotykania korony, śmierci Iviry ani ukończenia rytuału.
 - **Odczytanie:** zapis w Loross; materiał dla graczy jest tłumaczeniem i można przekazać go w całości. Duch może odczytać pokazany tekst telepatycznie Harkanowi. Obowiązują też zwykłe [zasady Loross](#material/s210a67f4cc8e).
-- **Odkrycie:** trwały wpływ spaczonego chardalynu można osłaniać bez usunięcia jego przyczyny. Raport opisuje dawnego chorego, nie ojca Harkana. Wskazuje chardalynowy kostur i instrukcję w [magazynie Y19f](#material/sf00d04ac81e9/harkan-staff-discovery).
+- **Odkrycie:** osłona pozwoliła dawnemu kamieniarzowi wrócić do rodziny i pracy, choć spaczenie pozostało. Kostur musi być blisko chorego. Dopisek kustosza wyjaśnia, że córka zwróciła go po dwunastu latach, po śmierci ojca ze starości; wskazuje przedmiot i instrukcję w [magazynie Y19f](#material/sf00d04ac81e9/harkan-staff-discovery). Raport opisuje dawnego chorego, nie ojca Harkana. Szczegóły codziennego używania znajdują się przy kosturze.
 - **Moonbow — tylko w myślach Harkana:** „Pamiętam ten znak. Robiono takie osłony. Poszukajmy egzemplarza, zanim uznamy, że przepadł razem z resztą”. Duch pomaga połączyć tropy, lecz nie zna metody przed odczytaniem raportu.
 - **Granica:** raport nie zmienia działania korony i nie rozwiązuje sytuacji Iviry. Kostur jest nagrodą dla ojca Harkana, a jego osłona nie jest uniwersalnym leczeniem wszystkich chorób nekropolii.
 

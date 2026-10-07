@@ -17,6 +17,12 @@ sortOrder: 150
 
 Nie trzeba nadawać duchowi imienia ani rozstrzygać, czy był twórcą łuku lub jego pierwszym posiadaczem. Przy prowadzeniu zachowaj dotychczasową historię broni.
 
+**Oś poszukiwań:** Harkan szuka sposobu, żeby ojciec znów mógł być sobą. W Y24 otrzymuje dowód, że podobnemu choremu pomogła osłona, oraz adres kostura. W Y19f zdobywa przedmiot i zasady jego używania. Osobista prośba Moonbow rozwija się przy okazji tej drogi, bez uzależniania pomocy ojcu od pozostawienia łuku.
+
+**Historia dokumentów:** raport opisuje kamieniarza, którego córka zabrała do domu wraz z kosturem. Po dwunastu latach, po śmierci ojca ze starości, zwróciła przedmiot. Kustosz dopisał miejsce przechowywania. Dzięki temu kostur jest dostępny, a dopisek potwierdza, że osłona pozwalała choremu żyć przez lata. To dawny przypadek, nie przewidywanie losu ojca Harkana.
+
+**Głosy postaci:** badaczka wydaje rzeczowe polecenia, ale zapisuje własny błąd po przedwczesnym odłożeniu kostura. Córka rozpoznaje powrót ojca po jego zwykłych prośbach i pomaga przy związaniu mimo zaleceń ciszy. Kamieniarz wraca do pracy; nie potrzebuje przemowy wdzięczności. Moonbow jest przywiązany do wygody i dawnych zwyczajów. Zauważa utratę miasta również przez brak znajomych drobiazgów. Temperament ojca Harkana i reakcję samego Harkana zachowaj zgodnie z historią gracza.
+
 ## Materiały i kolejność odkryć {#harkan-discoveries}
 
 | Miejsce | Scena lub znalezisko | Znaczenie |
@@ -39,6 +45,8 @@ Raport i instrukcja są rzeczywistymi dokumentami świata gry, przygotowanymi po
 - **Granica:** duch nie czyta cudzych myśli, nie przemawia do pozostałych bohaterów i nie widzi miejsc, których Harkan jeszcze nie odwiedził. Reaguje na to, co Harkan ogląda, pokazuje mu lub świadomie przekazuje.
 - **Charakter:** początkowo strach wypiera lenistwo. Przy znajomych szczegółach wracają senne uwagi i niechęć do wysiłku. Nie zmieniaj całego dotychczasowego zachowania w maskę ukrytej tragedii.
 - **Prowadzenie:** krótkie wypowiedzi przy odkryciach i odpowiedzi na pytania wystarczą. Duch nie wygłasza wykładu nad każdą ulicą i nie wybiera trasy za graczy.
+
+Przy znajomym miejscu daj mu najpierw rozpoznać szczegół: dawną ławkę, wejście, na którym zwykle czekał, albo drogę omijaną z powodu schodów. Wystarczy jedna uwaga; nie każda rozmowa musi kończyć się żartem lub wyznaniem. Dopiero widok obecnego stanu miejsca zmienia jego reakcję.
 
 ## Wiedza ducha o mieście i rytuale {#harkan-city-guidance}
 
