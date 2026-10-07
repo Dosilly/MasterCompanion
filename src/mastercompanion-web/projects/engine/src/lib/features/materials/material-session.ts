@@ -8,7 +8,8 @@ type SavedVersion =
   | { readonly kind: 'idle' | 'loading' | 'failed' }
   | { readonly kind: 'ready'; readonly material: MaterialDto };
 
-export type MaterialErrorCode = 'saveConflict' | 'saveFailed' | 'clipboardUnavailable';
+export type MaterialErrorCode =
+  'saveConflict' | 'saveFailed' | 'clipboardUnavailable' | 'materialDeleted';
 
 export class MaterialSession {
   readonly editing = signal(false);
@@ -26,6 +27,7 @@ export class MaterialSession {
   readonly savedVersion = this.savedVersionState.asReadonly();
   private readonly stop = new Subject<void>();
   private destroyed = false;
+  private deletionPaused = false;
 
   constructor(
     readonly material: MaterialDto,
@@ -47,11 +49,14 @@ export class MaterialSession {
     }
     this.status.set('waiting');
     clearTimeout(this.timer);
+    if (this.deletionPaused) {
+      return;
+    }
     this.timer = setTimeout(() => void this.flush(), 650);
   }
   flush(): Promise<boolean> {
     clearTimeout(this.timer);
-    if (this.destroyed) {
+    if (this.destroyed || this.deletionPaused) {
       return Promise.resolve(false);
     }
     if (this.inFlight) {
@@ -122,6 +127,32 @@ export class MaterialSession {
     this.error.set(null);
     return this.flush();
   }
+  markConflict(): void {
+    clearTimeout(this.timer);
+    this.status.set('conflict');
+    this.error.set('saveConflict');
+  }
+
+  markDeleted(): void {
+    clearTimeout(this.timer);
+    this.deletionPaused = true;
+    this.status.set('conflict');
+    this.error.set('materialDeleted');
+  }
+
+  async pauseForDeletion(): Promise<void> {
+    this.deletionPaused = true;
+    clearTimeout(this.timer);
+    await this.inFlight;
+  }
+
+  resumeAfterDeletion(): void {
+    this.deletionPaused = false;
+    if (!this.destroyed && this.dirty() && this.status() === 'waiting') {
+      this.timer = setTimeout(() => void this.flush(), 650);
+    }
+  }
+
   destroy(): void {
     this.destroyed = true;
     clearTimeout(this.timer);
@@ -130,6 +161,10 @@ export class MaterialSession {
   }
   private async savePending(): Promise<boolean> {
     while (this.savedGeneration !== this.generation) {
+      if (this.deletionPaused) {
+        this.status.set('waiting');
+        return false;
+      }
       const generation = this.generation;
       // HttpClient serializes this immutable document snapshot for the request.
       const document = this.document;
@@ -154,9 +189,10 @@ export class MaterialSession {
         if (this.destroyed) {
           return false;
         }
-        const conflict = error instanceof HttpErrorResponse && error.status === 409;
+        const missing = error instanceof HttpErrorResponse && error.status === 404;
+        const conflict = missing || (error instanceof HttpErrorResponse && error.status === 409);
         this.status.set(conflict ? 'conflict' : 'error');
-        this.error.set(conflict ? 'saveConflict' : 'saveFailed');
+        this.error.set(missing ? 'materialDeleted' : conflict ? 'saveConflict' : 'saveFailed');
         return false;
       }
     }

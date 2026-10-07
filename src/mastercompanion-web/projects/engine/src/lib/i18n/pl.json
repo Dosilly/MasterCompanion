@@ -224,7 +224,8 @@
     "errors": {
       "saveConflict": "Materiał zmieniono w innym oknie. Twój szkic został zachowany. Sprawdź zapisaną wersję, aby wybrać dalsze działanie.",
       "saveFailed": "Nie udało się zapisać. Zmiany pozostają w tej karcie; ponów zapis po przywróceniu połączenia.",
-      "clipboardUnavailable": "Przeglądarka nie pozwoliła skopiować tekstu. Zaznacz treść i skopiuj ją ręcznie."
+      "clipboardUnavailable": "Przeglądarka nie pozwoliła skopiować tekstu. Zaznacz treść i skopiuj ją ręcznie.",
+      "materialDeleted": "Materiał został usunięty w innym oknie. Skopiuj szkic, aby go zachować."
     }
   },
   "game": {
@@ -349,7 +350,8 @@
     "copied": "Odnośnik do materiału skopiowany.",
     "copyFailed": "Nie udało się skopiować odnośnika. Otwórz materiał i skopiuj jego adres.",
     "reorder": "Zmień kolejność dokumentu",
-    "moveMaterial": "Przenieś dokument do folderu"
+    "moveMaterial": "Przenieś dokument do folderu",
+    "delete": "Usuń"
   },
   "materialOrder": {
     "title": "Zmień kolejność dokumentu",
@@ -377,5 +379,29 @@
     "return": "Wróć do miejsca czytania",
     "outline": "Spis treści",
     "noHeadings": "Ta notatka nie ma nagłówków."
+  },
+  "deletion": {
+    "title": "Usuwanie materiału",
+    "pending": "Oczekiwanie na zapis i sprawdzanie powiązań…",
+    "consequence": "Kopia materiału w tej kampanii zostanie trwale usunięta. Źródła modułu i pozostałe dokumenty zostaną zachowane.",
+    "protected": "Ten dokument jest wymagany przez sesję. Najpierw usuń tę sesję; jej dokumenty pozostaną dostępne do osobnego usunięcia.",
+    "missingLinks": "Te odnośniki w dokumentach i znaczniki map pozostaną i pokażą komunikat o brakującym celu:",
+    "unpin": "Materiał zostanie odpięty z tych sesji:",
+    "discardDraft": "Ten materiał ma niezapisane zmiany. Rozumiem, że usunięcie odrzuci ten szkic dopiero po potwierdzeniu przez serwer.",
+    "cancel": "Wróć",
+    "confirm": "Usuń",
+    "retry": "Ponów dokładnie to usunięcie",
+    "action": "Usuń materiał",
+    "errors": {
+      "loadFailed": "Nie udało się wczytać powiązań. Wróć do dokumentu i spróbuj ponownie.",
+      "failed": "Wynik usunięcia jest niepewny. Szkic został zachowany. Ponów to samo żądanie, aby potwierdzić wynik.",
+      "conflict": "Materiał został zmieniony. Wróć do dokumentu i sprawdź zapisaną wersję przed usunięciem.",
+      "referencesChanged": "Powiązania się zmieniły. Wróć do dokumentu i ponownie otwórz usuwanie, aby je sprawdzić.",
+      "protected": "Sesja wymaga teraz tego dokumentu. Wróć do dokumentu.",
+      "notFound": "Ten materiał już nie istnieje. Otwarty szkic został zachowany do skopiowania."
+    },
+    "recoveryTitle": "Niepotwierdzone usunięcie",
+    "recoveryHint": "Wynik usunięcia nadal wymaga potwierdzenia. Ponów to samo żądanie, aby go sprawdzić.",
+    "resume": "Sprawdź usunięcie"
   }
 }

@@ -1,0 +1,65 @@
+<dialog #dialog aria-labelledby="material-deletion-title" (cancel)="cancel($event)">
+  <form (submit)="submit($event)">
+    <h2 id="material-deletion-title">{{ ui.title }}</h2>
+    @if (deletion().pending()) {
+      <p role="status">{{ ui.pending }}</p>
+    }
+    @if (deletion().preview(); as preview) {
+      <p class="target">{{ preview.title }}</p>
+      <p>{{ ui.consequence }}</p>
+      @if (preview.owningSessions.length) {
+        <p role="alert">{{ ui.protected }}</p>
+        <ul>
+          @for (title of preview.owningSessions; track $index) {
+            <li>{{ title }}</li>
+          }
+        </ul>
+      }
+      @if (preview.documentLinks.length || preview.mapMarkers.length) {
+        <p>{{ ui.missingLinks }}</p>
+        <ul>
+          @for (title of preview.documentLinks; track $index) {
+            <li>{{ title }}</li>
+          }
+          @for (title of preview.mapMarkers; track $index) {
+            <li>{{ title }}</li>
+          }
+        </ul>
+      }
+      @if (preview.pinnedSessions.length) {
+        <p>{{ ui.unpin }}</p>
+        <ul>
+          @for (title of preview.pinnedSessions; track $index) {
+            <li>{{ title }}</li>
+          }
+        </ul>
+      }
+      @if (deletion().dirty()) {
+        <label class="draft-warning">
+          <input type="checkbox" [checked]="acknowledged()" (change)="acknowledge($event)" />
+          <span>{{ ui.discardDraft }}</span>
+        </label>
+      }
+    }
+    @if (deletion().error(); as error) {
+      <p role="alert">{{ ui.errors[error] }}</p>
+    }
+    <div class="actions">
+      <button #cancelButton type="button" [disabled]="deletion().submitting()" (click)="cancel()">
+        {{ ui.cancel }}
+      </button>
+      <button
+        type="submit"
+        class="mc-action--danger"
+        [disabled]="
+          deletion().pending() ||
+          !deletion().preview() ||
+          deletion().preview()?.owningSessions?.length ||
+          (deletion().dirty() && !acknowledged())
+        "
+      >
+        <mc-icon name="trash" /> {{ deletion().retryAvailable() ? ui.retry : ui.confirm }}
+      </button>
+    </div>
+  </form>
+</dialog>

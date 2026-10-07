@@ -224,7 +224,8 @@
     "errors": {
       "saveConflict": "The material changed in another window. Your draft is retained. Inspect the saved version to choose how to continue.",
       "saveFailed": "Could not save. Your changes remain in this tab; retry after the connection is restored.",
-      "clipboardUnavailable": "The browser could not copy the text. Select the content and copy it manually."
+      "clipboardUnavailable": "The browser could not copy the text. Select the content and copy it manually.",
+      "materialDeleted": "This material was deleted in another window. Copy the draft to keep it."
     }
   },
   "game": {
@@ -349,7 +350,8 @@
     "copied": "Material link copied.",
     "copyFailed": "The link could not be copied. Open the material and copy its address.",
     "reorder": "Change document order",
-    "moveMaterial": "Move document to folder"
+    "moveMaterial": "Move document to folder",
+    "delete": "Delete"
   },
   "materialOrder": {
     "title": "Change document order",
@@ -377,5 +379,29 @@
     "return": "Return to reading position",
     "outline": "Outline",
     "noHeadings": "This document has no headings."
+  },
+  "deletion": {
+    "title": "Delete material",
+    "pending": "Waiting for saves and checking references…",
+    "consequence": "This permanently deletes this campaign copy. Module sources and other documents are kept.",
+    "protected": "This document is required by a session. Delete that session first; its documents remain available for separate deletion.",
+    "missingLinks": "These document links and map markers will remain and show a missing-target message:",
+    "unpin": "The material will be removed from the pins in these sessions:",
+    "discardDraft": "This material has unsaved changes. I understand that deletion discards this draft after server confirmation.",
+    "cancel": "Back",
+    "confirm": "Delete",
+    "retry": "Retry exact deletion",
+    "action": "Delete material",
+    "errors": {
+      "loadFailed": "References could not be loaded. Return to the document and try again.",
+      "failed": "The deletion outcome is uncertain. Your draft is kept. Retry this exact request to confirm the outcome.",
+      "conflict": "The material changed. Return to the document and inspect the saved version before deleting.",
+      "referencesChanged": "References changed. Return to the document and reopen deletion to review them.",
+      "protected": "A session now requires this document. Return to the document.",
+      "notFound": "This material no longer exists. Your open draft is kept for copying."
+    },
+    "recoveryTitle": "Unconfirmed deletion",
+    "recoveryHint": "The deletion result still needs confirmation. Retry the exact request to check it.",
+    "resume": "Resolve deletion"
   }
 }

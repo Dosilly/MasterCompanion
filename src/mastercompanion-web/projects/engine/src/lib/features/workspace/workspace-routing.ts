@@ -112,7 +112,12 @@ export class WorkspaceRouting {
     const decoded = decodeWorkspaceRoute(url, workspace);
     if (decoded.kind === 'default') {
       const target: WorkspaceRouteTarget = workspace.materials.length
-        ? { kind: 'material', materialId: workspace.startMaterialId }
+        ? {
+            kind: 'material',
+            materialId:
+              workspace.materials.find((material) => material.id === workspace.startMaterialId)
+                ?.id ?? workspace.materials[0].id,
+          }
         : { kind: 'empty' };
       return this.navigate(target, { replace: true });
     }

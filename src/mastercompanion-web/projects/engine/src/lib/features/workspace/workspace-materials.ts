@@ -120,7 +120,11 @@ export class WorkspaceMaterials {
     );
     for (const session of this.sessions()) {
       if (!materials.has(session.material.id)) {
-        materials.set(session.material.id, session.material);
+        if (session.dirty()) {
+          session.markDeleted();
+        } else {
+          this.removeConfirmedSession(session.material.id);
+        }
       }
     }
     const current = this.workspace();
@@ -161,6 +165,24 @@ export class WorkspaceMaterials {
       throw new Error('The campaign material cache is unavailable.');
     }
     return this.cache;
+  }
+
+  acceptDeletion(id: string): void {
+    this.requireCache().remove(id);
+    this.sessions()
+      .find((session) => session.material.id === id)
+      ?.destroy();
+    this.sessionState.update((sessions) =>
+      sessions.filter((session) => session.material.id !== id),
+    );
+    this.workspaceState.update((workspace) =>
+      workspace
+        ? {
+            ...workspace,
+            materials: workspace.materials.filter((material) => material.id !== id),
+          }
+        : workspace,
+    );
   }
 
   removeConfirmedSession(id: string): void {

@@ -10,6 +10,16 @@
       >
         {{ session().editing() ? ui.material.finishEditing : ui.material.edit }}
       </button>
+      <button
+        type="button"
+        class="mc-icon-button mc-action--danger"
+        [attr.aria-label]="ui.deletion.action"
+        [title]="ui.deletion.action"
+        [disabled]="deletionLocked()"
+        (click)="deleteRequested.emit($event)"
+      >
+        <mc-icon name="trash" />
+      </button>
     </div>
   </div>
   @if (documentNavigation(); as navigation) {

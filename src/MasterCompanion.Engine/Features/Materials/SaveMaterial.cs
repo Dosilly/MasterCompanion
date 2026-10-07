@@ -67,6 +67,16 @@ public static class SaveMaterial
                 return Problem(400, "invalid_document");
             }
 
+            var campaignId = await db.Materials.AsNoTracking().Where(item => item.Id == id)
+                .Select(item => (Guid?)item.CampaignId).SingleOrDefaultAsync(token);
+            if (campaignId is null)
+            {
+                return Results.NotFound();
+            }
+            // Material writes share the campaign lock with reference-aware deletion.
+            await using var transaction = await db.Database.BeginTransactionAsync(token);
+            await db.Campaigns.FromSqlInterpolated(
+                $"SELECT * FROM engine.\"Campaigns\" WHERE \"Id\" = {campaignId.Value} FOR UPDATE").ToListAsync(token);
             var material = await db.Materials.SingleOrDefaultAsync(x => x.Id == id, token);
             if (material is null)
             {
@@ -87,6 +97,7 @@ public static class SaveMaterial
             material.Revision++;
             try { await db.SaveChangesAsync(token); }
             catch (DbUpdateConcurrencyException) { return Conflict(); }
+            await transaction.CommitAsync(token);
             return Results.Ok(new { material.Revision });
         });
 

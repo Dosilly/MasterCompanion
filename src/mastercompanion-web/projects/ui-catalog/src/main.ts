@@ -61,6 +61,7 @@ class UiCatalog {
       anchor,
       label: disabled ? 'Unavailable actions' : 'Example actions',
       actions: [
+        { id: 'delete', label: 'Delete item', icon: 'trash', destructive: true, disabled },
         { id: 'open', label: 'Open item', disabled },
         { id: 'rename', label: 'Rename item', disabled: true },
         {
