@@ -1,6 +1,7 @@
 # Near-term improvements
 
-3 October 2026 · recorded roadmap; delivery status updated 6 October 2026
+3 October 2026 · recorded roadmap; delivery status updated 6 October 2026;
+requirements updated 7 October 2026
 
 The user requested the improvements below, then authorized search, URL navigation
 and campaign material memory. Search and routing have been delivered; material
@@ -28,6 +29,80 @@ upper-right destination row also require correction. The first proposed cycle is
 small control/icon foundations, searchable choices, session deletion, note ordering
 and bounded navigation with persistent search/reader commands. This first cycle
 is now implemented; the delivery records describe exact behavior and scoped evidence.
+
+## Recommended development order
+
+7 October 2026 · recommended sequence incorporating the user's future requirements;
+no implementation authorization, dates or effort estimates assigned.
+
+The previously delivered UX cycle remains complete. New session-view feedback
+requires a fresh composition rather than treating its prior screenshots as final
+usability acceptance. The following sequence supersedes the older map-first
+recommendation for planning; it is a proposal for the user's next scope choice.
+
+| Order | Slice | Reason and boundary |
+|---|---|---|
+| 1 | Editable document titles | Close a concrete editing gap with reusable metadata/save behavior before adding more editable documents. |
+| 2 | [Material deletion](46-Material-deletion.md) | Complete document management with a red trash action in the context menu and beside Edit, plus explicit draft/reference handling. |
+| 3 | [Session workspace redesign](44-Session-workspace-redesign.md) | Use the user-selected single workspace with the list beside the document; clarify actions and active-session context. |
+| 4 | [Character profiles](45-Character-profiles.md) | Add the requested backstory and notes, reusing the editor and stable character identities. |
+| 5 | Map authoring with multiple module maps | Add images and independent marker editing; verify at least two maps and their references throughout module/campaign handling. |
+| 6 | Multiple campaigns | Add selection and independent campaign creation once the current workspace's main content flows are clear. Empty custom campaigns need their own bounded scope. |
+| 7 | [User accounts and data isolation](47-User-accounts-and-data-isolation.md) | Implement and test authentication and server-enforced ownership/access locally as a separate product feature before hosted exposure. |
+| 8 | [Module editor and deliberate campaign updates](37-Module-editor-and-campaign-updates.md) | Reuse the content/map controls after defining external source storage, version discovery and edited-element protection. |
+| 9 | Chronicle and custom tools | Extend campaign history and generic mechanics after core authoring and organization. |
+| 10 | AWS / production | Deploy the verified account/isolation boundary with hosted security, production backups and recovery. |
+
+Document-title editing is a useful first delivery, not a strict prerequisite for
+session layout or profile design. Profile identity/removal semantics, multi-map
+authoring boundaries and module source storage must be designed before their
+respective implementations. Deletion draft/reference semantics must be reviewed
+before implementing material deletion. Shared UI extraction follows actual
+consumers within these slices rather than a separate prerequisite rewrite.
+
+User accounts and private data isolation are confirmed requirements. Define the
+ownership model alongside multiple-campaign design, then implement and verify the
+account/access boundary as its own locally testable feature. Accounts do not
+depend on AWS and should not be deferred merely because hosting is later. The
+verified boundary is a gate on hosted exposure regardless of which later product
+features are complete. This plan does not add login during unrelated local tasks.
+
+## Additional requirements: multiple module maps and document titles
+
+7 October 2026 · user-confirmed requirements; no new delivery date assigned.
+
+### Multiple maps per module
+
+A module must support multiple maps, rather than a single map. Each map has its
+own stable identity, image asset and markers; for example, a city map and separate
+building or dungeon maps. Campaign creation must include all supplied maps and
+their material references. Map authoring and the future module editor must let
+the user select and manage individual maps without replacing the other maps.
+Switching maps must retain each map's pan/zoom and existing document drafts.
+
+The current `ICampaignModule.LoadMapsAsync` contract already returns a collection.
+This requirement makes that capability explicit in the product scope; it does not
+claim that multiple-map authoring has been implemented or verified.
+
+### Editable document title
+
+While editing an existing campaign document, the GM must be able to change its
+title as well as its body. The title is material metadata, separate from headings
+inside the document. The current material view has no title-editing field and
+`SaveMaterial` saves only the body, so title editing remains an implementation gap.
+
+Title changes must use validated, revision-protected saving and remain recoverable
+with body drafts on errors or conflicts. Finishing editing or closing the tab must
+wait for confirmed persistence. After confirmation, navigation, tab labels and
+search results must reflect the new title; reloading must retain it. Renaming must
+preserve the material ID, URLs, links and map-marker targets, and must not change
+the module source. The future module-authoring mode must also support title
+editing, with saves directed explicitly to the module.
+
+Planned verification includes a module with at least two maps and independent
+markers, map switching with retained view state, title-only and combined title/body
+saves, validation, failed saves and revision conflicts. These are acceptance
+criteria, not completed test evidence.
 
 ## Future ideas: module editor and campaign updates
 

@@ -1,6 +1,6 @@
 # User stories — game master companion
 
-Version 0.3 · 4 October 2026
+Version 0.4 · 7 October 2026
 
 Related: [concept](00-Product-concept.md) · [BRD](01-BRD.md)
 
@@ -17,6 +17,8 @@ As a GM, I want to start a campaign from a prepared module so that I have a read
 **Acceptance criteria:**
 
 - After choosing a module and naming the campaign, I can access its folders, content, maps, relationships and tools.
+- A module can supply multiple maps; a campaign created from it includes every
+  supplied map with its own image, markers and valid material targets.
 - Tools have documented initial values and do not inherit another game's outcomes.
 - Changing content or values in this campaign does not change the module or a second campaign created from it.
 - I can return to each campaign with its independent state.
@@ -45,6 +47,9 @@ As a GM, I want to organize materials in nested folders so that their layout fit
 - I can rename and move a folder with its contents.
 - Moving or renaming a note preserves links, markers and event relationships.
 - Before deleting linked material, I see the effect on references and can cancel.
+- I can delete a material from its context menu or the trash action beside Edit
+  in the selected document. Both use destructive red text/icon treatment and an
+  accessible name; confirmation identifies the document and protects unsaved work.
 
 ### US-04. Free-form text and entities
 
@@ -58,6 +63,17 @@ As a GM, I want to write freely and identify important elements as NPCs, locatio
 - I can use headings, lists, tables, images and links.
 - Extra fields and templates are optional; I can change a template's content layout.
 - Campaign materials can be edited during preparation and play.
+- In document edit mode, I can change the existing document's title independently
+  of headings in its body.
+- A confirmed title change appears in navigation, tab labels and search results
+  and remains after reload, without changing IDs, links or map-marker targets.
+- Invalid titles are rejected; save failures and conflicts keep both title and
+  body drafts recoverable. Finishing editing or closing waits for confirmed saving.
+- A party character has separate editable backstory and campaign notes in addition
+  to its name; changing them preserves other characters and mechanical state.
+- Narrative character content remains independent of gameplay undo, with
+  recoverable drafts and confirmed saving. Optional profile proposals are recorded
+  in [the profile plan](45-Character-profiles.md).
 
 ### US-05. Linking and quick previews
 
@@ -95,6 +111,9 @@ As a GM, I want to add a map and place markers on it so that I can access notes 
 **Acceptance criteria:**
 
 - I can add my own map image and use it in the campaign when map authoring is delivered.
+- I can manage multiple maps independently; adding or editing one does not
+  replace the other maps. The future module editor provides the same capability
+  for module sources.
 - I can create, name, move and delete a marker and change its relationship.
 - A marker can point to an existing location or other material.
 - A location can have markers on two maps; removing one does not remove the location or the other marker.
@@ -109,6 +128,8 @@ As a GM, I want to open materials from maps and navigate to interior maps so tha
 
 - I can zoom and pan the map.
 - Clicking a marker opens its material; returning preserves map position and zoom.
+- Switching between maps retains each map's own position and zoom and preserves
+  document drafts.
 - A location can lead to its own map with further markers.
 - Visiting an interior map and returning does not change time, tools or the current session.
 
@@ -276,11 +297,33 @@ As a game master, I want saved materials and game state to remain available when
 
 Operational backups and safe recovery belong to the AWS production stage. Local development requires no database backups or restore rehearsals. See [data policy](21-Development-data-and-AWS-protection.md); this work is separate from a campaign archive feature in the GM interface.
 
+### US-21. User accounts and private campaigns
+
+As a GM, I want my own account and private campaigns so that another user's
+account cannot read or change my campaign data.
+
+**BRD:** BR-01, BR-19.
+
+**Acceptance criteria:**
+
+- Signed-in accounts see only their authorized campaigns and related resources.
+- Another account's direct document/map URLs, search and write requests do not
+  disclose private content or change it, even with known IDs.
+- Account switching does not reveal earlier cached content or replay pending
+  writes under the new identity.
+- Access is enforced by the server and verified with separate identities. The
+  feature can be developed and tested locally before AWS hosting.
+
+These requirements do not introduce player roles, collaboration or sharing. See
+[the future account/isolation plan](47-User-accounts-and-data-isolation.md).
+
 ## Proposed product verification order
 
 1. **Materials and map:** US-01–08 — are preparation and information access more convenient than in the existing notes?
 2. **Session and time continuity:** US-09–14, US-17 — can the GM run two sessions without losing state or due matters?
 3. **Custom components and chronicle:** US-15–16, US-18–19 — are custom campaigns and manual history building useful beyond Ythryn?
 4. **Durable persistence:** US-20 — verify normal saves across restarts and recoverable drafts after failed or conflicting saves. Backup and operational recovery verification belongs to AWS production readiness, not current local development. No internet-disconnected scenario is required.
+5. **Account isolation:** US-21 — verify separate identities and authorized
+   campaign ownership locally before hosted exposure.
 
 This is an order for evaluating product assumptions, not an implementation schedule or estimate.

@@ -1,6 +1,6 @@
 # BRD — game master companion
 
-Version 0.3 · 4 October 2026
+Version 0.4 · 7 October 2026
 
 Related: [product concept](00-Product-concept.md) · [user stories](02-User-stories.md)
 
@@ -54,13 +54,34 @@ The GM creates a campaign from an available module or an empty set. It receives 
 
 A module includes content, folders, maps, markers, relationships and prepared tools. It can organize materials into chapters, but the product does not impose that structure. A new campaign does not inherit session history or gameplay outcomes from another campaign. The product owner's module preparation process needs separate design.
 
+A module must support multiple maps, each with its own stable ID, image and
+markers. Campaign creation includes all maps supplied by the module. Module
+authoring must manage these maps individually rather than replace a single map.
+
 ### BR-03. Folders
 
 The GM creates, names and moves folders and materials in a multilevel hierarchy. Depth is not limited to chapters and subchapters. An entity can be referenced in several places without separate copies. Material deletion should show its effect on existing links and allow cancellation; the precise recovery process for deleted content remains undecided.
 
+Material deletion must be available from the context menu and beside Edit for
+the selected open document. Both actions use a trash icon and destructive red
+treatment, with accessible labels and explicit confirmation. Unsaved drafts and
+linked references require deliberate handling; see [the deletion plan](46-Material-deletion.md).
+
 ### BR-04. Free-form content and basic entities
 
 The GM creates ordinary notes and NPC, location and faction entities. Content supports at least headings, paragraphs, lists, tables, images and links. Templates and extra fields are optional. A new entity can begin with just a name and short description. Party character data allows tools to be assigned to characters; it is not a full character sheet for a particular RPG system.
+
+Editing an existing document must allow changing its title as well as its body.
+The title is separate metadata, not a heading in the body. Confirmed title changes
+appear in navigation, tabs and search, and persist after reload. Renaming preserves
+stable IDs, links and map targets. Validation, revision conflicts and recoverable
+drafts apply to title changes as they do to body changes. Campaign editing changes
+only the campaign copy; module authoring saves to the module explicitly.
+
+Party characters must have editable backstory and campaign notes in addition to
+their names. These narrative fields are independent of module mechanics and game
+undo. Player name, description, goals, relationships and portraits are optional
+proposals pending scope selection; see [character profiles](45-Character-profiles.md).
 
 ### BR-05. Links and previews
 
@@ -120,11 +141,24 @@ A scene plan does not automatically appear as a played event. Tool operation his
 
 ### BR-17. Durable persistence and recovery
 
-Normal saves persist in the database across application restarts, and save failures remain visible with recoverable drafts. During current local development, backups and restore verification are not required, local data loss is acceptable, and module updates may overwrite campaign notes. Backup coverage, retention, recovery and protection of authored production data belong to the AWS production stage and must be designed and verified before production use. Campaign export/import, portable archives and user-facing archive restore remain removed from the product plan. Full offline operation is not a current requirement. Possible future user accounts and hosted access need separate design. See [data policy](21-Development-data-and-AWS-protection.md).
+Normal saves persist in the database across application restarts, and save failures remain visible with recoverable drafts. During current local development, backups and restore verification are not required, local data loss is acceptable, and module updates may overwrite campaign notes. Backup coverage, retention, recovery and protection of authored production data belong to the AWS production stage and must be designed and verified before production use. Campaign export/import, portable archives and user-facing archive restore remain removed from the product plan. Full offline operation is not a current requirement. User accounts and private data isolation are required for hosted use and need separate design before deployment. See [data policy](21-Development-data-and-AWS-protection.md).
 
 ### BR-18. Independence from Ythryn and future hosting
 
 Folders, material types, maps and simple tools are useful in an empty campaign without Icewind Dale rules. The pilot supplies specific content. A future hosted version should preserve migrated campaign content, relationships, state and the GM's core workflow. This requirement does not determine the current technology, cloud or synchronization model.
+
+### BR-19. User accounts and private data isolation
+
+The product must support user accounts with explicit campaign ownership. Each
+account can access only its authorized campaigns and their documents, maps/assets,
+party profiles, sessions, search results and game state. The server must enforce
+access for every read and write, including direct resource URLs and referenced
+IDs. Authentication alone and UI filtering are insufficient.
+
+Design ownership alongside multiple campaigns. Implement and test accounts and
+isolation locally as a separate feature before hosted access; AWS is not a
+technical dependency. Sharing and collaborative roles require separate decisions.
+See [the account/isolation plan](47-User-accounts-and-data-isolation.md).
 
 ## 7. Pilot scope and acceptance scenario
 

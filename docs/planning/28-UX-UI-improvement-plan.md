@@ -443,5 +443,10 @@ shortens contextual actions and separates outline from document find. Feature
 branches remain available for user-controlled merging and remote pushing.
 
 The corrective cycle A–J is implemented locally with scoped delivery records.
-Map authoring and multiple campaigns remain subsequent product scope. Keep actual
-verification separate from the original planned acceptance criteria.
+On 7 October, the user requested a [new session composition](44-Session-workspace-redesign.md)
+and [character profiles](45-Character-profiles.md) as future work. The
+[recommended development order](15-Near-term-improvements.md#recommended-development-order)
+now puts editable document titles, material deletion, session redesign and profiles
+before map authoring and multiple campaigns. This is a planning recommendation, not a new
+delivery or implementation authorization. Keep actual verification separate from
+the original planned acceptance criteria.

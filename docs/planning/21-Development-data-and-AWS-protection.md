@@ -1,6 +1,6 @@
 # Development data and AWS protection scope
 
-4 October 2026
+4 October 2026 · account/isolation requirements confirmed 7 October 2026
 
 ## Current decision
 
@@ -36,8 +36,16 @@ on an isolated environment. Specific AWS services and settings remain undecided.
 
 Production campaigns must protect authored changes when module content changes.
 The local development permission to overwrite notes does not apply to production.
-Accounts, authorization and hosting security require their own design before
-network exposure.
+User accounts and isolation of private data are confirmed requirements for the
+hosted product. Authentication must be paired with server-enforced campaign
+ownership and authorization for reads, writes, search and asset delivery. Design,
+implement and verify these boundaries before public or multi-user hosted access;
+login alone does not establish isolation. See
+[the accounts and isolation plan](47-User-accounts-and-data-isolation.md).
+Accounts and isolation are a separate product feature that can be implemented
+and verified locally before AWS deployment. The ownership design should accompany
+multiple-campaign work. The current local workflow remains without accounts until
+that feature is implemented; unrelated local tasks do not acquire a login gate.
 
 Campaign export/import, portable archives and user-facing archive restore remain
 removed from the product plan. Operational production backups are a separate
@@ -56,7 +64,7 @@ already performed and do not impose those checks on subsequent development.
 | Existing campaign data | Local loss is acceptable; module updates may overwrite notes. No preservation fingerprints or production migration rehearsals per update. | Protect authored content and verify data-changing migrations on representative data. |
 | Saves and game operations | Keep validation, visible errors, revisions, transactions and idempotency; use scoped tests. | Continue these correctness guarantees. |
 | Developer machine and secrets | Keep loopback binding, safe rendering, secrets outside source/logs and task-scoped operations. | Extend with hosted security. |
-| Accounts and hosting | No speculative login, permissions or infrastructure hardening for local tasks. | Authentication, authorization, transport and origin/database protection before public exposure. |
+| Accounts and hosting | No speculative login, permissions or infrastructure hardening for local tasks. | Required accounts, server-enforced private data isolation and authorization, transport and origin/database protection before public exposure. |
 | Verification effort | Relevant tests and focused diff review; reuse passing evidence. No blanket audits or unrelated regressions. | Explicit production acceptance and recovery checks for the release scope. |
 
 Keep working save, validation and rendering protections; removing them would add

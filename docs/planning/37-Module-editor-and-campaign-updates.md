@@ -1,6 +1,7 @@
 # Module editor and campaign updates
 
-6 October 2026 · future ideas recorded; not scheduled or implemented
+6 October 2026 · future ideas recorded; requirements updated 7 October 2026;
+not scheduled or implemented
 
 ## Module editor
 
@@ -8,6 +9,17 @@ Provide an explicit module-authoring mode with a workflow similar to opening a
 campaign. Reuse suitable reading, editing and navigation controls, but save changes
 to the module itself rather than an instantiated campaign copy. The active mode
 and save destination must be clear to the user.
+
+The module editor must support multiple maps within one module. Each map has its
+own stable ID, image asset and markers, and can be selected and edited independently.
+Saving one map must not replace the module's other maps. Campaign creation from
+the module must retain all supplied maps and their material references.
+
+Document editing must include an editable title as well as the body, preserving
+stable material IDs, links and map targets. This applies to module authoring as
+well as campaign editing, with each mode saving to its own explicit destination.
+See [the additional requirements](15-Near-term-improvements.md#additional-requirements-multiple-module-maps-and-document-titles)
+for the current campaign title-editing gap and planned acceptance criteria.
 
 The authoritative editable module should live outside the application repository.
 A copy in the repository may serve as a backup, rather than the primary authoring
