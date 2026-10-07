@@ -1,8 +1,8 @@
 # Campaign material title editing
 
 7 October 2026 · implemented on `codex/material-titles` from `trunk`.
-Local container update and readiness verification are coordinated separately by
-the parent task after the feature commit.
+Local runtime image and container update verified from implementation commit
+`5184e6f2ed5009c2e7236ae1ca088e02667a84c0`.
 
 Related: [near-term requirements](15-Near-term-improvements.md),
 [engine ownership](06-Module-architecture.md),
@@ -77,5 +77,23 @@ pnpm --dir src/mastercompanion-web exec playwright test e2e/material-titles.spec
 Browser cases were run in focused groups while reviewing changed baselines; the
 last command selects the same 36 cases. API-only restore and browser test fixture
 corrections resolved initial setup failures; no failure was skipped or suppressed.
-The parent task will record container image/update/readiness evidence. Remote push
-and merge are reserved for the user.
+Remote push and merge are reserved for the user.
+
+## Local runtime delivery
+
+The parent task built `mastercompanion:material-titles` from implementation commit
+`5184e6f2ed5009c2e7236ae1ca088e02667a84c0`, tagged it for the local runtime and
+updated the application through Compose. The application and PostgreSQL containers
+reported healthy; the application remained bound to loopback on port 4200.
+
+The parent task's scoped runtime probe (`.local/runtime-feature-probe.mjs titles`)
+created a test-owned note and verified actual title-only and combined title/body
+saves. Canonical GET retained the same material identity and returned the expected
+body and advanced revision. Search returned the updated title metadata. A blank
+title returned 400, a stale revision returned 409, and rejected saves changed
+neither the title/body nor the revision. The test-owned note is scheduled for
+cleanup during the material-deletion feature's runtime verification.
+
+This documentation-only follow-up records the successful probe without repeating
+unchanged frontend/API/browser checks or rebuilding the image. The runtime image
+continues to identify the implementation commit above.
