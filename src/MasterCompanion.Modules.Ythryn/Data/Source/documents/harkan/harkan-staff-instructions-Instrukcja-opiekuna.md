@@ -5,38 +5,19 @@ folderId: directory:harkan
 sortOrder: 152
 ---
 
-**Skupienie osłaniające umysł**\
-Egzemplarz z magazynu kosturów w Iglicy Iriolarthasa.\
-Znak rozpoznawczy: otwarty krąg otaczający pionową kreskę, wyryty na trzonie.
+**Osłona umysłu — instrukcja dołączona do kostura**\
+Chardalyn. Znak na trzonie: otwarty krąg otaczający pionową kreskę.
 
-## Przeznaczenie {#harkan-instructions-purpose}
+Kostur pozwolił kamieniarzowi dotkniętemu wpływem spaczonego chardalynu odzyskać rozeznanie i wrócić do pracy. Wpływ pozostał; osłona powstrzymuje jego działanie. Samo trzymanie kostura chroni przed strachem i zatruciem, ale do osłonięcia umysłu potrzebne jest związanie z chorym.
 
-Kostur przygotowano do osłaniania umysłu przed utrzymującym się wpływem spaczonego chardalynu. W opisanym w archiwum przypadku kamieniarza pozwolił odzyskać jasność myślenia i normalne życie. Nie usunął samego spaczenia.
+Przeznaczyć **godzinę spokojnego odpoczynku**. Chory powinien dotykać trzonu. Nie musi znać czarów. Opiekun może podtrzymać jego dłoń i mówić o znajomych rzeczach. Jeśli chory nie potrafi skupić uwagi, pomóc mu, zamiast odkładać próbę.
 
-Podczas trzymania kostur chroni przed przerażeniem i zatruciem. Osłona umysłu wymaga dodatkowo związania przedmiotu z chorym; samo podanie mu kostura na chwilę nie wystarczy.
+Po związaniu kostur trzymać nie dalej niż **pięć stóp** od chorego. Przy łóżku wystarczy oprzeć go o ścianę. Nie trzeba wkładać go śpiącemu do ręki.
 
-## Związanie z chorym {#harkan-instructions-attunement}
+Osłona działa poza miastem, nie zużywa ładunków i nie wymaga odnawiania. Chory zachowuje własne wspomnienia i wolę. Nie narażać go ponownie na spaczony chardalyn.
 
-Wybrać spokojne miejsce i przeznaczyć **godzinę odpoczynku** na kontakt z kosturem. Chory powinien dotykać trzonu. Nie musi znać zaklęć ani posiadać czarodziejskich uzdolnień.
+Po oddaleniu kostura, zerwaniu związania lub stłumieniu magii objawy wracają stopniowo w ciągu **godziny**. Powrót działającej osłony przynosi poprawę w ciągu **minuty**. Zerwane związanie wymaga ponownego godzinnego przygotowania. Przy czasowym stłumieniu magii zostawić kostur przy chorym i zaczekać; zniszczony już go nie ochroni.
 
-Jeśli nie potrafi utrzymać uwagi lub nieruchomej dłoni, opiekun może mu pomóc. Mówić spokojnie, przypominać bliskich i znajome czynności. Zaburzenia są powodem stosowania osłony, a nie przeszkodą, którą chory ma najpierw sam przezwyciężyć.
+Kostur może być związany tylko z jednym chorym. Związanie z kolejnym odbiera ochronę poprzedniemu.
 
-Po związaniu osłona działa tylko na tę osobę. Powierzenie kostura innemu choremu i związanie go z nim odbierze ochronę poprzedniemu.
-
-## Codzienna opieka {#harkan-instructions-care}
-
-Kostur przechowywać nie dalej niż **pięć stóp** od związanej osoby. Można go nosić, oprzeć przy krześle albo położyć przy łóżku. Chory nie musi ściskać przedmiotu przez cały dzień i noc.
-
-Osłona nie wymaga wydawania ładunków ani okresowego odnawiania. Działa także poza Ythryn, bez urządzeń miasta. Pod jej wpływem chory zachowuje własne wspomnienia, upodobania i wolę. Kostur nie nakazuje mu zachowania i nie czyni go posłusznym opiekunowi.
-
-Nie narażać go ponownie na spaczony chardalyn. Osłona utrzymującego się wpływu nie jest pozwoleniem na dalszy kontakt z jego źródłem ani lekarstwem na każdą chorobę umysłu.
-
-## Oddalenie i zakłócenia {#harkan-instructions-interruption}
-
-Oddalenie kostura poza pięć stóp, zerwanie związania lub stłumienie jego magii przerywa osłonę. Dawne zaburzenia stopniowo wracają w ciągu **godziny**. Nie oznacza to, że przedmiot pogłębił chorobę — przestał ją powstrzymywać.
-
-Po przywróceniu działającej osłony umysł uspokaja się w ciągu **minuty**. Jeśli związanie zostało zerwane, najpierw trzeba powtórzyć godzinne przygotowanie. Samo ponowne przyniesienie kostura nie odtworzy utraconej więzi.
-
-Jeżeli magia została czasowo stłumiona, zachować kostur przy chorym i poczekać na ustanie zakłócenia. Zniszczenie przedmiotu usuwa ochronę.
-
-*Nie odkładać kostura dlatego, że chory znów zachowuje się jak dawniej. Jest to znak działania osłony, nie ustąpienia spaczenia.*
+*Na prośbę córki dopisuję: nie oddawać kostura do pracowni po pierwszym spokojnym tygodniu. Jej ojciec potrzebował go nadal, także kiedy zaczął sam zapewniać, że nic mu już nie jest.*
