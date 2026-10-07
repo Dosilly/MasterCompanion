@@ -1,0 +1,15 @@
+[1007/173402.998:WARNING:net\dns\dns_config_service_win.cc:609] Failed to read DnsConfig.
+[1007/173403.142:ERROR:ui\gl\angle_platform_impl.cc:37] vulkan_icd.cpp:157 (angle::vk::ScopedVkLoaderEnvironment::ScopedVkLoaderEnvironment): Error setting CWD for Vulkan layers init.
+[1007/173403.423:WARNING:ui\gl\angle_platform_impl.cc:42] vulkan_icd.cpp:389 (angle::vk::ChoosePhysicalDevice): Preferred device ICD not found. Using default physicalDevice instead.
+[1007/173424.814:WARNING:net\dns\dns_config_service_win.cc:609] Failed to read DnsConfig.
+[1007/173424.834:ERROR:ui\gl\angle_platform_impl.cc:37] vulkan_icd.cpp:157 (angle::vk::ScopedVkLoaderEnvironment::ScopedVkLoaderEnvironment): Error setting CWD for Vulkan layers init.
+[1007/173424.995:WARNING:ui\gl\angle_platform_impl.cc:42] vulkan_icd.cpp:389 (angle::vk::ChoosePhysicalDevice): Preferred device ICD not found. Using default physicalDevice instead.
+[1007/173429.828:WARNING:net\dns\dns_config_service_win.cc:609] Failed to read DnsConfig.
+[1007/173509.441:WARNING:net\dns\dns_config_service_win.cc:609] Failed to read DnsConfig.
+[1007/173509.468:ERROR:ui\gl\angle_platform_impl.cc:37] vulkan_icd.cpp:157 (angle::vk::ScopedVkLoaderEnvironment::ScopedVkLoaderEnvironment): Error setting CWD for Vulkan layers init.
+[1007/173509.635:WARNING:ui\gl\angle_platform_impl.cc:42] vulkan_icd.cpp:389 (angle::vk::ChoosePhysicalDevice): Preferred device ICD not found. Using default physicalDevice instead.
+[1007/173514.454:WARNING:net\dns\dns_config_service_win.cc:609] Failed to read DnsConfig.
+[1007/173524.464:WARNING:net\dns\dns_config_service_win.cc:609] Failed to read DnsConfig.
+[1007/173545.553:WARNING:net\dns\dns_config_service_win.cc:609] Failed to read DnsConfig.
+[1007/173545.588:ERROR:ui\gl\angle_platform_impl.cc:37] vulkan_icd.cpp:157 (angle::vk::ScopedVkLoaderEnvironment::ScopedVkLoaderEnvironment): Error setting CWD for Vulkan layers init.
+[1007/173545.750:WARNING:ui\gl\angle_platform_impl.cc:42] vulkan_icd.cpp:389 (angle::vk::ChoosePhysicalDevice): Preferred device ICD not found. Using default physicalDevice instead.

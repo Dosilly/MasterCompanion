@@ -1,5 +1,33 @@
 # Engine and module boundary
 
+## Planned accounts and data ownership, 7 October 2026
+
+User accounts and private data isolation are required future product capabilities,
+independent of AWS hosting. Define campaign ownership alongside multiple-campaign
+design, then implement authorization as a separate locally testable slice before
+hosted exposure. Trusted identity enters through the API composition boundary;
+the generic engine scopes campaign operations and references to authorized owners.
+Concrete adventure modules and neutral UI controls do not own access decisions.
+
+Private documents, assets, search, profiles, sessions, history and receipts share
+that boundary. Client caches and pending work must be scoped to identity and
+campaign as well. No runtime contract or schema change is implemented by this
+planning update. See [the account/isolation plan](47-User-accounts-and-data-isolation.md).
+
+## Planned character profiles and session composition, 7 October 2026
+
+Character backstory and notes will be campaign-owned narrative content in the
+engine, independent of module mechanics, game revision and gameplay undo. Define
+the stable profile/member association and roster removal/undo semantics before
+changing contracts. Reuse ordinary material persistence where appropriate rather
+than extending module state with narrative fields. See
+[the future profile plan](45-Character-profiles.md).
+
+The [session redesign proposal](44-Session-workspace-redesign.md) retains engine
+ownership of routes, lifecycle, active-meeting context and record drafts. Embedding
+preparation/play documents must reuse their existing material session/save owner,
+including standalone-tab coordination. Neither plan changes runtime contracts yet.
+
 ## Future module authoring and campaign updates, 6 October 2026
 
 The user recorded a module editor that reuses the campaign workflow but writes
