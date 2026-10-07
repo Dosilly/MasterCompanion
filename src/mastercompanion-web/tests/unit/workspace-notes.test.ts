@@ -142,7 +142,11 @@ describe('Campaign material memory and sessions', () => {
 
     const closing = session.prepareToClose();
     assert.equal(requests[1].method, 'PUT');
-    assert.deepEqual(requests[1].body, { document: savedDocument, expectedRevision: 9 });
+    assert.deepEqual(requests[1].body, {
+      title: oldMaterial.title,
+      document: savedDocument,
+      expectedRevision: 9,
+    });
     requests[1].response.next({ revision: 10 });
     assert.equal(await closing, true);
     workspace.removeConfirmedSession(oldMaterial.id);

@@ -3,12 +3,14 @@ import { signal } from '@angular/core';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { MaterialDto, RichDocument } from '@mastercompanion/contracts';
 import { isMaterialResponse } from './material-response';
+import { isValidMaterialTitle } from './material-title';
 
 type SavedVersion =
   | { readonly kind: 'idle' | 'loading' | 'failed' }
   | { readonly kind: 'ready'; readonly material: MaterialDto };
 
-export type MaterialErrorCode = 'saveConflict' | 'saveFailed' | 'clipboardUnavailable';
+export type MaterialErrorCode =
+  'saveConflict' | 'saveFailed' | 'invalidTitle' | 'clipboardUnavailable';
 
 export class MaterialSession {
   readonly editing = signal(false);
@@ -16,6 +18,12 @@ export class MaterialSession {
   readonly error = signal<MaterialErrorCode | null>(null);
   readonly dirty = signal(false);
   document: RichDocument;
+  private readonly titleDraftState;
+  readonly titleDraft;
+  private readonly confirmedMaterialState;
+  get material(): MaterialDto {
+    return this.confirmedMaterialState();
+  }
   private readonly confirmedRevisionState = signal(0);
   readonly confirmedRevision = this.confirmedRevisionState.asReadonly();
   private generation = 0;
@@ -28,11 +36,14 @@ export class MaterialSession {
   private destroyed = false;
 
   constructor(
-    readonly material: MaterialDto,
+    material: MaterialDto,
     private readonly http: HttpClient,
     private readonly onConfirmedSave?: (material: MaterialDto) => void,
   ) {
     this.document = material.document;
+    this.titleDraftState = signal(material.title);
+    this.titleDraft = this.titleDraftState.asReadonly();
+    this.confirmedMaterialState = signal(material);
     this.confirmedRevisionState.set(material.revision);
   }
   change(document: RichDocument) {
@@ -40,6 +51,16 @@ export class MaterialSession {
       return;
     }
     this.document = document;
+    this.queueChange();
+  }
+  changeTitle(title: string): void {
+    if (this.destroyed || title === this.titleDraft()) {
+      return;
+    }
+    this.titleDraftState.set(title);
+    this.queueChange();
+  }
+  private queueChange(): void {
     this.generation++;
     this.dirty.set(true);
     if (this.status() === 'conflict') {
@@ -102,6 +123,8 @@ export class MaterialSession {
     }
     clearTimeout(this.timer);
     this.document = version.material.document;
+    this.titleDraftState.set(version.material.title);
+    this.confirmedMaterialState.set(version.material);
     this.confirmedRevisionState.set(version.material.revision);
     this.savedGeneration = ++this.generation;
     this.dirty.set(false);
@@ -133,12 +156,19 @@ export class MaterialSession {
       const generation = this.generation;
       // HttpClient serializes this immutable document snapshot for the request.
       const document = this.document;
+      const title = this.titleDraft().trim();
+      if (!isValidMaterialTitle(title)) {
+        this.status.set('error');
+        this.error.set('invalidTitle');
+        return false;
+      }
       this.status.set('saving');
       this.error.set(null);
       try {
         const response = await firstValueFrom(
           this.http
             .put<{ revision: number }>(`/api/materials/${encodeURIComponent(this.material.id)}`, {
+              title,
               document,
               expectedRevision: this.confirmedRevision(),
             })
@@ -149,7 +179,12 @@ export class MaterialSession {
         }
         this.confirmedRevisionState.set(response.revision);
         this.savedGeneration = generation;
-        this.onConfirmedSave?.({ ...this.material, document, revision: response.revision });
+        const confirmed = { ...this.material, title, document, revision: response.revision };
+        this.confirmedMaterialState.set(confirmed);
+        if (generation === this.generation) {
+          this.titleDraftState.set(title);
+        }
+        this.onConfirmedSave?.(confirmed);
       } catch (error) {
         if (this.destroyed) {
           return false;

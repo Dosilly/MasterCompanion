@@ -91,6 +91,15 @@ retain theme/base rules, shared layout and document-reader rules that must reach
 editor-generated markup. Ythryn tool styling is owned by the module rather than
 depending on engine selectors crossing component boundaries.
 
+Campaign document titles are metadata owned by the same `MaterialSession` as body
+drafts. `PUT /api/materials/{id}` requires `title`, `document` and
+`expectedRevision`; one EF write updates title and body under the material revision.
+The title is trimmed, must contain 1–300 characters and cannot contain control
+characters. Confirmations update the session, campaign cache, navigation metadata,
+tab labels and active search results. Conflict recovery and draft copying include
+the title as well as the body. Renaming keeps IDs, routes, links and map targets
+stable and never writes module sources. See [title editing](48-Material-title-editing.md).
+
 Material saves validate the editor schema through `MaterialDocumentSchema` and
 `MaterialDocumentAttributes` before EF writes. The limit is 2 MiB per request,
 32 node nesting levels and 20,000 nodes. Unsupported node/mark/attribute shapes,

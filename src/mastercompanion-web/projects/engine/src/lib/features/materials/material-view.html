@@ -112,6 +112,7 @@
   }
   @if (savedMaterial(); as saved) {
     <p>{{ ui.recovery.revision.replace('{revision}', saved.revision.toString()) }}</p>
+    <h3>{{ saved.title }}</h3>
     <div class="saved-preview">
       <mc-rich-document-preview [document]="saved.document" [label]="ui.recovery.savedVersion" />
     </div>
@@ -133,7 +134,26 @@
 </dialog>
 <div class="material-scroll" (click)="followLink($event)">
   <article class="reading-paper" [class.is-editing]="session().editing()">
-    <h1>{{ session().material.title }}</h1>
+    @if (session().editing()) {
+      <div class="material-title-field">
+        <label [for]="insertionId('document-title')">{{ ui.material.titleLabel }}</label>
+        <input
+          [id]="insertionId('document-title')"
+          [value]="session().titleDraft()"
+          [attr.maxlength]="titleLimit"
+          [attr.aria-invalid]="titleInvalid()"
+          [attr.aria-describedby]="titleInvalid() ? insertionId('title-error') : null"
+          (input)="updateTitle($event)"
+        />
+        @if (titleInvalid()) {
+          <p class="title-error" [id]="insertionId('title-error')">
+            {{ ui.material.errors.invalidTitle }}
+          </p>
+        }
+      </div>
+    } @else {
+      <h1>{{ session().material.title }}</h1>
+    }
     <div #editorElement class="document-body"></div>
   </article>
 </div>

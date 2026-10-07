@@ -481,6 +481,15 @@ export class TestApi {
             if (!record(body)) {
               throw new Error('Expected a material save object.');
             }
+            if (typeof body['title'] !== 'string') {
+              throw new Error('Expected a material title in the save request.');
+            }
+            expect(Object.keys(body).sort()).toEqual(['document', 'expectedRevision', 'title']);
+            material.title = body['title'].trim();
+            const summary = this.data.workspace.materials.find((item) => item.id === material.id);
+            if (summary) {
+              summary.title = material.title;
+            }
             if (material.id === readerId) {
               this.savedDocument = body['document'];
               await route.fulfill({ json: { revision: ++this.revision } });
