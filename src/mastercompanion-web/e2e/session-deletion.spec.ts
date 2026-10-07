@@ -7,7 +7,6 @@ const dialog = (page: Page) => page.getByRole('dialog', { name: label('deleteTit
 
 async function createSession(page: Page, title: string): Promise<void> {
   await expect(view(page)).toBeVisible();
-  await expect(view(page).getByLabel(label('newTitle'), { exact: true })).toBeEnabled();
   if (!(await view(page).getByLabel(label('newTitle'), { exact: true }).isVisible())) {
     await view(page)
       .getByRole('button', { name: label('newSession'), exact: true })
@@ -20,10 +19,11 @@ async function createSession(page: Page, title: string): Promise<void> {
   await expect(view(page).getByRole('heading', { name: title, exact: true })).toBeVisible();
 }
 
-async function requestDeletion(page: Page, title: string): Promise<void> {
+async function requestDeletion(page: Page): Promise<void> {
   await view(page)
-    .getByRole('button', { name: label('deleteNamed').replace('{title}', title), exact: true })
+    .getByRole('button', { name: label('recordActions'), exact: true })
     .click();
+  await page.getByRole('menuitem', { name: label('delete'), exact: true }).click();
   await expect(dialog(page)).toBeVisible();
 }
 
@@ -33,7 +33,7 @@ test('Cancelling deletion preserves the record and returns focus to its secondar
 }, testInfo) => {
   await page.goto('/sessions');
   await createSession(page, 'Unwanted test meeting');
-  await requestDeletion(page, 'Unwanted test meeting');
+  await requestDeletion(page);
   await expect(dialog(page)).toContainText(label('deleteConsequences'));
   await expect(
     dialog(page).getByRole('button', { name: label('cancelDelete'), exact: true }),
@@ -48,7 +48,7 @@ test('Cancelling deletion preserves the record and returns focus to its secondar
   await expect(dialog(page)).not.toBeVisible();
   await expect(
     view(page).getByRole('button', {
-      name: label('deleteNamed').replace('{title}', 'Unwanted test meeting'),
+      name: label('recordActions'),
       exact: true,
     }),
   ).toBeFocused();
@@ -75,9 +75,10 @@ test('Deleting an active meeting retains its open ordinary play notes and choose
     throw new Error('The scenario requires an active session.');
   }
   await view(page)
-    .getByRole('button', { name: label('notes'), exact: true })
+    .getByRole('tab', { name: label('notes'), exact: true })
     .click();
-  await expect(page.locator('.meeting-document-context')).toContainText('Active meeting');
+  await expect(page).toHaveURL(/\/sessions\//);
+  await page.getByRole('button', { name: label('openActiveNotes'), exact: true }).click();
   await page.locator('[role="tab"][data-tab-id="@sessions"]').click();
   await createSession(page, 'Next meeting');
   await view(page)
@@ -88,7 +89,7 @@ test('Deleting an active meeting retains its open ordinary play notes and choose
     .click();
   const gameBefore = structuredClone(api.data.game);
   const documentsBefore = structuredClone(api.createdMaterials);
-  await requestDeletion(page, 'Active meeting');
+  await requestDeletion(page);
   await expect(dialog(page)).toContainText(label('deleteActiveConsequences'));
 
   await dialog(page)
@@ -130,12 +131,16 @@ test('Dirty detail fields require explicit disposal and remain recoverable when 
   await page.goto('/sessions');
   await createSession(page, 'Draft meeting');
   await view(page)
+    .getByRole('tab', { name: label('summaryTab'), exact: true })
+    .click();
+  await view(page)
+    .locator('.summary-section')
     .getByRole('button', { name: label('edit'), exact: true })
     .click();
   await view(page)
     .getByRole('textbox', { name: label('summary'), exact: true })
     .fill('Keep my unsaved summary');
-  await requestDeletion(page, 'Draft meeting');
+  await requestDeletion(page);
   await expect(
     dialog(page).getByRole('button', { name: label('confirmDelete'), exact: true }),
   ).toBeDisabled();
@@ -170,12 +175,16 @@ test('A lost deletion response retries its exact identity and clears the explici
   await page.goto('/sessions');
   await createSession(page, 'Disposable meeting');
   await view(page)
+    .getByRole('tab', { name: label('summaryTab'), exact: true })
+    .click();
+  await view(page)
+    .locator('.summary-section')
     .getByRole('button', { name: label('edit'), exact: true })
     .click();
   await view(page)
     .getByRole('textbox', { name: label('followUp'), exact: true })
     .fill('Discard only on confirmed success');
-  await requestDeletion(page, 'Disposable meeting');
+  await requestDeletion(page);
   await dialog(page)
     .getByRole('checkbox', { name: label('deleteDiscardDraft'), exact: true })
     .check();
@@ -212,6 +221,10 @@ test('Refreshing a remotely deleted session exposes its unsaved text until expli
   await page.goto('/sessions');
   await createSession(page, 'Deleted elsewhere');
   await view(page)
+    .getByRole('tab', { name: label('summaryTab'), exact: true })
+    .click();
+  await view(page)
+    .locator('.summary-section')
     .getByRole('button', { name: label('edit'), exact: true })
     .click();
   await view(page)

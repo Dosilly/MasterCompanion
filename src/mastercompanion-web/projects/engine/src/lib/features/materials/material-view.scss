@@ -132,6 +132,16 @@
   width: 100%;
 }
 
+:host(.session-document) {
+  .material-commands {
+    padding: 0 12px;
+  }
+  .material-scroll {
+    padding: 0 12px 24px;
+  }
+  .reading-paper {
+    padding: 24px 32px 36px;
+  }
 .material-title-field {
   margin-bottom: 24px;
 }

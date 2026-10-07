@@ -132,7 +132,12 @@
     }
   </div>
 </dialog>
-<div class="material-scroll" (click)="followLink($event)">
+<div
+  #readingScroll
+  class="material-scroll"
+  (scroll)="rememberScroll($event)"
+  (click)="followLink($event)"
+>
   <article class="reading-paper" [class.is-editing]="session().editing()">
     @if (session().editing()) {
       <div class="material-title-field">

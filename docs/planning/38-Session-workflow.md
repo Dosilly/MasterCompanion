@@ -25,3 +25,6 @@ record history/reload and missing IDs. One initial test setup race was corrected
 the failed case passed. The twelve workflow cases passed again after the specific
 document-return correction. Frontend quality and production compilation pass.
 Full HD active-record layouts were reviewed in both themes.
+
+The later [session workspace redesign](44-Session-workspace-redesign.md) changes
+composition while preserving the functional workflow and verification recorded here.

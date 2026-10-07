@@ -1,16 +1,41 @@
-import { IconComponent, SearchableChoiceComponent } from '@mastercompanion/ui';
-import { Component, ElementRef, computed, input, output, signal, viewChild } from '@angular/core';
+import {
+  ContextMenuComponent,
+  IconComponent,
+  SearchableChoiceComponent,
+} from '@mastercompanion/ui';
+import {
+  Component,
+  ElementRef,
+  computed,
+  effect,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import type { CampaignFolder, MaterialSummary, SessionRecord } from '@mastercompanion/contracts';
+import type { ContextMenuPresentation } from '@mastercompanion/ui';
+import { MaterialViewHost } from '../materials/material-view-host';
 import { materialChoices } from '../choices/campaign-choices';
 import { uiMessages } from '../../i18n/messages';
 import { MeetingRecords } from './meeting-records';
 import { SessionDrafts } from './session-drafts';
 import { SessionDeletionDialog } from './session-deletion-dialog';
+import type { SessionSection } from './session-section';
+import { SessionContentSelection } from './session-content-selection';
+import { SessionContentTabs } from './session-content-tabs';
 import { defaultSessionTitle } from './default-session-title';
 
 @Component({
   selector: 'mc-session-view',
-  imports: [IconComponent, SearchableChoiceComponent, SessionDeletionDialog],
+  imports: [
+    ContextMenuComponent,
+    IconComponent,
+    SearchableChoiceComponent,
+    SessionDeletionDialog,
+    MaterialViewHost,
+    SessionContentTabs,
+  ],
   templateUrl: './session-view.html',
   styleUrl: './session-view.scss',
 })
@@ -34,9 +59,6 @@ export class SessionView {
   readonly copiedText = signal('');
   readonly selectedId = input('');
   readonly creating = signal(false);
-  readonly showCreation = computed(
-    () => this.creating() || !this.meetings().snapshot().sessions.length,
-  );
   readonly selectedRecordMissing = computed(
     () =>
       !!this.selectedId() &&
@@ -71,6 +93,150 @@ export class SessionView {
   private readonly editingIds = signal<ReadonlySet<string>>(new Set());
   readonly editing = computed(() => this.editingIds().has(this.selected()?.id ?? ''));
   readonly pinId = signal('');
+  readonly addingPin = signal(false);
+  readonly recordMenu = signal<ContextMenuPresentation | null>(null);
+  readonly renameTitle = signal('');
+  readonly renameBlocked = signal(false);
+  readonly renaming = signal(false);
+  readonly finishing = signal(false);
+  readonly documentHost = viewChild.required(MaterialViewHost);
+  private readonly creationDialog =
+    viewChild.required<ElementRef<HTMLDialogElement>>('creationDialog');
+  private readonly renameDialog = viewChild.required<ElementRef<HTMLDialogElement>>('renameDialog');
+  private readonly finishDialog = viewChild.required<ElementRef<HTMLDialogElement>>('finishDialog');
+  private readonly newButton = viewChild.required<ElementRef<HTMLButtonElement>>('newButton');
+  private readonly menuButton = viewChild<ElementRef<HTMLButtonElement>>('menuButton');
+  private readonly contentSelection = new SessionContentSelection();
+  readonly section = computed(() => this.contentSelection.selected(this.selected()));
+  readonly documentId = computed(() => {
+    const record = this.selected();
+    if (!record || this.section() === 'summary') {
+      return null;
+    }
+    return this.section() === 'preparation' ? record.preparationMaterialId : record.notesMaterialId;
+  });
+  readonly contentLoading = input(false);
+  readonly contentError = input(false);
+  readonly closeFailureId = input<string | null>(null);
+  readonly contentRetried = output<void>();
+
+  constructor() {
+    effect(() => {
+      const record = this.selected();
+      if (record) {
+        this.contentSelection.initialize(record);
+      }
+    });
+  }
+
+  showSection(section: SessionSection): void {
+    const record = this.selected();
+    if (record) {
+      this.contentSelection.select(record.id, section);
+    }
+  }
+
+  openCreation(): void {
+    this.creating.set(true);
+    this.creationDialog().nativeElement.showModal();
+  }
+
+  openRecordMenu(event: Event): void {
+    const trigger = event.currentTarget;
+    if (!(trigger instanceof HTMLElement)) {
+      return;
+    }
+    const bounds = trigger.getBoundingClientRect();
+    this.recordMenu.set({
+      trigger,
+      anchor: { x: bounds.left, y: bounds.bottom },
+      label: this.text.recordActions,
+      actions: [
+        { id: 'rename', label: this.text.rename, disabled: this.meetings().locked() },
+        { id: 'delete', label: this.text.delete, disabled: this.meetings().locked() },
+      ],
+    });
+  }
+
+  selectRecordAction(action: string): void {
+    this.recordMenu.set(null);
+    if (action === 'rename') {
+      const record = this.selected();
+      if (record) {
+        if (this.drafts().hasChanges(record)) {
+          this.renameBlocked.set(true);
+          this.showSection('summary');
+          this.beginEditing();
+          return;
+        }
+        this.renameBlocked.set(false);
+        this.renameTitle.set(record.title);
+        this.renaming.set(true);
+        this.renameDialog().nativeElement.showModal();
+      }
+    } else if (action === 'delete') {
+      this.requestDeletion(new Event('click'));
+    }
+  }
+
+  updateRenameTitle(event: Event): void {
+    if (event.target instanceof HTMLInputElement) {
+      this.renameTitle.set(event.target.value);
+    }
+  }
+
+  cancelRename(event?: Event): void {
+    event?.preventDefault();
+    if (!this.meetings().locked()) {
+      this.renameDialog().nativeElement.close();
+      this.renaming.set(false);
+      this.menuButton()?.nativeElement.focus();
+    }
+  }
+
+  async rename(event: Event): Promise<void> {
+    event.preventDefault();
+    const record = this.selected();
+    if (!record || !this.renameTitle().trim() || this.meetings().locked()) {
+      return;
+    }
+    if (this.drafts().hasChanges(record)) {
+      this.renameBlocked.set(true);
+      return;
+    }
+    if (
+      await this.meetings().execute({
+        kind: 'update',
+        sessionId: record.id,
+        title: this.renameTitle().trim(),
+        summary: record.summary,
+        followUp: record.followUp,
+      })
+    ) {
+      this.cancelRename();
+    }
+  }
+
+  requestCompletion(): void {
+    this.finishing.set(true);
+    this.finishDialog().nativeElement.showModal();
+  }
+
+  cancelCompletion(event?: Event): void {
+    event?.preventDefault();
+    if (!this.meetings().locked()) {
+      this.finishDialog().nativeElement.close();
+      this.finishing.set(false);
+    }
+  }
+
+  async confirmCompletion(): Promise<void> {
+    if (await this.transition('complete')) {
+      this.showSection('summary');
+      this.cancelCompletion();
+    }
+  }
+
   readonly selected = computed(() => {
     const records = this.meetings().snapshot().sessions;
     if (this.selectedId()) {
@@ -94,13 +260,18 @@ export class SessionView {
   select(record: SessionRecord): void {
     this.recordRequested.emit(record.id);
     this.pinId.set('');
+    this.addingPin.set(false);
     this.copyState.set('idle');
     this.recoveryError.set(false);
   }
-  cancelCreation(): void {
+  cancelCreation(event?: Event): void {
+    event?.preventDefault();
     if (!this.meetings().locked()) {
       this.resetSuggestedTitle();
       this.creating.set(false);
+      this.creationDialog().nativeElement.close();
+      this.newButton().nativeElement.focus();
+      this.closeBlocked.set(false);
     }
   }
 
@@ -149,6 +320,7 @@ export class SessionView {
   }
 
   private finishEditing(id: string): void {
+    this.renameBlocked.set(false);
     this.editingIds.update((ids) => {
       const next = new Set(ids);
       next.delete(id);
@@ -164,7 +336,7 @@ export class SessionView {
   }
 
   async prepareToClose(): Promise<boolean> {
-    if (this.deletionTarget() || this.meetings().locked()) {
+    if (this.deletionTarget() || this.renaming() || this.finishing() || this.meetings().locked()) {
       return false;
     }
     if (this.hasCreationDraft()) {
@@ -172,6 +344,10 @@ export class SessionView {
       return false;
     }
     return this.drafts().saveAll(this.meetings());
+  }
+  hasRenameDraft(): boolean {
+    const record = this.selected();
+    return this.renaming() && !!record && this.renameTitle().trim() !== record.title;
   }
   hasCreationDraft(): boolean {
     return !!this.newTitle().trim() && this.newTitle().trim() !== this.suggestedTitle;
@@ -205,6 +381,7 @@ export class SessionView {
     if (created) {
       this.resetSuggestedTitle();
       this.creating.set(false);
+      this.creationDialog().nativeElement.close();
       this.recordRequested.emit(sessionId);
       this.materialsCreated.emit();
     }
@@ -231,8 +408,16 @@ export class SessionView {
         this.resetSuggestedTitle();
       }
       this.creating.set(false);
+      this.creationDialog().nativeElement.close();
       this.recordRequested.emit(operation.sessionId);
       this.materialsCreated.emit();
+    }
+    if (confirmed && operation?.kind === 'complete' && this.finishing()) {
+      this.showSection('summary');
+      this.cancelCompletion();
+    }
+    if (confirmed && operation?.kind === 'update' && this.renaming()) {
+      this.cancelRename();
     }
     this.drafts().acceptConfirmed(this.meetings().snapshot().sessions);
     if (operation?.kind === 'update') {
@@ -264,6 +449,7 @@ export class SessionView {
   cancelDeletion(): void {
     this.deletionTarget.set(null);
     this.deletionConflict.set(false);
+    this.menuButton()?.nativeElement.focus();
   }
 
   async confirmDeletion(): Promise<void> {
@@ -300,11 +486,12 @@ export class SessionView {
     this.pageTitle().nativeElement.focus();
   }
 
-  async transition(kind: 'start' | 'complete'): Promise<void> {
+  async transition(kind: 'start' | 'complete'): Promise<boolean> {
     const record = this.selected();
     if (record && (await this.drafts().save(record, this.meetings()))) {
-      await this.meetings().execute({ kind, sessionId: record.id });
+      return this.meetings().execute({ kind, sessionId: record.id });
     }
+    return false;
   }
 
   changePin(id: string): void {
@@ -321,6 +508,7 @@ export class SessionView {
       (await this.meetings().execute({ kind: 'pin', sessionId: record.id, materialId }))
     ) {
       this.pinId.set('');
+      this.addingPin.set(false);
     }
   }
 

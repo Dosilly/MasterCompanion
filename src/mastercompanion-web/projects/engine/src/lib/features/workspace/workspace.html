@@ -336,7 +336,8 @@
               [label]="ui.meetings.title"
               [closeLabel]="ui.workspace.closeTab"
               [selected]="active() === '@sessions'"
-              [dirty]="meetingDrafts.dirty()"
+              [dirty]="meetingDirty()"
+              [closing]="closing().has('@sessions')"
               (activate)="activate('@sessions')"
               (close)="close('@sessions')"
               (contextmenu)="menus.open($event, 'tab', '@sessions')"
@@ -381,7 +382,7 @@
               (keydown)="menus.open($event, 'tab', '@map:' + map.id)"
             />
           }
-          @for (tab of sessions(); track tab.material.id) {
+          @for (tab of materialTabs(); track tab.material.id) {
             <mc-workspace-tab
               [key]="tab.material.id"
               [label]="tab.material.title"
@@ -421,6 +422,10 @@
             [hidden]="active() !== '@sessions'"
             [meetings]="records"
             [selectedId]="meetingsSelection()"
+            [contentLoading]="meetingContentLoading()"
+            [contentError]="meetingContentError()"
+            [closeFailureId]="meetingCloseFailure()"
+            (contentRetried)="loadMeetingDocument()"
             (recordRequested)="openMeetings($event)"
             [drafts]="meetingDrafts"
             [materials]="data.materials"
@@ -473,18 +478,7 @@
           }
         }
       }
-      @for (tab of sessions(); track tab.material.id) {
-        <mc-material-view
-          [id]="'panel-' + tab.material.id"
-          role="tabpanel"
-          [attr.aria-labelledby]="'tab-' + tab.material.id"
-          [hidden]="active() !== tab.material.id"
-          [session]="tab"
-          [materials]="data.materials"
-          [folders]="data.folders"
-          (openMaterial)="open($event.id, $event.anchor)"
-        />
-      }
+      <ng-container mcMaterialViewHost />
     </main>
   </div>
   @if (creation(); as draft) {

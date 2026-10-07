@@ -1,13 +1,13 @@
 # Session workspace redesign
 
-7 October 2026 · user-requested future work; composition selected, not implemented
+7 October 2026 · implemented on `codex/session-workspace`
 
 ## Selected design
 
 On 7 October, the user selected the recommended single workspace with the session
 list beside the selected document. Keep session switching and content in the same
 view. The separate list/detail-page alternative is not selected. This decision
-chooses the future composition; implementation remains in the roadmap sequence.
+is implemented below with the existing persistence and lifecycle contracts.
 
 ## Problem and evidence
 
@@ -82,7 +82,7 @@ uncertain-operation receipts, independent drafts and deletion recovery. Closing
 the parent view must account for every owned unsaved draft. The redesign does
 not add new lifecycle states, chronicle events or automatic gameplay operations.
 
-## Planned acceptance
+## Acceptance criteria
 
 - New is visibly owned by the list; record actions are beside the selected record.
 - Preparation, play and summary are distinct and usable regardless of lifecycle.
@@ -94,6 +94,81 @@ not add new lifecycle states, chronicle events or automatic gameplay operations.
   smaller desktop viewport. Check keyboard navigation, focus return and reader
   width; screenshot success alone is not usability evidence.
 
-No application changes or tests have been delivered for this proposal. See
+The implementation and scoped verification are recorded below. See
 [the recommended sequence](15-Near-term-improvements.md#recommended-development-order)
 and [the delivered workflow](38-Session-workflow.md).
+
+## Delivered implementation
+
+The session list and New/Refresh actions remain beside the selected record. Three
+keyboard-operable tabs separate Preparation, Play notes and Summary without changing
+lifecycle. Per-record section selection survives subsequent visits. Compact pinned
+materials sit in a disclosure below each rich document, with Add revealing the
+existing searchable material choice. Creation and Finish use localized dialogs;
+record Rename/Delete use the shared reachable menu. Start/Finish consequences and
+navigation to a competing active record are explicit.
+
+The engine owns one MaterialSession and one mounted MaterialView/editor per material.
+MaterialViewRegistry moves retained Angular ViewRefs between stable workspace and
+session hosts; it does not copy content or create another save owner. Loading an
+embedded document does not create a standalone tab. Editor history, selection and
+scroll survive section changes and standalone visits. MaterialView captures/restores
+scroll around relocation and releases document-navigation listeners on destruction.
+
+Closing the session parent serializes and flushes every historically embedded
+document, including drafts whose session record was removed remotely. It rechecks outstanding drafts after each pass so documents edited while another save is pending also wait for confirmation. A failed save
+keeps the parent open and offers navigation to the recoverable document. Existing
+session summary drafts and operation receipts retain their persistence/recovery
+boundary. Rename uses an independent dialog draft and directs unsaved summary or
+follow-up work to its own Save/Discard flow instead of implicitly persisting it.
+An unsaved rename participates in before-unload protection; cancellation leaves the
+confirmed title and other drafts intact.
+
+No backend schema or lifecycle operation changed. Engine time, module state and
+gameplay undo remain independent of session presentation.
+
+## Verification
+
+Scoped frontend rules and state tests passed: 46 cases covering section selection,
+material autosave, session drafts, routing and operation recovery. The frontend
+build, quality checks, typed test fixtures and E2E type check passed.
+
+The four session browser suites passed 92 distinct project cases across Full HD
+and the smaller desktop viewport, each in light and dark themes. The initial
+history scenario needed corrected fixture material IDs and independently seeded
+saved text; the navigation selector was scoped to its owning navigation landmark.
+Those cases passed after correction. The final parent-close change passed 16
+focused cases, including a second document edited while the first save was held.
+Successful unchanged cases were reused rather than repeated.
+
+Twelve focused ordinary-reader/editor cases passed for scroll and keyboard tabs,
+confirmed-save-before-close, retained drafts and save conflicts. Reviewed rendered
+evidence covers populated Preparation, empty Play notes and empty Summary at
+Full HD in both themes and at the smaller viewport. The reader remains wide,
+section controls have visible keyboard focus and the checked views do not overflow
+horizontally. This is scoped feature verification, not full application acceptance.
+
+Commands used from the repository root:
+
+- pnpm --dir src/mastercompanion-web check:quality
+- pnpm --dir src/mastercompanion-web check:tests
+- pnpm --dir src/mastercompanion-web check:ui
+- pnpm --dir src/mastercompanion-web build
+- pnpm --dir src/mastercompanion-web exec playwright test e2e/session-workspace.spec.ts e2e/sessions.spec.ts e2e/session-deletion.spec.ts e2e/session-workflow.spec.ts
+- Focused Playwright reader/editor runs selected save, conflict, scroll and tab-navigation scenarios.
+
+## Local runtime
+
+The runtime image mastercompanion:session-workspace was built from implementation
+commit 9f5fbd2 and applied to the existing local Compose application without changing
+the database volume. Compose reported healthy application and database containers.
+Three read-only deployed session checks passed for readiness/deep routes, stable
+material references and the expected unknown-campaign error.
+
+The actual served UI passed Full HD checks in both themes: the list owns New,
+creation cancellation returns focus, and all three sections can be selected against
+an existing local session with its two ordinary documents. No campaign writes were
+needed for this runtime probe. The resulting light/dark views were inspected.
+This image remains the final running local version; title editing and material
+deletion remain independent, unmerged feature branches with separately verified
+runtime images.

@@ -1,0 +1,38 @@
+<div
+  #tabs
+  class="content-tabs"
+  role="tablist"
+  [attr.aria-label]="text.contentSections"
+  (keydown)="key($event)"
+>
+  <button
+    id="session-tab-preparation"
+    role="tab"
+    aria-controls="session-content"
+    [attr.aria-selected]="selected() === 'preparation'"
+    [tabIndex]="selected() === 'preparation' ? 0 : -1"
+    (click)="sectionSelected.emit('preparation')"
+  >
+    {{ text.preparation }}
+  </button>
+  <button
+    id="session-tab-notes"
+    role="tab"
+    aria-controls="session-content"
+    [attr.aria-selected]="selected() === 'notes'"
+    [tabIndex]="selected() === 'notes' ? 0 : -1"
+    (click)="sectionSelected.emit('notes')"
+  >
+    {{ text.notes }}
+  </button>
+  <button
+    id="session-tab-summary"
+    role="tab"
+    aria-controls="session-content"
+    [attr.aria-selected]="selected() === 'summary'"
+    [tabIndex]="selected() === 'summary' ? 0 : -1"
+    (click)="sectionSelected.emit('summary')"
+  >
+    {{ text.summaryTab }}
+  </button>
+</div>

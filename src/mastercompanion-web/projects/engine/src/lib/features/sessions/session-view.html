@@ -1,28 +1,4 @@
 <section class="session-page" [attr.aria-label]="text.title">
-  <header class="page-heading">
-    <div>
-      <h1 #pageTitle tabindex="-1">{{ text.title }}</h1>
-      <p>{{ text.hint }}</p>
-    </div>
-    @if (!showCreation()) {
-      <button
-        class="mc-action--primary"
-        (click)="creating.set(true)"
-        [disabled]="meetings().locked()"
-      >
-        {{ text.newSession }}
-      </button>
-    }
-    <button
-      class="mc-icon-button mc-action--quiet"
-      [attr.aria-label]="text.refresh"
-      [title]="text.refresh"
-      (click)="meetings().refresh()"
-      [disabled]="meetings().pending()"
-    >
-      <mc-icon name="refresh" />
-    </button>
-  </header>
   @if (meetings().pending()) {
     <p role="status">{{ text.pending }}</p>
   }
@@ -30,9 +6,7 @@
     <div class="feedback" role="alert">
       <p>{{ text.errors[error] }}</p>
       @if (meetings().request()) {
-        <button (click)="retry()" [disabled]="meetings().pending()">
-          {{ text.retry }}
-        </button>
+        <button (click)="retry()" [disabled]="meetings().pending()">{{ text.retry }}</button>
       } @else if (meetings().invalidRecovery()) {
         <p>{{ text.discardRecoveryWarning }}</p>
         <button (click)="meetings().discardUnreadable()">{{ text.discardRecovery }}</button>
@@ -43,259 +17,432 @@
       }
     </div>
   }
-  <form class="create-session" [hidden]="!showCreation()" (submit)="create($event)">
-    <label for="new-session-title">{{ text.newTitle }}</label>
-    <input
-      id="new-session-title"
-      required
-      maxlength="240"
-      [value]="newTitle()"
-      (input)="updateNewTitle($event)"
-      [disabled]="meetings().locked()"
-    />
-    <button
-      class="mc-action--primary"
-      type="submit"
-      [disabled]="meetings().locked() || !newTitle().trim()"
-    >
-      {{ text.create }}
-    </button>
-    @if (meetings().snapshot().sessions.length) {
-      <button type="button" (click)="cancelCreation()" [disabled]="meetings().locked()">
-        {{ text.cancelCreation }}
-      </button>
-    }
-  </form>
   @if (closeBlocked()) {
     <p role="alert">{{ text.closeBlocked }}</p>
   }
+  @if (renameBlocked()) {
+    <p class="feedback" role="status">{{ text.renameDraftBlocked }}</p>
+  }
+  @if (closeFailureId(); as id) {
+    <div class="feedback" role="alert">
+      <p>{{ text.closeDocumentFailed }}</p>
+      <button (click)="materialRequested.emit(id)">{{ text.openFailedDocument }}</button>
+    </div>
+  }
   <div class="session-layout">
-    @if (selectedRecordMissing()) {
-      <p class="feedback missing-record" role="status">{{ text.deletedRecordRecovery }}</p>
-    }
-    <nav class="session-list" [attr.aria-label]="text.listLabel">
-      @for (record of meetings().snapshot().sessions; track record.id) {
+    <aside class="session-list-panel">
+      <header class="list-heading">
+        <h1 #pageTitle tabindex="-1">{{ text.title }}</h1>
         <button
-          [attr.aria-current]="selected()?.id === record.id ? 'true' : null"
-          [class.selected]="selected()?.id === record.id"
-          (click)="select(record)"
+          #newButton
+          class="mc-icon-button mc-action--quiet"
+          (click)="openCreation()"
+          [disabled]="meetings().locked()"
+          [attr.aria-label]="text.newSession"
+          [title]="text.newSession"
         >
-          <strong>{{ record.title }}</strong
-          ><span>{{ text.status[record.status] }}</span>
+          <mc-icon name="note-add" />
         </button>
-      } @empty {
-        @if (meetings().loaded()) {
-          <p>{{ text.empty }}</p>
+        <button
+          class="mc-icon-button mc-action--quiet"
+          [attr.aria-label]="text.refresh"
+          [title]="text.refresh"
+          (click)="meetings().refresh()"
+          [disabled]="meetings().pending()"
+        >
+          <mc-icon name="refresh" />
+        </button>
+      </header>
+      <nav class="session-list" [attr.aria-label]="text.listLabel">
+        @for (record of meetings().snapshot().sessions; track record.id) {
+          <button
+            [attr.aria-current]="selected()?.id === record.id ? 'true' : null"
+            [class.selected]="selected()?.id === record.id"
+            (click)="select(record)"
+          >
+            <strong>{{ record.title }}</strong
+            ><span>{{ text.status[record.status] }}</span>
+          </button>
+        } @empty {
+          @if (meetings().loaded()) {
+            <p>{{ text.empty }}</p>
+          }
         }
+      </nav>
+    </aside>
+    <article class="session-record" [attr.aria-label]="selected()?.title || text.title">
+      @if (selectedRecordMissing()) {
+        <p class="feedback" role="status">{{ text.deletedRecordRecovery }}</p>
       }
-    </nav>
-    @if (selected(); as record) {
-      <article class="session-record" [attr.aria-label]="record.title">
-        <p class="stage-hint">{{ text.stages[record.status] }}</p>
-        <div class="record-heading">
+      @if (selected(); as record) {
+        <header class="record-heading">
           <h2>{{ record.title }}</h2>
           <span class="status">{{ text.status[record.status] }}</span>
-          <button
-            class="record-delete"
-            (click)="requestDeletion($event)"
-            [disabled]="meetings().locked()"
-            [attr.aria-label]="text.deleteNamed.replace('{title}', record.title)"
-          >
-            {{ text.delete }}
-          </button>
-        </div>
-        <div class="actions">
-          @if (record.status === 'planned') {
-            <button
-              (click)="transition('start')"
-              [disabled]="meetings().locked() || !!meetings().activeSession()"
-            >
+          @if (record.status === 'planned' && !meetings().activeSession()) {
+            <button (click)="transition('start')" [disabled]="meetings().locked()">
               {{ text.start }}
             </button>
-            @if (meetings().activeSession()) {
-              <span>{{ text.activeExists }}</span>
-            }
           } @else if (record.status === 'active') {
-            <button (click)="transition('complete')" [disabled]="meetings().locked()">
+            <button (click)="requestCompletion()" [disabled]="meetings().locked()">
               {{ text.complete }}
             </button>
           }
-        </div>
-        <div class="document-actions">
           <button
-            [class.mc-action--primary]="record.status === 'planned'"
-            (click)="materialRequested.emit(record.preparationMaterialId)"
+            #menuButton
+            class="record-menu mc-icon-button mc-action--quiet"
+            [attr.aria-label]="text.recordActions"
+            [title]="text.recordActions"
+            aria-haspopup="menu"
+            [attr.aria-expanded]="!!recordMenu()"
+            (click)="openRecordMenu($event)"
           >
-            {{ text.preparation }}
+            ⋯
           </button>
-          <button
-            [class.mc-action--primary]="record.status === 'active'"
-            (click)="materialRequested.emit(record.notesMaterialId)"
-          >
-            {{ text.notes }}
-          </button>
+        </header>
+        <p class="lifecycle-hint">
+          @if (record.status === 'planned') {
+            @if (meetings().activeSession(); as current) {
+              {{ text.otherActive.replace('{title}', current.title) }}
+              <button class="mc-action--quiet" (click)="recordRequested.emit(current.id)">
+                {{ text.showActive }}
+              </button>
+            } @else {
+              {{ text.startConsequence }}
+            }
+          } @else if (record.status === 'active') {
+            {{ text.finishConsequence }}
+          } @else {
+            {{ text.completedConsequence }}
+          }
+        </p>
+        <mc-session-content-tabs [selected]="section()" (sectionSelected)="showSection($event)" />
+      }
+      <section
+        id="session-content"
+        class="session-content"
+        role="tabpanel"
+        [attr.aria-labelledby]="'session-tab-' + section()"
+        [hidden]="!selected()"
+      >
+        <h3 id="session-content-heading" class="visually-hidden">
+          {{
+            section() === 'preparation'
+              ? text.preparation
+              : section() === 'notes'
+                ? text.notes
+                : text.summaryTab
+          }}
+        </h3>
+        <div class="document-section" [hidden]="section() === 'summary'">
+          @if (contentLoading()) {
+            <p role="status">{{ text.documentLoading }}</p>
+          }
+          @if (contentError()) {
+            <div class="feedback" role="alert">
+              <p>{{ text.documentFailed }}</p>
+              <button (click)="contentRetried.emit()">{{ text.retryDocument }}</button>
+            </div>
+          }
+          <ng-container mcMaterialViewHost />
         </div>
-        <p class="document-hint">{{ text.documentHint }}</p>
-        <section [attr.aria-label]="text.pins">
-          <h3>{{ text.pins }}</h3>
-          <form class="pin-form" (submit)="pin($event)">
-            <mc-searchable-choice
-              controlId="session-pin"
-              [label]="text.chooseMaterial"
-              [options]="pinOptions()"
-              [value]="pinId()"
-              [searchLabel]="choiceText.search"
-              [noResultsLabel]="choiceText.noResults"
-              [loadingLabel]="choiceText.loading"
-              [disabled]="meetings().locked()"
-              (selectionChanged)="changePin($event)"
-            />
-            <button
-              class="mc-action--primary"
-              type="submit"
-              [disabled]="meetings().locked() || !pinId()"
-            >
-              {{ text.pin }}
-            </button>
-          </form>
-          <ul class="pin-list">
-            @for (id of record.pinnedMaterialIds; track id) {
-              <li>
-                <button class="material-link" (click)="materialRequested.emit(id)">
-                  {{ materialTitle(id) }}
+        @if (selected(); as record) {
+          <section class="summary-section" [hidden]="section() !== 'summary'">
+            @if (!editing()) {
+              <section class="record-text" [attr.aria-label]="text.summary">
+                <h3>{{ text.summary }}</h3>
+                <p>{{ record.summary || text.noSummary }}</p>
+                <h3>{{ text.followUp }}</h3>
+                <p>{{ record.followUp || text.noFollowUp }}</p>
+                <button (click)="beginEditing()" [disabled]="meetings().locked()">
+                  {{ text.edit }}
                 </button>
-                <button
-                  (click)="unpin(record, id)"
+              </section>
+            } @else if (draft(); as fields) {
+              <form class="record-form" (submit)="save($event)">
+                <label for="session-summary">{{ text.summary }}</label>
+                <textarea
+                  id="session-summary"
+                  maxlength="20000"
+                  rows="5"
+                  [value]="fields.summary"
+                  (input)="edit('summary', $event)"
                   [disabled]="meetings().locked()"
-                  [attr.aria-label]="text.unpin + ': ' + materialTitle(id)"
-                >
-                  {{ text.unpin }}
-                </button>
-              </li>
-            } @empty {
-              <li>{{ text.noPins }}</li>
-            }
-          </ul>
-        </section>
-        @if (!editing()) {
-          <section class="record-text" [attr.aria-label]="text.summary">
-            <h3>{{ text.summary }}</h3>
-            <p>{{ record.summary || text.noSummary }}</p>
-            <h3>{{ text.followUp }}</h3>
-            <p>{{ record.followUp || text.noFollowUp }}</p>
-            <button (click)="beginEditing()" [disabled]="meetings().locked()">
-              {{ text.edit }}
-            </button>
-          </section>
-        } @else if (draft(); as fields) {
-          <form class="record-form" (submit)="save($event)">
-            <label for="session-title">{{ text.name }}</label>
-            <input
-              id="session-title"
-              required
-              maxlength="300"
-              [value]="fields.title"
-              (input)="edit('title', $event)"
-              [disabled]="meetings().locked()"
-            />
-            <label for="session-summary">{{ text.summary }}</label>
-            <textarea
-              id="session-summary"
-              maxlength="20000"
-              rows="5"
-              [value]="fields.summary"
-              (input)="edit('summary', $event)"
-              [disabled]="meetings().locked()"
-            ></textarea>
-            <label for="session-follow-up">{{ text.followUp }}</label>
-            <textarea
-              id="session-follow-up"
-              maxlength="20000"
-              rows="4"
-              [value]="fields.followUp"
-              (input)="edit('followUp', $event)"
-              [disabled]="meetings().locked()"
-            ></textarea>
-            @if (drafts().conflict()) {
-              <p class="feedback" role="alert">{{ text.draftConflict }}</p>
-            }
-            @if (drafts().hasChanges(record)) {
-              <div class="draft-recovery">
-                <div class="actions">
-                  <button type="button" (click)="copyDraft(record)">{{ recoveryText.copy }}</button>
-                  <button
-                    type="button"
-                    (click)="inspectSaved(record)"
-                    [disabled]="meetings().locked()"
-                  >
-                    {{ recoveryText.inspect }}
-                  </button>
-                </div>
-                @if (copyState() === 'copied') {
-                  <p role="status">{{ recoveryText.copied }}</p>
-                } @else if (copyState() === 'failed') {
-                  <p role="alert">{{ recoveryText.copyFailed }}</p>
-                  <label for="session-manual-copy">{{ recoveryText.manualCopy }}</label>
-                  <textarea id="session-manual-copy" readonly [value]="copiedText()"></textarea>
+                ></textarea>
+                <label for="session-follow-up">{{ text.followUp }}</label>
+                <textarea
+                  id="session-follow-up"
+                  maxlength="20000"
+                  rows="4"
+                  [value]="fields.followUp"
+                  (input)="edit('followUp', $event)"
+                  [disabled]="meetings().locked()"
+                ></textarea>
+                @if (drafts().conflict()) {
+                  <p class="feedback" role="alert">{{ text.draftConflict }}</p>
                 }
-                @if (recoveryError()) {
-                  <p role="alert">{{ recoveryText.loadFailed }}</p>
-                }
-                @if (drafts().inspectedRecord(record.id); as saved) {
-                  <section class="saved-fields" [attr.aria-label]="recoveryText.savedVersion">
-                    <h3>{{ recoveryText.savedVersion }}</h3>
-                    <h4>{{ saved.title }}</h4>
-                    <h4>{{ text.summary }}</h4>
-                    <p>{{ saved.summary || text.noSummary }}</p>
-                    <h4>{{ text.followUp }}</h4>
-                    <p>{{ saved.followUp || text.noFollowUp }}</p>
-                    <p>{{ recoveryText.adoptWarning }}</p>
+                @if (drafts().hasChanges(record)) {
+                  <div class="draft-recovery">
                     <div class="actions">
-                      <button
-                        type="button"
-                        (click)="adoptSaved(record)"
-                        [disabled]="meetings().locked()"
-                      >
-                        {{ recoveryText.adopt }}
+                      <button type="button" (click)="copyDraft(record)">
+                        {{ recoveryText.copy }}
                       </button>
                       <button
                         type="button"
-                        class="mc-action--primary"
-                        (click)="reapplyDraft(record)"
+                        (click)="inspectSaved(record)"
                         [disabled]="meetings().locked()"
                       >
-                        {{ recoveryText.reapply }}
+                        {{ recoveryText.inspect }}
                       </button>
                     </div>
-                  </section>
+                    @if (copyState() === 'copied') {
+                      <p role="status">{{ recoveryText.copied }}</p>
+                    } @else if (copyState() === 'failed') {
+                      <p role="alert">{{ recoveryText.copyFailed }}</p>
+                      <label for="session-manual-copy">{{ recoveryText.manualCopy }}</label>
+                      <textarea id="session-manual-copy" readonly [value]="copiedText()"></textarea>
+                    }
+                    @if (recoveryError()) {
+                      <p role="alert">{{ recoveryText.loadFailed }}</p>
+                    }
+                    @if (drafts().inspectedRecord(record.id); as saved) {
+                      <section class="saved-fields" [attr.aria-label]="recoveryText.savedVersion">
+                        <h3>{{ recoveryText.savedVersion }}</h3>
+                        <h4>{{ saved.title }}</h4>
+                        <h4>{{ text.summary }}</h4>
+                        <p>{{ saved.summary || text.noSummary }}</p>
+                        <h4>{{ text.followUp }}</h4>
+                        <p>{{ saved.followUp || text.noFollowUp }}</p>
+                        <p>{{ recoveryText.adoptWarning }}</p>
+                        <div class="actions">
+                          <button
+                            type="button"
+                            (click)="adoptSaved(record)"
+                            [disabled]="meetings().locked()"
+                          >
+                            {{ recoveryText.adopt }}
+                          </button>
+                          <button
+                            type="button"
+                            class="mc-action--primary"
+                            (click)="reapplyDraft(record)"
+                            [disabled]="meetings().locked()"
+                          >
+                            {{ recoveryText.reapply }}
+                          </button>
+                        </div>
+                      </section>
+                    }
+                  </div>
                 }
-              </div>
+                <div class="actions">
+                  <button
+                    class="mc-action--primary"
+                    type="submit"
+                    [disabled]="
+                      meetings().locked() || !drafts().hasChanges(record) || !fields.title.trim()
+                    "
+                  >
+                    {{ text.save }}
+                  </button>
+                  @if (drafts().hasChanges(record)) {
+                    <span role="status">{{ text.unsaved }}</span>
+                    <button
+                      type="button"
+                      (click)="discardEditing()"
+                      [disabled]="meetings().locked()"
+                    >
+                      {{ text.discardDraft }}
+                    </button>
+                  } @else {
+                    <span role="status">{{ text.saved }}</span>
+                    <button type="button" (click)="discardEditing()">
+                      {{ text.finishEditing }}
+                    </button>
+                  }
+                </div>
+              </form>
             }
-            <div class="actions">
-              <button
-                class="mc-action--primary"
-                type="submit"
-                [disabled]="
-                  meetings().locked() || !drafts().hasChanges(record) || !fields.title.trim()
-                "
-              >
-                {{ text.save }}
-              </button>
-              @if (drafts().hasChanges(record)) {
-                <span role="status">{{ text.unsaved }}</span>
-                <button type="button" (click)="discardEditing()" [disabled]="meetings().locked()">
-                  {{ text.discardDraft }}
+          </section>
+          @if (section() !== 'summary') {
+            <details class="pins">
+              <summary>
+                {{ text.pins }} <span class="pin-count">{{ record.pinnedMaterialIds.length }}</span>
+              </summary>
+              <div class="pin-body">
+                <button
+                  class="mc-action--quiet"
+                  (click)="addingPin.set(!addingPin())"
+                  [disabled]="meetings().locked()"
+                  [attr.aria-expanded]="addingPin()"
+                >
+                  {{ text.addPin }}
                 </button>
-              } @else {
-                <span role="status">{{ text.saved }}</span>
-                <button type="button" (click)="discardEditing()">{{ text.finishEditing }}</button>
-              }
-            </div>
-          </form>
+                @if (addingPin()) {
+                  <form class="pin-form" (submit)="pin($event)">
+                    <mc-searchable-choice
+                      controlId="session-pin"
+                      [label]="text.chooseMaterial"
+                      [options]="pinOptions()"
+                      [value]="pinId()"
+                      [searchLabel]="choiceText.search"
+                      [noResultsLabel]="choiceText.noResults"
+                      [loadingLabel]="choiceText.loading"
+                      [disabled]="meetings().locked()"
+                      (selectionChanged)="changePin($event)"
+                    />
+                    <button
+                      class="mc-action--primary"
+                      type="submit"
+                      [disabled]="meetings().locked() || !pinId()"
+                    >
+                      {{ text.pin }}
+                    </button>
+                  </form>
+                }
+                <ul class="pin-list">
+                  @for (id of record.pinnedMaterialIds; track id) {
+                    <li>
+                      <button
+                        class="material-link mc-action--quiet"
+                        (click)="materialRequested.emit(id)"
+                      >
+                        {{ materialTitle(id) }}
+                      </button>
+                      <button
+                        class="mc-action--quiet"
+                        (click)="unpin(record, id)"
+                        [disabled]="meetings().locked()"
+                        [attr.aria-label]="text.unpin + ': ' + materialTitle(id)"
+                      >
+                        {{ text.unpin }}
+                      </button>
+                    </li>
+                  } @empty {
+                    <li>{{ text.noPins }}</li>
+                  }
+                </ul>
+              </div>
+            </details>
+          }
         }
-      </article>
-    }
+      </section>
+    </article>
   </div>
+  <dialog
+    #creationDialog
+    class="record-dialog"
+    [attr.aria-label]="text.newSession"
+    (cancel)="cancelCreation($event)"
+  >
+    <form (submit)="create($event)">
+      <h2>{{ text.newSession }}</h2>
+      <label for="new-session-title">{{ text.newTitle }}</label>
+      <input
+        id="new-session-title"
+        required
+        maxlength="240"
+        [value]="newTitle()"
+        (input)="updateNewTitle($event)"
+        [disabled]="meetings().locked()"
+        autofocus
+      />
+      @if (meetings().error(); as error) {
+        <p role="alert">{{ text.errors[error] }}</p>
+        @if (meetings().request()) {
+          <button type="button" (click)="retry()" [disabled]="meetings().pending()">
+            {{ text.retry }}
+          </button>
+        }
+      }
+      <div class="actions">
+        <button type="button" (click)="cancelCreation()" [disabled]="meetings().locked()">
+          {{ text.cancelCreation }}
+        </button>
+        <button
+          class="mc-action--primary"
+          type="submit"
+          [disabled]="meetings().locked() || !newTitle().trim()"
+        >
+          {{ text.create }}
+        </button>
+      </div>
+    </form>
+  </dialog>
+  <dialog
+    #renameDialog
+    class="record-dialog"
+    [attr.aria-label]="text.rename"
+    (cancel)="cancelRename($event)"
+  >
+    <form (submit)="rename($event)">
+      <h2>{{ text.rename }}</h2>
+      <label for="rename-session-title">{{ text.name }}</label>
+      <input
+        id="rename-session-title"
+        maxlength="300"
+        required
+        [value]="renameTitle()"
+        (input)="updateRenameTitle($event)"
+        [disabled]="meetings().locked()"
+        autofocus
+      />
+      @if (meetings().error(); as error) {
+        <p role="alert">{{ text.errors[error] }}</p>
+      }
+      @if (meetings().request()) {
+        <button type="button" (click)="retry()" [disabled]="meetings().pending()">
+          {{ text.retry }}
+        </button>
+      }
+      <div class="actions">
+        <button type="button" (click)="cancelRename()" [disabled]="meetings().locked()">
+          {{ text.cancelRename }}
+        </button>
+        <button
+          type="submit"
+          class="mc-action--primary"
+          [disabled]="meetings().locked() || !renameTitle().trim()"
+        >
+          {{ text.save }}
+        </button>
+      </div>
+    </form>
+  </dialog>
+  <dialog
+    #finishDialog
+    class="record-dialog"
+    [attr.aria-label]="text.complete"
+    (cancel)="cancelCompletion($event)"
+  >
+    <h2>{{ text.complete }}</h2>
+    <p>{{ text.finishConsequence }}</p>
+    <p>{{ text.finishOptionalSummary }}</p>
+    @if (meetings().error(); as error) {
+      <p role="alert">{{ text.errors[error] }}</p>
+    }
+    @if (meetings().request()) {
+      <button (click)="retry()" [disabled]="meetings().pending()">{{ text.retry }}</button>
+    }
+    <div class="actions">
+      <button (click)="cancelCompletion()" [disabled]="meetings().locked()">
+        {{ text.cancelFinish }}
+      </button>
+      <button
+        class="mc-action--primary"
+        (click)="confirmCompletion()"
+        [disabled]="meetings().locked()"
+      >
+        {{ text.confirmFinish }}
+      </button>
+    </div>
+  </dialog>
+  @if (recordMenu(); as menu) {
+    <mc-context-menu
+      [presentation]="menu"
+      (actionSelected)="selectRecordAction($event)"
+      (dismissed)="recordMenu.set(null)"
+    />
+  }
   @for (record of missingDraftRecords(); track record.id) {
     <section class="feedback" [attr.aria-label]="text.missingDraftTitle">
       <h2>{{ text.missingDraftTitle }}</h2>

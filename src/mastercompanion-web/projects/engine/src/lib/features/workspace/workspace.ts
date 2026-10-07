@@ -7,13 +7,13 @@ import {
   HostListener,
   Injector,
   afterNextRender,
+  afterRenderEffect,
   computed,
   effect,
   inject,
   signal,
   untracked,
   viewChild,
-  viewChildren,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -31,7 +31,8 @@ import { OpenTabs } from './open-tabs';
 import type { OpenTabItem } from './open-tab-item';
 import { WorkspaceTab } from './workspace-tab';
 import { WorkspaceMaterials } from './workspace-materials';
-import { MaterialView } from '../materials/material-view';
+import { MaterialViewHost } from '../materials/material-view-host';
+import { MaterialViewRegistry } from '../materials/material-view-registry';
 import { MaterialCreation } from '../materials/material-creation';
 import { MaterialCreationDialog } from '../materials/material-creation-dialog';
 import { MaterialSearch } from '../materials/material-search';
@@ -67,7 +68,7 @@ import { SessionView } from '../sessions/session-view';
     WorkspaceTab,
     OpenTabs,
     NgTemplateOutlet,
-    MaterialView,
+    MaterialViewHost,
     MaterialCreationDialog,
     MaterialSearchView,
     MapView,
@@ -92,6 +93,19 @@ export class Workspace {
   private readonly materials = new WorkspaceMaterials(this.http);
   readonly workspace = this.materials.workspace;
   readonly sessions = this.materials.sessions;
+  private readonly materialTabIds = signal<ReadonlySet<string>>(new Set());
+  readonly materialTabs = computed(() =>
+    this.sessions().filter((session) => this.materialTabIds().has(session.material.id)),
+  );
+  private readonly standaloneMaterialHost = viewChild(MaterialViewHost);
+  private readonly materialViews = new MaterialViewRegistry((request) => {
+    void this.open(request.id, request.anchor);
+  });
+  readonly meetingContentLoading = signal(false);
+  readonly meetingContentError = signal(false);
+  private contentRequest = 0;
+  private readonly meetingDocumentIds = signal<ReadonlySet<string>>(new Set());
+  readonly meetingCloseFailure = signal<string | null>(null);
   readonly active = signal('');
   readonly routing = new WorkspaceRouting(inject(Router), (target, context) =>
     this.applyRoute(target, context),
@@ -165,8 +179,8 @@ export class Workspace {
             id: '@sessions',
             title: this.ui.meetings.title,
             context: '',
-            dirty: this.meetingDrafts.dirty(),
-            closing: false,
+            dirty: this.meetingDirty(),
+            closing: this.closing().has('@sessions'),
           },
         ]
       : []),
@@ -191,7 +205,7 @@ export class Workspace {
       dirty: false,
       closing: false,
     })),
-    ...this.sessions().map((tab) => ({
+    ...this.materialTabs().map((tab) => ({
       id: tab.material.id,
       title: tab.material.title,
       context:
@@ -210,7 +224,14 @@ export class Workspace {
   private readonly searchView = viewChild(MaterialSearchView);
   private readonly navigation = viewChild<ElementRef<HTMLElement>>('navigation');
   private readonly tabStrip = viewChild<ElementRef<HTMLElement>>('tabStrip');
-  readonly views = viewChildren(MaterialView);
+  readonly meetingDirty = computed(
+    () =>
+      this.meetingDrafts.dirty() ||
+      this.meetingView()?.hasRenameDraft() ||
+      this.sessions().some(
+        (session) => this.meetingDocumentIds().has(session.material.id) && session.dirty(),
+      ),
+  );
   readonly folders = computed(() =>
     buildNavigation(
       this.workspace()?.folders ?? [],
@@ -228,6 +249,7 @@ export class Workspace {
       this.folderNavigationRender?.destroy();
       this.finishNavigationRender?.(false);
       this.routing.destroy();
+      this.materialViews.destroy();
       this.materials.destroy();
       this.game()?.destroy();
       this.creation()?.destroy();
@@ -244,6 +266,42 @@ export class Workspace {
     effect(() => {
       const records = this.meetings()?.snapshot().sessions ?? [];
       untracked(() => this.meetingDrafts.acceptConfirmed(records));
+    });
+    effect(() => {
+      const id = this.meetingView()?.documentId();
+      if (id) {
+        untracked(() => {
+          void this.loadMeetingDocument(id);
+        });
+      } else {
+        untracked(() => {
+          this.contentRequest++;
+          this.meetingContentLoading.set(false);
+          this.meetingContentError.set(false);
+        });
+      }
+    });
+    afterRenderEffect(() => {
+      const standalone = this.standaloneMaterialHost()?.container;
+      const embedded = this.meetingView()?.documentHost().container;
+      const sessions = this.sessions();
+      const activeId = this.active();
+      const embeddedId =
+        activeId === '@sessions' ? (this.meetingView()?.documentId() ?? null) : null;
+      const workspace = this.workspace();
+      if (standalone && workspace) {
+        untracked(() =>
+          this.materialViews.synchronize(
+            sessions,
+            standalone,
+            embedded,
+            activeId,
+            embeddedId,
+            workspace.materials,
+            workspace.folders,
+          ),
+        );
+      }
     });
     void this.load();
   }
@@ -407,6 +465,7 @@ export class Workspace {
       }
       try {
         await this.materials.open(target.materialId);
+        this.materialTabIds.update((ids) => new Set([...ids, target.materialId]));
       } catch (error) {
         return {
           kind: 'error',
@@ -536,7 +595,7 @@ export class Workspace {
       ...(this.partyOpen() ? ['@party'] : []),
       ...(this.gameOpen() ? ['@game'] : []),
       ...this.maps().map((map) => `@map:${map.id}`),
-      ...this.sessions().map((session) => session.material.id),
+      ...this.materialTabs().map((session) => session.material.id),
     ];
     for (const id of ids) {
       if (id !== keepId) {
@@ -648,6 +707,27 @@ export class Workspace {
   openMeetings(sessionId?: string): void {
     void this.routing.navigate({ kind: 'sessions', ...(sessionId ? { sessionId } : {}) });
   }
+  async loadMeetingDocument(id = this.meetingView()?.documentId()): Promise<void> {
+    if (!id) {
+      return;
+    }
+    this.meetingDocumentIds.update((ids) => new Set([...ids, id]));
+    const request = ++this.contentRequest;
+    this.meetingContentLoading.set(true);
+    this.meetingContentError.set(false);
+    try {
+      await this.materials.open(id);
+    } catch {
+      if (request === this.contentRequest && !this.destroyRef.destroyed) {
+        this.meetingContentError.set(true);
+      }
+    } finally {
+      if (request === this.contentRequest && !this.destroyRef.destroyed) {
+        this.meetingContentLoading.set(false);
+      }
+    }
+  }
+
   async openMeetingMaterial(id: string): Promise<void> {
     if (!this.workspace()?.materials.some((item) => item.id === id)) {
       await this.load();
@@ -725,9 +805,7 @@ export class Workspace {
           });
         }
         const found = anchor
-          ? (this.views()
-              .find((view) => view.session().material.id === id)
-              ?.scrollToAnchor(anchor) ?? false)
+          ? (this.materialViews.find(id)?.scrollToAnchor(anchor) ?? false)
           : true;
         this.finishNavigationRender?.(found);
         this.finishNavigationRender = undefined;
@@ -817,16 +895,8 @@ export class Workspace {
       return;
     }
     const session = this.sessions().find((tab) => tab.material.id === id);
-    if (id === '@sessions') {
-      const meetings = this.meetings();
-      if (
-        !meetings ||
-        meetings.request() ||
-        meetings.pending() ||
-        !(await this.meetingView()?.prepareToClose())
-      ) {
-        return;
-      }
+    if (id === '@sessions' && !(await this.prepareMeetingsToClose())) {
+      return;
     }
     if (session) {
       this.closing.update((current) => new Set([...current, id]));
@@ -845,7 +915,7 @@ export class Workspace {
       ...(this.partyOpen() ? ['@party'] : []),
       ...(this.gameOpen() ? ['@game'] : []),
       ...this.openMaps().map((mapId) => `@map:${mapId}`),
-      ...this.sessions().map((tab) => tab.material.id),
+      ...this.materialTabs().map((tab) => tab.material.id),
     ];
     const index = tabIds.indexOf(id);
     if (index < 0) {
@@ -860,7 +930,19 @@ export class Workspace {
     } else if (id === '@sessions') {
       this.meetingsOpen.set(false);
     } else {
-      this.materials.removeConfirmedSession(id);
+      this.materialTabIds.update((ids) => {
+        const remaining = new Set(ids);
+        remaining.delete(id);
+        return remaining;
+      });
+      const sessionDocument = this.meetings()
+        ?.snapshot()
+        .sessions.some(
+          (record) => record.preparationMaterialId === id || record.notesMaterialId === id,
+        );
+      if (!sessionDocument) {
+        this.materials.removeConfirmedSession(id);
+      }
     }
     if (this.active() === id) {
       await this.routing.navigate(this.targetForTab(tabIds[index + 1] ?? tabIds[index - 1] ?? ''), {
@@ -868,12 +950,51 @@ export class Workspace {
       });
     }
   }
+  private async prepareMeetingsToClose(): Promise<boolean> {
+    this.closing.update((ids) => new Set([...ids, '@sessions']));
+    this.meetingCloseFailure.set(null);
+    try {
+      do {
+        const meetings = this.meetings();
+        if (
+          !meetings ||
+          meetings.request() ||
+          meetings.pending() ||
+          !(await this.meetingView()?.prepareToClose())
+        ) {
+          return false;
+        }
+        for (const document of this.sessions().filter((item) =>
+          this.meetingDocumentIds().has(item.material.id),
+        )) {
+          if (!(await document.prepareToClose())) {
+            this.meetingCloseFailure.set(document.material.id);
+            return false;
+          }
+        }
+      } while (
+        this.meetingDrafts.dirty() ||
+        this.sessions().some(
+          (item) => this.meetingDocumentIds().has(item.material.id) && item.dirty(),
+        )
+      );
+      return true;
+    } finally {
+      this.closing.update((ids) => {
+        const remaining = new Set(ids);
+        remaining.delete('@sessions');
+        return remaining;
+      });
+    }
+  }
+
   @HostListener('window:beforeunload', ['$event'])
   protectPendingChanges(event: BeforeUnloadEvent) {
     if (
       this.sessions().some((tab) => tab.dirty()) ||
       this.partyView()?.dirty() ||
       this.meetingDrafts.dirty() ||
+      this.meetingView()?.hasRenameDraft() ||
       (!this.meetings()?.request() && this.meetingView()?.hasCreationDraft()) ||
       (!this.creation()?.hasRecovery() && this.creation()?.title().trim())
     ) {
