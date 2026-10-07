@@ -16,7 +16,7 @@ const put = (document, expectedRevision) =>
   fetch(url, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ document, expectedRevision }),
+    body: JSON.stringify({ title: original.title, document, expectedRevision }),
   });
 async function verifyRejectedWrites(revision) {
   const conflict = await put(original.document, revision - 1);

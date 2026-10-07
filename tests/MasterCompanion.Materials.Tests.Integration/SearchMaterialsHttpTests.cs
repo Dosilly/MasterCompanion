@@ -188,7 +188,7 @@ public sealed class SearchMaterialsHttpTests(PostgreSqlFixture database) : IAsyn
         var nextDocument = JsonSerializer.Deserialize<JsonElement>(Document("Current phrase"));
 
         // Act
-        using var save = await Client.PutAsJsonAsync($"/api/materials/{material.Id}", new SaveMaterialRequest(nextDocument, material.Revision));
+        using var save = await Client.PutAsJsonAsync($"/api/materials/{material.Id}", new SaveMaterialRequest(material.Title, nextDocument, material.Revision));
         var current = await SearchAsync("current phrase");
         var previous = await SearchAsync("previous phrase");
 

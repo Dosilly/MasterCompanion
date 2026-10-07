@@ -20,6 +20,7 @@ import { SearchableChoiceComponent } from '@mastercompanion/ui';
 import { materialChoices } from '../choices/campaign-choices';
 import { createMaterialEditor } from './material-editor';
 import { MaterialSession } from './material-session';
+import { isValidMaterialTitle, materialTitleLimit } from './material-title';
 import { RichDocumentPreview } from './rich-document-preview';
 import { uiMessages } from '../../i18n/messages';
 import {
@@ -38,6 +39,13 @@ import {
 export class MaterialView implements AfterViewInit, OnDestroy {
   readonly ui = uiMessages;
   readonly session = input.required<MaterialSession>();
+  readonly titleLimit = materialTitleLimit;
+  readonly titleInvalid = computed(() => !isValidMaterialTitle(this.session().titleDraft()));
+  updateTitle(event: Event): void {
+    if (event.target instanceof HTMLInputElement) {
+      this.session().changeTitle(event.target.value);
+    }
+  }
   readonly materials = input<readonly MaterialSummary[]>([]);
   readonly folders = input<readonly CampaignFolder[]>([]);
   readonly linkOptions = computed(() => [
@@ -225,7 +233,7 @@ export class MaterialView implements AfterViewInit, OnDestroy {
     }
   }
   async copyDraft() {
-    const text = this.editor?.getText() ?? '';
+    const text = `${this.session().titleDraft()}\n\n${this.editor?.getText() ?? ''}`;
     this.copiedText.set(text);
     try {
       await navigator.clipboard.writeText(text);

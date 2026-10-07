@@ -224,8 +224,10 @@
     "errors": {
       "saveConflict": "Materiał zmieniono w innym oknie. Twój szkic został zachowany. Sprawdź zapisaną wersję, aby wybrać dalsze działanie.",
       "saveFailed": "Nie udało się zapisać. Zmiany pozostają w tej karcie; ponów zapis po przywróceniu połączenia.",
-      "clipboardUnavailable": "Przeglądarka nie pozwoliła skopiować tekstu. Zaznacz treść i skopiuj ją ręcznie."
-    }
+      "clipboardUnavailable": "Przeglądarka nie pozwoliła skopiować tekstu. Zaznacz treść i skopiuj ją ręcznie.",
+      "invalidTitle": "Wpisz tytuł o długości 1–300 znaków, bez znaków sterujących."
+    },
+    "titleLabel": "Tytuł"
   },
   "game": {
     "chooseActivity": "Wybierz działanie zegara",

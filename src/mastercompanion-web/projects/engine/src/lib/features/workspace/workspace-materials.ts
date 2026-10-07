@@ -105,9 +105,13 @@ export class WorkspaceMaterials {
       return existing;
     }
     const cache = this.requireCache();
-    const session = new MaterialSession(material, this.http, (confirmed) =>
-      cache.confirm(confirmed),
-    );
+    const session = new MaterialSession(material, this.http, (confirmed) => {
+      cache.confirm(confirmed);
+      const workspace = this.workspace();
+      if (workspace) {
+        this.updateWorkspace(workspace);
+      }
+    });
     this.sessionState.update((sessions) => [...sessions, session]);
     return session;
   }
