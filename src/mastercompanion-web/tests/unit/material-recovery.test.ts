@@ -71,7 +71,11 @@ describe('Material conflict recovery', () => {
     await inspection;
 
     const save = session.reapplyDraft();
-    assert.deepEqual(http.requests[2].body, { document: document('draft'), expectedRevision: 2 });
+    assert.deepEqual(http.requests[2].body, {
+      title: 'Note',
+      document: document('draft'),
+      expectedRevision: 2,
+    });
     http.requests[2].response.error(new HttpErrorResponse({ status: 409 }));
 
     assert.equal(await save, false);

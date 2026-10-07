@@ -88,8 +88,10 @@ claim that multiple-map authoring has been implemented or verified.
 
 While editing an existing campaign document, the GM must be able to change its
 title as well as its body. The title is material metadata, separate from headings
-inside the document. The current material view has no title-editing field and
-`SaveMaterial` saves only the body, so title editing remains an implementation gap.
+inside the document. The previous material view had no title-editing field and
+`SaveMaterial` previously saved only the body. [Title editing](48-Material-title-editing.md)
+is now implemented on its feature branch, with campaign metadata and body saved
+under one revision.
 
 Title changes must use validated, revision-protected saving and remain recoverable
 with body drafts on errors or conflicts. Finishing editing or closing the tab must

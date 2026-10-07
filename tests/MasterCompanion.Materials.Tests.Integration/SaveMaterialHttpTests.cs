@@ -66,6 +66,8 @@ public sealed class SaveMaterialHttpTests(PostgreSqlFixture database) : IAsyncLi
     [Theory]
     [InlineData("null")]
     [InlineData("{}")]
+    [InlineData("""{"document":{"type":"doc","content":[{"type":"paragraph"}]},"expectedRevision":1}""")]
+    [InlineData("""{"title":null,"document":{"type":"doc","content":[{"type":"paragraph"}]},"expectedRevision":1}""")]
     [InlineData("""{"type":"doc","content":[]}""")]
     [InlineData("""{"type":"doc","content":[{"type":"script"}]}""")]
     [InlineData("""{"type":"doc","content":[{"type":"text","text":"Outside a paragraph"}]}""")]
@@ -85,7 +87,7 @@ public sealed class SaveMaterialHttpTests(PostgreSqlFixture database) : IAsyncLi
     public async Task SaveMaterial_InvalidDocument_RejectsWithoutChangingContentOrRevision(string document)
     {
         // Arrange
-        using var body = Json($$"""{"document":{{document}},"expectedRevision":1}""");
+        using var body = Json($$"""{"title":"Valid title","document":{{document}},"expectedRevision":1}""");
 
         // Act
         using var response = await Client.PutAsync(Path, body);
@@ -97,11 +99,13 @@ public sealed class SaveMaterialHttpTests(PostgreSqlFixture database) : IAsyncLi
 
     [Theory]
     [InlineData("{}")]
+    [InlineData("""{"document":{"type":"doc","content":[{"type":"paragraph"}]},"expectedRevision":1}""")]
+    [InlineData("""{"title":null,"document":{"type":"doc","content":[{"type":"paragraph"}]},"expectedRevision":1}""")]
     [InlineData("""{"expectedRevision":1}""")]
     [InlineData("""{"document":{"type":"doc","content":[{"type":"paragraph"}]}}""")]
-    [InlineData("""{"document":{"type":"doc","content":[{"type":"paragraph"}]},"expectedRevision":0}""")]
-    [InlineData("""{"document":{"type":"doc","content":[{"type":"paragraph"}]},"expectedRevision":"1"}""")]
-    [InlineData("""{"document":{"type":"doc","content":[{"type":"paragraph"}]},"expectedRevision":1,"extra":true}""")]
+    [InlineData("""{"title":"Valid title","document":{"type":"doc","content":[{"type":"paragraph"}]},"expectedRevision":0}""")]
+    [InlineData("""{"title":"Valid title","document":{"type":"doc","content":[{"type":"paragraph"}]},"expectedRevision":"1"}""")]
+    [InlineData("""{"title":"Valid title","document":{"type":"doc","content":[{"type":"paragraph"}]},"expectedRevision":1,"extra":true}""")]
     public async Task SaveMaterial_InvalidEnvelope_RejectsWithoutWrites(string json)
     {
         // Arrange
@@ -128,7 +132,7 @@ public sealed class SaveMaterialHttpTests(PostgreSqlFixture database) : IAsyncLi
         }
 
         var content = string.Join(',', Enumerable.Repeat(nested, paragraphs));
-        using var body = Json($$"""{"document":{"type":"doc","content":[{{content}}]},"expectedRevision":1}""");
+        using var body = Json($$"""{"title":"Valid title","document":{"type":"doc","content":[{{content}}]},"expectedRevision":1}""");
 
         // Act
         using var response = await Client.PutAsync(Path, body);
@@ -159,7 +163,7 @@ public sealed class SaveMaterialHttpTests(PostgreSqlFixture database) : IAsyncLi
         var document = JsonSerializer.Deserialize<JsonElement>(OriginalDocument);
 
         // Act
-        using var response = await Client.PutAsJsonAsync(Path, new SaveMaterialRequest(document, 2));
+        using var response = await Client.PutAsJsonAsync(Path, new SaveMaterialRequest("Conflicting title", document, 2));
 
         // Assert
         await AssertProblemAsync(response, HttpStatusCode.Conflict, "material_revision_conflict");
@@ -177,7 +181,7 @@ public sealed class SaveMaterialHttpTests(PostgreSqlFixture database) : IAsyncLi
         // Act / Assert: the supported schema must preserve every authored source document exactly.
         foreach (var material in materials)
         {
-            using var response = await Client.PutAsJsonAsync(Path, new SaveMaterialRequest(material.Document, revision));
+            using var response = await Client.PutAsJsonAsync(Path, new SaveMaterialRequest(material.Title, material.Document, revision));
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var saved = await response.Content.ReadFromJsonAsync<JsonElement>();
             Assert.Equal(++revision, saved.GetProperty("revision").GetInt64());
@@ -190,11 +194,63 @@ public sealed class SaveMaterialHttpTests(PostgreSqlFixture database) : IAsyncLi
         }
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task SaveMaterial_TitleChange_SavesMetadataAndBodyInOneRevision(bool changeBody)
+    {
+        var document = JsonSerializer.Deserialize<JsonElement>(changeBody
+            ? """{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Changed body"}]}]}"""
+            : OriginalDocument);
+
+        using var response = await Client.PutAsJsonAsync(Path,
+            new SaveMaterialRequest("  Renamed title  ", document, 1));
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var saved = await response.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Equal(2, saved.GetProperty("revision").GetInt64());
+        using var read = await Client.GetAsync(Path);
+        var material = await read.Content.ReadFromJsonAsync<MaterialResponse>();
+        Assert.NotNull(material);
+        Assert.Equal(materialId, material.Id);
+        Assert.Equal("Renamed title", material.Title);
+        Assert.Equal(2, material.Revision);
+        Assert.True(JsonElement.DeepEquals(document, material.Document));
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData("Invalid\nTitle")]
+    [InlineData("Invalid\u0085Title")]
+    public async Task SaveMaterial_InvalidTitle_RejectsBothMetadataAndBody(string title)
+    {
+        var document = JsonSerializer.Deserialize<JsonElement>(OriginalDocument);
+
+        using var response = await Client.PutAsJsonAsync(Path, new SaveMaterialRequest(title, document, 1));
+
+        await AssertProblemAsync(response, HttpStatusCode.BadRequest, "invalid_material_title");
+        await AssertOriginalAsync();
+    }
+
+    [Fact]
+    public async Task SaveMaterial_OverlongTitle_RejectsWithoutWrites()
+    {
+        var document = JsonSerializer.Deserialize<JsonElement>(OriginalDocument);
+
+        using var response = await Client.PutAsJsonAsync(Path,
+            new SaveMaterialRequest(new string('x', 301), document, 1));
+
+        await AssertProblemAsync(response, HttpStatusCode.BadRequest, "invalid_material_title");
+        await AssertOriginalAsync();
+    }
+
     private async Task AssertOriginalAsync()
     {
         await using var scope = App.Services.CreateAsyncScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var material = await db.Materials.AsNoTracking().SingleAsync(item => item.Id == materialId);
+        Assert.Equal("Test-owned note", material.Title);
         Assert.Equal(1, material.Revision);
         Assert.True(JsonElement.DeepEquals(JsonSerializer.Deserialize<JsonElement>(OriginalDocument),
             JsonSerializer.Deserialize<JsonElement>(material.DocumentJson)),

@@ -142,4 +142,28 @@
   .reading-paper {
     padding: 24px 32px 36px;
   }
+.material-title-field {
+  margin-bottom: 24px;
+}
+.material-title-field label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.material-title-field input {
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 12px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--control-line);
+  border-radius: 5px;
+  font: inherit;
+  font-size: 28px;
+  font-weight: 600;
+}
+.title-error {
+  color: var(--danger);
+  font-size: 13px;
 }

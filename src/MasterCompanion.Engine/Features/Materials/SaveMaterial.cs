@@ -67,6 +67,12 @@ public static class SaveMaterial
                 return Problem(400, "invalid_document");
             }
 
+            var title = request.Title.Trim();
+            if (title.Length is < 1 or > 300 || title.Any(char.IsControl))
+            {
+                return Problem(400, "invalid_material_title");
+            }
+
             var material = await db.Materials.SingleOrDefaultAsync(x => x.Id == id, token);
             if (material is null)
             {
@@ -83,6 +89,7 @@ public static class SaveMaterial
                 return Problem(409, "material_revision_limit");
             }
 
+            material.Title = title;
             material.DocumentJson = request.Document.GetRawText();
             material.Revision++;
             try { await db.SaveChangesAsync(token); }

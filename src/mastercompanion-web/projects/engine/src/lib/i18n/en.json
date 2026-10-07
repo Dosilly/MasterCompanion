@@ -244,8 +244,10 @@
     "errors": {
       "saveConflict": "The material changed in another window. Your draft is retained. Inspect the saved version to choose how to continue.",
       "saveFailed": "Could not save. Your changes remain in this tab; retry after the connection is restored.",
-      "clipboardUnavailable": "The browser could not copy the text. Select the content and copy it manually."
-    }
+      "clipboardUnavailable": "The browser could not copy the text. Select the content and copy it manually.",
+      "invalidTitle": "Enter a title of 1–300 characters without control characters."
+    },
+    "titleLabel": "Title"
   },
   "game": {
     "chooseActivity": "Choose clock activity",

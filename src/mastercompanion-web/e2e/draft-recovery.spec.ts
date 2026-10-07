@@ -102,7 +102,9 @@ test('Failed inspection and clipboard copying keep a manually selectable draft @
   await page
     .getByRole('button', { name: text('engine', 'material', 'copyDraft'), exact: true })
     .click();
-  await expect(page.getByLabel(recovery('manualCopy'))).toHaveValue('Retained local draft');
+  await expect(page.getByLabel(recovery('manualCopy'))).toHaveValue(
+    `${readerTitle}\n\nRetained local draft`,
+  );
   api.materialInspectionFailures = 1;
   await button(page, 'inspect').click();
   await expect(page.getByRole('dialog').getByRole('alert')).toHaveText(recovery('loadFailed'));

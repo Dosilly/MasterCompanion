@@ -160,7 +160,7 @@ public sealed class HttpTests(PostgreSqlFixture database) : IAsyncLifetime
         var path = Path;
         var request = NewRequest();
         var created = await PostMaterialAsync(client, path, request, HttpStatusCode.Created);
-        using (var saved = await client.PutAsync($"/api/materials/{created.Id}", JsonContent(new SaveMaterialRequest(
+        using (var saved = await client.PutAsync($"/api/materials/{created.Id}", JsonContent(new SaveMaterialRequest(created.Title,
             JsonSerializer.Deserialize<JsonElement>(AuthoredDocument), created.Revision))))
             Assert.True(saved.StatusCode == HttpStatusCode.OK, "The new material must use existing revision-protected saves.");
 
@@ -180,7 +180,7 @@ public sealed class HttpTests(PostgreSqlFixture database) : IAsyncLifetime
         var path = Path;
         var request = NewRequest();
         var created = await PostMaterialAsync(client, path, request, HttpStatusCode.Created);
-        using (var saved = await client.PutAsync($"/api/materials/{created.Id}", JsonContent(new SaveMaterialRequest(
+        using (var saved = await client.PutAsync($"/api/materials/{created.Id}", JsonContent(new SaveMaterialRequest(created.Title,
             JsonSerializer.Deserialize<JsonElement>(AuthoredDocument), created.Revision))))
             Assert.True(saved.StatusCode == HttpStatusCode.OK, "The new material must use existing revision-protected saves.");
 
@@ -190,7 +190,7 @@ public sealed class HttpTests(PostgreSqlFixture database) : IAsyncLifetime
         await AssertProblemAsync(client, $"/api/campaigns/{otherCampaignId:D}/materials",
             request with { FolderId = null }, 409, "material_creation_conflict");
         await AssertCountAsync(App.Services, otherCampaignId, 0);
-        using (var staleSave = await client.PutAsync($"/api/materials/{created.Id}", JsonContent(new SaveMaterialRequest(
+        using (var staleSave = await client.PutAsync($"/api/materials/{created.Id}", JsonContent(new SaveMaterialRequest(created.Title,
             JsonSerializer.Deserialize<JsonElement>(AuthoredDocument), 1))))
             await AssertProblemAsync(staleSave, 409, "material_revision_conflict");
 
