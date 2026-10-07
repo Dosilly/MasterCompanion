@@ -5,21 +5,21 @@ folderId: s1e3ee963d887
 sortOrder: 81
 ---
 
-**Do odczytania — wariant 1: Rzeźba zmienia pozycję**
+**Do odczytania — wariant 1: Walka — Szpony zamiast kamienia**
 
-> Wśród pozostałości kamiennych ozdób dostrzegacie rogatą figurę ze złożonymi skrzydłami i świeżo osypany pył przy jej stopach. Gdy patrzycie na nią, bark przesuwa się odrobinę z suchym zgrzytem i strząsa kolejną warstwę kurzu. Głowa jest zwrócona ku wam, a szpony opierają się o podłoże, jakby figura właśnie przeniosła na nie ciężar. Po chwili głowa obraca się, śledząc was bez ruchu reszty ciała. Z pobliskich ruin odpowiada jej drugi zgrzyt.
+> Kamienna ozdoba tuż obok was zgrzyta i odrywa szpony od podłoża. Rogata głowa obraca się gwałtownie, skrzydła strząsają pył, a ciężkie ciało rusza ku wam. Z pobliskich ruin odpowiada mu drugi zgrzyt. To, co wzięliście za nieruchome figury, właśnie zaczyna polowanie.
 
-**Do odczytania — wariant 2: Zajęte przejście**
+**Do odczytania — wariant 2: Drużyna ma inicjatywę — Rzeźba zdradza ruch**
 
-> Przy przejściu stoi rogata figura ze złożonymi skrzydłami, otoczona gruzem usypanym wokół szponiastych stóp. Na wasz widok schodzi z miejsca z ciężkim skrobaniem i ustawia się bokiem na drodze, zostawiając obok siebie wąską lukę. Powoli rozprostowuje jedno skrzydło, po czym znów je składa. Nie patrzy na najbliższą osobę; jej oczy śledzą tych, którzy zostali z tyłu. Gdzieś za nią kamień znów zaczyna trzeć o kamień.
+> Dalej wśród kamiennych ozdób stoi rogata figura ze złożonymi skrzydłami. Jej bark przesuwa się z suchym zgrzytem, strząsając pył. Figura powoli obraca głowę ku dźwiękowi dochodzącemu z głębi ruin, potem znów zastyga. Przy jej szponach widać świeżo rozsypany kurz.
 
 ### Sytuacja i zasady — dla MG {#s88abf0c1f66f}
 
--   **Prowadzenie wariantów — propozycja MG:** w pierwszym gargulce porzucają bezruch kolejno, pozwalając drużynie zauważyć, że zagrożenie jest liczniejsze, niż wyglądało. W drugim pierwszy kusi do przejścia pojedynczo obok niego, podczas gdy pozostałe szukają dostępnego obejścia. Zachowanie zwartego szyku lub cofnięcie się odbiera im tę okazję; drugi odgłos pochodzi od istniejącego członka wylosowanej grupy.
+-   **Prowadzenie wariantów — propozycja MG:** Wariant 1: bohaterowie minęli nierozpoznane gargulce, które rozpoczynają atak. Rzuć na inicjatywę; oskrzydlenie zależy od rzeczywistych dróg i pozycji. Wariant 2: ruch zdradził jednego gargulca, zanim dostrzegł drużynę. Daj czas na ukrycie, obejście lub odwrót. Inni członkowie wylosowanej grupy mogą pozostawać nieruchome; nie dopisuj dodatkowych przeciwników.
 
--   **Skład:** **1k4 + 1 gargoyles**. Pierwszy jest widoczny, pozostałe zbliżają się tą samą dostępną drogą.
+-   **Skład:** **1k4 + 1 gargoyles**. Opis ujawnia pierwszego; pozostałe pozostają przy rzeczywistych kryjówkach albo zbliżają się dostępną drogą.
 
--   **Cel — propozycja MG:** osaczyć i zabić intruzów. Pierwszy odwraca uwagę, podczas gdy reszta szuka możliwości obejścia.
+-   **Cel — propozycja MG:** osaczyć i zabić intruzów. Po wykryciu drużyny pierwszy może odwracać uwagę, podczas gdy reszta szuka możliwości obejścia. W wariancie 1 grupa zaczyna atak z zajętych pozycji.
 
 -   **Reakcja:** rozdzielenie drużyny lub odwrócenie się plecami do dostępnego skrzydła → próba ataku na odizolowaną osobę. Bohaterowie blokują obejście → gargulce muszą uderzyć od frontu albo zrezygnować z oskrzydlenia.
 

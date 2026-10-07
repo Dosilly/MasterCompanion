@@ -5,17 +5,17 @@ folderId: s1e3ee963d887
 sortOrder: 85
 ---
 
-**Do odczytania — wariant 1: Oczekiwani goście**
+**Do odczytania — wariant 1: Walka — Rozpoznani grabieżcy**
 
-> Nad gruzem unosi się ludzka czaszka, a towarzysząca jej jednooka istota odsuwa kamienie z dalszej drogi. Gdy czaszka kieruje się ku wam, sługa przerywa pracę, cofa się i pochyla głowę, pozostawiając przed swoim panem wolne miejsce. Czaszka zatrzymuje się naprzeciw was, obraca ku jednej osobie, potem ku następnej. Czeka dłużej, niż trwa zwykłe spojrzenie. Gdy nikt nie występuje naprzód, podpływa odrobinę bliżej i znów zastyga, jak gospodarz oczekujący dawno obiecanej odpowiedzi.
+> Z ciemności wypływa ludzka czaszka i zatrzymuje się tuż przed wami. Jednooka istota za nią nagle cofa się, przyciskając dłonie do głowy. Czaszka obraca się w stronę najbliższej osoby; jej szczęka rozwiera się szeroko. Cisza trwa jeszcze przez uderzenie serca.
 
-**Do odczytania — wariant 2: Milczący świadek**
+**Do odczytania — wariant 2: Drużyna ma inicjatywę — Pan ruin zajęty oględzinami**
 
-> Nieopodal przygarbiona, jednooka istota obchodzi rumowisko, torując drogę unoszącej się za nią ludzkiej czaszce. Czaszka zatrzymuje się przy miejscu, które oglądacie, i zwraca ku waszym dłoniom; sługa czeka kilka kroków z tyłu. Obserwator powoli przenosi uwagę z niesionego wyposażenia na najbliższy ślad ruin. Potem znów obraca się ku wam. Nie wydaje żadnego dźwięku i nie rusza dalej, zostawiając wam pierwszy ruch.
+> Dalej jednooka istota odsuwa kamienie z drogi unoszącej się nad gruzem ludzkiej czaszki. Czaszka zatrzymuje się przy uszkodzonym fragmencie ruin i powoli obraca nad nim, jakby oglądała go ze wszystkich stron. Sługa czeka z pochyloną głową. Żadne z nich nie zwraca się ku wam.
 
 ### Sytuacja i zasady — dla MG {#sdda62fe2f42e}
 
--   **Prowadzenie wariantów — propozycja MG:** w pierwszym Iriolarthas oczekuje, że przybysze rozpoczną ratowanie enklawy; nothiki odsuwają się z przyzwyczajenia, bez tłumaczenia jego zamiaru. W drugim pojawia się podczas oglądania lub przeszukiwania ruin i ocenia, czy drużyna bada uszkodzenia, czy zabiera własność miasta. Daj bohaterom czas na zauważenie obserwatora i świadomą odpowiedź zachowaniem; wcześniejsze rozpoznanie ich jako grabieżców wyklucza ponowne powitanie jak ratowników.
+-   **Prowadzenie wariantów — propozycja MG:** Wariant 1 stosuj tylko wtedy, gdy Iriolarthas już rozpoznał bohaterów jako grabieżców, a oni przeoczyli jego zbliżenie. Rozpoczyna próbę ich zniszczenia: rzuć na inicjatywę, nie przyznawaj skutków zdolności z samego opisu. Nowi przybysze, których nadal bierze za ratowników, nie są atakowani tylko dlatego, że go nie zauważyli; po wykryciu użyj opisanej niżej oceny i testów. Wariant 2: bohaterowie widzą go pierwsi. Mogą ukryć się, odejść, ominąć grupę albo świadomie podjąć kontakt jako ratownicy. Nothiki nie tłumaczą automatycznie jego myśli.
 
 -   **Skład:** **Iriolarthas, demilich**, oraz **1k3 nothics**. Nothiki mówią **Loross**, otwierają i zamykają drzwi oraz usuwają przeszkody za pana. Nie przechodzą dowolnie przez zabezpieczenia.
 

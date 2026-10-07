@@ -5,17 +5,17 @@ folderId: s1e3ee963d887
 sortOrder: 83
 ---
 
-**Do odczytania — wariant 1: Kontrola, która się nie kończy**
+**Do odczytania — wariant 1: Walka — Zatrzymanie siłą**
 
-> W przejściu przed wami stoi grupa strażników o jednakowych twarzach, pilnujących pustego miejsca pośrodku szyku. Kiedy was dostrzegają, rozstępują się przed postacią, która unosi pustą dłoń i czeka na waszą uwagę. Jej usta pozostają zamknięte, lecz w głowie rozlega się wyraźne polecenie: „Zatrzymajcie się. Kontrola uprawnień”. Postać wskazuje miejsce, w którym macie stanąć, a potem pustą przestrzeń obok siebie, jakby zostawiała ją komuś wyższemu rangą. „Nadzorca przybędzie” — oznajmia po chwili z tą samą pewnością.
+> Strażnik o obojętnej twarzy wychodzi tuż przed was, a za nim pojawiają się następni, już z uniesioną bronią. W głowach rozlega się suche polecenie: „Pozostać na miejscu”. Postać z pustymi dłońmi wbija wzrok w najbliższą osobę. Uzbrojeni strażnicy ruszają jednocześnie, próbując zamknąć drogę dalszego marszu.
 
-**Do odczytania — wariant 2: Czy ktoś wyda nowy rozkaz?**
+**Do odczytania — wariant 2: Drużyna ma inicjatywę — Kontrola bez przybyszów**
 
-> Przeszukujący ruiny strażnicy dostrzegają was i zatrzymują się w równym szeregu. Jeden wychodzi przed pozostałych i wyciąga ku wam pustą dłoń; bez ruchu ust pyta w waszych głowach: „Uprawnienia?”. Czeka na odpowiedź, a potem zwraca twarz ku drugiemu strażnikowi, który nie reaguje. Kiedy znów patrzy na was, pytanie ustępuje poleceniu: „Pozostać do przybycia nadzorcy”. Uzbrojone postacie zaczynają zajmować drogę odwrotu.
+> Dalej grupa strażników o jednakowych twarzach stoi w równym szeregu. Jeden bez broni spogląda na puste miejsce przed sobą, czeka, po czym obraca głowę ku przestrzeni między towarzyszami. Nikt stamtąd nie nadchodzi. Uzbrojone postacie trwają na posterunku; żadna nie patrzy w waszą stronę.
 
 ### Sytuacja i zasady — dla MG {#scef122b0fa77}
 
--   **Prowadzenie wariantów — propozycja MG:** pierwszy patrol od początku egzekwuje kontrolę i bezterminowe oczekiwanie. W drugim hypnos najpierw szuka osoby z rzeczywistymi uprawnieniami, lecz wobec ich braku wraca do ostatniego rozkazu; pytanie daje czas na reakcję, a nie automatyczny sposób oszukania strażników. W obu wersjach cisza na miejscu nadzorcy powinna stopniowo ujawniać, że nikt nie przyjdzie; wypowiedzi telepatyczne odczytaj dopiero w zasięgu zdolności.
+-   **Prowadzenie wariantów — propozycja MG:** Wariant 1: drużyna przeoczyła posterunek i przeszła przez punkt kontroli; patrol zaczyna zatrzymanie siłą. Rzuć na inicjatywę przed użyciem zdolności hypnos. Polecenie odczytaj tylko w zasięgu telepatii. Wariant 2: bohaterowie wykryli posterunek, zanim strażnicy wykryli ich. Mogą się ukryć, ominąć go lub zawrócić; dobrowolne podejście uruchamia zwykłą kontrolę, bez automatycznej walki.
 
 -   **Skład:** **1k4 + 1 demos magen** i **1k4 hypnos magen**. Telepatyczne polecenie pojawia się dopiero w zasięgu odpowiedniej zdolności; samo w sobie nie zmusza do posłuszeństwa.
 
@@ -23,4 +23,4 @@ sortOrder: 83
 
 -   **Sekret MG:** nadzorca od dawna nie żyje. Posłusznych bohaterów patrol strzeże bez końca; nie odprowadza ich automatycznie do wymyślonego więzienia.
 
--   **Reakcja:** próba odejścia → hypnos próbuje zatrzymać jedną osobę swoją zdolnością, rozstrzyganą według statystyk; demos blokują drogę. Atak → patrol walczy. Skuteczne ukrycie, obejście lub przejęcie kontroli pozostaje możliwe.
+-   **Reakcja:** przejście przez punkt kontroli lub próba odejścia → hypnos próbuje zatrzymać jedną osobę swoją zdolnością, rozstrzyganą według statystyk; demos blokują drogę. Atak → patrol walczy. Skuteczne ukrycie, obejście lub przejęcie kontroli pozostaje możliwe.

@@ -5,17 +5,17 @@ folderId: s1e3ee963d887
 sortOrder: 86
 ---
 
-**Do odczytania — wariant 1: Nazwiska na rozkazie**
+**Do odczytania — wariant 1: Walka — Rozkaz wykonany bez ostrzeżenia**
 
-> W głębi ruin dostrzegacie uzbrojony patrol, którego członkowie rozglądają się i rozmawiają półgłosem. „Jeśli to oni, nie wracamy z pustymi rękami” — mówi jeden z idących z tyłu, zanim towarzysz ucisza go syknięciem. Na wasz widok prowadzący patrol zatrzymuje pozostałych uniesioną dłonią i przygląda się kolejno twarzom oraz wyposażeniu. Za jego plecami ktoś poprawia chwyt na broni. Dowódca opuszcza dłoń, nie odrywając od was wzroku.
+> Krótki rozkaz pada tuż obok: „To oni”. Z pobliskiego przejścia wychodzą uzbrojone postacie. Dowódca nie zatrzymuje się na rozmowę — wskazuje was bronią, a pozostali ruszają za nim. Jeden z idących z tyłu zostaje przy drodze powrotnej, patrząc na pierwszych nacierających.
 
-**Do odczytania — wariant 2: Kto poniesie wiadomość?**
+**Do odczytania — wariant 2: Drużyna ma inicjatywę — Patrol szuka dalej**
 
-> Z pobliskiego przejścia wychodzi uzbrojona grupa, a jej dowódca przytrzymuje ostatniego z maszerujących poleceniem: „Zostań z tyłu”. Kiedy dostrzega was na swojej drodze, zatrzymuje pozostałych gestem. Wymienia spojrzenie z wyznaczonym towarzyszem; ten cofa się o krok i ogląda trasę powrotną. „Pamiętasz, co masz jej powiedzieć?” — pyta go dowódca półgłosem. Reszta patrolu rozsuwa się na tyle, na ile pozwala miejsce, i unosi broń.
+> Dalej uzbrojona grupa przystaje, a prowadzący rozgląda się po ruinach. „Jeśli to oni, nie wracamy z pustymi rękami” — mówi ktoś z tyłu. Dowódca ucisza go gestem i wskazuje dalszą drogę. Patrol rusza w tamtą stronę; ostatni ogląda się za siebie, ale jego spojrzenie nie sięga waszego miejsca.
 
 ### Sytuacja i zasady — dla MG {#s7c67cc4da302}
 
--   **Prowadzenie wariantów — propozycja MG:** w pierwszym patrol chce wrócić do Avarice z dowodem wykonania rozkazu, a dowódca sprawdza, kogo napotkał. W drugim jeden z wylosowanych kultystów ma przeżyć i donieść o wyniku starcia; nie jest dodatkowym przeciwnikiem i nie ucieka automatycznie poza inicjatywą. Jeśli patrol zna obowiązujący rozejm, opuszczenie dłoni lub rozstawienie grupy prowadzi do żądania wyjaśnień zamiast ataku.
+-   **Prowadzenie wariantów — propozycja MG:** Wariant 1: patrol rozpoznał przeoczoną przez drużynę okazję i wykonuje rozkaz ataku na widok. Rzuć na inicjatywę; kultysta pozostający z tyłu jest członkiem wylosowanej grupy. Jeśli patrol zna rozejm, zamiast ataku żąda wyjaśnień — niewykrycie zagrożenia nie unieważnia rozkazu Avarice. Wariant 2: bohaterowie wykryli patrol pierwsi. Mogą się ukryć, ominąć go lub wycofać; odgłosy i widoczność dopasuj do miejsca.
 
 -   **Warunek i skład:** **Avarice przybyła**; wynik **56–60** daje **2k4 cult fanatics**, Rycerzy Czarnego Miecza. Przy użyciu tej scenki dla osobnego patrolu budynkowego skład wynosi **pięciu**, pomniejszony o rzeczywiste straty.
 

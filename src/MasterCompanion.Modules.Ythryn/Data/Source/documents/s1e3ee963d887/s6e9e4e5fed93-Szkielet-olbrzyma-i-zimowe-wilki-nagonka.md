@@ -5,17 +5,17 @@ folderId: s1e3ee963d887
 sortOrder: 88
 ---
 
-**Do odczytania — wariant 1: Miejsce dla uciekinierów**
+**Do odczytania — wariant 1: Walka — Nagonka dopada drużynę**
 
-> Ślady wielkich łap prowadzą ku białemu wilkowi, który czeka przy drodze i węszy z uniesionym łbem. Dostrzegłszy was, ogląda się ku idącej za nim ogromnej, kościanej sylwetce, stawiającej ciężkie kroki z suchym klekotem. „Nie spiesz się” — mówi spokojnie. „Oni sami podejdą”. Potem obniża łeb, odsłania zęby i robi wam miejsce po stronie, z której nadchodzi szkielet.
+> Wielki biały wilk wypada z ciemności tuż obok was, odsłaniając zęby. „Teraz” — warczy, zwracając łeb ku ogromnej, kościanej sylwetce za sobą. Szkielet stawia ciężki krok, kości grzechoczą, a wilk rzuca się naprzód. Odgłosy polowania, które wcześniej ginęły w ruinach, są już przy was.
 
-**Do odczytania — wariant 2: Głos przy schronieniu**
+**Do odczytania — wariant 2: Drużyna ma inicjatywę — Łowcy na tropie**
 
-> Za wejściem do waszego schronienia krąży wielki biały wilk, co chwilę przystając i zerkając do środka. „Możecie tam zostać” — mówi głębokim, spokojnym głosem, kiedy napotyka wasze spojrzenia. Przechyla łeb, jakby nasłuchiwał odpowiedzi, po czym odsuwa się od przejścia. Dalej rozlega się ciężki krok i grzechot ogromnych kości. „My też mamy czas” — dodaje wilk i kładzie się tak, by widzieć wyjście.
+> Dalej wielki biały wilk węszy przy ziemi, zataczając powolny łuk. „Jeszcze nie tędy” — mówi, unosząc łeb ku idącej za nim kościanej sylwetce. Ogromny szkielet zatrzymuje się z suchym klekotem. Wilk znów pochyla nos i podejmuje trop prowadzący w bok od was.
 
 ### Sytuacja i zasady — dla MG {#s70f7d4aca56e}
 
--   **Prowadzenie wariantów — propozycja MG:** w pierwszym wilki celowo zostawiają pozornie łatwą drogę ku szkieletowi; wybór innej trasy lub atak na wilki psuje nagonkę. Drugi pasuje do schronienia z wejściem zbyt małym dla olbrzyma: wilki najpierw próbują wymusić wyjście groźbą, a dopiero potem szukają rzeczywistej drogi do środka. Użyj dialogu wobec wykrytej drużyny; polujący nie poznają miejsca ukrycia bohaterów z samego opisu.
+-   **Prowadzenie wariantów — propozycja MG:** Wariant 1: polujący znaleźli drużynę, zanim ta dostrzegła zagrożenie; zaczynają atak. Rzuć na inicjatywę i ustaw ich przy rzeczywistych drogach dostępu. Wariant 2: bohaterowie usłyszeli łowców lub dostrzegli ich wcześniej, sami pozostając niewykryci. Mogą się ukryć, ominąć grupę lub odejść; uwzględnij zmysły wilków zgodnie ze statystykami. Schronienie z wejściem zbyt małym dla olbrzyma rzeczywiście ogranicza jego dostęp.
 
 -   **Warunek i skład:** **Auril przybyła**; wynik **66–70** daje jeden **frost giant skeleton** i **1k3 winter wolves**. Na otwartej przestrzeni widoczny jest cały kościany olbrzym; w ciasnym miejscu pozostaje przy najbliższym dostępnym wejściu.
 
