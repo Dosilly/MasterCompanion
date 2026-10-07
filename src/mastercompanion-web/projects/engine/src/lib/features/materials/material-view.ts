@@ -64,6 +64,8 @@ export class MaterialView implements AfterViewInit, OnDestroy {
   private recoveryOpener?: HTMLElement;
   private readonly injector = inject(Injector);
   private selection?: InsertionSelection;
+  private readingScrollTop = 0;
+  private readonly readingScroll = viewChild.required<ElementRef<HTMLElement>>('readingScroll');
   private insertionOpener?: HTMLElement;
   editor?: Editor;
   readonly documentNavigation = signal<DocumentNavigation | null>(null);
@@ -261,6 +263,26 @@ export class MaterialView implements AfterViewInit, OnDestroy {
     this.closeRecovery();
     await this.session().reapplyDraft();
   }
+  rememberScroll(event: Event): void {
+    if (event.target instanceof HTMLElement && event.target.clientHeight > 0) {
+      this.readingScrollTop = event.target.scrollTop;
+    }
+  }
+
+  rememberPlacement(): void {
+    const element = this.readingScroll().nativeElement;
+    if (element.clientHeight > 0) {
+      this.readingScrollTop = element.scrollTop;
+    }
+  }
+
+  restorePlacement(): void {
+    const element = this.readingScroll().nativeElement;
+    if (element.clientHeight > 0) {
+      element.scrollTop = this.readingScrollTop;
+    }
+  }
+
   scrollToAnchor(id: string): boolean {
     const element = Array.from(
       this.editorElement().nativeElement.querySelectorAll<HTMLElement>('[id]'),
@@ -277,6 +299,7 @@ export class MaterialView implements AfterViewInit, OnDestroy {
     return true;
   }
   ngOnDestroy() {
+    this.documentNavigation()?.destroy();
     this.editor?.off('transaction', this.updateCommandState);
     this.editor?.destroy();
   }

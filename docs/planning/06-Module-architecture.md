@@ -429,3 +429,16 @@ module; any new cross-boundary projection needs an explicit neutral contract.
 See [control ownership](29-Control-foundation.md), [searchable choices](31-Searchable-choices.md),
 [session deletion](30-Session-deletion.md), [ordering](32-Material-ordering.md), and
 [workspace navigation](33-Workspace-navigation.md) for implemented boundaries.
+
+## Session document composition - 7 October 2026
+
+The engine's session workspace embeds ordinary campaign documents in separate
+Preparation/Play notes destinations while Summary retains explicit record saves.
+WorkspaceMaterials remains the authoritative MaterialSession owner. The engine-owned
+MaterialViewRegistry retains one mounted MaterialView/editor and moves its Angular
+ViewRef between stable hosts, preserving draft, history and scroll without opening
+an extra standalone tab. Parent-close orchestration tracks all historically embedded
+documents and waits for confirmed saves, including drafts from removed records.
+Section selection is presentation state, independent of lifecycle/game time. Rename
+has a separate dialog draft and never implicitly saves a summary. See
+[session workspace delivery](44-Session-workspace-redesign.md).

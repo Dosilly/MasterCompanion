@@ -25,11 +25,9 @@ async function openSessions(page: Page): Promise<void> {
   await expect(
     view(page).getByRole('heading', { name: label('title'), exact: true }),
   ).toBeVisible();
-  await expect(view(page).getByLabel(label('newTitle'), { exact: true })).toBeEnabled();
 }
 async function createSession(page: Page, title = 'Meeting one'): Promise<void> {
   await expect(view(page)).toBeVisible();
-  await expect(view(page).getByLabel(label('newTitle'), { exact: true })).toBeEnabled();
   if (!(await view(page).getByLabel(label('newTitle'), { exact: true }).isVisible())) {
     await view(page)
       .getByRole('button', { name: label('newSession'), exact: true })
@@ -48,6 +46,10 @@ test('Preparation, pinned material and separate play notes use the existing edit
 }, testInfo) => {
   await openSessions(page);
   await createSession(page);
+  await view(page).locator('.pins > summary').click();
+  await view(page)
+    .getByRole('button', { name: label('addPin'), exact: true })
+    .click();
   await selectChoice(view(page).getByLabel(label('chooseMaterial'), { exact: true }), readerId);
   await view(page)
     .getByRole('button', { name: label('pin'), exact: true })
@@ -67,12 +69,15 @@ test('Preparation, pinned material and separate play notes use the existing edit
   expect(firstSession(api).pinnedMaterialIds).toEqual([readerId]);
   await sessionTab(page).click();
   await view(page)
-    .getByRole('button', { name: label('notes'), exact: true })
+    .getByRole('tab', { name: label('notes'), exact: true })
     .click();
   await expect(
-    page.getByRole('heading', { name: 'Meeting one · ' + label('notes'), exact: true }),
+    page.getByRole('heading', {
+      name: label('notesDocument').replace('{title}', 'Meeting one'),
+      exact: true,
+    }),
   ).toBeVisible();
-  await expect(page.locator('.meeting-document-context')).toContainText('Meeting one');
+  await expect(page).toHaveURL(/\/sessions\//);
   await page.getByRole('button', { name: text('engine', 'material', 'edit'), exact: true }).click();
   const editor = page.getByRole('textbox', {
     name: text('engine', 'material', 'contentLabel'),
@@ -87,7 +92,7 @@ test('Preparation, pinned material and separate play notes use the existing edit
   );
   await sessionTab(page).click();
   await view(page)
-    .getByRole('button', { name: label('preparation'), exact: true })
+    .getByRole('tab', { name: label('preparation'), exact: true })
     .click();
   await expect(
     page.getByRole('heading', {
@@ -106,6 +111,10 @@ test('Session lifecycle preserves summary, follow-up and time across the next me
   await createSession(page);
   const gameBefore = structuredClone(api.data.game);
   await view(page)
+    .getByRole('tab', { name: label('summaryTab'), exact: true })
+    .click();
+  await view(page)
+    .locator('.summary-section')
     .getByRole('button', { name: label('edit'), exact: true })
     .click();
   await view(page)
@@ -123,6 +132,10 @@ test('Session lifecycle preserves summary, follow-up and time across the next me
   await view(page)
     .getByRole('button', { name: label('complete'), exact: true })
     .click();
+  await page
+    .getByRole('dialog', { name: label('complete'), exact: true })
+    .getByRole('button', { name: label('confirmFinish'), exact: true })
+    .click();
   await expect(view(page).locator('.status')).toHaveText(
     text('engine', 'meetings', 'status', 'completed'),
   );
@@ -132,6 +145,10 @@ test('Session lifecycle preserves summary, follow-up and time across the next me
   });
   await createSession(page, 'Meeting two');
   await view(page)
+    .getByRole('tab', { name: label('summaryTab'), exact: true })
+    .click();
+  await view(page)
+    .locator('.summary-section')
     .getByRole('button', { name: label('edit'), exact: true })
     .click();
   await expect(
@@ -151,6 +168,10 @@ test('Session lifecycle preserves summary, follow-up and time across the next me
     })
     .click();
   await view(page)
+    .getByRole('tab', { name: label('summaryTab'), exact: true })
+    .click();
+  await view(page)
+    .locator('.summary-section')
     .getByRole('button', { name: label('edit'), exact: true })
     .click();
   await expect(
@@ -171,6 +192,10 @@ test('Text drafts survive material navigation and save before closing the sessio
   await page.getByRole('button', { name: label('title'), exact: true }).click();
   await createSession(page);
   await view(page)
+    .getByRole('tab', { name: label('summaryTab'), exact: true })
+    .click();
+  await view(page)
+    .locator('.summary-section')
     .getByRole('button', { name: label('edit'), exact: true })
     .click();
   await view(page)
@@ -203,6 +228,10 @@ test('A conflicting save retains the draft through refresh and requires delibera
   await openSessions(page);
   await createSession(page);
   await view(page)
+    .getByRole('tab', { name: label('summaryTab'), exact: true })
+    .click();
+  await view(page)
+    .locator('.summary-section')
     .getByRole('button', { name: label('edit'), exact: true })
     .click();
   await view(page)
@@ -237,6 +266,10 @@ test('A conflicting save retains the draft through refresh and requires delibera
     .getByRole('button', { name: label('discardDraft'), exact: true })
     .click();
   await view(page)
+    .getByRole('tab', { name: label('summaryTab'), exact: true })
+    .click();
+  await view(page)
+    .locator('.summary-section')
     .getByRole('button', { name: label('edit'), exact: true })
     .click();
   await expect(
@@ -250,17 +283,21 @@ test('Lost creation response retries after reload without duplicating records or
 }) => {
   await openSessions(page);
   api.meetings.mode = 'lostResponse';
+  await view(page)
+    .getByRole('button', { name: label('newSession'), exact: true })
+    .click();
   await view(page).getByLabel(label('newTitle'), { exact: true }).fill('Recover this meeting');
   await view(page)
     .getByRole('button', { name: label('create'), exact: true })
     .click();
-  await expect(view(page).getByRole('button', { name: label('retry'), exact: true })).toBeVisible();
+  await expect(
+    page.getByRole('dialog').getByRole('button', { name: label('retry'), exact: true }),
+  ).toBeVisible();
   const first = api.meetings.requests[0];
   await page.reload();
   await view(page)
     .getByRole('button', { name: label('retry'), exact: true })
     .click();
-  await expect(view(page).getByLabel(label('newTitle'), { exact: true })).toBeEnabled();
   expect(api.meetings.requests[1]).toEqual(first);
   expect(api.meetings.snapshot.sessions).toHaveLength(1);
   expect(api.createdMaterials).toHaveLength(2);
@@ -279,6 +316,9 @@ test('Pending writes block repeated actions and failed loading has visible retry
   await view(page)
     .getByRole('button', { name: label('refresh'), exact: true })
     .first()
+    .click();
+  await view(page)
+    .getByRole('button', { name: label('newSession'), exact: true })
     .click();
   await view(page).getByLabel(label('newTitle'), { exact: true }).fill('Pending meeting');
   api.meetings.mode = 'hold';

@@ -81,6 +81,14 @@ export class SessionApi {
     private readonly lost: (url: string) => void,
   ) {}
 
+  seed(record: SessionRecord, documents: readonly MaterialDto[]): void {
+    this.snapshot = {
+      revision: this.snapshot.revision + 1,
+      sessions: [...this.snapshot.sessions, record],
+    };
+    this.addDocument(documents);
+  }
+
   release(): void {
     this.gate.resolve();
   }

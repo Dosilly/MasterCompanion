@@ -131,7 +131,12 @@
     }
   </div>
 </dialog>
-<div class="material-scroll" (click)="followLink($event)">
+<div
+  #readingScroll
+  class="material-scroll"
+  (scroll)="rememberScroll($event)"
+  (click)="followLink($event)"
+>
   <article class="reading-paper" [class.is-editing]="session().editing()">
     <h1>{{ session().material.title }}</h1>
     <div #editorElement class="document-body"></div>
