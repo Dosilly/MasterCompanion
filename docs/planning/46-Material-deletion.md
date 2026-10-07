@@ -108,6 +108,9 @@ Verified checks on this branch:
 - Full HD dialog and catalog images reviewed in both themes. No existing visual
   baseline was replaced to clear a failure.
 
-The local runtime image build/update and deployed readiness/feature probe are
-coordinated by the parent task after this branch commit. No merge or remote push
-is part of feature delivery.
+The parent task built the local runtime image from implementation commit
+`cdb5f1c` and updated the local Compose application on 7 October 2026. The
+application became healthy. The deployed feature probe verified confirmed
+material deletion, an exact receipt retry, a missing-target response, and removal
+from material listing and search. The probe removed only its test-owned note.
+No merge or remote push is part of feature delivery.
