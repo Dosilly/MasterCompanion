@@ -93,7 +93,7 @@ export class Workspace {
   private readonly destroyRef = inject(DestroyRef);
   readonly theme = inject(ThemePreference);
   readonly ui = uiMessages;
-  private readonly materials = new WorkspaceMaterials(this.http);
+  readonly materials = new WorkspaceMaterials(this.http);
   readonly workspace = this.materials.workspace;
   readonly sessions = this.materials.sessions;
   private readonly materialTabIds = signal<ReadonlySet<string>>(new Set());
@@ -200,7 +200,7 @@ export class Workspace {
             title: this.ui.game.partyTitle,
             context: '',
             dirty: this.partyView()?.dirty() ?? false,
-            closing: false,
+            closing: this.closing().has('@party'),
           },
         ]
       : []),
@@ -293,11 +293,28 @@ export class Workspace {
     });
     afterRenderEffect(() => {
       const standalone = this.standaloneMaterialHost()?.container;
-      const embedded = this.meetingView()?.documentHost().container;
+      const embeddedContainer =
+        this.active() === '@party'
+          ? this.partyView()?.documentHost().container
+          : this.meetingView()?.documentHost().container;
       const sessions = this.sessions();
       const activeId = this.active();
       const embeddedId =
-        activeId === '@sessions' ? (this.meetingView()?.documentId() ?? null) : null;
+        activeId === '@sessions'
+          ? (this.meetingView()?.documentId() ?? null)
+          : activeId === '@party'
+            ? (this.partyView()?.documentId() ?? null)
+            : null;
+      const embedded = embeddedContainer
+        ? {
+            container: embeddedContainer,
+            materialId: embeddedId,
+            headingId:
+              activeId === '@party' ? 'character-content-heading' : 'session-content-heading',
+            showTitle: activeId !== '@party',
+            allowDeletion: activeId !== '@party',
+          }
+        : undefined;
       const workspace = this.workspace();
       const deletionLockedIds = new Set(
         sessions
@@ -311,7 +328,6 @@ export class Workspace {
             standalone,
             embedded,
             activeId,
-            embeddedId,
             workspace.materials,
             workspace.folders,
             deletionLockedIds,
@@ -960,6 +976,20 @@ export class Workspace {
       return;
     }
     const session = this.sessions().find((tab) => tab.material.id === id);
+    if (id === '@party') {
+      this.closing.update((ids) => new Set([...ids, id]));
+      try {
+        if (!(await this.partyView()?.prepareToClose())) {
+          return;
+        }
+      } finally {
+        this.closing.update((ids) => {
+          const remaining = new Set(ids);
+          remaining.delete(id);
+          return remaining;
+        });
+      }
+    }
     if (id === '@sessions' && !(await this.prepareMeetingsToClose())) {
       return;
     }
@@ -1005,7 +1035,8 @@ export class Workspace {
         .sessions.some(
           (record) => record.preparationMaterialId === id || record.notesMaterialId === id,
         );
-      if (!sessionDocument) {
+      const characterDocument = this.partyView()?.profileDocumentIds().has(id) ?? false;
+      if (!sessionDocument && !characterDocument) {
         this.materials.removeConfirmedSession(id);
       }
     }

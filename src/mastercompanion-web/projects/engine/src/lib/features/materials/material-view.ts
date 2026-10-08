@@ -53,6 +53,8 @@ export class MaterialView implements AfterViewInit, OnDestroy {
     ...materialChoices(this.materials(), this.folders(), this.ui.workspace.unfiledMaterials),
   ]);
   readonly deletionLocked = input(false);
+  readonly allowDeletion = input(true);
+  readonly showTitle = input(true);
   readonly deleteRequested = output<Event>();
   readonly openMaterial = output<{ id: string; anchor?: string }>();
   readonly editorElement = viewChild.required<ElementRef<HTMLElement>>('editorElement');

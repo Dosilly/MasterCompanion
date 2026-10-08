@@ -23,6 +23,7 @@ public abstract class GameplayPersistenceTestBase(PostgreSqlFixture database) : 
     public async Task DisposeAsync()
     {
         await using var db = CreateDb(connectionString);
+        await db.Characters.Where(x => ownedCampaigns.Contains(x.CampaignId)).ExecuteDeleteAsync();
         await db.Materials.Where(x => ownedCampaigns.Contains(x.CampaignId)).ExecuteDeleteAsync();
         await db.Maps.Where(x => ownedCampaigns.Contains(x.CampaignId)).ExecuteDeleteAsync();
         await db.GameOperations.Where(x => ownedCampaigns.Contains(x.CampaignId)).ExecuteDeleteAsync();

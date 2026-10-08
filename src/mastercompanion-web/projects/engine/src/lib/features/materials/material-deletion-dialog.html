@@ -7,10 +7,13 @@
     @if (deletion().preview(); as preview) {
       <p class="target">{{ preview.title }}</p>
       <p>{{ ui.consequence }}</p>
-      @if (preview.owningSessions.length) {
+      @if (preview.owningSessions.length || preview.owningCharacters.length) {
         <p role="alert">{{ ui.protected }}</p>
         <ul>
           @for (title of preview.owningSessions; track $index) {
+            <li>{{ title }}</li>
+          }
+          @for (title of preview.owningCharacters; track $index) {
             <li>{{ title }}</li>
           }
         </ul>
@@ -55,6 +58,7 @@
           deletion().pending() ||
           !deletion().preview() ||
           deletion().preview()?.owningSessions?.length ||
+          deletion().preview()?.owningCharacters?.length ||
           (deletion().dirty() && !acknowledged())
         "
       >

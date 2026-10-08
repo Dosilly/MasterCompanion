@@ -1,7 +1,7 @@
 # Near-term improvements
 
 3 October 2026 · recorded roadmap; delivery status updated 6 October 2026;
-requirements updated 7 October 2026
+requirements updated 8 October 2026
 
 The user requested the improvements below, then authorized search, URL navigation
 and campaign material memory. Search and routing have been delivered; material
@@ -45,13 +45,17 @@ recommendation for planning; it is a proposal for the user's next scope choice.
 | 1 | Editable document titles | Close a concrete editing gap with reusable metadata/save behavior before adding more editable documents. |
 | 2 | [Material deletion](46-Material-deletion.md) | Complete document management with a red trash action in the context menu and beside Edit, plus explicit draft/reference handling. |
 | 3 | [Session workspace redesign](44-Session-workspace-redesign.md) | Use the user-selected single workspace with the list beside the document; clarify actions and active-session context. |
-| 4 | [Character profiles](45-Character-profiles.md) | Add the requested backstory and notes, reusing the editor and stable character identities. |
+| 4 | [Character catalog and profiles](45-Character-profiles.md) — delivered | Player characters and NPCs have independent backstory/notes; explicit membership selects the gameplay party. |
 | 5 | Map authoring with multiple module maps | Add images and independent marker editing; verify at least two maps and their references throughout module/campaign handling. |
 | 6 | Multiple campaigns | Add selection and independent campaign creation once the current workspace's main content flows are clear. Empty custom campaigns need their own bounded scope. |
 | 7 | [User accounts and data isolation](47-User-accounts-and-data-isolation.md) | Implement and test authentication and server-enforced ownership/access locally as a separate product feature before hosted exposure. |
 | 8 | [Module editor and deliberate campaign updates](37-Module-editor-and-campaign-updates.md) | Reuse the content/map controls after defining external source storage, version discovery and edited-element protection. |
 | 9 | Chronicle and custom tools | Extend campaign history and generic mechanics after core authoring and organization. |
 | 10 | AWS / production | Deploy the verified account/isolation boundary with hosted security, production backups and recovery. |
+
+Title editing, material deletion and the session workspace redesign are delivered.
+The character catalog/profile feature is implemented; map authoring is the next
+planned product slice.
 
 Document-title editing is a useful first delivery, not a strict prerequisite for
 session layout or profile design. Profile identity/removal semantics, multi-map

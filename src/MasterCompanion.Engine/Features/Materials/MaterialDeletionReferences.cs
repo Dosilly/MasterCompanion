@@ -34,6 +34,9 @@ internal static class MaterialDeletionReferences
         var pins = sessions.Where(item => (JsonSerializer.Deserialize<string[]>(item.PinnedMaterialIdsJson)
             ?? throw new InvalidOperationException("The saved session pin collection is invalid.")).Contains(material.Id));
         var owners = sessions.Where(item => item.PreparationMaterialId == material.Id || item.NotesMaterialId == material.Id);
+        var characterOwners = await db.Characters.AsNoTracking().Where(item => item.CampaignId == material.CampaignId &&
+            (item.BackstoryMaterialId == material.Id || item.NotesMaterialId == material.Id))
+            .Select(item => item.Name).ToArrayAsync(token);
         // Confirmation binds reference consequences to their exact confirmed snapshot.
         var fingerprint = JsonSerializer.Serialize(new
         {
@@ -43,7 +46,7 @@ internal static class MaterialDeletionReferences
         });
         var referenceToken = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(fingerprint)));
         return new(material.Id, material.Title, material.Revision, referenceToken, links.Select(item => item.Title).ToArray(),
-            markers, pins.Select(item => item.Title).ToArray(), owners.Select(item => item.Title).ToArray());
+            markers, pins.Select(item => item.Title).ToArray(), owners.Select(item => item.Title).ToArray(), characterOwners);
     }
 
     private static bool ContainsLink(JsonElement node, string id)

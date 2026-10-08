@@ -8,7 +8,6 @@ import {
   isGameRequest,
   isGameState,
 } from '../../projects/engine/src/lib/features/gameplay/game-wire';
-import { PartyDraft } from '../../projects/engine/src/lib/features/gameplay/party-draft';
 const campaignId = 'ec8bf847-08b7-4314-9e54-ffcd39b0ab8e';
 const characterId = 'da929f55-a678-482a-a8c8-13b89f2b71ad';
 const previousRequestId = '8c6e29fd-5266-42a1-9684-46ea79e99d1b';
@@ -43,86 +42,6 @@ describe('Gameplay session and wire validation', () => {
 
     // Assert
     assert.equal(actual3, false);
-  });
-  test('Party drafts preserve stable IDs and confirmed data while editing, cancelling and accepting revisions', () => {
-    // Arrange
-    const confirmed = state(4, 1080);
-    const draft = new PartyDraft();
-
-    // Act
-    draft.begin(confirmed);
-    draft.rename(characterId, 'Renamed character');
-    draft.add();
-    // Arrange
-    const newId = draft.members()[1].id;
-
-    // Act
-    draft.rename(newId, 'New character');
-
-    // Assert
-    assert.equal(draft.dirty(), true);
-    assert.equal(confirmed.snapshot.party[0].name, 'Character');
-    assert.deepEqual(draft.validatedMembers(false), [
-      { id: characterId, name: 'Renamed character' },
-      { id: newId, name: 'New character' },
-    ]);
-    assert.equal(draft.isStale(4), false);
-    assert.equal(draft.isStale(5), true);
-    // Arrange
-    const retained = structuredClone(draft.members());
-
-    // Act
-    draft.acceptRevision(5);
-
-    // Assert
-    assert.equal(draft.isStale(5), false);
-    assert.deepEqual(draft.members(), retained);
-
-    // Act
-    draft.finish();
-
-    // Assert
-    assert.equal(draft.dirty(), false);
-    assert.equal(draft.editing(), false);
-
-    // Act
-    draft.begin(confirmed);
-
-    // Assert
-    assert.deepEqual(draft.members(), confirmed.snapshot.party);
-  });
-  test('Party draft validation allows removal of the final active member but requires nonempty initial setup', () => {
-    // Arrange
-    const draft = new PartyDraft();
-
-    // Act
-    draft.begin(state());
-    draft.remove(characterId);
-
-    // Assert
-    assert.deepEqual(draft.validatedMembers(false), []);
-    assert.equal(draft.validatedMembers(true), null);
-
-    // Act
-    draft.add();
-    // Arrange
-    const id = draft.members()[0].id;
-    for (const invalid of ['', '   ', 'a'.repeat(101), 'Invalid\u0001name']) {
-      // Act
-      draft.rename(id, invalid);
-
-      // Assert
-      assert.equal(draft.validatedMembers(false), null);
-    }
-
-    // Act
-    draft.rename(id, ' Trimmed character ');
-
-    // Assert
-    assert.deepEqual(draft.validatedMembers(false), [{ id, name: 'Trimmed character' }]);
-    for (let index = 1; index <= 25; index++) draft.add();
-    assert.equal(draft.members().length, 20);
-    assert.equal(new Set(draft.members().map((member) => member.id)).size, 20);
   });
   test('Party edits and short rests retain strict request shapes and existing character identities', () => {
     // Arrange

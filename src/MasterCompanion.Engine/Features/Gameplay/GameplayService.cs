@@ -2,6 +2,7 @@ using static MasterCompanion.Engine.Features.Gameplay.GameSnapshotCodec;
 using System.Text.Json;
 using System.Data;
 using MasterCompanion.Contracts;
+using MasterCompanion.Engine.Features.Characters;
 using MasterCompanion.Engine.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -131,6 +132,11 @@ public sealed class GameplayService(AppDbContext db, IEnumerable<ICampaignGameRu
             last = new(request.RequestId, request.Kind, revision + 1);
         }
 
+        var catalogError = await CharacterCatalogWrites.ApplyAsync(db, campaignId, after.Party, request.Character, token);
+        if (catalogError is not null)
+        {
+            return new(409, catalogError);
+        }
         var response = new GameStateResponse(revision + 1, after, rules.Describe(after), last);
         if (state is null)
         {
