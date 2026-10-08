@@ -1,6 +1,6 @@
 # Character catalog and profiles
 
-9 October 2026 · implemented on `codex/character-profiles`; local runtime delivery follows verification
+9 October 2026 · delivered locally from `codex/character-profiles`
 
 ## Delivered behavior
 
@@ -92,9 +92,24 @@ The solution build, C# formatting verification, model/snapshot check, frontend
 quality and production compilation pass. The final scoped browser run passes all
 28 cases: 20 character checks and eight shared-editor checks. Thirty-six intentional
 visual/title checks pass; the later normal snapshot comparison run passes all its
-visual/title checks with updates disabled. Local-runtime results follow below after
-delivery. No merge into `trunk`, remote push or hosted release is authorized by this
+visual/title checks with updates disabled. After the final membership-source
+refinement, all eleven draft/catalog cases and four browser creation cases pass
+again. No merge into `trunk`, remote push or hosted release is authorized by this
 feature.
+
+## Local delivery
+
+Feature commit `2eb6c64` was built into `mastercompanion:characters-2eb6c64` and
+installed as the local application image. Both application and PostgreSQL are
+healthy; the app is published on IPv4 loopback port 4200. Four read-only container
+probes pass. The live catalog contains the existing five active profiles, matches
+the confirmed roster/revision, and exposes readable independent documents.
+
+Live Full HD checks in light/dark confirm profile rendering, new-player/NPC
+membership defaults and explicit NPC membership. Both actual screenshots were
+reviewed. No campaign writes or browser page errors occurred during verification.
+The runtime build also passes frontend quality/production compilation and .NET
+Release publishing. Documentation-only delivery updates do not change that image.
 
 Related: [architecture](06-Module-architecture.md),
 [roadmap](15-Near-term-improvements.md),

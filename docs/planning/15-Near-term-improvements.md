@@ -1,6 +1,6 @@
 # Near-term improvements
 
-3 October 2026 · recorded roadmap; delivery status updated 6 October 2026;
+3 October 2026 · recorded roadmap; delivery status updated 9 October 2026;
 requirements updated 8 October 2026
 
 The user requested the improvements below, then authorized search, URL navigation
@@ -54,7 +54,7 @@ recommendation for planning; it is a proposal for the user's next scope choice.
 | 10 | AWS / production | Deploy the verified account/isolation boundary with hosted security, production backups and recovery. |
 
 Title editing, material deletion and the session workspace redesign are delivered.
-The character catalog/profile feature is implemented; map authoring is the next
+The character catalog/profile feature is delivered locally; map authoring is the next
 planned product slice.
 
 Document-title editing is a useful first delivery, not a strict prerequisite for
