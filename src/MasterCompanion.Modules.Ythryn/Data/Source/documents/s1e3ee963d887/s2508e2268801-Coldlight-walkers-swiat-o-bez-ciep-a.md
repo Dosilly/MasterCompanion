@@ -5,17 +5,17 @@ folderId: s1e3ee963d887
 sortOrder: 87
 ---
 
-**Do odczytania — wariant 1: Światło szuka twarzy**
+**Do odczytania — wariant 1: Walka — Światło znajduje twarz**
 
-> W głębi ruin ktoś przeszukuje zakamarki, omiatając kamień ostrym, białym światłem. Blask zatrzymuje się, cofa i przechodzi po tym samym miejscu jeszcze raz, jak latarnia kogoś, kto zgubił drogę. Nierówne kroki przybliżają sztywną sylwetkę w przemarzniętym ubraniu. Postać nie niesie niczego w dłoniach; światło wydobywa się z miejsca, w którym powinna być twarz. Gdy obraca głowę ku wam, blask odcina od ciemności każdy szczegół na swojej drodze.
+> Ostre, białe światło nagle pada prosto na was. W jego środku stoi postać w przemarzniętym ubraniu; zamiast twarzy ma oślepiający blask. Sztywna głowa zatrzymuje się na najbliższej osobie. Nieumarły rusza ku wam, a światło podąża za jego spojrzeniem.
 
-**Do odczytania — wariant 2: Niedokończony gest**
+**Do odczytania — wariant 2: Drużyna ma inicjatywę — Blask w głębi ruin**
 
-> Nieopodal postać w przemarzniętym ubraniu przemierza ruiny, powłócząc nogami i rozświetlając sobie drogę białym blaskiem. Zatrzymuje się na moment i unosi pustą rękę do piersi, jakby sprawdzała obecność czegoś pod ubraniem. Palce nie potrafią się zacisnąć, więc dłoń po chwili opada. Głowa podejmuje przerwany ruch, omiatając otoczenie ostrym światłem. Postać rusza ponownie, zostawiając za sobą drobiny lodu osypujące się z rękawa.
+> Po kamieniu dalej przesuwa się biały blask. Zatrzymuje się, cofa i omiata ten sam zakamarek jeszcze raz. Za nim idzie sztywna postać w przemarzniętym ubraniu; światło wydobywa się z miejsca, w którym powinna mieć twarz. Głowa obraca się w stronę przeciwną do was, a nierówne kroki niosą ją dalej.
 
 ### Sytuacja i zasady — dla MG {#s163b5aefc39c}
 
--   **Prowadzenie wariantów — propozycja MG:** w pierwszym nieumarli przeszukują dostępne zakamarki, a ruch blasku pozwala ocenić kierunek ich uwagi i spróbować się ukryć. W drugim bezcelowy gest jest śladem dawnego życia, nie dowodem odzyskanej świadomości ani obietnicą rozmowy. Jeśli Auril rzeczywiście przemieniła znanego kultystę, widoczne wyposażenie może umożliwić rozpoznanie; w przeciwnym razie nie przypisuj postaci tożsamości członka ekspedycji.
+-   **Prowadzenie wariantów — propozycja MG:** Wariant 1: drużyna przeoczyła zbliżający się blask, a nieumarli wykryli żywy cel i rozpoczynają atak. Rzuć na inicjatywę; opis nie nakłada oślepienia ani obrażeń. Wariant 2: bohaterowie zauważyli światło, zanim znaleźli się w polu widzenia nieumarłych. Mogą schować się za rzeczywistą przeszkodą, ominąć trasę poszukiwań lub wycofać. Wyposażenie pozwala rozpoznać znanego kultystę tylko wtedy, gdy Auril rzeczywiście go przemieniła.
 
 -   **Warunek i skład:** **Auril przybyła**; wynik **61–65** daje **1k3 coldlight walkers**. Zasłonięte źródło widać dopiero przez istniejący otwór lub po wyjściu zza przeszkody.
 
