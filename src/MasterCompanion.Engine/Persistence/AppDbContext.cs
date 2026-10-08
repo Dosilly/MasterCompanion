@@ -12,6 +12,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     public DbSet<GameOperation> GameOperations => Set<GameOperation>();
     public DbSet<FolderOperationReceipt> FolderOperationReceipts => Set<FolderOperationReceipt>();
     public DbSet<CampaignSession> Sessions => Set<CampaignSession>();
+    public DbSet<CampaignCharacter> Characters => Set<CampaignCharacter>();
     public DbSet<SessionOperationReceipt> SessionOperationReceipts => Set<SessionOperationReceipt>();
 
     public DbSet<MaterialDeletionReceipt> MaterialDeletionReceipts => Set<MaterialDeletionReceipt>();
@@ -35,6 +36,15 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
         material.Property(x => x.DocumentJson).HasColumnType("jsonb");
         material.Property(x => x.Revision).IsConcurrencyToken();
         material.HasOne<Campaign>().WithMany().HasForeignKey(x => x.CampaignId);
+        var character = modelBuilder.Entity<CampaignCharacter>();
+        character.HasKey(x => new { x.CampaignId, x.Id });
+        character.Property(x => x.Name).HasMaxLength(100);
+        character.Property(x => x.Kind).HasMaxLength(20);
+        character.Property(x => x.BackstoryMaterialId).HasMaxLength(80);
+        character.Property(x => x.NotesMaterialId).HasMaxLength(80);
+        character.HasOne<Campaign>().WithMany().HasForeignKey(x => x.CampaignId);
+        character.HasOne<Material>().WithMany().HasForeignKey(x => x.BackstoryMaterialId).OnDelete(DeleteBehavior.Restrict);
+        character.HasOne<Material>().WithMany().HasForeignKey(x => x.NotesMaterialId).OnDelete(DeleteBehavior.Restrict);
         var folder = modelBuilder.Entity<CampaignFolder>();
         folder.HasKey(x => new { x.CampaignId, x.Id });
         folder.Property(x => x.Id).HasMaxLength(80);

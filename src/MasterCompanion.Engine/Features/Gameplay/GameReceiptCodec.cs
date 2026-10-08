@@ -18,7 +18,7 @@ internal static class GameReceiptCodec
             (receipt.Kind != "undo" && confirmed.LastOperation != new GameOperationSummary(receipt.RequestId, receipt.Kind, receipt.Revision)) ||
             (confirmed.LastOperation is { } operation && (operation.RequestId == Guid.Empty ||
                 operation.Revision < 1 || operation.Revision > confirmed.Revision ||
-                operation.Kind is not ("configureParty" or "updateParty" or "advanceTime" or "shortRest" or "longRest" or "module"))))
+                operation.Kind is not ("configureParty" or "updateParty" or "updateCharacter" or "advanceTime" or "shortRest" or "longRest" or "module"))))
         {
             throw new InvalidOperationException("The saved game receipt is inconsistent.");
         }

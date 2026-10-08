@@ -90,6 +90,7 @@ export class MaterialDeletion {
       this.pending() ||
       !preview ||
       preview.owningSessions.length ||
+      preview.owningCharacters.length ||
       (this.dirty() && !discardAcknowledged)
     ) {
       return null;
@@ -131,7 +132,7 @@ export class MaterialDeletion {
           this.recoveryTarget.set('');
           this.retryAvailable.set(false);
           this.error.set(
-            code === 'material_session_document'
+            code === 'material_session_document' || code === 'material_character_document'
               ? 'protected'
               : code === 'material_references_changed'
                 ? 'referencesChanged'
@@ -210,7 +211,9 @@ export function isDeletionPreview(value: unknown): value is MaterialDeletionPrev
     'pinnedSessions' in value &&
     stringArray(value.pinnedSessions) &&
     'owningSessions' in value &&
-    stringArray(value.owningSessions)
+    stringArray(value.owningSessions) &&
+    'owningCharacters' in value &&
+    stringArray(value.owningCharacters)
   );
 }
 

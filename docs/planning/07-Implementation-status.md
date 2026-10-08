@@ -1,5 +1,25 @@
 # Implementation status
 
+## Character catalog and profiles — 9 October 2026
+
+[The requested catalog](45-Character-profiles.md) stores player characters and
+NPCs with stable identities, backstory and campaign notes. Explicit In the party
+membership supplies the module-tool roster for either type. New player characters
+default to membership; new NPCs default outside. Existing and explicitly selected
+membership survives type changes. Leaving/undo retains profiles and narratives.
+
+Thirteen isolated HTTP/PostgreSQL cases, three existing party persistence cases,
+eleven typed catalog/draft cases and affected gameplay/editor/deletion checks pass.
+The final scoped browser run passes 28 cases across both themes/sizes; normal
+visual/title comparisons and reviewed Full HD profile composition also pass.
+Frontend quality, solution compilation, C# formatting and the EF model/snapshot
+check pass. Feature commit `2eb6c64` remains on `codex/character-profiles`; image
+`mastercompanion:characters-2eb6c64` is installed locally. Both services are healthy,
+four read-only container probes pass, and the actual five-profile catalog matches
+the active roster. Live Full HD light/dark checks verify defaults and explicit NPC
+membership without campaign writes or page errors. Merging and remote pushing
+remain user-controlled.
+
 ## Compact navigation and separate reader tools — 6 October 2026
 
 [The user-requested refinement](43-Compact-navigation-and-reader-tools.md) moves

@@ -1,77 +1,116 @@
-# Character profiles and party workspace
+# Character catalog and profiles
 
-7 October 2026 · user-requested future work; not implemented or scheduled
+9 October 2026 · delivered locally from `codex/character-profiles`
 
-## Confirmed requirements
+## Delivered behavior
 
-Each party character must be more than a name. The user requested separately
-editable backstory and campaign notes. The current neutral `GameCharacter` contract
-contains only ID and name, and the party view lists names or edits roster membership.
-Character profiles are therefore a new capability, not a delivered feature.
+The campaign now owns a catalog of player characters and NPCs. Both types have a
+stable identity, name, independent rich backstory and campaign notes, and an
+explicit In the party choice. New player characters default to membership; choosing
+NPC defaults to outside the party. Either type can join deliberately. Only current
+members appear in module gameplay tools; type alone does not determine membership.
+An explicit membership choice, including the saved choice of an existing profile,
+survives type changes. Type selection supplies defaults only for new profiles whose
+membership has not been chosen explicitly.
 
-Backstory describes the character before and outside the campaign. Campaign notes
-hold developments and the GM's observations during play. Both should support the
-existing rich-document schema, material links, explicit edit mode and confirmed
-saving with recoverable drafts. Neither field is mandatory to create a character.
+The Characters workspace replaces the former roster-only screen at `/party`.
+A compact searchable list offers All, Player characters, NPC and Party filters.
+Selecting a character opens their readable profile alongside the list. Character
+details edit name, type and membership; Backstory and Campaign notes use the existing
+rich-document editor with explicit editing, autosave, failure/conflict recovery and
+save-before-close. Switching profiles, sections or workspace views retains the same
+mounted editor, draft, selection, undo history and reading position.
 
-## Optional field proposals
+The current limits are 1,000 catalog entries and 20 party members. Narrative fields
+are optional. The first slice does not add a separate player-account directory,
+portraits, system-specific character sheets, custom fields or permanent profile
+deletion. Optional player name, description, goals and relationship fields remain
+future scope rather than required profile fields.
 
-These suggestions are not yet user-confirmed requirements:
+## Ownership and atomic changes
 
-- Player name, kept distinct from the character name.
-- A short description for appearance, personality or the character's role.
-- Goals and open threads to support session preparation.
-- Relationships with existing NPCs, factions, places or other characters, using
-  stable references and shared documents rather than copied descriptions.
-- A portrait as later asset work, after image/asset authoring is available.
+`CampaignCharacter` belongs to the generic engine and stores the character type,
+last confirmed name and two campaign-owned material references. `GameCharacter`
+remains the neutral ID/name projection supplied to module rules; NPC identity and
+catalog storage do not enter concrete module implementations.
 
-Keep the initial profile small: name, optional player/description, backstory and
-notes. Add goals/relationships deliberately if they improve actual preparation.
-Avoid a system-specific character sheet, mandatory class/race/level/stat fields
-or arbitrary field-builder infrastructure in this slice.
+`updateCharacter` is an explicit engine operation using the existing game revision,
+request receipt and campaign lock. One gameplay transaction creates or updates the
+catalog entry, instantiates missing documents, reconciles the selected party,
+updates module state and records the immutable receipt. Existing members retain
+their IDs and mechanical state on rename or type changes. Catalog reads expose the
+same game revision; editing requires a current catalog/game pair. Metadata errors,
+conflicts and uncertain acknowledgements retain the draft and use deliberate
+cancellation or exact request retry.
 
-## Proposed workspace
+The game snapshot owns current membership and active roster names. The transaction
+synchronizes catalog names from the confirmed roster, including after undo. Catalog
+creation and type/inactive metadata are retained; gameplay undo restores the previous
+roster, names and module state, without deleting profile documents or catalog entries.
+An undone creation therefore leaves an outside-party profile available for reuse.
 
-Keep the roster as a compact list with Add beside its heading. Selecting a member
-opens a readable profile in the main area, with name and optional player/description
-followed by Backstory and Notes tabs. Edit belongs beside the selected content;
-roster membership actions remain distinct from narrative editing.
+Leaving the party retains all authored narrative. Deliberately rejoining the same
+catalog identity initializes module-owned state at the current game time, following
+the existing party reconciliation rule. Undoing a removal restores its previous
+mechanical state instead. Catalog identities can be reused after absence without
+creating a second profile or new copies of their documents.
 
-Existing module mechanics may show a compact read-only status and a link to the
-owning tool. The profile must not duplicate rule calculations or embed Ythryn
-conditions in the engine. Missing narrative content uses small actionable empty
-states rather than a long blank form.
+Narrative saves use ordinary material revisions independently of game time, game
+revision and operation undo. Document titles remain independent material metadata;
+embedded profile content omits the redundant title and deletion control. The same
+material view can move into the standalone reader without making a second editor
+or draft owner. Closing the catalog flushes every owned open document, including
+edits made while another save is pending, and refuses unconfirmed closure.
 
-## Ownership and unresolved decisions
+The additive `CharacterCatalog` migration instantiates profiles/documents for the
+existing active roster as player characters. Earlier removed identities can be
+instantiated when gameplay undo restores them. Profile materials participate in
+ordinary campaign navigation, search and links. Foreign keys and reference-aware
+material deletion protect required backstory/notes even outside the profile view.
 
-The engine owns campaign character profiles and stable links to party member IDs.
-Module rules continue owning their mechanical state through neutral contracts.
-Narrative saves must not advance game time or gameplay revision, enter gameplay
-undo or be reverted by undoing a roster operation.
+## Verification
 
-Prefer reusing campaign-owned materials and their editor/save infrastructure for
-backstory and notes; decide the profile metadata and material references before
-implementation. Reuse must not create competing name or draft owners. Define how
-character renaming updates the roster and gameplay presentation without changing
-identity. Resolve that explicit boundary with the existing party operation first.
+- 13 isolated HTTP/PostgreSQL cases cover NPC exclusion, either type joining,
+  removal/undo retention, independent narrative saving, rename identity, exact
+  receipts, concurrent writers, invalid metadata, migration, capacity and campaign
+  scoping. Three existing party persistence cases pass with catalog-aware cleanup.
+- Eleven typed frontend cases cover defaults, explicit membership, validation,
+  duplicate/unsupported catalog entries, delayed reads and refresh failures.
+  Existing gameplay session, autosave, material editor and deletion cases verify the
+  reused persistence/recovery owners.
+- Scoped browser cases cover catalog creation, filters, module-tool exclusion,
+  independent editors, failed saves, serialized parent closure and readable profiles
+  in both themes at Full HD and the smaller desktop viewport. The shared standalone
+  and session editor destinations are included in the affected checks.
+- Full HD profile composition was reviewed in light/dark with representative prose.
+  Visual references intentionally replace the sidebar label Party with Characters;
+  reviewed differences contain that label on existing screens. Older folder/search
+  references also now capture the existing document deletion action; it remains
+  available outside the protected embedded profile destination.
 
-Define what happens to a profile when a member leaves the party, returns or is
-removed through undo. Prefer retaining authored narrative content with deliberate
-unlinking rather than deleting it with a roster change. Final archive/removal
-semantics and concurrency need a reviewed contract before implementation.
+The solution build, C# formatting verification, model/snapshot check, frontend
+quality and production compilation pass. The final scoped browser run passes all
+28 cases: 20 character checks and eight shared-editor checks. Thirty-six intentional
+visual/title checks pass; the later normal snapshot comparison run passes all its
+visual/title checks with updates disabled. After the final membership-source
+refinement, all eleven draft/catalog cases and four browser creation cases pass
+again. No merge into `trunk`, remote push or hosted release is authorized by this
+feature.
 
-## Planned acceptance
+## Local delivery
 
-- Two characters have independent backstory and notes; editing one preserves the
-  other's content and module state.
-- Confirmed profile edits survive reload; errors/conflicts retain recoverable
-  drafts and prevent unconfirmed close.
-- Switching characters or views retains drafts and reading/editor state.
-- Narrative saves and gameplay undo remain independent. Roster removal/return
-  follows the chosen explicit profile-retention contract.
-- Optional fields remain optional, and the view stays readable and keyboard usable
-  at Full HD in both themes.
+Feature commit `2eb6c64` was built into `mastercompanion:characters-2eb6c64` and
+installed as the local application image. Both application and PostgreSQL are
+healthy; the app is published on IPv4 loopback port 4200. Four read-only container
+probes pass. The live catalog contains the existing five active profiles, matches
+the confirmed roster/revision, and exposes readable independent documents.
 
-These are planned criteria, not test evidence. Related:
-[architecture](06-Module-architecture.md),
-[recommended sequence](15-Near-term-improvements.md#recommended-development-order).
+Live Full HD checks in light/dark confirm profile rendering, new-player/NPC
+membership defaults and explicit NPC membership. Both actual screenshots were
+reviewed. No campaign writes or browser page errors occurred during verification.
+The runtime build also passes frontend quality/production compilation and .NET
+Release publishing. Documentation-only delivery updates do not change that image.
+
+Related: [architecture](06-Module-architecture.md),
+[roadmap](15-Near-term-improvements.md),
+[local runtime](10-Docker-local-runtime.md).

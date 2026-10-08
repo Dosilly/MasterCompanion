@@ -1,5 +1,23 @@
 # Engine and module boundary
 
+## Character catalog ownership — 8 October 2026
+
+The engine owns a campaign-scoped catalog of player characters and NPCs, with
+stable IDs and ordinary material references for backstory and campaign notes.
+An explicit membership choice selects the neutral ID/name party projection sent
+to module tools; either type may join, and outside-party catalog entries are not
+part of module state. Catalog metadata and roster reconciliation share the
+existing gameplay transaction, campaign lock, revision and immutable receipt.
+Narrative documents retain independent material revisions and stay outside
+gameplay undo. Removal/undo retain catalog entries and authored documents.
+
+The frontend contracts expose CharacterProfile, CharacterCatalog, CharacterChange
+and the updateCharacter action without importing implementation libraries. The
+workspace retains one material session/editor across profile, session and standalone
+reading destinations; catalog controls do not create competing narrative saves.
+No concrete module or neutral UI library owns profile storage or membership.
+See [the delivered character contract](45-Character-profiles.md).
+
 ## Planned accounts and data ownership, 7 October 2026
 
 User accounts and private data isolation are required future product capabilities,

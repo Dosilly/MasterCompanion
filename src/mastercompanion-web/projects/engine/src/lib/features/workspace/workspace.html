@@ -366,6 +366,7 @@
               [label]="ui.game.partyTitle"
               [closeLabel]="ui.workspace.closeTab"
               [selected]="active() === '@party'"
+              [closing]="closing().has('@party')"
               [dirty]="partyView()?.dirty() ?? false"
               (activate)="activate('@party')"
               (close)="close('@party')"
@@ -475,6 +476,9 @@
             aria-labelledby="tab-party"
             [hidden]="active() !== '@party'"
             [session]="session"
+            [materialsOwner]="materials"
+            [closing]="closing().has('@party')"
+            (materialsCreated)="folderManagement()?.refresh()"
           />
         }
       }

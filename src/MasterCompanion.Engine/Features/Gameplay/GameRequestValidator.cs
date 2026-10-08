@@ -1,5 +1,6 @@
 using System.Text.Json;
 using MasterCompanion.Contracts;
+using MasterCompanion.Engine.Features.Characters;
 
 namespace MasterCompanion.Engine.Features.Gameplay;
 
@@ -13,6 +14,16 @@ internal static class GameRequestValidator
     internal static bool IsValidRequest(GameOperationRequest request)
     {
         if (request.RequestId == Guid.Empty || request.ExpectedRevision < 0)
+        {
+            return false;
+        }
+
+        if (request.Kind == "updateCharacter")
+        {
+            return request.Character is not null && CharacterCatalogWrites.IsValid(request.Character) &&
+                request.Party is null && request.Minutes is null && request.Command is null;
+        }
+        if (request.Character is not null)
         {
             return false;
         }

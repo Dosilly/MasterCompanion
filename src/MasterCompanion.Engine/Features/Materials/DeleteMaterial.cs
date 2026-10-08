@@ -105,6 +105,11 @@ public static class DeleteMaterial
             return Problem(409, "material_revision_conflict");
         }
         var preview = await MaterialDeletionReferences.ReadAsync(db, material, campaign.SessionsRevision, token);
+        if (await db.Characters.AnyAsync(item => item.CampaignId == campaignId &&
+            (item.BackstoryMaterialId == id || item.NotesMaterialId == id), token))
+        {
+            return Problem(409, "material_character_document");
+        }
         if (preview.OwningSessions.Count > 0)
         {
             return Problem(409, "material_session_document");

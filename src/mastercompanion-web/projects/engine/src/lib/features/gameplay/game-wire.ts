@@ -75,9 +75,15 @@ export function isGameState(value: unknown): value is GameStateDto {
       integer(last['revision'], 1) &&
       last['revision'] <= value['revision'] &&
       typeof last['kind'] === 'string' &&
-      ['configureParty', 'updateParty', 'advanceTime', 'shortRest', 'longRest', 'module'].includes(
-        last['kind'],
-      ))
+      [
+        'configureParty',
+        'updateParty',
+        'updateCharacter',
+        'advanceTime',
+        'shortRest',
+        'longRest',
+        'module',
+      ].includes(last['kind']))
   );
 }
 export function isGameRequest(value: unknown): value is GameOperationRequest {
@@ -88,6 +94,25 @@ export function isGameRequest(value: unknown): value is GameOperationRequest {
   const only = (...fields: string[]) =>
     keys.length === fields.length && fields.every((field) => keys.includes(field));
   switch (value['kind']) {
+    case 'updateCharacter': {
+      const member = value['character'];
+      return (
+        only('kind', 'requestId', 'expectedRevision', 'character') &&
+        character(member) &&
+        record(member) &&
+        Object.keys(member).length === 6 &&
+        (member['kind'] === 'player' || member['kind'] === 'npc') &&
+        typeof member['inParty'] === 'boolean' &&
+        [member['backstoryTitle'], member['notesTitle']].every(
+          (title) =>
+            typeof title === 'string' &&
+            title.length > 0 &&
+            title.length <= 300 &&
+            title.trim() === title &&
+            !/[\u0000-\u001f\u007f]/.test(title),
+        )
+      );
+    }
     case 'configureParty':
     case 'updateParty':
       return (

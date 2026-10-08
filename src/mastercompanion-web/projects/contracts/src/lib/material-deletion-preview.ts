@@ -7,4 +7,5 @@ export interface MaterialDeletionPreview {
   readonly mapMarkers: readonly string[];
   readonly pinnedSessions: readonly string[];
   readonly owningSessions: readonly string[];
+  readonly owningCharacters: readonly string[];
 }

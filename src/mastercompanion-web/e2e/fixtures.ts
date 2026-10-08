@@ -8,6 +8,7 @@ import type {
 } from '@mastercompanion/contracts';
 import { campaignFixture, campaignId, readerId, readerTitle } from './fixtures/campaign';
 import { SessionApi } from './fixtures/session-api';
+import { CharacterApi } from './fixtures/character-api';
 
 // Read canonical localization data, without importing private library implementations.
 const catalogs: Record<'engine' | 'ythryn', unknown> = {
@@ -115,6 +116,17 @@ export class TestApi {
     (url) => this.expectedNetworkFailures.push(url),
   );
   readonly data = campaignFixture();
+  private characterApi: CharacterApi | null = null;
+  get characters(): CharacterApi {
+    this.characterApi ??= new CharacterApi(this.data.game, (documents) => {
+      this.createdMaterials.push(...documents);
+      this.data.workspace.materials.push(
+        ...documents.map(({ id, title, group, folderId }) => ({ id, title, group, folderId })),
+      );
+      this.data.workspace.foldersRevision++;
+    });
+    return this.characterApi;
+  }
   readonly saves: unknown[] = [];
   readonly creations: CreationRequest[] = [];
   readonly folderRequests: FolderOperationRequest[] = [];
@@ -361,6 +373,14 @@ export class TestApi {
           } else {
             await route.fulfill({ json: this.data.workspace });
           }
+          return;
+        }
+        if (method === 'GET' && path === `/api/campaigns/${campaignId}/characters`) {
+          await this.characters.read(route);
+          return;
+        }
+        if (method === 'POST' && path === `/api/campaigns/${campaignId}/game/operations`) {
+          await this.characters.change(route);
           return;
         }
         if (method === 'GET' && path === `/api/campaigns/${campaignId}/game`) {

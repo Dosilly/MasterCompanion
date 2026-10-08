@@ -1,131 +1,214 @@
-<section class="party-view" [attr.aria-label]="text.partyTitle">
-  <div class="game-heading">
-    <h1>{{ text.partyTitle }}</h1>
+<section class="party-view" [attr.aria-label]="text.title">
+  <header class="game-heading">
+    <h1>{{ text.title }}</h1>
     <button
-      class="mc-icon-button mc-action--quiet"
-      [attr.aria-label]="text.refresh"
-      [title]="text.refresh"
       type="button"
+      class="mc-icon-button mc-action--quiet"
+      [attr.aria-label]="gameText.refresh"
+      [title]="gameText.refresh"
       [disabled]="session().pending()"
-      (click)="session().load()"
+      (click)="refresh()"
     >
       <mc-icon name="refresh" />
     </button>
-  </div>
-  <p class="game-hint">{{ text.partyResourceHint }}</p>
-  @if (session().pending()) {
-    <p role="status">{{ text.working }}</p>
+  </header>
+  @if (session().pending() || catalog()?.loading()) {
+    <p role="status">{{ gameText.working }}</p>
+  }
+  @if (catalog()?.failed()) {
+    <div role="alert">
+      <p>{{ text.loadFailed }}</p>
+      <button type="button" (click)="refresh()">{{ gameText.refresh }}</button>
+    </div>
   }
   @if (session().error(); as error) {
     <div class="game-error" role="alert">
-      <p>{{ text.errors[error] }}</p>
+      <p>{{ gameText.errors[error] }}</p>
       @if (session().hasRecovery()) {
         <button type="button" [disabled]="session().pending()" (click)="retry()">
-          {{ text.retryOperation }}
+          {{ gameText.retryOperation }}
         </button>
       }
-      @if (session().invalidPending() && state()) {
+      @if (session().invalidPending()) {
         <button
           type="button"
           [disabled]="session().pending()"
           (click)="session().discardUnreadable()"
         >
-          {{ text.discardUnreadable }}
+          {{ gameText.discardUnreadable }}
         </button>
       }
     </div>
   }
-  @if (state(); as current) {
-    @if (draft.editing()) {
-      @if (stale()) {
-        <div class="game-error" role="alert">
-          <p>{{ text.partyDraftConflict }}</p>
-          <p>{{ text.currentParty }}: {{ currentNames() || text.noCharacters }}</p>
-          <button
-            type="button"
-            [disabled]="!session().canOperate()"
-            (click)="openConfirmation('rebase', $event)"
-          >
-            {{ text.rebaseParty }}
-          </button>
-        </div>
-      }
-      <form class="party-editor" (submit)="save($event)">
-        <fieldset
-          [disabled]="session().pending() || session().hasRecovery() || session().invalidPending()"
+  @if (closeBlocked()) {
+    <p role="alert">{{ text.closeBlocked }}</p>
+  }
+  <div class="character-workspace">
+    <aside class="character-list" [attr.aria-label]="text.catalog">
+      <div class="list-heading">
+        <h2>{{ text.catalog }}</h2>
+        <button
+          type="button"
+          class="mc-icon-button mc-action--quiet"
+          [title]="text.add"
+          [attr.aria-label]="text.add"
+          [disabled]="!ready() || !!draft.value()"
+          (click)="create()"
         >
-          <legend>{{ current.revision === 0 ? text.partySetup : text.editParty }}</legend>
-          <p class="game-hint">{{ text.partyEditHint }}</p>
-          @for (member of draft.members(); track member.id; let index = $index) {
-            <div class="party-row">
-              <label [for]="'party-name-' + member.id"
-                >{{ text.characterName }} {{ index + 1 }}</label
+          <mc-icon name="note-add" />
+        </button>
+      </div>
+      <label for="character-search">{{ text.search }}</label
+      ><input id="character-search" type="search" [value]="query()" (input)="search($event)" />
+      <div class="character-filters" role="group" [attr.aria-label]="text.filter">
+        <button type="button" [attr.aria-pressed]="filter() === 'all'" (click)="filter.set('all')">
+          {{ text.all }}
+        </button>
+        <button
+          type="button"
+          [attr.aria-pressed]="filter() === 'player'"
+          (click)="filter.set('player')"
+        >
+          {{ text.players }}
+        </button>
+        <button type="button" [attr.aria-pressed]="filter() === 'npc'" (click)="filter.set('npc')">
+          {{ text.npcs }}
+        </button>
+        <button
+          type="button"
+          [attr.aria-pressed]="filter() === 'party'"
+          (click)="filter.set('party')"
+        >
+          {{ text.party }}
+        </button>
+      </div>
+      <ul>
+        @for (profile of visibleProfiles(); track profile.id) {
+          <li>
+            <button
+              type="button"
+              [attr.aria-current]="selected()?.id === profile.id ? 'true' : null"
+              (click)="selectedId.set(profile.id)"
+            >
+              <span>{{ profile.name }}</span
+              ><small
+                >{{ profile.kind === 'player' ? text.player : text.npc
+                }}{{ profile.inParty ? ' · ' + text.inParty : '' }}</small
               >
-              <input
-                [id]="'party-name-' + member.id"
-                [value]="member.name"
-                maxlength="100"
-                required
-                (input)="rename(member.id, $event)"
-              />
+            </button>
+          </li>
+        }
+      </ul>
+      @if (catalog()?.loaded() && !visibleProfiles().length) {
+        <p>{{ profiles().length ? text.noMatches : text.empty }}</p>
+      }
+    </aside>
+    <div class="character-main">
+      @if (draft.value(); as value) {
+        <form class="character-editor" (submit)="save($event)">
+          <h2>{{ text.details }}</h2>
+          <fieldset
+            [disabled]="
+              session().pending() || session().hasRecovery() || session().invalidPending()
+            "
+          >
+            <label for="character-name">{{ gameText.characterName }}</label
+            ><input
+              id="character-name"
+              required
+              maxlength="100"
+              [value]="value.name"
+              (input)="name($event)"
+            />
+            <div class="character-filters" role="group" [attr.aria-label]="text.kind">
               <button
                 type="button"
-                [disabled]="current.revision === 0 && draft.members().length === 1"
-                [attr.aria-label]="text.removeCharacter + ' ' + (member.name || index + 1)"
-                (click)="draft.remove(member.id)"
+                [attr.aria-pressed]="value.kind === 'player'"
+                (click)="draft.kind('player')"
               >
-                {{ text.removeCharacter }}
+                {{ text.player }}
+              </button>
+              <button
+                type="button"
+                [attr.aria-pressed]="value.kind === 'npc'"
+                (click)="draft.kind('npc')"
+              >
+                {{ text.npc }}
               </button>
             </div>
+            <label class="membership"
+              ><input type="checkbox" [checked]="value.inParty" (change)="membership($event)" />{{
+                text.inParty
+              }}</label
+            >
+            <p class="game-hint">{{ text.membershipHint }}</p>
+            <div class="game-actions">
+              <button type="submit" [disabled]="!session().canOperate() || stale()">
+                {{ text.save }}</button
+              ><button type="button" (click)="cancel()">{{ gameText.cancel }}</button>
+            </div>
+          </fieldset>
+          @if (stale()) {
+            <p role="alert">{{ text.stale }}</p>
           }
-          @if (!draft.members().length) {
-            <p>{{ text.noCharacters }}</p>
+          @if (validationError(); as error) {
+            <p role="alert">{{ text[error] }}</p>
           }
-          <div class="game-actions">
-            <button type="button" [disabled]="draft.members().length >= 20" (click)="draft.add()">
-              {{ text.addCharacter }}
-            </button>
-            <button type="submit" [disabled]="!session().canOperate() || stale()">
-              {{ current.revision === 0 ? text.start : text.saveParty }}
-            </button>
-            <button type="button" (click)="cancel($event)">{{ text.cancel }}</button>
+          @if (discardRequested()) {
+            <div role="alert">
+              <p>{{ gameText.discardPartyHint }}</p>
+              <button type="button" (click)="discardRequested.set(false)">
+                {{ gameText.cancel }}</button
+              ><button type="button" (click)="discard()">{{ gameText.confirmDiscardParty }}</button>
+            </div>
+          }
+        </form>
+      }
+      @if (selected(); as profile) {
+        <header class="profile-heading">
+          <div>
+            <h2 id="character-content-heading">{{ profile.name }}</h2>
+            <p>
+              {{ profile.kind === 'player' ? text.player : text.npc }} ·
+              {{ profile.inParty ? text.inParty : text.outsideParty }}
+            </p>
           </div>
-        </fieldset>
-      </form>
-      @if (validationError()) {
-        <p class="game-error" role="alert">{{ text.invalidParty }}</p>
+          <button type="button" [disabled]="!!draft.value() || !ready()" (click)="edit()">
+            {{ text.details }}
+          </button>
+        </header>
+        <div class="profile-sections" role="group" [attr.aria-label]="text.sections">
+          <button
+            type="button"
+            [attr.aria-pressed]="section() === 'backstory'"
+            (click)="section.set('backstory')"
+          >
+            {{ text.backstory }}
+          </button>
+          <button
+            type="button"
+            [attr.aria-pressed]="section() === 'notes'"
+            (click)="section.set('notes')"
+          >
+            {{ text.notes }}
+          </button>
+        </div>
+      } @else if (!draft.value()) {
+        <p>{{ text.choose }}</p>
       }
-      @if (dirty()) {
-        <p role="status">{{ text.partyDraftPreserved }}</p>
+      @if (contentLoading()) {
+        <p role="status">{{ gameText.working }}</p>
       }
-    } @else {
-      @if (current.snapshot.party.length) {
-        <ol class="party-summary">
-          @for (member of current.snapshot.party; track member.id) {
-            <li>{{ member.name }}</li>
-          }
-        </ol>
-      } @else {
-        <p>{{ text.noCharacters }}</p>
+      @if (emptyNarrative()) {
+        <p class="game-hint">{{ text.emptyNarrative }}</p>
       }
-      <button type="button" [disabled]="!session().canOperate()" (click)="edit()">
-        {{ text.editParty }}
-      </button>
-    }
-  }
-</section>
-<dialog
-  #confirmationDialog
-  class="game-undo-dialog"
-  [attr.aria-label]="confirmation() === 'rebase' ? text.rebasePartyTitle : text.discardPartyTitle"
-  (cancel)="closeConfirmation()"
->
-  <h2>{{ confirmation() === 'rebase' ? text.rebasePartyTitle : text.discardPartyTitle }}</h2>
-  <p>{{ confirmation() === 'rebase' ? text.rebasePartyHint : text.discardPartyHint }}</p>
-  <div class="game-actions">
-    <button type="button" (click)="closeConfirmation()">{{ text.cancel }}</button>
-    <button type="button" (click)="confirm()">
-      {{ confirmation() === 'rebase' ? text.confirmRebaseParty : text.confirmDiscardParty }}
-    </button>
+      @if (contentError()) {
+        <div role="alert">
+          <p>{{ text.documentFailed }}</p>
+          <button type="button" (click)="loadDocument()">{{ gameText.refresh }}</button>
+        </div>
+      }
+      <ng-container mcMaterialViewHost />
+    </div>
   </div>
-</dialog>
+</section>

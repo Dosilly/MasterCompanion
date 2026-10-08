@@ -57,6 +57,43 @@ namespace MasterCompanion.Engine.Persistence.Migrations
                     b.ToTable("Campaigns", "engine");
                 });
 
+            modelBuilder.Entity("MasterCompanion.Engine.Persistence.CampaignCharacter", b =>
+                {
+                    b.Property<Guid>("CampaignId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("BackstoryMaterialId")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("NotesMaterialId")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.HasKey("CampaignId", "Id");
+
+                    b.HasIndex("BackstoryMaterialId");
+
+                    b.HasIndex("NotesMaterialId");
+
+                    b.ToTable("Characters", "engine");
+                });
+
             modelBuilder.Entity("MasterCompanion.Engine.Persistence.CampaignFolder", b =>
                 {
                     b.Property<Guid>("CampaignId")
@@ -355,6 +392,27 @@ namespace MasterCompanion.Engine.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("SessionOperationReceipts", "engine");
+                });
+
+            modelBuilder.Entity("MasterCompanion.Engine.Persistence.CampaignCharacter", b =>
+                {
+                    b.HasOne("MasterCompanion.Engine.Persistence.Material", null)
+                        .WithMany()
+                        .HasForeignKey("BackstoryMaterialId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MasterCompanion.Engine.Persistence.Campaign", null)
+                        .WithMany()
+                        .HasForeignKey("CampaignId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MasterCompanion.Engine.Persistence.Material", null)
+                        .WithMany()
+                        .HasForeignKey("NotesMaterialId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MasterCompanion.Engine.Persistence.CampaignFolder", b =>

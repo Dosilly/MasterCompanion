@@ -34,6 +34,7 @@ const preview: MaterialDeletionPreview = {
   documentLinks: [],
   mapMarkers: [],
   pinnedSessions: [],
+  owningCharacters: [],
   owningSessions: [],
 };
 const turn = () => new Promise((resolve) => setImmediate(resolve));

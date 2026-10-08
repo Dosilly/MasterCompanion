@@ -2,6 +2,7 @@ import type { ComponentRef, ViewContainerRef, ViewRef } from '@angular/core';
 import type { CampaignFolder, MaterialSummary } from '@mastercompanion/contracts';
 import { MaterialSession } from './material-session';
 import { MaterialView } from './material-view';
+import type { EmbeddedMaterialView } from './embedded-material-view';
 
 interface MountedMaterial {
   readonly component: ComponentRef<MaterialView>;
@@ -21,9 +22,8 @@ export class MaterialViewRegistry {
   synchronize(
     sessions: readonly MaterialSession[],
     standalone: ViewContainerRef,
-    embedded: ViewContainerRef | undefined,
+    embedded: EmbeddedMaterialView | undefined,
     activeId: string,
-    embeddedId: string | null,
     materials: readonly MaterialSummary[],
     folders: readonly CampaignFolder[],
     deletionLockedIds: ReadonlySet<string>,
@@ -37,7 +37,8 @@ export class MaterialViewRegistry {
     }
     for (const session of sessions) {
       const id = session.material.id;
-      const destination = embedded && id === embeddedId ? embedded : standalone;
+      const isEmbedded = embedded?.materialId === id;
+      const destination = embedded && isEmbedded ? embedded.container : standalone;
       let mounted = this.mounted.get(id);
       if (!mounted) {
         const component = destination.createComponent(MaterialView);
@@ -62,15 +63,14 @@ export class MaterialViewRegistry {
       mounted.component.setInput('materials', materials);
       mounted.component.setInput('folders', folders);
       mounted.component.setInput('deletionLocked', deletionLockedIds.has(id));
+      mounted.component.setInput('showTitle', isEmbedded ? embedded.showTitle : true);
+      mounted.component.setInput('allowDeletion', isEmbedded ? embedded.allowDeletion : true);
       const element: HTMLElement = mounted.component.location.nativeElement;
-      element.hidden = id !== activeId && !(embedded && id === embeddedId);
+      element.hidden = id !== activeId && !isEmbedded;
       element.id = `panel-${id}`;
-      element.classList.toggle('session-document', id === embeddedId);
-      element.setAttribute('role', id === embeddedId ? 'region' : 'tabpanel');
-      element.setAttribute(
-        'aria-labelledby',
-        id === embeddedId ? 'session-content-heading' : `tab-${id}`,
-      );
+      element.classList.toggle('session-document', isEmbedded);
+      element.setAttribute('role', isEmbedded ? 'region' : 'tabpanel');
+      element.setAttribute('aria-labelledby', isEmbedded ? embedded.headingId : `tab-${id}`);
       mounted.component.changeDetectorRef.detectChanges();
       mounted.component.instance.restorePlacement();
     }

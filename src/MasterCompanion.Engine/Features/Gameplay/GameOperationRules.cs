@@ -26,9 +26,15 @@ internal static class GameOperationRules
 
             after = after with { ModuleState = reconciliation.State };
         }
-        else if (request.Kind == "updateParty")
+        else if (request.Kind is "updateParty" or "updateCharacter")
         {
-            var party = request.Party ?? throw new InvalidOperationException("Validated party is missing.");
+            var party = request.Kind == "updateCharacter"
+                ? UpdatedParty(before, request)
+                : request.Party ?? throw new InvalidOperationException("Validated party is missing.");
+            if (!GameRequestValidator.IsValidParty(party))
+            {
+                return new GameTransition.Rejected(409, "game_party_limit");
+            }
             after = before with { Party = party };
             var reconciliation = rules.ReconcileParty(before, after);
             if (reconciliation.ErrorCode is not null)
@@ -76,5 +82,17 @@ internal static class GameOperationRules
         }
         GameSnapshotCodec.ValidateSnapshot(after, rules);
         return new GameTransition.Accepted(after);
+    }
+
+    private static GameCharacter[] UpdatedParty(GameSnapshot before, GameOperationRequest request)
+    {
+        var character = request.Character ?? throw new InvalidOperationException("Validated character is missing.");
+        var party = before.Party.Where(member => member.Id != character.Id).ToList();
+        if (character.InParty)
+        {
+            var index = before.Party.ToList().FindIndex(member => member.Id == character.Id);
+            party.Insert(index < 0 ? party.Count : index, new(character.Id, character.Name));
+        }
+        return party.ToArray();
     }
 }

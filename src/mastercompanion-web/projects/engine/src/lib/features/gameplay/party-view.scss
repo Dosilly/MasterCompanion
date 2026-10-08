@@ -1,1 +1,98 @@
 @use './gameplay-layout';
+
+.party-view {
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.party-view > * {
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
+.game-heading {
+  margin-bottom: 12px;
+}
+.character-workspace {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  flex: 1;
+  min-height: 0;
+  gap: 20px;
+}
+.character-list {
+  overflow: auto;
+  border-right: 1px solid var(--line);
+  padding-right: 16px;
+}
+.list-heading,
+.profile-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.list-heading h2,
+.profile-heading h2 {
+  margin: 0;
+}
+.character-list input {
+  width: 100%;
+  margin-top: 6px;
+}
+.character-filters,
+.profile-sections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 12px 0;
+}
+[aria-pressed='true'],
+.character-list [aria-current='true'] {
+  background: var(--selection);
+  color: var(--selection-ink);
+}
+.character-list ul {
+  list-style: none;
+  padding: 0;
+}
+.character-list li button {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.character-list small,
+.profile-heading p {
+  color: var(--muted);
+  font-size: 12px;
+}
+.character-list [aria-current='true'] small {
+  color: inherit;
+}
+.character-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+.character-editor {
+  margin-bottom: 16px;
+}
+.character-editor label {
+  display: block;
+  margin-bottom: 6px;
+}
+.membership {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+}
+.game-error,
+[role='alert'] {
+  color: var(--danger);
+}

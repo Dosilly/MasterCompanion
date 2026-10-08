@@ -21,6 +21,7 @@ async function mockDeletion(
         documentLinks: ['Linked document'],
         mapMarkers: ['Map / Marker'],
         pinnedSessions: ['Pinned meeting'],
+        owningCharacters: [],
         owningSessions: options.protected ? ['Required meeting'] : [],
       };
       await route.fulfill({ json: preview });
@@ -73,6 +74,7 @@ test('Embedded session documents keep their deletion action and protected confir
       documentLinks: [],
       mapMarkers: [],
       pinnedSessions: [],
+      owningCharacters: [],
       owningSessions: ['Protected session'],
     };
     await route.fulfill({ json: preview });
